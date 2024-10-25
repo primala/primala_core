@@ -104,7 +104,8 @@ abstract class _SessionLobbyCoordinatorBase
         }
       });
 
-  sessionPresetReactor() => reaction((p0) => sessionMetadata.state, (p0) async {
+  sessionPresetReactor() =>
+      reaction((p0) => sessionMetadata.presetsLogic.state, (p0) async {
         if (p0 == StoreState.loaded) {
           showPresetInfo();
           if (hasReceivedRoutingArgs) {
