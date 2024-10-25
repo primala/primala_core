@@ -276,6 +276,19 @@ abstract class _SessionMetadataStoreBase
   PresetTypes get presetType => presetEntity.presets.first;
 
   @computed
+  List<SessionTags> get tags {
+    if (presetEntity.tags.isEmpty) {
+      return [];
+    } else {
+      final list = <SessionTags>[];
+      for (var section in presetEntity.articles.first.articleSections) {
+        list.add(section.tag);
+      }
+      return list;
+    }
+  }
+
+  @computed
   PresetArticleEntity get article => presetEntity.articles.first;
 
   @computed
