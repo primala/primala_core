@@ -4,7 +4,7 @@ import 'package:nokhte_backend/tables/company_presets_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class PresetsRemoteSource {
-  Future<List> getCompanyPresets();
+  Future<List> getCompanyPresets(String params);
   Future<List> upsertSessionPreferences(UpsertSessionPreferencesParams params);
 }
 
@@ -17,7 +17,9 @@ class PresetsRemoteSourceImpl implements PresetsRemoteSource {
       : queries = CompanyPresetsQueries(supabase: supabase),
         prefQueries = CompanyPresetsPreferencesQueries(supabase: supabase);
   @override
-  Future<List> getCompanyPresets() async => await queries.select();
+  Future<List> getCompanyPresets(params) async => await queries.select(
+        uid: params,
+      );
 
   @override
   upsertSessionPreferences(params) async =>

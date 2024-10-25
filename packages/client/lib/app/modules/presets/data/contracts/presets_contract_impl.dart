@@ -14,7 +14,8 @@ class PresetsContractImpl with ResponseToStatus implements PresetsContract {
   @override
   getPresets(params) async {
     if (await networkInfo.isConnected) {
-      final res = await remoteSource.getCompanyPresets();
+      final res = await remoteSource
+          .getCompanyPresets(params.fold((_) => '', (uid) => uid));
       return Right(CompanyPresetsModel.fromSupabase(res));
     } else {
       return Left(FailureConstants.internetConnectionFailure);
