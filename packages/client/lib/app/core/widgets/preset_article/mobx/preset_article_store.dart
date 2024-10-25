@@ -161,42 +161,65 @@ abstract class _PresetArticleStoreBase extends BaseWidgetStore with Store {
 
   @computed
   SessionTags get currentTag {
-    final section = _getCurrentSection();
-    return section.tag;
+    if (articleSections.isNotEmpty) {
+      final section = _getCurrentSection();
+      return section.tag;
+    } else {
+      return SessionTags.none;
+    }
   }
 
   @computed
   List<String> get currentInstruction {
-    final section = _getCurrentSection();
-    return section.articleInstructions;
+    if (articleSections.isNotEmpty) {
+      final section = _getCurrentSection();
+      return section.articleInstructions;
+    } else {
+      return [];
+    }
   }
 
   @computed
   List<String> get currentJustification {
-    final section = _getCurrentSection();
-    return section.articleJustifications;
+    if (articleSections.isNotEmpty) {
+      final section = _getCurrentSection();
+      return section.articleJustifications;
+    } else {
+      return [];
+    }
   }
 
   @computed
   PowerupInfo get powerUpInfo {
-    final section = _getCurrentSection();
-    return section.powerup;
+    if (articleSections.isNotEmpty) {
+      final section = _getCurrentSection();
+      return section.powerup;
+    } else {
+      return PowerupInfo.initial();
+    }
   }
 
   @computed
   String get currentInstructionsHeader {
-    final section = _getCurrentSection();
-    return section.sectionHeader;
+    if (articleSections.isNotEmpty) {
+      final section = _getCurrentSection();
+      return section.sectionHeader;
+    } else {
+      return '';
+    }
   }
 
   @computed
-  PresetArticleEntity get article => preset.articles[activeIndex];
+  PresetArticleEntity get article => preset.articles.isEmpty
+      ? PresetArticleEntity.initial()
+      : preset.articles[activeIndex];
 
   @computed
   List<ArticleOptions> get options => article.options;
 
   @computed
-  List<SessionTags> get allTheSessionTags => preset.tags[activeIndex];
+  List<SessionTags> get allTheSessionTags =>
+      articleSectionsTags.isNotEmpty ? [] : preset.tags[activeIndex];
 
   @computed
   List<SessionTags> get articleSectionsTags {
@@ -204,7 +227,6 @@ abstract class _PresetArticleStoreBase extends BaseWidgetStore with Store {
     for (var section in articleSections) {
       temp.add(section.tag);
     }
-    print('computed articleSectionsTags $temp');
     return temp;
   }
 }
