@@ -1,14 +1,15 @@
-export 'session_speaking_coordinator.dart';
-export 'session_speaking_widgets_coordinator.dart';
-import 'package:flutter/material.dart';
+export 'polymorphic_solo_coordinator.dart';
+export 'polymorphic_solo_widgets_coordinator.dart';
+import 'package:flutter/material.dart' hide BackButton;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
+import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 
-class SessionSpeakingScreen extends HookWidget {
-  final SessionSpeakingCoordinator coordinator;
-  const SessionSpeakingScreen({
+class PolymorphicSoloScreen extends HookWidget {
+  final PolymorphicSoloCoordinator coordinator;
+  const PolymorphicSoloScreen({
     super.key,
     required this.coordinator,
   });
@@ -17,7 +18,6 @@ class SessionSpeakingScreen extends HookWidget {
   Widget build(BuildContext context) {
     useEffect(() {
       coordinator.constructor();
-
       return () => coordinator.deconstructor();
     }, []);
     return Scaffold(
@@ -33,11 +33,12 @@ class SessionSpeakingScreen extends HookWidget {
                   store: coordinator.widgets.beachWaves,
                 ),
               ),
-              // Tint(
-              //   store: coordinator.widgets.tint,
-              // ),
               BorderGlow(
                 store: coordinator.widgets.borderGlow,
+              ),
+              BackButton(
+                store: coordinator.widgets.backButton,
+                overridedColor: Colors.white,
               ),
               MirroredText(
                 store: coordinator.widgets.mirroredText,
@@ -50,12 +51,20 @@ class SessionSpeakingScreen extends HookWidget {
                   store: coordinator.widgets.touchRipple,
                 ),
               ),
-              // SessionNavigation(
-              //   store: coordinator.widgets.sessionNavigation,
-              // ),
-              // CollaboratorPresenceIncidentsOverlay(
-              //   store: coordinator.presence.incidentsOverlayStore,
-              // ),
+              Center(
+                child: SmartText(
+                  store: coordinator.widgets.secondarySmartText,
+                  bottomPadding: .3,
+                  opacityDuration: Seconds.get(1),
+                ),
+              ),
+              Center(
+                child: SmartText(
+                  store: coordinator.widgets.primarySmartText,
+                  topPadding: .3,
+                  opacityDuration: Seconds.get(1),
+                ),
+              ),
               WifiDisconnectOverlay(
                 store: coordinator.widgets.wifiDisconnectOverlay,
               ),

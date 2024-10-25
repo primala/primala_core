@@ -55,6 +55,6 @@ mixin SessionConstants {
   static const notesModule = '/notes';
   static const notes = '$module$notesModule$relativeRoot';
 
-  static const speakingModule = '/speaking';
-  static const speaking = '$module$speakingModule$relativeRoot';
+  static const polymorphicModule = '/polymorphic';
+  static const polymorphicSolo = '$module$polymorphicModule$relativeRoot';
 }

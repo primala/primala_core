@@ -2,19 +2,21 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
-export 'speaking/speaking.dart';
+export 'polymorphic_solo/polymorphic_solo.dart';
 
-class SessionSpeakingModule extends Module {
+class SessionPolymorphicModule extends Module {
   @override
   List<Module> get imports => [
         PosthogModule(),
+        SessionLogicModule(),
       ];
   @override
   void exportedBinds(Injector i) {
-    i.add<SessionSpeakingCoordinator>(
-      () => SessionSpeakingCoordinator(
+    i.add<PolymorphicSoloCoordinator>(
+      () => PolymorphicSoloCoordinator(
+        presence: Modular.get<SessionPresenceCoordinator>(),
         captureScreen: Modular.get<CaptureScreen>(),
-        widgets: Modular.get<SessionSpeakingWidgetsCoordinator>(),
+        widgets: Modular.get<PolymorphicSoloWidgetsCoordinator>(),
         hold: HoldDetector(),
         tap: TapDetector(),
       ),
@@ -26,8 +28,8 @@ class SessionSpeakingModule extends Module {
     r.child(
       SessionConstants.relativeRoot,
       transition: TransitionType.noTransition,
-      child: (context) => SessionSpeakingScreen(
-        coordinator: Modular.get<SessionSpeakingCoordinator>(),
+      child: (context) => PolymorphicSoloScreen(
+        coordinator: Modular.get<PolymorphicSoloCoordinator>(),
       ),
     );
   }

@@ -1,6 +1,4 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
-import 'dart:async';
-
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
@@ -10,84 +8,101 @@ import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/home/home.dart';
 import 'package:nokhte/app/modules/session/session.dart';
-part 'session_speaking_widgets_coordinator.g.dart';
+import 'package:nokhte_backend/tables/company_presets.dart';
+part 'polymorphic_solo_widgets_coordinator.g.dart';
 
-class SessionSpeakingWidgetsCoordinator = _SessionSpeakingWidgetsCoordinatorBase
-    with _$SessionSpeakingWidgetsCoordinator;
+class PolymorphicSoloWidgetsCoordinator = _PolymorphicSoloWidgetsCoordinatorBase
+    with _$PolymorphicSoloWidgetsCoordinator;
 
-abstract class _SessionSpeakingWidgetsCoordinatorBase
-    with Store, BaseWidgetsCoordinator, Reactions {
+abstract class _PolymorphicSoloWidgetsCoordinatorBase
+    with Store, BaseWidgetsCoordinator, Reactions, SessionSpeakingUtilities {
   final MirroredTextStore mirroredText;
+  final SmartTextStore primarySmartText;
+  final SmartTextStore secondarySmartText;
+  @override
   final BeachWavesStore beachWaves;
+  @override
   final BorderGlowStore borderGlow;
+  @override
   final TouchRippleStore touchRipple;
+  @override
   final SpeakLessSmileMoreStore speakLessSmileMore;
+  @override
   final SessionNavigationStore sessionNavigation;
+
   final TintStore tint;
   @override
   final WifiDisconnectOverlayStore wifiDisconnectOverlay;
+  final BackButtonStore backButton;
 
-  _SessionSpeakingWidgetsCoordinatorBase({
+  _PolymorphicSoloWidgetsCoordinatorBase({
     required this.wifiDisconnectOverlay,
     required this.mirroredText,
     required this.beachWaves,
     required this.borderGlow,
+    required this.backButton,
+    required this.primarySmartText,
+    required this.secondarySmartText,
     required this.sessionNavigation,
     required this.tint,
     required this.touchRipple,
     required this.speakLessSmileMore,
   }) {
     initBaseWidgetsCoordinatorActions();
+    initSessionSpeakingUtilities();
   }
+  // also add back button reactor
 
   @action
   constructor() {
     beachWaves.setMovieMode(BeachWaveMovieModes.halfAndHalfToDrySand);
-    mirroredText.setMessagesData(MirroredTextContent.sessionSpeaking);
-    mirroredText.startBothRotatingText();
+    mirroredText.setMessagesData(MirroredTextContent.tapSpeaking);
+    primarySmartText.setMessagesData(SessionLists.tapToTalk);
+    secondarySmartText.setMessagesData(SessionLists.tapToTakeANote);
+    primarySmartText.setStaticAltMovie(SessionConstants.blue);
     setIsLeaving(false);
     borderGlow.initFadeIn();
+    backButton.setWidgetVisibility(false);
     initReactors();
   }
 
-  @observable
-  bool isLettingGo = false;
-
-  @observable
-  bool isHolding = false;
+  postConstructor(List<SessionTags> sessionTags) {
+    if (sessionTags.contains(SessionTags.holdToSpeak)) {
+      primarySmartText.setMessagesData(SessionLists.holdToTalk);
+      mirroredText.setMessagesData(MirroredTextContent.holdSpeaking);
+    }
+    if (sessionTags.contains(SessionTags.deactivatedNotes)) {
+      mirroredText.startBothRotatingText();
+    } else {
+      primarySmartText.startRotatingText();
+      secondarySmartText.startRotatingText();
+    }
+    backButton.setWidgetVisibility(true);
+  }
 
   @observable
   bool isLeaving = false;
 
   @action
-  setIsHolding(bool newBool) => isHolding = newBool;
-
-  @action
   setIsLeaving(bool newBool) => isLeaving = newBool;
 
-  @observable
-  bool collaboratorHasLeft = false;
-
-  @observable
-  int holdCount = 0;
-
   @action
-  onCollaboratorLeft() {
-    mirroredText.setWidgetVisibility(false);
-    sessionNavigation.setWidgetVisibility(false);
-    collaboratorHasLeft = true;
+  initFullScreenNotes() {
+    baseInitFullScreenNotes(() {
+      setTextVisibilities(false);
+    });
   }
 
-  @action
-  onCollaboratorJoined() {
-    sessionNavigation.setWidgetVisibility(true);
-    mirroredText.setWidgetVisibility(true);
-    collaboratorHasLeft = false;
+  setTextVisibilities(bool val) {
+    mirroredText.setWidgetVisibility(val);
+    primarySmartText.setWidgetVisibility(val);
+    secondarySmartText.setWidgetVisibility(val);
   }
 
   @action
   goHome() {
-    mirroredText.setWidgetVisibility(false);
+    setTextVisibilities(false);
+    backButton.setWidgetVisibility(false);
     borderGlow.setWidgetVisibility(false);
     beachWaves.setMovieMode(BeachWaveMovieModes.anyToOnShore);
     beachWaves.currentStore.initMovie(
@@ -99,39 +114,31 @@ abstract class _SessionSpeakingWidgetsCoordinatorBase
 
   @action
   onHold(GesturePlacement holdPosition) {
-    holdCount++;
-    isHolding = true;
+    incrementHoldCount();
+    setIsHolding(true);
     if (holdPosition == GesturePlacement.topHalf) {
       DurationAndGradient params = DurationAndGradient.initial();
       params = DurationAndGradient(
         gradient: beachWaves.currentColorsAndStops,
         duration: const Duration(seconds: 2),
       );
-
       beachWaves.setMovieMode(BeachWaveMovieModes.anyToSky);
       beachWaves.currentStore.initMovie(params);
     } else if (holdPosition == GesturePlacement.bottomHalf) {
       beachWaves.setMovieMode(BeachWaveMovieModes.halfAndHalfToDrySand);
-      beachWaves.currentStore.initMovie(NoParams());
+      beachWaves.currentStore.initMovie(const NoParams());
     }
-    mirroredText.setWidgetVisibility(false);
+    setTextVisibilities(false);
   }
 
   @action
   onLetGo() {
-    initGlowDown();
-    beachWaves.setMovieMode(BeachWaveMovieModes.anyToHalfAndHalf);
-    beachWaves.currentStore.initMovie(beachWaves.currentColorsAndStops);
+    endSpeaking();
   }
 
-  @action
   onLetGoCompleted() {
-    isHolding = false;
-    isLettingGo = false;
-    // setCanHold(true);
-    if (!collaboratorHasLeft) {
-      mirroredText.setWidgetVisibility(true);
-    }
+    resetSpeakingVariables();
+    setTextVisibilities(true);
   }
 
   @action
@@ -139,7 +146,7 @@ abstract class _SessionSpeakingWidgetsCoordinatorBase
 
   @action
   initBorderGlow() {
-    borderGlow.initMovie(NoParams());
+    borderGlow.initMovie(const NoParams());
   }
 
   @action
@@ -157,58 +164,16 @@ abstract class _SessionSpeakingWidgetsCoordinatorBase
   }
 
   @action
-  onExit({
-    required bool isASocraticSession,
-  }) {
-    setIsLeaving(true);
-    mirroredText.setWidgetVisibility(false);
-    tint.reverseMovie(NoParams());
-    if (isASocraticSession) {
-      beachWaves.setMovieMode(BeachWaveMovieModes.orangeSandToHalfAndHalf);
-    } else {
-      beachWaves.setMovieMode(BeachWaveMovieModes.skyToHalfAndHalf);
-    }
-    beachWaves.currentStore.reverseMovie(NoParams());
-  }
-
-  @action
   initReactors() {
     disposers.add(borderGlowReactor());
     disposers.add(beachWavesMovieStatusReactor());
-    disposers.add(
-      gestureCrossTapReactor(
-        onInit: () {
-          mirroredText.setWidgetVisibility(false);
-        },
-        onReverse: () {
-          mirroredText.setWidgetVisibility(true);
-        },
-      ),
-    );
   }
-
-  gestureCrossTapReactor({
-    required Function onInit,
-    required Function onReverse,
-  }) =>
-      reaction(
-        (p0) => sessionNavigation.gestureCross.tapCount,
-        (p0) {
-          if (!isHolding) {
-            sessionNavigation.onGestureCrossTap(onInit, onReverse);
-          }
-        },
-      );
 
   beachWavesMovieStatusReactor() =>
       reaction((p0) => beachWaves.movieStatus, (p0) {
         if (p0 == MovieStatus.finished) {
           if (beachWaves.movieMode == BeachWaveMovieModes.skyToHalfAndHalf) {
-            if (isLeaving) {
-              Modular.to.navigate(SessionConstants.exit);
-            } else if (isLettingGo) {
-              onLetGoCompleted();
-            }
+            Modular.to.navigate(SessionConstants.notes);
           } else if (beachWaves.movieMode ==
               BeachWaveMovieModes.anyToHalfAndHalf) {
             onLetGoCompleted();
@@ -216,27 +181,8 @@ abstract class _SessionSpeakingWidgetsCoordinatorBase
               beachWaves.movieMode ==
                   BeachWaveMovieModes.halfAndHalfToDrySand) {
             initBorderGlow();
-          } else if (beachWaves.movieMode ==
-              BeachWaveMovieModes.orangeSandToHalfAndHalf) {
-            Modular.to.navigate(SessionConstants.socraticSpeakingExit);
           } else if (beachWaves.movieMode == BeachWaveMovieModes.anyToOnShore) {
             Modular.to.navigate(HomeConstants.home);
-          }
-        }
-      });
-
-  borderGlowReactor() => reaction((p0) => borderGlow.currentWidth, (p0) {
-        if (p0 == 200) {
-          speakLessSmileMore.setSpeakLess(true);
-          Timer(Seconds.get(2), () {
-            if (borderGlow.currentWidth == 200) {
-              speakLessSmileMore.setSmileMore(true);
-            }
-          });
-        } else {
-          if (speakLessSmileMore.showSmileMore ||
-              speakLessSmileMore.showSpeakLess) {
-            speakLessSmileMore.hideBoth();
           }
         }
       });
