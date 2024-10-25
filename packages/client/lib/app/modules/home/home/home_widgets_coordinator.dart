@@ -256,7 +256,7 @@ abstract class _HomeWidgetsCoordinatorBase
       reaction((p0) => beachWaves.movieStatus, (p0) {
         if (beachWaves.movieStatus == MovieStatus.finished) {
           if (beachWaves.movieMode == BeachWaveMovieModes.anyToOnShore) {
-            Modular.to.navigate(SessionConstants.speaking);
+            Modular.to.navigate(SessionConstants.polymorphicSolo);
           } else {
             beachWaves.setMovieStatus(MovieStatus.inProgress);
             if (waterDirecton == WaterDirection.up) {
@@ -297,7 +297,12 @@ abstract class _HomeWidgetsCoordinatorBase
 
   smartTextIndexReactor() => reaction((p0) => smartText.currentIndex, (p0) {
         if (p0 == 2) {
-          smartText.reset();
+          Timer.periodic(const Duration(seconds: 1), (timer) {
+            if (smartText.showWidget) {
+              smartText.reset();
+              timer.cancel();
+            }
+          });
         }
       });
 

@@ -53,6 +53,7 @@ class HomeModule extends Module {
     i.add<HomeCoordinator>(
       () => HomeCoordinator(
         tap: TapDetector(),
+        sessionStartersLogic: Modular.get<SessionStartersLogicCoordinator>(),
         getNokhteSessionArtifactsLogic:
             Modular.get<GetNokhteSessionArtifacts>(),
         captureScreen: Modular.get<CaptureScreen>(),
