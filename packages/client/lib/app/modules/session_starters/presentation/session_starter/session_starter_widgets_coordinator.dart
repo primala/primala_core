@@ -309,7 +309,7 @@ abstract class _SessionStarterWidgetsCoordinatorBase
               SessionStarterConstants.QR_CODE_DATA: qrCode.qrCodeData,
             });
           } else {
-            Modular.to.navigate(SessionConstants.speaking);
+            Modular.to.navigate(SessionConstants.polymorphicSolo);
           }
         }
       });
@@ -339,9 +339,6 @@ abstract class _SessionStarterWidgetsCoordinatorBase
                   CondensedPresetCardMovieModes.selectionInProgress &&
               presetCards.movieStatuses[currentHeldIndex] ==
                   MovieStatus.finished) {
-            if (firstCardIsSelected) {
-              scrollToTop();
-            }
             Timer(Seconds.get(1), () {
               presetCards.enableAllTouchFeedback();
             });
@@ -350,6 +347,9 @@ abstract class _SessionStarterWidgetsCoordinatorBase
               firstCardIsSelected = true;
             });
             await onSelected(presetCards.currentlySelectedSessionUID);
+            if (firstCardIsSelected) {
+              scrollToTop();
+            }
           }
         }
       });

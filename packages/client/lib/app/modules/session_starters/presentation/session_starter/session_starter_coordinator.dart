@@ -1,4 +1,6 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
@@ -49,7 +51,6 @@ abstract class _SessionStarterCoordinatorBase
     widgets.initReactors();
     initReactors();
     await presetsLogic.getCompanyPresets(Left(GetAllPresetsParams()));
-    await starterLogic.initialize();
     await captureScreen(SessionStarterConstants.sessionStarter);
     starterLogic.listenToSessionActivation();
   }
@@ -71,6 +72,7 @@ abstract class _SessionStarterCoordinatorBase
     ));
     disposers.add(nokhteSearchStatusReactor());
     disposers.add(tapReactor());
+    disposers.add(hasInitiatedSessionReactor());
     disposers.add(widgets.presetSelectionReactor(onSelected));
     disposers.add(widgets.condensedPresetCardTapReactor(
       onClose: () async {
@@ -126,33 +128,46 @@ abstract class _SessionStarterCoordinatorBase
       reaction((p0) => starterLogic.hasFoundNokhteSession, (p0) async {
         if (p0) {
           setDisableAllTouchFeedback(true);
-          await starterLogic.dispose();
           widgets.initTransition(false);
         }
       });
 
-  preferredPresetReactor() => reaction((p0) => userInfo.preferredPreset, (p0) {
+  preferredPresetReactor() =>
+      reaction((p0) => userInfo.preferredPreset, (p0) async {
         if (userInfo.state == StoreState.loaded) {
           if (userInfo.hasAccessedQrCode) {
-            if (p0.name.isNotEmpty) {
-              final index =
-                  presetsLogic.presetsEntity.uids.indexOf(p0.presetUID);
-              final sections =
-                  presetsLogic.presetsEntity.articles[index].articleSections;
-              final tags = <SessionTags>[];
-              for (var section in sections) {
-                tags.add(section.tag);
-              }
-              widgets.onPreferredPresetReceived(
-                sessionName: p0.name,
-                tags: tags,
-                presetUID: userInfo.preferredPreset.presetUID,
-                userUID: userInfo.preferredPreset.userUID,
-              );
-            }
+            await starterLogic.initialize();
           } else {
             widgets.onNoPresetSelected();
           }
+        }
+      });
+
+  @action
+  resetPresetInfo() {
+    if (userInfo.preferredPreset.name.isNotEmpty) {
+      final index = presetsLogic.presetsEntity.uids
+          .indexOf(userInfo.preferredPreset.presetUID);
+      final sections =
+          presetsLogic.presetsEntity.articles[index].articleSections;
+      final tags = <SessionTags>[];
+      for (var section in sections) {
+        tags.add(section.tag);
+      }
+
+      widgets.onPreferredPresetReceived(
+        sessionName: userInfo.preferredPreset.name,
+        tags: tags,
+        presetUID: userInfo.preferredPreset.presetUID,
+        userUID: userInfo.preferredPreset.userUID,
+      );
+    }
+  }
+
+  hasInitiatedSessionReactor() =>
+      reaction((p0) => starterLogic.hasJoined, (p0) async {
+        if (p0) {
+          resetPresetInfo();
         }
       });
 
@@ -166,8 +181,8 @@ abstract class _SessionStarterCoordinatorBase
         }
       });
 
-  deconstructor() {
-    starterLogic.dispose();
+  deconstructor() async {
+    await starterLogic.dispose();
     dispose();
     widgets.dispose();
   }
