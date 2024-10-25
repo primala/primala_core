@@ -1,8 +1,10 @@
+import 'package:nokhte/app/modules/session_starters/session_starters.dart';
+import 'package:nokhte_backend/tables/company_presets.dart';
 import 'package:nokhte_backend/tables/rt_active_nokhte_sessions.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class SessionStartersRemoteSource {
-  Future<FunctionResponse> initializeSession();
+  Future<FunctionResponse> initializeSession(InitializeSessionParams param);
 
   Future<FunctionResponse> nukeSession();
 
@@ -26,16 +28,19 @@ class SessionStartersRemoteSourceImpl implements SessionStartersRemoteSource {
         currentUserUID = supabase.auth.currentUser?.id ?? '';
 
   @override
-  bool cancelSessionActivationStream() =>
-      stream.cancelSessionActivationStream();
-
-  @override
-  Stream<bool> listenToSessionActivationStatus() {
-    return stream.listenToSessionActivationStatus();
+  bool cancelSessionActivationStream() {
+    return stream.cancelSessionActivationStream();
   }
 
   @override
-  initializeSession() async => await queries.initializeSession();
+  Stream<bool> listenToSessionActivationStatus() =>
+      stream.listenToSessionActivationStatus();
+
+  @override
+  initializeSession(param) async => await queries.initializeSession(
+        presetType:
+            param.fold((_) => PresetTypes.none, (presetType) => presetType),
+      );
 
   @override
   joinSession(String leaderUID) async => await queries.joinSession(leaderUID);

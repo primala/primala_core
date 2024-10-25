@@ -40,9 +40,15 @@ class ActiveNokhteSessionEdgeFunctions with STActiveNokhteSessionsConstants {
       );
 
   Future<FunctionResponse> initializeSession({
-    PresetTypes presetType = PresetTypes.consultative,
+    PresetTypes presetType = PresetTypes.none,
   }) async {
-    final presetUID = await userInformationQueries.getPreferredPresetUID();
+    String presetUID = '';
+    if (presetType == PresetTypes.none) {
+      presetUID = (await presetQueries.select(type: presetType))
+          .first[CompanyPresetsQueries.UID];
+    } else {
+      presetUID = await userInformationQueries.getPreferredPresetUID() ?? '';
+    }
     return await supabase.functions.invoke(
       'nokhte-session-init-or-nuke-or-start',
       body: {
