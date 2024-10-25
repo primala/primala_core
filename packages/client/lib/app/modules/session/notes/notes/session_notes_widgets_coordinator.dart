@@ -166,8 +166,10 @@ abstract class _SessionNotesWidgetsCoordinatorBase
         if (p0 == MovieStatus.finished) {
           if (presetType == PresetTypes.consultative) {
             Modular.to.navigate(SessionConstants.groupHybrid);
-          } else {
+          } else if (presetType == PresetTypes.collaborative) {
             Modular.to.navigate(SessionConstants.soloHybrid);
+          } else if (presetType == PresetTypes.solo) {
+            Modular.to.navigate(SessionConstants.polymorphicSolo);
           }
         }
       });
