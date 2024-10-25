@@ -66,7 +66,7 @@ abstract class _StorageHomeCoordinatorBase
 
   @action
   getNokhteSessionArtifacts() async {
-    final res = await getNokhteSessionArtifactsLogic(NoParams());
+    final res = await getNokhteSessionArtifactsLogic(const NoParams());
     res.fold(
       (failure) => errorUpdater(failure),
       (artifacts) {

@@ -8,7 +8,8 @@ void main() {
   group("initial values", () {
     test("authState", () {
       final mockGetAuthState = MockGetLoginState();
-      when(mockGetAuthState(NoParams())).thenAnswer((_) => Stream.value(true));
+      when(mockGetAuthState(const NoParams()))
+          .thenAnswer((_) => Stream.value(true));
       final authStateStore = GetLoginStateStore(logic: mockGetAuthState);
       expect(authStateStore.authState, emitsInOrder([true]));
     });

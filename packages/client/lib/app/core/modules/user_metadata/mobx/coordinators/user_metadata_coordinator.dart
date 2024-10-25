@@ -29,7 +29,7 @@ abstract class _UserMetadataCoordinatorBase
 
   @action
   getMetadata() async {
-    final res = await contract.getUserMetadata(NoParams());
+    final res = await contract.getUserMetadata(const NoParams());
     res.fold((failure) {
       setErrorMessage(mapFailureToMessage(failure));
       setState(StoreState.initial);
@@ -43,7 +43,7 @@ abstract class _UserMetadataCoordinatorBase
   @action
   Future<void> addMetadata(NoParams param) async {
     setState(StoreState.loading);
-    final res = await contract.addUserMetadata(NoParams());
+    final res = await contract.addUserMetadata(const NoParams());
     res.fold((failure) {
       setErrorMessage(mapFailureToMessage(failure));
       setState(StoreState.initial);

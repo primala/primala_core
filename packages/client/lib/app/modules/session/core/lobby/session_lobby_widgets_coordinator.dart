@@ -151,10 +151,10 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
   enterSession(bool isAValidSession) {
     if (isAValidSession) {
       beachWaves.setMovieMode(BeachWaveMovieModes.deepSeaToSky);
-      beachWaves.currentStore.initMovie(NoParams());
+      beachWaves.currentStore.initMovie(const NoParams());
     } else {
       beachWaves.setMovieMode(BeachWaveMovieModes.deepSeaToBorealis);
-      beachWaves.currentStore.initMovie(NoParams());
+      beachWaves.currentStore.initMovie(const NoParams());
     }
     presetArticle.setShowPreview(false);
     presetArticle.setWidgetVisibility(true);

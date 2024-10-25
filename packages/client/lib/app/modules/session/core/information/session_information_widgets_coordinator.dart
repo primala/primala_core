@@ -58,7 +58,7 @@ abstract class _SessionInformationWidgetsCoordinatorBase
   @action
   onClose() {
     if (isFirstTap) {
-      tint.initMovie(NoParams());
+      tint.initMovie(const NoParams());
       isFirstTap = false;
       Timer(Seconds.get(1), () {
         Modular.to.navigate(route);

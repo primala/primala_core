@@ -40,7 +40,7 @@ abstract class _HomeScreenRootRouterCoordinatorBase
   constructor() async {
     widgets.constructor();
     initReactors();
-    await cleanUpCollaborationArtifacts(NoParams());
+    await cleanUpCollaborationArtifacts(const NoParams());
     if (isConnected && !isRouting) {
       await decideAndRoute(setRoutingParams);
     }

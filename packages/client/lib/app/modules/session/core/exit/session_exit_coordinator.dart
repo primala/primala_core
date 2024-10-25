@@ -129,7 +129,7 @@ abstract class _SessionExitCoordinatorBase
     presence.dispose();
     if (sessionMetadata.userIndex == 0) {
       await presence.completeTheSession();
-      await captureEnd(NoParams());
+      await captureEnd(const NoParams());
     }
     widgets.initHomeTransition();
   }

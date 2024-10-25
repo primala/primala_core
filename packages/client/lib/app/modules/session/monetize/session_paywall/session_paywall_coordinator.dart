@@ -125,7 +125,7 @@ abstract class _SessionPaywallCoordinatorBase
             );
           case GestureDirections.down:
             if (!hasSwipedDown) {
-              await cleanUpCollaborationArtifacts(NoParams());
+              await cleanUpCollaborationArtifacts(const NoParams());
               hasSwipedDown = true;
             }
           default:

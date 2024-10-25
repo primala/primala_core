@@ -24,7 +24,7 @@ abstract class _CleanUpCollaborationArtifactsCoordinatorBase
     try {
       setState(StoreState.loading);
       // await sessionStarters.nuke();
-      await contract.cleanUpNokhteSession(NoParams());
+      await contract.cleanUpNokhteSession(const NoParams());
       setState(StoreState.loaded);
     } catch (e) {}
   }

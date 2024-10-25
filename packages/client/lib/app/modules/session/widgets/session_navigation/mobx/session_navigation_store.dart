@@ -182,7 +182,7 @@ abstract class _SessionNavigationStoreBase extends BaseWidgetStore
     if (isAllowedToMakeGesture() && showWidget) {
       if (!hasInitiatedBlur) {
         setHasInitiatedBlur(true);
-        tint.initMovie(NoParams());
+        tint.initMovie(const NoParams());
         centerNokhte.moveToCenter();
         swipeGuide.fadeIn();
         moveAuxNokhtes(shouldExpand: true);
@@ -203,7 +203,7 @@ abstract class _SessionNavigationStoreBase extends BaseWidgetStore
       startingPosition: CenterNokhtePositions.center,
     );
     moveAuxNokhtes(shouldExpand: false);
-    tint.reverseMovie(NoParams());
+    tint.reverseMovie(const NoParams());
   }
 
   @action

@@ -171,7 +171,7 @@ abstract class _StorageHomeWidgetsCoordinatorBase
   @action
   onSessionCardTapped() {
     beachWaves.setMovieMode(BeachWaveMovieModes.skyToDrySand);
-    beachWaves.currentStore.initMovie(NoParams());
+    beachWaves.currentStore.initMovie(const NoParams());
     sessionCard.setWidgetVisibility(false);
     primarySmartText.setWidgetVisibility(false);
     centerNokhte.setWidgetVisibility(false);

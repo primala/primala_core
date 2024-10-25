@@ -143,7 +143,7 @@ abstract class _SessionNotesWidgetsCoordinatorBase
         // if (presetType == PresetTypes.collaborative) {
         textEditor.setWidgetVisibility(false);
         beachWaves.setMovieMode(BeachWaveMovieModes.skyToHalfAndHalf);
-        beachWaves.currentStore.initMovie(NoParams());
+        beachWaves.currentStore.initMovie(const NoParams());
         // } else if (presetType == PresetTypes.consultative) {
         //   if (screenType == SessionScreenTypes.notes) {
         //     textEditor.controller.clear();

@@ -45,7 +45,7 @@ abstract class _NeedsUpdateWidgetsCoordinatorBase
     consumeRoutingArgs();
     gestureCross.fadeInTheCross();
     disposers.add(beachWavesMovieStatusReactor());
-    tint.initMovie(NoParams());
+    tint.initMovie(const NoParams());
     gradientText.setWidgetVisibility(false);
     Timer(Seconds.get(1), () {
       gradientText.setWidgetVisibility(true);

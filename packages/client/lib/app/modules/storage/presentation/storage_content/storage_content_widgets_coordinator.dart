@@ -48,7 +48,7 @@ abstract class _StorageContentWidgetsCoordinatorBase
           backButton.setWidgetVisibility(false);
           Timer(Seconds.get(1), () {
             beachWaves.setMovieMode(BeachWaveMovieModes.skyToDrySand);
-            beachWaves.currentStore.reverseMovie(NoParams());
+            beachWaves.currentStore.reverseMovie(const NoParams());
           });
         }
       });

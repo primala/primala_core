@@ -109,7 +109,7 @@ abstract class _SessionMetadataStoreBase
 
   @action
   _getStaticMetadata() async {
-    final res = await contract.getSTSessionMetadata(NoParams());
+    final res = await contract.getSTSessionMetadata(const NoParams());
     res.fold((failure) => mapFailureToMessage(failure), (entity) async {
       isAPremiumSession = entity.isAPremiumSession;
       isAValidSession = entity.isAValidSession;

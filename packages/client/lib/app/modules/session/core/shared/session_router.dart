@@ -11,10 +11,8 @@ export './session_router.dart';
 mixin SessionRouter {
   BeachWavesStore get beachWaves;
   initTransition(SessionScreenTypes phoneType) {
-    
-      beachWaves.setMovieMode(BeachWaveMovieModes.skyToHalfAndHalf);
-      beachWaves.currentStore.initMovie(NoParams());
-    
+    beachWaves.setMovieMode(BeachWaveMovieModes.skyToHalfAndHalf);
+    beachWaves.currentStore.initMovie(const NoParams());
   }
 
   route({

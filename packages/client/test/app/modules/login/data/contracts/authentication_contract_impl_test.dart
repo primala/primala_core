@@ -56,7 +56,7 @@ void main() {
       when(mockRemoteSource.signInWithGoogle()).thenAnswer((_) async =>
           const AuthProviderModel(
               authProvider: AuthProvider.google, authProviderStatus: true));
-      await authContract.googleSignIn(NoParams());
+      await authContract.googleSignIn(const NoParams());
       verify(mockNetworkInfo.isConnected);
     });
 
@@ -65,7 +65,7 @@ void main() {
           () async {
         when(mockRemoteSource.signInWithGoogle())
             .thenAnswer((_) async => tAuthProviderModel);
-        final result = await authContract.googleSignIn(NoParams());
+        final result = await authContract.googleSignIn(const NoParams());
         expect(result, Right<Failure, AuthProviderModel>(tAuthProviderModel));
         verify(mockRemoteSource.signInWithGoogle());
       });
@@ -74,7 +74,7 @@ void main() {
           () async {
         when(mockRemoteSource.signInWithGoogle())
             .thenThrow(FailureConstants.authFailure);
-        final result = await authContract.googleSignIn(NoParams());
+        final result = await authContract.googleSignIn(const NoParams());
         expect(result, Left(FailureConstants.authFailure));
       });
     });
@@ -82,7 +82,7 @@ void main() {
       test(
         "Should Run The Appropriate Conditional Code for being offline",
         () async {
-          final result = await authContract.googleSignIn(NoParams());
+          final result = await authContract.googleSignIn(const NoParams());
 
           expect(result, Left(FailureConstants.internetConnectionFailure));
         },
@@ -96,7 +96,7 @@ void main() {
       when(mockRemoteSource.signInWithApple()).thenAnswer((_) async =>
           const AuthProviderModel(
               authProvider: AuthProvider.apple, authProviderStatus: true));
-      await authContract.appleSignIn(NoParams());
+      await authContract.appleSignIn(const NoParams());
       verify(mockNetworkInfo.isConnected);
     });
 
@@ -105,7 +105,7 @@ void main() {
           () async {
         when(mockRemoteSource.signInWithApple())
             .thenAnswer((_) async => tAuthProviderModel);
-        final result = await authContract.appleSignIn(NoParams());
+        final result = await authContract.appleSignIn(const NoParams());
         expect(
           result,
           Right<Failure, AuthProviderModel>(tAuthProviderModel),
@@ -121,7 +121,7 @@ void main() {
             exceptionCode: 'AUTHENTICATION_ERROR',
           ),
         );
-        final result = await authContract.appleSignIn(NoParams());
+        final result = await authContract.appleSignIn(const NoParams());
         expect(
           result,
           Left(FailureConstants.authFailure),
@@ -132,7 +132,7 @@ void main() {
       test(
         "Should Run The Appropriate Conditional Code for being offline",
         () async {
-          final result = await authContract.appleSignIn(NoParams());
+          final result = await authContract.appleSignIn(const NoParams());
 
           expect(result, Left(FailureConstants.internetConnectionFailure));
         },

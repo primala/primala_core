@@ -115,10 +115,10 @@ abstract class _LoginCoordinatorBase
       authStateStream.listen((isLoggedIn) async {
         if (isLoggedIn) {
           widgets.loggedInOnResumed();
-          await addName(NoParams());
-          await addMetadata(NoParams());
+          await addName(const NoParams());
+          await addMetadata(const NoParams());
           await userInfo.checkIfVersionIsUpToDate();
-          await identifyUser(NoParams());
+          await identifyUser(const NoParams());
         }
       });
 

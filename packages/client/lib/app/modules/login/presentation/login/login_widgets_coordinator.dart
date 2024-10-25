@@ -108,7 +108,7 @@ abstract class _LoginScreenWidgetsCoordinatorBase
     toggleHasTriggeredLoginAnimation();
     Timer(Seconds.get(0, milli: 500), () {
       layer1BeachWaves.setMovieMode(BeachWaveMovieModes.blackOutToDrySand);
-      layer1BeachWaves.currentStore.initMovie(NoParams());
+      layer1BeachWaves.currentStore.initMovie(const NoParams());
     });
   }
 
@@ -136,7 +136,7 @@ abstract class _LoginScreenWidgetsCoordinatorBase
           layer2BeachWaves.setMovieMode(
             BeachWaveMovieModes.waterFromTopToOnShorePt1,
           );
-          layer2BeachWaves.currentStore.initMovie(NoParams());
+          layer2BeachWaves.currentStore.initMovie(const NoParams());
         }
       });
 
@@ -146,9 +146,9 @@ abstract class _LoginScreenWidgetsCoordinatorBase
           layer2BeachWaves.setMovieMode(
             BeachWaveMovieModes.waterFromTopToOnShorePt2,
           );
-          layer2BeachWaves.currentStore.initMovie(NoParams());
+          layer2BeachWaves.currentStore.initMovie(const NoParams());
           toggleHasCompletedWaterFromTopToOnShorePt1();
-          layer2BeachWaves.currentStore.initMovie(NoParams());
+          layer2BeachWaves.currentStore.initMovie(const NoParams());
         } else if (hasFinishedWaterFromTopPart2(p0)) {
           onPt2Finished();
         }

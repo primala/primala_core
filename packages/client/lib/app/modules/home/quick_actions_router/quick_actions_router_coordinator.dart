@@ -34,7 +34,7 @@ abstract class _QuickActionsRouterCoordinatorBase
   @action
   constructor() async {
     widgets.preconstructor();
-    await cleanUpCollaborationArtifacts(NoParams());
+    await cleanUpCollaborationArtifacts(const NoParams());
     await userInfo.checkIfVersionIsUpToDate();
     if (userInfo.isOnMostRecentVersion) {
       widgets.constructor();
