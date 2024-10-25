@@ -12,6 +12,7 @@ class CompanyPresetsQueries {
   static const PHONE_TYPE = 'phone_type';
   static const TAGS = 'tags';
   static const NAME = 'name';
+  static const WITH_PREFS = '*,${CompanyPresetsPreferencesQueries.TABLE}(*)';
 
   final SupabaseClient supabase;
 
@@ -24,14 +25,12 @@ class CompanyPresetsQueries {
     PresetTypes? type,
   }) async {
     if (uid.isEmpty && type == null) {
-      return await supabase.from(TABLE).select(
-            '*,${CompanyPresetsPreferencesQueries.TABLE}(*)',
-          );
-    } else if (type != null) {
+      return await supabase.from(TABLE).select(WITH_PREFS);
+    } else if (type != null && uid.isEmpty) {
       final name = CompanyPresetsUtils.mapTypeToPresetType(type);
-      return await supabase.from(TABLE).select().eq(NAME, name);
+      return await supabase.from(TABLE).select(WITH_PREFS).eq(NAME, name);
     } else {
-      return await supabase.from(TABLE).select().eq(UID, uid);
+      return await supabase.from(TABLE).select(WITH_PREFS).eq(UID, uid);
     }
   }
 }
