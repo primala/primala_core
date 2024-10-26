@@ -89,6 +89,11 @@ abstract class _PresetArticleStoreBase extends BaseWidgetStore with Store {
       final indexToChange = articleSectionsTags.indexOf(pastTag);
       articleSectionsTags[indexToChange] = newTag;
       preset.tags[activeIndex] = articleSectionsTags;
+      articleSections = ObservableList.of(ArticleSection.fromExistingEntity(
+        preset.presets[activeIndex],
+        preset.tags[activeIndex],
+        preset.articles[activeIndex],
+      ));
     }
   }
 
@@ -104,7 +109,7 @@ abstract class _PresetArticleStoreBase extends BaseWidgetStore with Store {
     if (!showWidget) {
       setWidgetVisibility(true);
       nokhteBlur.init(
-        end: Seconds.get(0, milli: 500),
+        end: Seconds.get(0, milli: 200),
       );
       showModalBottomSheet(
         isDismissible: false,
