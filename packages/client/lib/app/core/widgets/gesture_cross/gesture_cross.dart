@@ -33,6 +33,7 @@ class GestureCross extends HookWidget {
             height: size.height,
             child: GestureDetector(
               onTap: () => store.incrementTapCount(),
+              onDoubleTap: () => store.incrementTapCount(),
               child: MultiHitStack(
                 children: [
                   Cross(
