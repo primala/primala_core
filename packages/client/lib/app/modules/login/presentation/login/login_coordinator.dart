@@ -59,10 +59,7 @@ abstract class _LoginCoordinatorBase
 
   @action
   constructor() async {
-    widgets.constructor(
-      onConnected,
-      onDisconnected,
-    );
+    widgets.constructor();
     authStateListener(authStateStore.authState);
     initReactors();
     await captureScreen(LoginConstants.root);
@@ -74,12 +71,11 @@ abstract class _LoginCoordinatorBase
         widgets.wifiDisconnectOverlay.initReactors(onQuickConnected: () {
       setDisableAllTouchFeedback(false);
     }, onLongReConnected: () {
-      widgets.onLongReConnected();
       setDisableAllTouchFeedback(false);
     }, onDisconnected: () {
       setDisableAllTouchFeedback(true);
     }));
-    disposers.add(widgets.layer2BeachWavesReactor(onAnimationComplete));
+    disposers.add(widgets.beachWavesReactor(onAnimationComplete));
   }
 
   @action

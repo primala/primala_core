@@ -16,7 +16,7 @@ class SessionStartersList {
           pauseHere: true,
         ),
         RotatingTextData(
-          text: "Tap to start session",
+          text: "Double tap to start session",
           pauseHere: true,
         ),
       ];

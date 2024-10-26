@@ -32,12 +32,7 @@ class LoginScreen extends HookWidget {
             children: [
               FullScreen(
                 child: BeachWaves(
-                  store: coordinator.widgets.layer1BeachWaves,
-                ),
-              ),
-              FullScreen(
-                child: BeachWaves(
-                  store: coordinator.widgets.layer2BeachWaves,
+                  store: coordinator.widgets.beachWaves,
                 ),
               ),
               LoginButtons(

@@ -119,7 +119,7 @@ abstract class _SessionStarterWidgetsCoordinatorBase
     String qrCodeData, {
     bool isASoloSession = false,
   }) {
-    qrSubtitleSmartText.reset();
+    // qrSubtitleSmartText.reset();
     qrCode.setQrCodeData(qrCodeData);
     if (qrCodeIsNotActivated) {
       qrSubtitleSmartText.setMessagesData(SessionStartersList.inactiveQrCode);
@@ -184,7 +184,7 @@ abstract class _SessionStarterWidgetsCoordinatorBase
 
   initReactors() {
     disposers.add(beachWavesReactor());
-    // disposers.add(qrSubtitleTextReactor());
+    disposers.add(presetHeaderTapReactor());
     disposers.add(gestureCrossTapReactor());
     disposers.add(condensedPresetCardHoldReactor());
     disposers.add(transitionsCondensedPresetCardMovieStatusReactor());
@@ -194,6 +194,7 @@ abstract class _SessionStarterWidgetsCoordinatorBase
 
   @action
   initTransition(bool transitionToSolo) {
+    if (hasInitiatedBlur) return;
     scrollToTop();
     presetHeader.presetIcons.setWidgetVisibility(false);
     isEnteringNokhteSession = true;
@@ -220,6 +221,11 @@ abstract class _SessionStarterWidgetsCoordinatorBase
     homeNokhte.setWidgetVisibility(false);
   }
 
+  presetHeaderTapReactor() => reaction(
+        (p0) => presetHeader.tapCount,
+        (p0) => scrollToBottom(),
+      );
+
   gestureCrossTapReactor() => reaction(
         (p0) => gestureCross.tapCount,
         (p0) => onGestureCrossTap(),
@@ -243,6 +249,15 @@ abstract class _SessionStarterWidgetsCoordinatorBase
   scrollToTop() {
     sessionScroller.scrollController.animateTo(
       0,
+      duration: Seconds.get(1),
+      curve: Curves.decelerate,
+    );
+  }
+
+  @action
+  scrollToBottom() {
+    sessionScroller.scrollController.animateTo(
+      sessionScroller.scrollController.position.maxScrollExtent,
       duration: Seconds.get(1),
       curve: Curves.decelerate,
     );
@@ -344,12 +359,12 @@ abstract class _SessionStarterWidgetsCoordinatorBase
             });
             Timer(Seconds.get(firstCardIsSelected ? 0 : 1), () {
               presetCards.initSelectionMovie(currentHeldIndex);
-              firstCardIsSelected = true;
             });
             await onSelected(presetCards.currentlySelectedSessionUID);
             if (firstCardIsSelected) {
               scrollToTop();
             }
+            firstCardIsSelected = true;
           }
         }
       });

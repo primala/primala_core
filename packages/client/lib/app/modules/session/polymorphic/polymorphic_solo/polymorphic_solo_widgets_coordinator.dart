@@ -102,6 +102,7 @@ abstract class _PolymorphicSoloWidgetsCoordinatorBase
 
   @action
   goHome() {
+    if (!canHold) return;
     setIsLeaving(true);
     setTextVisibilities(false);
     backButton.setWidgetVisibility(false);
@@ -131,6 +132,7 @@ abstract class _PolymorphicSoloWidgetsCoordinatorBase
       beachWaves.setMovieMode(BeachWaveMovieModes.halfAndHalfToDrySand);
       beachWaves.currentStore.initMovie(const NoParams());
     }
+    backButton.setWidgetVisibility(false);
     setTextVisibilities(false);
   }
 
@@ -143,6 +145,7 @@ abstract class _PolymorphicSoloWidgetsCoordinatorBase
   onLetGoCompleted() {
     resetSpeakingVariables();
     setTextVisibilities(true);
+    backButton.setWidgetVisibility(true);
   }
 
   @action

@@ -77,6 +77,8 @@ abstract class _SessionStarterCoordinatorBase
     disposers.add(widgets.condensedPresetCardTapReactor(
       onClose: () async {
         if (widgets.presetArticle.hasAdjustedSessionPreferences) {
+          widgets.presetHeader.presetIcons
+              .setTags(widgets.presetArticle.articleSectionsTags);
           await presetsLogic.upsertSessionPreferences(
             UpsertSessionPreferencesParams(
               type: PresetTypes.solo,
@@ -90,7 +92,7 @@ abstract class _SessionStarterCoordinatorBase
     ));
   }
 
-  tapReactor() => reaction((p0) => tap.tapCount, (p0) async {
+  tapReactor() => reaction((p0) => tap.doubleTapCount, (p0) async {
         if (selectedSessionIsSolo) {
           widgets.initTransition(true);
           await starterLogic.dispose();
