@@ -2,7 +2,6 @@
 import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
-import 'package:nokhte/app/core/extensions/extensions.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
@@ -39,7 +38,7 @@ abstract class _SessionSoloHybridCoordinatorBase
   constructor() async {
     widgets.constructor(sessionMetadata.userCanSpeak);
     widgets.sessionNavigation.setup(
-      sessionMetadata.sessionScreenType,
+      sessionMetadata.screenType,
       sessionMetadata.presetType,
     );
     widgets.rally.setValues(
@@ -68,7 +67,7 @@ abstract class _SessionSoloHybridCoordinatorBase
       },
       onDisconnected: () {
         setDisableAllTouchFeedback(true);
-        if (widgets.holdCount.isGreaterThan(widgets.letGoCount)) {
+        if (widgets.isHolding) {
           widgets.onLetGo();
         }
       },
@@ -88,9 +87,16 @@ abstract class _SessionSoloHybridCoordinatorBase
     ));
     disposers.add(tapReactor());
     disposers.add(
-      widgets.beachWavesMovieStatusReactor(
+      widgets.baseBeachWavesMovieStatusReactor(
         onBorderGlowInitialized: () async {
+          widgets.initBorderGlow();
           await presence.updateSpeakingTimerStart();
+        },
+        onReturnToEquilibrium: () {
+          widgets.onLetGoCompleted();
+        },
+        onSkyTransition: () {
+          widgets.onReadyToNavigate(SessionConstants.notes);
         },
       ),
     );
@@ -118,7 +124,6 @@ abstract class _SessionSoloHybridCoordinatorBase
       reaction((p0) => sessionMetadata.userIsSpeaking, (p0) async {
         if (p0) {
           setUserIsSpeaking(true);
-          widgets.adjustSpeakLessSmileMoreRotation(tap.currentTapPlacement);
           widgets.onHold(tap.currentTapPlacement);
           setDisableAllTouchFeedback(true);
           await presence.updateCurrentPhase(2);
@@ -153,7 +158,7 @@ abstract class _SessionSoloHybridCoordinatorBase
           } else {
             widgets.onLetGo();
             if (!sessionMetadata.userCanSpeak) {
-              widgets.othersAreTalkingTint.initMovie(NoParams());
+              widgets.othersAreTalkingTint.initMovie(const NoParams());
             }
             // add functionality for wind down
           }
@@ -177,9 +182,9 @@ abstract class _SessionSoloHybridCoordinatorBase
             setDisableAllTouchFeedback(false);
           });
         } else if (p0 && !userIsSpeaking) {
-          widgets.othersAreTalkingTint.reverseMovie(NoParams());
+          widgets.othersAreTalkingTint.reverseMovie(const NoParams());
         } else if (!p0 && !userIsSpeaking) {
-          widgets.othersAreTalkingTint.initMovie(NoParams());
+          widgets.othersAreTalkingTint.initMovie(const NoParams());
         }
       });
 

@@ -21,7 +21,6 @@ class SessionStartersWidgetsModule extends Module {
     i.add<SessionStarterWidgetsCoordinator>(
       () => SessionStarterWidgetsCoordinator(
         presetArticle: PresetArticleStore(
-          body: ArticleBodyStore(),
           nokhteBlur: NokhteBlurStore(),
         ),
         sessionScroller: SessionScrollerStore(),

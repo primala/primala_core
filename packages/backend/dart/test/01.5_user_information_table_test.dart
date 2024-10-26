@@ -22,8 +22,9 @@ void main() {
           }).eq('uid', tSetup.secondUserUID));
 
   test("should be able to update their preferred preset uid", () async {
-    final presetUID =
-        await companyPresetsQueries.getUnifiedUID(PresetTypes.collaborative);
+    final companyPresetsRes =
+        await companyPresetsQueries.select(type: PresetTypes.collaborative);
+    final presetUID = companyPresetsRes.first[CompanyPresetsQueries.UID];
     print("presetUID: $presetUID");
     final res = await user1Queries.updatePreferredPreset(presetUID);
     expect(res.first[user1Queries.PREFERRED_PRESET], presetUID);

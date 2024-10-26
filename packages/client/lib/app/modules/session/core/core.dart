@@ -83,7 +83,6 @@ class SessionCoreModule extends Module {
         captureEnd: Modular.get<CaptureNokhteSessionEnd>(),
         cleanUpCollaborationArtifacts:
             Modular.get<CleanUpCollaborationArtifactsCoordinator>(),
-        getUserInfo: Modular.get<GetUserInfoStore>(),
         swipe: SwipeDetector(),
         widgets: Modular.get<SessionExitWidgetsCoordinator>(),
         presence: Modular.get<SessionPresenceCoordinator>(),

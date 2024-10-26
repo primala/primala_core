@@ -31,7 +31,9 @@ class QuickActionsRouterScreen extends HookWidget {
               quarterTurns: coordinator.widgets.shouldRotate ? 2 : 0,
               child: FullScreen(
                 child: BeachWaves(
-                  sandType: SandTypes.collaboration,
+                  sandType: coordinator.widgets.shouldRotate
+                      ? SandTypes.collaboration
+                      : SandTypes.home,
                   store: coordinator.widgets.beachWaves,
                 ),
               ),

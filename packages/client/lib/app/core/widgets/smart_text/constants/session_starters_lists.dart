@@ -4,11 +4,26 @@ import 'package:nokhte/app/core/types/types.dart';
 class SessionStartersList {
   static List<RotatingTextData> get activeQrCode => [
         RotatingTextData(
-          text: "Scan to join",
-          onScreenTime: Seconds.get(3),
+          text: "",
+          pauseHere: true,
         ),
         RotatingTextData(
           text: "Scroll up for more",
+          pauseHere: true,
+        ),
+        RotatingTextData(
+          text: "",
+          pauseHere: true,
+        ),
+        RotatingTextData(
+          text: "Tap to start session",
+          pauseHere: true,
+        ),
+      ];
+
+  static List<RotatingTextData> get solo => [
+        RotatingTextData(
+          text: "Tap to start session",
           onScreenTime: Seconds.get(3),
         ),
         SharedLists.emptyItem,

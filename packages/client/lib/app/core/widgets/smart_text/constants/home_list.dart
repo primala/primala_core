@@ -4,13 +4,26 @@ class HomeList {
   static List<RotatingTextData> get list => [
         RotatingTextData(
           text: "Tap on the compass to navigate",
-          pauseHere: true,
+          onScreenTime: const Duration(seconds: 5),
+          // pauseHere: true,
         ),
+        RotatingTextData(
+          text: "Double tap to enter solo session",
+          onScreenTime: const Duration(seconds: 5),
+        ),
+        SharedLists.emptyItem,
         RotatingTextData(
           text: "Swipe to move",
           pauseHere: true,
           mainFontSize: 20,
         ),
         SharedLists.emptyItem,
+      ];
+  static List<RotatingTextData> get gestureCrossList => [
+        RotatingTextData(
+          text: "Swipe to move",
+          pauseHere: true,
+          mainFontSize: 20,
+        ),
       ];
 }

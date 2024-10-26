@@ -42,14 +42,12 @@ abstract class _SessionExitWidgetsCoordinatorBase
   }
 
   @action
-  constructor(bool isNotASocraticSession) {
-    tint.initMovie(NoParams());
+  constructor() {
+    tint.initMovie(const NoParams());
     primarySmartText.setMessagesData(SessionLists.waitingToLeave);
     secondarySmartText.setMessagesData(SessionLists.exitBottomText);
     primarySmartText.startRotatingText();
-    if (isNotASocraticSession) {
-      secondarySmartText.startRotatingText();
-    }
+    secondarySmartText.startRotatingText();
     beachWaves.setMovieMode(
       BeachWaveMovieModes.skyToDrySand,
     );
@@ -59,7 +57,7 @@ abstract class _SessionExitWidgetsCoordinatorBase
   initHomeTransition() {
     primarySmartText.setWidgetVisibility(false);
     secondarySmartText.setWidgetVisibility(false);
-    tint.reverseMovie(NoParams());
+    tint.reverseMovie(const NoParams());
     beachWaves.setMovieMode(BeachWaveMovieModes.onShoreToSky);
     beachWaves.currentStore.reverseMovie(-10.0);
     borderGlow.setWidgetVisibility(false);
@@ -67,7 +65,7 @@ abstract class _SessionExitWidgetsCoordinatorBase
 
   @action
   onReadyToGoBack(Function onReadyToGoBack) async {
-    tint.reverseMovie(NoParams());
+    tint.reverseMovie(const NoParams());
     exitStatusIndicator.setWidgetVisibility(false);
     primarySmartText.setWidgetVisibility(false);
     secondarySmartText.setWidgetVisibility(false);
@@ -75,7 +73,7 @@ abstract class _SessionExitWidgetsCoordinatorBase
     //     phoneRole == SessionScreenTypes.groupHybrid ||
     //     phoneRole == SessionScreenTypes.soloHybrid) {
     beachWaves.setMovieMode(BeachWaveMovieModes.skyToHalfAndHalf);
-    beachWaves.currentStore.initMovie(NoParams());
+    beachWaves.currentStore.initMovie(const NoParams());
     // } else if (phoneRole == SessionScreenTypes.notes) {
     //   Timer(Seconds.get(1), () {
     //     Modular.to.navigate(SessionConstants.notes);

@@ -96,7 +96,7 @@ void main() {
   test("startTheSession", () async {
     await user1STQueries.startTheSession();
     final res = await user1RTQueries.getHasBegun();
-    expect(res, true);
+    expect(res.mainType, true);
   });
 
   test("updateOnlineStatus", () async {
@@ -119,10 +119,10 @@ void main() {
   test("updateSpeakerSpotlight", () async {
     await user1RTQueries.updateSpeakerSpotlight(addUserToSpotlight: true);
     final res1 = await user1RTQueries.getSpeakerSpotlight();
-    expect(res1, isNotNull);
+    expect(res1.mainType, isNotNull);
     await user1RTQueries.updateSpeakerSpotlight(addUserToSpotlight: false);
     final res2 = await user1RTQueries.getSpeakerSpotlight();
-    expect(res2, isNull);
+    expect(res2.mainType, isNull);
   });
 
   test("updateCurrentPhases", () async {
@@ -157,7 +157,7 @@ void main() {
   });
 
   test("completeSession", () async {
-    final sessionTimestamp = await user1STQueries.getCreatedAt();
+    final sessionTimestamp = (await user1STQueries.getCreatedAt()).mainType;
     await user1STQueries.completeTheSession();
     final res = await user1FinishedQueries.select();
     expect(res.first["content"], ["test"]);

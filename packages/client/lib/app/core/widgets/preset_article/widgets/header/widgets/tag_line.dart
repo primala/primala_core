@@ -7,6 +7,7 @@ import 'package:nokhte/app/core/widgets/widgets.dart';
 class TagLine extends HookWidget {
   final String text;
   final bool useExpandedPadding;
+  final bool shouldGiveMoreSpaceToTheRight;
   final TextStyle textStyle = GoogleFonts.jost(
     fontSize: 15,
   );
@@ -14,6 +15,7 @@ class TagLine extends HookWidget {
   TagLine(
     this.text, {
     this.useExpandedPadding = true,
+    this.shouldGiveMoreSpaceToTheRight = false,
     super.key,
   });
 
@@ -56,7 +58,7 @@ class TagLine extends HookWidget {
             ),
             SizedBox(
               width: useScaledSize(
-                baseValue: .094,
+                baseValue: shouldGiveMoreSpaceToTheRight ? .054 : .094,
                 screenSize: screenSize,
                 bumpPerHundredth: -0.001,
               ),

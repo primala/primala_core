@@ -1,12 +1,15 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api,  overridden_fields
+import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:nokhte/app/modules/session_starters/session_starters.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
 import 'package:nokhte/app/modules/home/home.dart';
+import 'package:nokhte_backend/tables/company_presets.dart';
 part 'home_coordinator.g.dart';
 
 class HomeCoordinator = _HomeCoordinatorBase with _$HomeCoordinator;
@@ -17,6 +20,7 @@ abstract class _HomeCoordinatorBase
   final HomeWidgetsCoordinator widgets;
   final TapDetector tap;
   final SwipeDetector swipe;
+  final SessionStartersLogicCoordinator sessionStartersLogic;
   @override
   final CaptureScreen captureScreen;
 
@@ -24,6 +28,7 @@ abstract class _HomeCoordinatorBase
     required this.swipe,
     required this.widgets,
     required this.tap,
+    required this.sessionStartersLogic,
     required this.getNokhteSessionArtifactsLogic,
     required this.captureScreen,
   });
@@ -59,11 +64,12 @@ abstract class _HomeCoordinatorBase
     disposers.add(tapReactor());
   }
 
-  tapReactor() => reaction((p0) => tap.tapCount, (p0) {
-        ifTouchIsNotDisabled(() {
-          if (p0 == 3) {
-            widgets.initSoloSession();
-          }
+  tapReactor() => reaction((p0) => tap.doubleTapCount, (p0) {
+        ifTouchIsNotDisabled(() async {
+          widgets.initSoloSession();
+          await sessionStartersLogic.initialize(
+            params: const Right(PresetTypes.solo),
+          );
         });
       });
 
@@ -86,7 +92,7 @@ abstract class _HomeCoordinatorBase
 
   @action
   getNokhteSessionArtifacts() async {
-    final res = await getNokhteSessionArtifactsLogic(NoParams());
+    final res = await getNokhteSessionArtifactsLogic(const NoParams());
     res.fold(
       (failure) => errorUpdater(failure),
       (artifacts) => nokhteSessionArtifacts = ObservableList.of(artifacts),

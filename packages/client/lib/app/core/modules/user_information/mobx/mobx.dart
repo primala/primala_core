@@ -1,2 +1,1 @@
-export 'main/main.dart';
-export 'coordinators/coordinators.dart';
+export 'user_information_coordinator.dart';

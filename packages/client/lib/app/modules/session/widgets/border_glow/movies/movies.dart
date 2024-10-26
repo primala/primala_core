@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:nokhte/app/core/types/types.dart';
+import 'package:nokhte/app/modules/session/widgets/widgets.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 class BorderGlowMovies {
   static MovieTween glowUp({
-    Color startingColor = const Color(0x0004FF00),
+    Color startingColor = BorderGlowConstants.transparentGreen,
     double startingWidth = 0.0,
   }) =>
       MovieTween()
@@ -23,7 +24,7 @@ class BorderGlowMovies {
               'color',
               ColorTween(
                 begin: startingColor,
-                end: const Color(0xFF04FF00),
+                end: BorderGlowConstants.greenGlowColor,
               ),
             )
         ..scene(
@@ -32,8 +33,8 @@ class BorderGlowMovies {
         ).tween(
           'color',
           ColorTween(
-            begin: const Color(0xFF04FF00),
-            end: const Color(0xFFFBFF00),
+            begin: BorderGlowConstants.greenGlowColor,
+            end: BorderGlowConstants.yellowGlowColor,
           ),
         )
         ..scene(
@@ -42,8 +43,8 @@ class BorderGlowMovies {
         ).tween(
           'color',
           ColorTween(
-            begin: const Color(0xFFFBFF00),
-            end: const Color(0xFFCB3B44),
+            begin: BorderGlowConstants.yellowGlowColor,
+            end: BorderGlowConstants.redGlowColor,
           ),
         )
         ..scene(
@@ -58,7 +59,7 @@ class BorderGlowMovies {
         );
 
   static MovieTween glowDown({
-    Color lastColor = Colors.transparent,
+    Color lastColor = BorderGlowConstants.transparentGreen,
     double lastWidth = 0.0,
   }) =>
       MovieTween()
@@ -108,8 +109,8 @@ class BorderGlowMovies {
           .tween(
             'color',
             ColorTween(
-              begin: const Color(0x0004FF00),
-              end: const Color(0xFF04FF00),
+              begin: BorderGlowConstants.transparentGreen,
+              end: BorderGlowConstants.greenGlowColor,
             ),
           );
 
@@ -128,8 +129,8 @@ class BorderGlowMovies {
           .tween(
             'color',
             ColorTween(
-              begin: const Color(0x00FBFF00),
-              end: const Color(0xFFFBFF00),
+              begin: BorderGlowConstants.greenGlowColor,
+              end: BorderGlowConstants.yellowGlowColor,
             ),
           );
 
@@ -141,8 +142,8 @@ class BorderGlowMovies {
           .tween(
             'color',
             ColorTween(
-              begin: const Color(0xFFFBFF00),
-              end: const Color(0xFFCB3B44),
+              begin: BorderGlowConstants.yellowGlowColor,
+              end: BorderGlowConstants.redGlowColor,
             ),
           );
 
@@ -176,8 +177,8 @@ class BorderGlowMovies {
           .tween(
             'color',
             ColorTween(
-              begin: const Color(0x00FBFF00),
-              end: const Color(0xFFFBFF00),
+              begin: BorderGlowConstants.transparentYellow,
+              end: BorderGlowConstants.yellowGlowColor,
             ),
           );
 
@@ -189,8 +190,8 @@ class BorderGlowMovies {
           .tween(
             'color',
             ColorTween(
-              begin: const Color(0xFFFBFF00),
-              end: const Color(0xFFCB3B44),
+              begin: BorderGlowConstants.yellowGlowColor,
+              end: BorderGlowConstants.redGlowColor,
             ),
           );
 
@@ -217,8 +218,8 @@ class BorderGlowMovies {
           .tween(
             'color',
             ColorTween(
-              begin: const Color(0x00CB3B44),
-              end: const Color(0xFFCB3B44),
+              begin: BorderGlowConstants.transparentRed,
+              end: BorderGlowConstants.redGlowColor,
             ),
           );
 

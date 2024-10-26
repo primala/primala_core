@@ -53,15 +53,15 @@ class SessionSoloHybridScreen extends HookWidget {
                   opacityDuration: Seconds.get(1),
                 ),
               ),
-              Rally(
-                store: coordinator.widgets.rally,
-              ),
               Center(
                 child: SmartText(
                   store: coordinator.widgets.primarySmartText,
                   topPadding: .3,
                   opacityDuration: Seconds.get(1),
                 ),
+              ),
+              Rally(
+                store: coordinator.widgets.rally,
               ),
               SpeakLessSmileMore(
                 store: coordinator.widgets.speakLessSmileMore,

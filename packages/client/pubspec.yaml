@@ -58,13 +58,14 @@ flutter:
   assets:
     - .env
     - assets/app_logo.png
-    - assets/collaborative_seating.png
-    - assets/consultative_seating.png
+    - assets/flexible_seating.png
+    - assets/strict_seating.png
     - assets/apple_icon.png
     - assets/google_icon.png
     - assets/cook_button.png
     - assets/rally_button_blue.png
     - assets/rally_button_red.png
+    - assets/rally_button_white.png
 flutter_icons:
   image_path: "assets/app_logo.png"
   android: true

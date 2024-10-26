@@ -13,7 +13,13 @@ class NeedsUpdateWidgetsCoordinator = _NeedsUpdateWidgetsCoordinatorBase
     with _$NeedsUpdateWidgetsCoordinator;
 
 abstract class _NeedsUpdateWidgetsCoordinatorBase
-    with Store, EnRoute, Reactions, EnRouteConsumer, BaseWidgetsCoordinator {
+    with
+        Store,
+        EnRoute,
+        Reactions,
+        EnRouteConsumer,
+        BaseWidgetsCoordinator,
+        EnRouteWidgetsRouter {
   final GestureCrossStore gestureCross;
   final TintStore tint;
   final NokhteGradientTextStore gradientText;
@@ -31,6 +37,7 @@ abstract class _NeedsUpdateWidgetsCoordinatorBase
   }) {
     initEnRouteActions();
     initBaseWidgetsCoordinatorActions();
+    setupEnRouteWidgets();
   }
 
   @action
@@ -38,19 +45,10 @@ abstract class _NeedsUpdateWidgetsCoordinatorBase
     consumeRoutingArgs();
     gestureCross.fadeInTheCross();
     disposers.add(beachWavesMovieStatusReactor());
-    tint.initMovie(NoParams());
+    tint.initMovie(const NoParams());
     gradientText.setWidgetVisibility(false);
     Timer(Seconds.get(1), () {
       gradientText.setWidgetVisibility(true);
     });
   }
-
-  beachWavesMovieStatusReactor() =>
-      reaction((p0) => beachWaves.movieStatus, (p0) {
-        if (p0 == MovieStatus.finished) {
-          if (beachWaves.movieMode == BeachWaveMovieModes.resumeOnShore) {
-            beachWaves.setMovieMode(BeachWaveMovieModes.onShore);
-          }
-        }
-      });
 }

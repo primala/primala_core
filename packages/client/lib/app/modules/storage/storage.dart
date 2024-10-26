@@ -2,7 +2,6 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/modules/legacy_connectivity/legacy_connectivity.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/modules/supabase/supabase.dart';
-import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'storage.dart';
 export 'data/data.dart';
@@ -19,7 +18,6 @@ class StorageModule extends Module {
         LegacyConnectivityModule(),
         StorageWidgetsModule(),
         PosthogModule(),
-        UserInformationModule(),
         SupabaseModule(),
         StorageLogicModule(),
       ];
@@ -34,7 +32,6 @@ class StorageModule extends Module {
         captureScreen: Modular.get<CaptureScreen>(),
         widgets: Modular.get<StorageHomeWidgetsCoordinator>(),
         swipe: SwipeDetector(),
-        userInfo: Modular.get<UserInformationCoordinator>(),
       ),
     );
     i.add<StorageContentCoordinator>(

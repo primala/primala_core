@@ -8,10 +8,8 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/clean_up_collaboration_artifacts/clean_up_collaboration_artifacts.dart';
 import 'package:nokhte/app/core/modules/in_app_purchase/in_app_purchase.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
-import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
-import 'package:nokhte/app/modules/home/home.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 import 'session_paywall_widgets_coordinator.dart';
 part 'session_paywall_coordinator.g.dart';
@@ -20,13 +18,7 @@ class SessionPaywallCoordinator = _SessionPaywallCoordinatorBase
     with _$SessionPaywallCoordinator;
 
 abstract class _SessionPaywallCoordinatorBase
-    with
-        Store,
-        EnRoute,
-        EnRouteRouter,
-        HomeScreenRouter,
-        BaseCoordinator,
-        Reactions {
+    with Store, EnRoute, EnRouteRouter, BaseCoordinator, Reactions {
   final TapDetector tap;
   final SessionPaywallWidgetsCoordinator widgets;
   final SessionPresenceCoordinator presence;
@@ -34,8 +26,6 @@ abstract class _SessionPaywallCoordinatorBase
   final SwipeDetector swipe;
   final InAppPurchaseCoordinator iap;
   final CleanUpCollaborationArtifactsCoordinator cleanUpCollaborationArtifacts;
-  @override
-  final GetUserInfoStore getUserInfo;
   @override
   final CaptureScreen captureScreen;
 
@@ -47,7 +37,6 @@ abstract class _SessionPaywallCoordinatorBase
     required this.presence,
     required this.swipe,
     required this.iap,
-    required this.getUserInfo,
   }) : sessionMetadata = presence.sessionMetadataStore {
     initEnRouteActions();
     initBaseCoordinatorActions();
@@ -60,7 +49,6 @@ abstract class _SessionPaywallCoordinatorBase
     swipe.setMinDistance(100.0);
     await iap.getSubscriptionInfo();
     await captureScreen(SessionConstants.paywall);
-    await getUserInfo(NoParams());
   }
 
   initReactors() {
@@ -79,8 +67,6 @@ abstract class _SessionPaywallCoordinatorBase
         widgets.setDisableTouchInput(true);
       },
     ));
-    disposers.add(
-        widgets.beachWaveMovieStatusReactor(onReturnHome: onAnimationComplete));
     disposers.add(subscriptionInfoReactor());
     disposers.add(purchaseSuccessReactor());
     disposers.add(purchaseErrorReactor());
@@ -139,7 +125,7 @@ abstract class _SessionPaywallCoordinatorBase
             );
           case GestureDirections.down:
             if (!hasSwipedDown) {
-              await cleanUpCollaborationArtifacts(NoParams());
+              await cleanUpCollaborationArtifacts(const NoParams());
               hasSwipedDown = true;
             }
           default:

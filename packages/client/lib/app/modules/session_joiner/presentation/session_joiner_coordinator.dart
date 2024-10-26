@@ -107,8 +107,8 @@ abstract class _SessionJoinerCoordinatorBase
         });
       });
 
-  deconstructor() {
-    logic.dispose();
+  deconstructor() async {
+    await logic.dispose();
     widgets.dispose();
     dispose();
   }

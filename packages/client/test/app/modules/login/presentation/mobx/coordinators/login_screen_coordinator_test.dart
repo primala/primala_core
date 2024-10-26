@@ -35,7 +35,7 @@ void main() {
       identifyUser: MockIdentifyUser(),
       addMetadata: MockAddMetadata(),
       captureScreen: MockCaptureScreen(),
-      getUserInfo: MockGetUserInfoStore(),
+      userInfo: MockUserInformationCoordinator(),
       addName: mockAddNameToDatabase,
       widgets: mockWidgetsStore,
       signInWithAuthProvider: mockAuthProviderStore,

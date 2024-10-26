@@ -1,10 +1,12 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
+import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/extensions/extensions.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/types/types.dart';
+import 'package:nokhte/app/modules/presets/presets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte_backend/tables/company_presets.dart';
 import 'package:nokhte_backend/tables/rt_active_nokhte_sessions.dart';
@@ -16,8 +18,10 @@ class SessionMetadataStore = _SessionMetadataStoreBase
 abstract class _SessionMetadataStoreBase
     with Store, BaseMobxLogic<NoParams, Stream<NokhteSessionMetadata>> {
   final SessionPresenceContract contract;
+  final PresetsLogicCoordinator presetsLogic;
   _SessionMetadataStoreBase({
     required this.contract,
+    required this.presetsLogic,
   }) {
     initBaseLogicActions();
   }
@@ -75,18 +79,6 @@ abstract class _SessionMetadataStoreBase
   String presetUID = '';
 
   @observable
-  String presetName = '';
-
-  @observable
-  ObservableList presetTags = ObservableList.of([]);
-
-  @observable
-  ObservableList oddConfiguration = ObservableList.of([]);
-
-  @observable
-  ObservableList evenConfiguration = ObservableList.of([]);
-
-  @observable
   DateTime speakingTimerStart = DateTime.fromMillisecondsSinceEpoch(0);
 
   @observable
@@ -105,7 +97,7 @@ abstract class _SessionMetadataStoreBase
   @action
   resetValues() {
     setState(StoreState.initial);
-    presetName = '';
+    presetsLogic.reset();
     currentPhases = ObservableList.of(List.filled(9, -9));
   }
 
@@ -116,33 +108,18 @@ abstract class _SessionMetadataStoreBase
   }
 
   @action
-  _getInstructionType(String unifiedUID) async {
-    final res = await contract.getInstructionType(unifiedUID);
-    res.fold(
-      (failure) => errorUpdater(failure),
-      (instructionType) => this.instructionType = instructionType,
-    );
-  }
-
-  @action
   _getStaticMetadata() async {
-    final res = await contract.getSTSessionMetadata(NoParams());
+    final res = await contract.getSTSessionMetadata(const NoParams());
     res.fold((failure) => mapFailureToMessage(failure), (entity) async {
       isAPremiumSession = entity.isAPremiumSession;
       isAValidSession = entity.isAValidSession;
-      if (presetName.isEmpty) {
+      if (presetsLogic.presetsEntity.uids.isEmpty) {
         userIndex = entity.userIndex;
         leaderIsWhitelisted = entity.leaderIsWhitelisted;
         namesAndUIDs = ObservableList.of(entity.namesAndUIDs);
         presetUID = entity.presetUID;
         leaderUID = entity.leaderUID;
-        final res = await contract.getSessionPresetInfo(presetUID);
-        res.fold((failure) => mapFailureToMessage(failure), (presetEntity) {
-          presetName = presetEntity.name;
-          presetTags = ObservableList.of(presetEntity.tags);
-          oddConfiguration = ObservableList.of(presetEntity.oddConfiguration);
-          evenConfiguration = ObservableList.of(presetEntity.evenConfiguration);
-        });
+        await presetsLogic.getCompanyPresets(Right(entity.presetUID));
       }
     });
   }
@@ -161,7 +138,6 @@ abstract class _SessionMetadataStoreBase
         streamSubscription = sessionMetadata.listen((value) async {
           if (value.phases.length != currentPhases.length) {
             await _getStaticMetadata();
-            await _getInstructionType(presetUID);
           }
           everyoneIsOnline = value.everyoneIsOnline;
           final phases = value.phases.map((e) => double.parse(e.toString()));
@@ -179,20 +155,6 @@ abstract class _SessionMetadataStoreBase
         });
       },
     );
-  }
-
-  SessionScreenTypes fromRawScreenType(String param) {
-    if (param.contains('solo')) {
-      return SessionScreenTypes.soloHybrid;
-    } else if (param.contains('group')) {
-      return SessionScreenTypes.groupHybrid;
-    } else if (param.contains('speaking')) {
-      return SessionScreenTypes.speaking;
-    } else if (param.contains('notes')) {
-      return SessionScreenTypes.notes;
-    } else {
-      return SessionScreenTypes.inital;
-    }
   }
 
   getUIDFromName(String name) {
@@ -229,41 +191,6 @@ abstract class _SessionMetadataStoreBase
       }
     }
     return count;
-  }
-
-  @computed
-  PresetTypes get presetType {
-    if (presetName.contains('sultat')) {
-      return PresetTypes.consultative;
-    } else if (presetName.contains('llaborat')) {
-      return PresetTypes.collaborative;
-    } else if (presetName.contains('crat')) {
-      return PresetTypes.socratic;
-    } else {
-      return PresetTypes.none;
-    }
-  }
-
-  @computed
-  SessionScreenTypes get sessionScreenType {
-    if (evenConfiguration.isEmpty || oddConfiguration.isEmpty) {
-      return SessionScreenTypes.inital;
-    } else {
-      if (evenConfiguration.length == 1 && oddConfiguration.length == 1) {
-        return fromRawScreenType(evenConfiguration.first);
-      } else {
-        final moduloIndex = userIndex % 2;
-        if (numberOfCollaborators.isOdd) {
-          if (userIndex == numberOfCollaborators - 1) {
-            return fromRawScreenType(oddConfiguration.last);
-          } else {
-            return fromRawScreenType(oddConfiguration[moduloIndex]);
-          }
-        } else {
-          return fromRawScreenType(evenConfiguration[moduloIndex]);
-        }
-      }
-    }
   }
 
   @computed
@@ -338,6 +265,31 @@ abstract class _SessionMetadataStoreBase
 
     return names;
   }
+
+  @computed
+  CompanyPresetsEntity get presetEntity => presetsLogic.presetsEntity;
+
+  @computed
+  SessionScreenTypes get screenType => presetEntity.screenTypes.first;
+
+  @computed
+  PresetTypes get presetType => presetEntity.presets.first;
+
+  @computed
+  List<SessionTags> get tags {
+    if (presetEntity.tags.isEmpty) {
+      return [];
+    } else {
+      final list = <SessionTags>[];
+      for (var section in presetEntity.articles.first.articleSections) {
+        list.add(section.tag);
+      }
+      return list;
+    }
+  }
+
+  @computed
+  PresetArticleEntity get article => presetEntity.articles.first;
 
   @computed
   List<bool> get canRallyArray {

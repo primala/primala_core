@@ -28,21 +28,9 @@ class UserMetadataModule extends Module {
         networkInfo: Modular.get<NetworkInfoImpl>(),
       ),
     );
-    i.add<AddUserMetadata>(
-      () => AddUserMetadata(
-        contract: Modular.get<UserMetadataContractImpl>(),
-      ),
-    );
-    i.add<GetUserMetadata>(
-      () => GetUserMetadata(
-        contract: Modular.get<UserMetadataContractImpl>(),
-      ),
-    );
-
     i.add<UserMetadataCoordinator>(
       () => UserMetadataCoordinator(
-        addUserMetadataLogic: Modular.get<AddUserMetadata>(),
-        getUserMetadataLogic: Modular.get<GetUserMetadata>(),
+        contract: Modular.get<UserMetadataContractImpl>(),
       ),
     );
   }

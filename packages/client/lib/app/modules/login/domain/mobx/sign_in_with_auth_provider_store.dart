@@ -30,9 +30,9 @@ abstract class _SignInWithAuthProviderStoreBase
       AuthProvider authProvider) async {
     switch (authProvider) {
       case AuthProvider.apple:
-        return await signInWithApple(NoParams());
+        return await signInWithApple(const NoParams());
       case AuthProvider.google:
-        return await signInWithGoogle(NoParams());
+        return await signInWithGoogle(const NoParams());
     }
   }
 

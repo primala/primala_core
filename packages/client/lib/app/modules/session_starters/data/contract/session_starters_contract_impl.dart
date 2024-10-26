@@ -30,9 +30,9 @@ class SessionStartersContractImpl
   }
 
   @override
-  initializeSession(NoParams param) async {
+  initializeSession(param) async {
     if (await networkInfo.isConnected) {
-      final res = await remoteSource.initializeSession();
+      final res = await remoteSource.initializeSession(param);
       return fromFunctionResponse(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);

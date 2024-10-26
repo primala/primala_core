@@ -125,20 +125,23 @@ class Rally extends HookWidget with RallyConstants {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Column(
-                children: [
-                  Image.asset(
-                    'assets/rally_button_blue.png',
-                    width: containerSize,
-                    height: containerSize,
-                  ),
-                  Jost(
-                    'Rallying with ${store.currentPartnerFirstName}',
-                    fontColor: navyBlue,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.only(bottom: 100.0),
+                child: Column(
+                  children: [
+                    Image.asset(
+                      'assets/rally_button_blue.png',
+                      width: containerSize,
+                      height: containerSize,
+                    ),
+                    Jost(
+                      'Rallying with ${store.currentPartnerFirstName}',
+                      fontColor: navyBlue,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ],
+                ),
               ),
               AnimatedOpacity(
                 duration: Seconds.get(1),
@@ -174,21 +177,24 @@ class Rally extends HookWidget with RallyConstants {
         });
 
       case RallyPhase.activeRecipient:
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/rally_button_blue.png',
-              width: containerSize,
-              height: containerSize,
-            ),
-            Jost(
-              'Rallying with ${store.currentInitiatorFirstName}',
-              fontColor: navyBlue,
-              fontSize: 20,
-              fontWeight: FontWeight.w300,
-            ),
-          ],
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 80.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/rally_button_blue.png',
+                width: containerSize,
+                height: containerSize,
+              ),
+              Jost(
+                'Rallying with ${store.currentInitiatorFirstName}',
+                fontColor: navyBlue,
+                fontSize: 20,
+                fontWeight: FontWeight.w300,
+              ),
+            ],
+          ),
         );
     }
   }

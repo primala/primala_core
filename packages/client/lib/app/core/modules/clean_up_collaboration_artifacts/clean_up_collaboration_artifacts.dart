@@ -21,14 +21,9 @@ class CleanUpCollaborationArtifactsModule extends Module {
         networkInfo: Modular.get<NetworkInfoImpl>(),
       ),
     );
-    i.add<CleanUpNokhteSession>(
-      () => CleanUpNokhteSession(
-        contract: Modular.get<CleanUpCollaborationArtifactsContractImpl>(),
-      ),
-    );
     i.add<CleanUpCollaborationArtifactsCoordinator>(
       () => CleanUpCollaborationArtifactsCoordinator(
-        cleanUpNokhteSession: Modular.get<CleanUpNokhteSession>(),
+        contract: Modular.get<CleanUpCollaborationArtifactsContractImpl>(),
       ),
     );
   }

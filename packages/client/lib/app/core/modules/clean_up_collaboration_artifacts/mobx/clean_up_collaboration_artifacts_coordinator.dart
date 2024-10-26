@@ -10,10 +10,10 @@ class CleanUpCollaborationArtifactsCoordinator = _CleanUpCollaborationArtifactsC
 
 abstract class _CleanUpCollaborationArtifactsCoordinatorBase
     with Store, BaseMobxLogic<NoParams, bool> {
-  final CleanUpNokhteSession cleanUpNokhteSession;
+  final CleanUpCollaborationArtifactsContract contract;
 
   _CleanUpCollaborationArtifactsCoordinatorBase({
-    required this.cleanUpNokhteSession,
+    required this.contract,
   }) {
     initBaseLogicActions();
   }
@@ -24,7 +24,7 @@ abstract class _CleanUpCollaborationArtifactsCoordinatorBase
     try {
       setState(StoreState.loading);
       // await sessionStarters.nuke();
-      await cleanUpNokhteSession(NoParams());
+      await contract.cleanUpNokhteSession(const NoParams());
       setState(StoreState.loaded);
     } catch (e) {}
   }

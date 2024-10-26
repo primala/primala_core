@@ -13,9 +13,9 @@ class GetOnConnectivityChangedStore = _GetOnConnectivityChangedStoreBase
 
 abstract class _GetOnConnectivityChangedStoreBase extends Equatable with Store {
   late StreamSubscription<ConnectivityResult> streamSub;
-  final GetOnConnectivityChanged logic;
+  final ConnectivityRemoteSourceImpl remoteSource;
 
-  _GetOnConnectivityChangedStoreBase({required this.logic}) {
+  _GetOnConnectivityChangedStoreBase({required this.remoteSource}) {
     callAndListen();
   }
 
@@ -40,7 +40,8 @@ abstract class _GetOnConnectivityChangedStoreBase extends Equatable with Store {
 
   @action
   callAndListen() {
-    connectivityStream = ObservableStream(logic(NoParams()));
+    connectivityStream = ObservableStream(
+        remoteSource.getOnConnectivityChanged(const NoParams()));
     streamSub = connectivityStream
         .distinct()
         .listen((value) => setMostRecentResult(value));

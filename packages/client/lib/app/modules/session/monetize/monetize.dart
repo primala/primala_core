@@ -28,7 +28,6 @@ class SessionMonetizeModule extends Module {
         cleanUpCollaborationArtifacts:
             Modular.get<CleanUpCollaborationArtifactsCoordinator>(),
         iap: Modular.get<InAppPurchaseCoordinator>(),
-        getUserInfo: Modular.get<GetUserInfoStore>(),
         presence: Modular.get<SessionPresenceCoordinator>(),
         captureScreen: Modular.get<CaptureScreen>(),
         widgets: Modular.get<SessionPaywallWidgetsCoordinator>(),
