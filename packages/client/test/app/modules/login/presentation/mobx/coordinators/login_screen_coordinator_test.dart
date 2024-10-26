@@ -11,7 +11,6 @@ void main() {
   late TapDetector mockTapDetector;
   late LoginCoordinator testStore;
   late BeachWavesStore mockLayer1BeachWavesStore;
-  late BeachWavesStore mockLayer2BeachWavesStore;
   late SmartTextStore smartTextStore;
   late MockWifiDisconnectOverlayStore wifiDisconnectOverlayStore;
   late MockAddName mockAddNameToDatabase;
@@ -20,12 +19,10 @@ void main() {
     mockAddNameToDatabase = MockAddName();
     wifiDisconnectOverlayStore = MockWifiDisconnectOverlayStore();
     mockLayer1BeachWavesStore = BeachWavesStore();
-    mockLayer2BeachWavesStore = BeachWavesStore();
     smartTextStore = SmartTextStore();
     mockWidgetsStore = LoginScreenWidgetsCoordinator(
       wifiDisconnectOverlay: wifiDisconnectOverlayStore,
-      layer1BeachWaves: mockLayer1BeachWavesStore,
-      layer2BeachWaves: mockLayer2BeachWavesStore,
+      beachWaves: mockLayer1BeachWavesStore,
       smartTextStore: smartTextStore,
     );
     mockAuthStateStore = MockGetLoginStateStore();
