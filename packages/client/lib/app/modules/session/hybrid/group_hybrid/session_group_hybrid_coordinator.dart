@@ -39,7 +39,7 @@ abstract class _SessionGroupHybridCoordinatorBase
   constructor() async {
     widgets.constructor(sessionMetadata.someoneIsTakingANote);
     widgets.sessionNavigation.setup(
-      sessionMetadata.sessionScreenType,
+      sessionMetadata.screenType,
       sessionMetadata.presetType,
     );
     initReactors();
@@ -158,9 +158,9 @@ abstract class _SessionGroupHybridCoordinatorBase
   othersAreTakingNotesReactor() =>
       reaction((p0) => sessionMetadata.someoneIsTakingANote, (p0) {
         if (p0 && !widgets.isGoingToNotes) {
-          widgets.othersAreTakingNotesTint.initMovie(NoParams());
+          widgets.othersAreTakingNotesTint.initMovie(const NoParams());
         } else {
-          widgets.othersAreTakingNotesTint.reverseMovie(NoParams());
+          widgets.othersAreTakingNotesTint.reverseMovie(const NoParams());
         }
       });
 

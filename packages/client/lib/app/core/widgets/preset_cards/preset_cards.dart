@@ -14,16 +14,10 @@ export 'mobx/preset_cards_store.dart';
 
 class PresetsCards extends HookWidget {
   final PresetCardsStore store;
-  // final List names;
-  // final List unifiedUIDs;
-  // final List<String> taglines;
 
   const PresetsCards({
     super.key,
-    // required this.names,
     required this.store,
-    // required this.unifiedUIDs,
-    // required this.taglines,
   });
 
   Widget buildText(Movie value, String text, double height) {

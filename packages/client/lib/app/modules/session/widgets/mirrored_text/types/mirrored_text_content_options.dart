@@ -1,4 +1,5 @@
 enum MirroredTextContent {
-  sessionSpeaking,
+  holdSpeaking,
+  tapSpeaking,
   hybrid,
 }

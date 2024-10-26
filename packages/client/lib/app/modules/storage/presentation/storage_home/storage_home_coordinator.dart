@@ -5,7 +5,6 @@ import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mixins/mixin.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
-import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/home/home.dart';
@@ -20,19 +19,15 @@ abstract class _StorageHomeCoordinatorBase
         Store,
         EnRoute,
         EnRouteRouter,
-        HomeScreenRouter,
         BaseCoordinator,
         BaseMobxLogic,
         Reactions {
   final StorageHomeWidgetsCoordinator widgets;
   final GetNokhteSessionArtifacts getNokhteSessionArtifactsLogic;
   final UpdateSessionAlias updateSessionAliasLogic;
-  final UserInformationCoordinator userInfo;
   @override
   final CaptureScreen captureScreen;
   final TapDetector tap;
-  @override
-  final GetUserInfoStore getUserInfo;
 
   final SwipeDetector swipe;
   _StorageHomeCoordinatorBase({
@@ -41,9 +36,8 @@ abstract class _StorageHomeCoordinatorBase
     required this.updateSessionAliasLogic,
     required this.widgets,
     required this.swipe,
-    required this.userInfo,
     required this.tap,
-  }) : getUserInfo = userInfo.getUserInfoStore {
+  }) {
     initEnRouteActions();
     initBaseCoordinatorActions();
     initBaseLogicActions();
@@ -66,20 +60,13 @@ abstract class _StorageHomeCoordinatorBase
   constructor() async {
     widgets.constructor();
     initReactors();
-    await getUserInfo(NoParams());
     await getNokhteSessionArtifacts();
-    await userInfo.updateUserFlag(
-      const UserFlagParam(
-        key: UserFlagKeys.hasEnteredStorage,
-        value: true,
-      ),
-    );
     await captureScreen(StorageConstants.home);
   }
 
   @action
   getNokhteSessionArtifacts() async {
-    final res = await getNokhteSessionArtifactsLogic(NoParams());
+    final res = await getNokhteSessionArtifactsLogic(const NoParams());
     res.fold(
       (failure) => errorUpdater(failure),
       (artifacts) {
@@ -127,14 +114,13 @@ abstract class _StorageHomeCoordinatorBase
         if (p0 == MovieStatus.finished &&
             widgets.beachWaves.movieMode == BeachWaveMovieModes.anyToOnShore) {
           widgets.dispose();
-          onAnimationComplete();
+          Modular.to.navigate(HomeConstants.home);
         } else if (p0 == MovieStatus.finished &&
             widgets.beachWaves.movieMode == BeachWaveMovieModes.skyToDrySand) {
           widgets.dispose();
-          Modular.to.navigate("/storage/content", arguments: {
+          Modular.to.navigate(StorageConstants.content, arguments: {
             "content":
                 nokhteSessionArtifacts[widgets.sessionCard.lastTappedIndex],
-            "isFirstTime": false,
           });
         }
       });

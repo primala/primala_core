@@ -110,31 +110,7 @@ class SessionPresenceContractImpl
     }
   }
 
-  @override
-  getSessionPresetInfo(unifiedUID) async {
-    if (await networkInfo.isConnected) {
-      final res = await remoteSource.getPresetInformation(unifiedUID);
-      return Right(SessionPresetInfoModel.fromSupabase(res));
-    } else {
-      return Left(FailureConstants.internetConnectionFailure);
-    }
-  }
 
-  @override
-  getInstructionType(params) async {
-    if (await networkInfo.isConnected) {
-      final otherSessionsRes =
-          await remoteSource.checkIfHasDoneSessionBesides(params);
-      final currentPresetSessionsRes =
-          await remoteSource.checkIfHasDoneSessionSessionType(params);
-      return Right(toInstructionType(
-        otherSessions: otherSessionsRes,
-        currentPresetSessions: currentPresetSessionsRes,
-      ));
-    } else {
-      return Left(FailureConstants.internetConnectionFailure);
-    }
-  }
 
   @override
   usePowerUp(params) async {

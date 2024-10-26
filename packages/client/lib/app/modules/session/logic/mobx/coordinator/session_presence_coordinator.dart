@@ -68,7 +68,7 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
   @action
   dispose() async {
     setState(StoreState.loading);
-    final res = contract.cancelSessionMetadataStream(NoParams());
+    final res = contract.cancelSessionMetadataStream(const NoParams());
     sessionMetadataStore.dispose();
     isListening = res;
     setState(StoreState.loaded);
@@ -77,7 +77,7 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
   @action
   listen() {
     setState(StoreState.loading);
-    sessionMetadataStore.get(NoParams());
+    sessionMetadataStore.get(const NoParams());
     setState(StoreState.loaded);
   }
 
@@ -93,7 +93,7 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
 
   @action
   completeTheSession() async {
-    final res = await contract.completeTheSession(NoParams());
+    final res = await contract.completeTheSession(const NoParams());
     res.fold(
       (failure) => errorUpdater(failure),
       (sessionUpdateStatus) => sessionIsFinished = sessionUpdateStatus,
@@ -146,7 +146,7 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
   @action
   startTheSession() async {
     setState(StoreState.loading);
-    final res = await contract.startTheSession(NoParams());
+    final res = await contract.startTheSession(const NoParams());
     res.fold(
       (failure) => errorUpdater(failure),
       (status) => sessionStartStatusIsUpdated = status,

@@ -2,6 +2,7 @@
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:nokhte_backend/tables/company_presets.dart';
 part 'preset_header_store.g.dart';
 
 class PresetHeaderStore = _PresetHeaderStoreBase with _$PresetHeaderStore;
@@ -22,7 +23,7 @@ abstract class _PresetHeaderStoreBase extends BaseWidgetStore with Store {
   @action
   setHeader(
     String presetName,
-    List tags,
+    List<SessionTags> tags,
   ) {
     this.presetName = presetName;
     presetIcons.setTags(tags);

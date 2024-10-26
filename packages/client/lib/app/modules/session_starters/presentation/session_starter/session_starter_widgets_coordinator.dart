@@ -9,8 +9,10 @@ import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/home/shared/mobx/mobx.dart';
+import 'package:nokhte/app/modules/presets/presets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte/app/modules/session_starters/session_starters.dart';
+import 'package:nokhte_backend/tables/company_presets.dart';
 import 'package:simple_animations/simple_animations.dart';
 part 'session_starter_widgets_coordinator.g.dart';
 
@@ -105,7 +107,6 @@ abstract class _SessionStarterWidgetsCoordinatorBase
     );
     qrSubtitleSmartText.setMessagesData(SharedLists.emptyList);
     qrSubtitleSmartText.startRotatingText();
-    qrSubtitleSmartText.setWidgetVisibility(false);
     beachWaves.setMovieMode(BeachWaveMovieModes.invertedOnShore);
     beachWaves.currentStore.initMovie(WaterDirection.down);
     headerText.setMessagesData(PresetsLists.presetsHeader);
@@ -114,17 +115,25 @@ abstract class _SessionStarterWidgetsCoordinatorBase
   }
 
   @action
-  onQrCodeReceived(String qrCodeData) {
+  onQrCodeReceived(
+    String qrCodeData, {
+    bool isASoloSession = false,
+  }) {
+    qrSubtitleSmartText.reset();
     qrCode.setQrCodeData(qrCodeData);
-    qrCode.setWidgetVisibility(true);
     if (qrCodeIsNotActivated) {
       qrSubtitleSmartText.setMessagesData(SessionStartersList.inactiveQrCode);
     } else {
       qrSubtitleSmartText.setMessagesData(SessionStartersList.activeQrCode);
     }
-
-    qrSubtitleSmartText.setWidgetVisibility(true);
+    if (isASoloSession) {
+      qrSubtitleSmartText.setCurrentIndex(2);
+    } else {
+      qrSubtitleSmartText.setCurrentIndex(0);
+    }
     qrSubtitleSmartText.startRotatingText(isResuming: true);
+
+    qrCode.setWidgetVisibility(true);
   }
 
   @action
@@ -138,16 +147,18 @@ abstract class _SessionStarterWidgetsCoordinatorBase
   @action
   onPreferredPresetReceived({
     required String sessionName,
-    required List tags,
-    required String unifiedUID,
+    required List<SessionTags> tags,
+    required String presetUID,
     required String userUID,
   }) {
     presetHeader.setHeader(
       sessionName,
       tags,
     );
-    presetCards.setPreferredPresetUID(unifiedUID);
-    onQrCodeReceived(userUID);
+    onQrCodeReceived(userUID,
+        isASoloSession: !tags.contains(SessionTags.flexibleSeating) &&
+            !tags.contains(SessionTags.strictSeating));
+    presetCards.setPreferredPresetUID(presetUID);
   }
 
   @action
@@ -173,39 +184,36 @@ abstract class _SessionStarterWidgetsCoordinatorBase
 
   initReactors() {
     disposers.add(beachWavesReactor());
-    disposers.add(qrSubtitleTextReactor());
+    // disposers.add(qrSubtitleTextReactor());
     disposers.add(gestureCrossTapReactor());
-    disposers.add(condensedPresetCardTapReactor());
     disposers.add(condensedPresetCardHoldReactor());
     disposers.add(transitionsCondensedPresetCardMovieStatusReactor());
     disposers.add(canScrollReactor());
     initHomeNavigationReactions();
   }
 
-  qrSubtitleTextReactor() => reaction(
-        (p0) => qrSubtitleSmartText.currentIndex,
-        (p0) {
-          if (beachWaves.movieMode == BeachWaveMovieModes.invertedOnShore &&
-              qrSubtitleSmartText.showWidget) {
-            if (p0 == 0) {
-              qrSubtitleSmartText.startRotatingText(isResuming: true);
-            } else if (p0 == 2) {
-              qrSubtitleSmartText.setCurrentIndex(0);
-              qrSubtitleSmartText.startRotatingText(isResuming: true);
-            }
-          }
-        },
-      );
-
   @action
-  initTransition() {
+  initTransition(bool transitionToSolo) {
     scrollToTop();
     presetHeader.presetIcons.setWidgetVisibility(false);
     isEnteringNokhteSession = true;
     setSwipeDirection(GestureDirections.up);
-    beachWaves
-        .setMovieMode(BeachWaveMovieModes.invertedOnShoreToInvertedDeepSea);
-    beachWaves.currentStore.initMovie(beachWaves.currentAnimationValues.first);
+    if (transitionToSolo) {
+      beachWaves.setMovieMode(BeachWaveMovieModes.anyToOnShore);
+      beachWaves.currentStore.reverseMovie(
+        AnyToOnShoreParams(
+          startingColors: WaterColorsAndStops.invertedHalfWaterAndSand,
+          endingColors: WaterColorsAndStops.invertedBeachWater,
+          endValue: beachWaves.currentAnimationValues.first,
+        ),
+      );
+      qrCode.setWidgetVisibility(false);
+    } else {
+      beachWaves
+          .setMovieMode(BeachWaveMovieModes.invertedOnShoreToInvertedDeepSea);
+      beachWaves.currentStore
+          .initMovie(beachWaves.currentAnimationValues.first);
+    }
     qrSubtitleSmartText.setWidgetVisibility(false);
     gestureCross.fadeAllOut();
     centerNokhte.setWidgetVisibility(false);
@@ -281,17 +289,11 @@ abstract class _SessionStarterWidgetsCoordinatorBase
     }
   }
 
-  onCompanyPresetsReceived({
-    required ObservableList unifiedUIDs,
-    required ObservableList tags,
-    required ObservableList names,
-  }) {
-    presetCards.setPresets(
-      unifiedUIDs: unifiedUIDs,
-      tags: tags,
-      names: names,
-    );
-    presetCards.showAllCondensedPresets(showTags: false);
+  onCompanyPresetsReceived(CompanyPresetsEntity presetsEntity) {
+    presetCards.setPresets(presetsEntity);
+    if (presetArticle.articleSections.isEmpty) {
+      presetCards.showAllCondensedPresets();
+    }
   }
 
   moveOtherNokhtes({required bool shouldExpand}) {
@@ -301,9 +303,14 @@ abstract class _SessionStarterWidgetsCoordinatorBase
 
   beachWavesReactor() => reaction((p0) => beachWaves.movieStatus, (p0) {
         if (p0 == MovieStatus.finished) {
-          Modular.to.navigate(SessionConstants.lobby, arguments: {
-            SessionStarterConstants.QR_CODE_DATA: qrCode.qrCodeData,
-          });
+          if (beachWaves.movieMode ==
+              BeachWaveMovieModes.invertedOnShoreToInvertedDeepSea) {
+            Modular.to.navigate(SessionConstants.lobby, arguments: {
+              SessionStarterConstants.QR_CODE_DATA: qrCode.qrCodeData,
+            });
+          } else {
+            Modular.to.navigate(SessionConstants.polymorphicSolo);
+          }
         }
       });
 
@@ -332,9 +339,6 @@ abstract class _SessionStarterWidgetsCoordinatorBase
                   CondensedPresetCardMovieModes.selectionInProgress &&
               presetCards.movieStatuses[currentHeldIndex] ==
                   MovieStatus.finished) {
-            if (firstCardIsSelected) {
-              scrollToTop();
-            }
             Timer(Seconds.get(1), () {
               presetCards.enableAllTouchFeedback();
             });
@@ -343,15 +347,24 @@ abstract class _SessionStarterWidgetsCoordinatorBase
               firstCardIsSelected = true;
             });
             await onSelected(presetCards.currentlySelectedSessionUID);
+            if (firstCardIsSelected) {
+              scrollToTop();
+            }
           }
         }
       });
-  condensedPresetCardTapReactor() =>
-      reaction((p0) => presetCards.condensedTapCount, (p0) {
+  condensedPresetCardTapReactor({
+    required Function onClose,
+  }) =>
+      reaction((p0) => presetCards.tapCount, (p0) {
         presetArticle.showBottomSheet(
-          presetCards.currentExpandedPresetType,
-          onOpen: () {},
-          onClose: () {},
+          presetCards.companyPresetsEntity,
+          activeIndex: presetCards.currentTappedIndex,
+          onClose: () async {
+            if (presetCards.currentArticleHasOptions) {
+              await onClose();
+            }
+          },
         );
       });
 

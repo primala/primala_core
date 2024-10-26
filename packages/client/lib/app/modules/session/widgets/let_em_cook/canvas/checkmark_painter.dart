@@ -3,12 +3,12 @@ import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte/app/modules/session/widgets/let_em_cook/let_em_cook.dart';
 
 class CheckmarkPainter extends CustomPainter {
-  final double l1progress, l2progress, opacity;
+  final double l1Progress, l2Progress, opacity;
 
   CheckmarkPainter({
     super.repaint,
-    required this.l1progress,
-    required this.l2progress,
+    required this.l1Progress,
+    required this.l2Progress,
     required this.opacity,
   });
 
@@ -55,12 +55,12 @@ class CheckmarkPainter extends CustomPainter {
     // Animate the first path
     var pathMetric = path.computeMetrics().first;
     var animatedPath =
-        pathMetric.extractPath(0, pathMetric.length * l1progress);
+        pathMetric.extractPath(0, pathMetric.length * l1Progress);
 
     // Animate the second path
     var path1Metric = path1.computeMetrics().first;
     var animatedPath1 =
-        path1Metric.extractPath(0, path1Metric.length * l2progress);
+        path1Metric.extractPath(0, path1Metric.length * l2Progress);
 
     // Draw the animated portion of both paths
 
@@ -92,10 +92,10 @@ class CheckmarkPainter extends CustomPainter {
       size.height * 0.5,
       circlePaint,
     );
-    if (l1progress > 0) {
+    if (l1Progress > 0) {
       canvas.drawPath(animatedPath, paint1); // First path with gradient1
     }
-    if (l1progress == 1) {
+    if (l1Progress == 1) {
       canvas.drawPath(animatedPath1, paint2); // Second path with gradient2
     }
   }

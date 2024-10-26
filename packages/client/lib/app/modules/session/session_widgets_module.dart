@@ -18,7 +18,7 @@ class SessionWidgetsModule extends Module {
   void exportedBinds(Injector i) {
     injectCore(i);
     injectHybrid(i);
-    injectSpeaking(i);
+    injectPolymorphic(i);
     injectNotes(i);
     injectMonetization(i);
   }
@@ -28,7 +28,6 @@ class SessionWidgetsModule extends Module {
       () => SessionInformationWidgetsCoordinator(
         presetArticle: PresetArticleStore(
           nokhteBlur: NokhteBlurStore(),
-          body: ArticleBodyStore(),
         ),
         tint: TintStore(),
         wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
@@ -40,7 +39,6 @@ class SessionWidgetsModule extends Module {
       () => SessionLobbyWidgetsCoordinator(
         presetArticle: PresetArticleStore(
           nokhteBlur: NokhteBlurStore(),
-          body: ArticleBodyStore(),
         ),
         touchRipple: TouchRippleStore(),
         primarySmartText: SmartTextStore(),
@@ -107,9 +105,12 @@ class SessionWidgetsModule extends Module {
     );
   }
 
-  injectSpeaking(i) {
-    i.add<SessionSpeakingWidgetsCoordinator>(
-      () => SessionSpeakingWidgetsCoordinator(
+  injectPolymorphic(i) {
+    i.add<PolymorphicSoloWidgetsCoordinator>(
+      () => PolymorphicSoloWidgetsCoordinator(
+        backButton: BackButtonStore(),
+        primarySmartText: SmartTextStore(),
+        secondarySmartText: SmartTextStore(),
         sessionNavigation: Modular.get<SessionNavigationStore>(),
         tint: TintStore(),
         speakLessSmileMore: SpeakLessSmileMoreStore(),
@@ -126,11 +127,11 @@ class SessionWidgetsModule extends Module {
     i.add<SessionSoloHybridWidgetsCoordinator>(
       () => SessionSoloHybridWidgetsCoordinator(
         sessionNavigation: Modular.get<SessionNavigationStore>(),
-        primarySmartText: SmartTextStore(),
         rally: RallyStore(
           backButton: BackButtonStore(),
           tint: TintStore(),
         ),
+        primarySmartText: SmartTextStore(),
         secondarySmartText: SmartTextStore(),
         othersAreTalkingTint: HalfScreenTintStore(),
         speakLessSmileMore: SpeakLessSmileMoreStore(),

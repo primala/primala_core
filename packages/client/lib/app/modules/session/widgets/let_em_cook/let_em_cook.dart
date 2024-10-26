@@ -1,5 +1,4 @@
 // ignore_for_file: unused_import
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -10,8 +9,7 @@ import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 import 'package:simple_animations/simple_animations.dart';
-
-import 'canvas/checkmark_painter.dart';
+export 'canvas/checkmark_painter.dart';
 export 'movies/movies.dart';
 export 'mobx/let_em_cook_store.dart';
 export 'constants/constants.dart';
@@ -79,8 +77,8 @@ class LetEmCook extends HookWidget {
                             width: containerSize,
                             child: CustomPaint(
                               painter: CheckmarkPainter(
-                                l1progress: value.get('l1'),
-                                l2progress: value.get('l2'),
+                                l1Progress: value.get('l1'),
+                                l2Progress: value.get('l2'),
                                 opacity: value.get('opacity'),
                               ),
                             ),

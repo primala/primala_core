@@ -42,7 +42,7 @@ abstract class _InAppPurchaseCoordinatorBase with Store, BaseMobxLogic {
 
   @action
   getSubscriptionInfo() async {
-    final res = await getSubscriptionInfoLogic(NoParams());
+    final res = await getSubscriptionInfoLogic(const NoParams());
     res.fold(
       (failure) => mapFailureToMessage(failure),
       (productInfo) => skuProductEntity = productInfo,
@@ -51,7 +51,7 @@ abstract class _InAppPurchaseCoordinatorBase with Store, BaseMobxLogic {
 
   @action
   buySubscription() async {
-    final res = await buySubscriptionLogic(NoParams());
+    final res = await buySubscriptionLogic(const NoParams());
     res.fold(
       (failure) => errorUpdater(failure),
       (result) => hasPurchasedSubscription = result,

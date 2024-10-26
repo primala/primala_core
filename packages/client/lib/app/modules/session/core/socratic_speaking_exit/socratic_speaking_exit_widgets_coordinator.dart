@@ -55,7 +55,7 @@ abstract class _SocraticSpeakingExitWidgetsCoordinatorBase
 
   initBackToSpeaking() {
     beachWaves.setMovieMode(BeachWaveMovieModes.orangeSandToHalfAndHalf);
-    beachWaves.currentStore.initMovie(NoParams());
+    beachWaves.currentStore.initMovie(const NoParams());
     primarySmartText.setWidgetVisibility(false);
     secondarySmartText.setWidgetVisibility(false);
   }
@@ -63,7 +63,7 @@ abstract class _SocraticSpeakingExitWidgetsCoordinatorBase
   @action
   initNotesTransition() {
     beachWaves.setMovieMode(BeachWaveMovieModes.orangeSandToSky);
-    beachWaves.currentStore.initMovie(NoParams());
+    beachWaves.currentStore.initMovie(const NoParams());
     primarySmartText.setWidgetVisibility(false);
     secondarySmartText.setWidgetVisibility(false);
   }
@@ -74,7 +74,7 @@ abstract class _SocraticSpeakingExitWidgetsCoordinatorBase
           if (beachWaves.movieMode == BeachWaveMovieModes.orangeSandToSky) {
             Modular.to.navigate(SessionConstants.notes);
           } else {
-            Modular.to.navigate(SessionConstants.speaking);
+            // Modular.to.navigate(SessionConstants.speaking);
           }
         }
       });

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 class RichJostList extends StatelessWidget {
   final List<String> contentList;
   final bool isOrdered;
+  final double horizontalPadding;
 
   jost({
     bool isBold = false,
@@ -18,13 +19,14 @@ class RichJostList extends StatelessWidget {
     super.key,
     required this.contentList,
     required this.isOrdered,
+    this.horizontalPadding = 65.0,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 65.0,
+      padding: EdgeInsets.symmetric(
+        horizontal: horizontalPadding,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

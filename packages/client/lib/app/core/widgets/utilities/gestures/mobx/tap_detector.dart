@@ -26,6 +26,9 @@ abstract class _TapDetector extends Equatable with Store {
   int tapCount = 0;
 
   @observable
+  int doubleTapCount = 0;
+
+  @observable
   Offset currentTapPosition = Offset.zero;
 
   @action
@@ -33,6 +36,9 @@ abstract class _TapDetector extends Equatable with Store {
 
   @action
   onTap() => tapCount++;
+
+  @action
+  onDoubleTap() => doubleTapCount++;
 
   @override
   List<Object> get props => [];

@@ -10,8 +10,8 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:nokhte/app/modules/presets/presets.dart';
 import 'package:nokhte/app/modules/session_starters/session_starters.dart';
-import 'package:nokhte_backend/tables/company_presets.dart';
 part 'session_lobby_widgets_coordinator.g.dart';
 
 class SessionLobbyWidgetsCoordinator = _SessionLobbyWidgetsCoordinatorBase
@@ -89,20 +89,19 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
 
   @action
   onPresetTypeReceived(
-    PresetTypes presetType, {
+    CompanyPresetsEntity entity, {
     required Function onOpen,
     required Function onClose,
   }) {
     presetArticle.setShowPreview(true);
     if (!hasReceivedRoutingArgs) {
       presetArticle.showBottomSheet(
-        presetType,
+        entity,
         onOpen: onOpen,
         onClose: onClose,
       );
     } else {
-      presetArticle.body.setPresetType(presetType);
-      // onOpen();
+      presetArticle.setPreset(entity);
     }
   }
 
@@ -152,10 +151,10 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
   enterSession(bool isAValidSession) {
     if (isAValidSession) {
       beachWaves.setMovieMode(BeachWaveMovieModes.deepSeaToSky);
-      beachWaves.currentStore.initMovie(NoParams());
+      beachWaves.currentStore.initMovie(const NoParams());
     } else {
       beachWaves.setMovieMode(BeachWaveMovieModes.deepSeaToBorealis);
-      beachWaves.currentStore.initMovie(NoParams());
+      beachWaves.currentStore.initMovie(const NoParams());
     }
     presetArticle.setShowPreview(false);
     presetArticle.setWidgetVisibility(true);
@@ -166,18 +165,6 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
   beachWavesMovieStatusReactor(Function onCompleted) =>
       reaction((p0) => beachWaves.movieStatus, (p0) {
         if (p0 == beachWaves.movieStatus) onCompleted();
-      });
-
-  presetArticleTapReactor({
-    required Function onOpen,
-    required Function onClose,
-  }) =>
-      reaction((p0) => presetArticle.tapCount, (p0) {
-        presetArticle.showBottomSheet(
-          presetArticle.body.presetType,
-          onOpen: onOpen,
-          onClose: onClose,
-        );
       });
 
   smartTextIndexReactor() =>

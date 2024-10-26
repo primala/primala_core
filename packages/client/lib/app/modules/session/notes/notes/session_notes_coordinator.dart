@@ -40,13 +40,23 @@ abstract class _SessionNotesCoordinatorBase
       await presence.updateCurrentPhase(2.0);
     });
     initReactors();
-    if (isNotASocraticSession) {
-      await presence.updateCurrentPhase(2.5);
-    }
+    await presence.updateCurrentPhase(2.5);
     await captureScreen(SessionConstants.notes);
   }
 
   initReactors() {
+    if (sessionMetadata.presetType != PresetTypes.solo) {
+      disposers.add(presence.initReactors(
+        onCollaboratorJoined: () {
+          setDisableAllTouchFeedback(false);
+          widgets.onCollaboratorJoined();
+        },
+        onCollaboratorLeft: () {
+          setDisableAllTouchFeedback(true);
+          widgets.onCollaboratorLeft();
+        },
+      ));
+    }
     disposers.add(presence.initReactors(
       onCollaboratorJoined: () {
         setDisableAllTouchFeedback(false);
@@ -93,8 +103,4 @@ abstract class _SessionNotesCoordinatorBase
     dispose();
     widgets.deconstructor();
   }
-
-  @computed
-  bool get isNotASocraticSession =>
-      sessionMetadata.presetType != PresetTypes.socratic;
 }

@@ -11,17 +11,11 @@ abstract class SessionPresenceContract {
   Future<Either<Failure, bool>> updateOnlineStatus(bool params);
   Future<Either<Failure, bool>> usePowerUp(
       Either<LetEmCookParams, RallyParams> params);
-  Future<Either<Failure, SessionInstructionTypes>> getInstructionType(
-    String params,
-  );
   Future<Either<Failure, bool>> updateWhoIsTalking(
       UpdateWhoIsTalkingParams params);
   Future<Either<Failure, bool>> updateCurrentPhase(double params);
   Future<Either<Failure, StaticSessionMetadataEntity>> getSTSessionMetadata(
     NoParams params,
-  );
-  Future<Either<Failure, SessionPresetInfoEntity>> getSessionPresetInfo(
-    String unifiedUID,
   );
   Future<Either<Failure, Stream<NokhteSessionMetadata>>>
       listenToRTSessionMetadata(NoParams params);

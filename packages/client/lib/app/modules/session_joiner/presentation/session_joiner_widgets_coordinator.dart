@@ -68,7 +68,7 @@ abstract class _SessionJoinerWidgetsCoordinatorBase
   @action
   enterSession() {
     beachWaves.setMovieMode(BeachWaveMovieModes.emptyOceanToInvertedDeepSea);
-    beachWaves.currentStore.initMovie(NoParams());
+    beachWaves.currentStore.initMovie(const NoParams());
     gestureCross.fadeAllOut();
     centerNokhte.setWidgetVisibility(false);
     homeNokhte.setWidgetVisibility(false);

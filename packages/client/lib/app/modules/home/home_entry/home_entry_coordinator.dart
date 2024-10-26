@@ -1,6 +1,5 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'package:mobx/mobx.dart';
-import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mixins/mixin.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
@@ -20,14 +19,15 @@ abstract class _HomeEntryCoordinatorBase
         BaseCoordinator,
         Reactions {
   final HomeEntryWidgetsCoordinator widgets;
+
   @override
-  final GetUserInfoStore getUserInfo;
+  final UserInformationCoordinator userInfo;
   @override
   final CaptureScreen captureScreen;
 
   _HomeEntryCoordinatorBase({
     required this.widgets,
-    required this.getUserInfo,
+    required this.userInfo,
     required this.captureScreen,
   }) {
     initEnRouteActions();
@@ -38,7 +38,7 @@ abstract class _HomeEntryCoordinatorBase
   constructor() async {
     initReactors();
     widgets.constructor();
-    await getUserInfo(NoParams());
+    await userInfo.checkIfVersionIsUpToDate();
   }
 
   initReactors() {

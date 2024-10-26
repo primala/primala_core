@@ -37,6 +37,7 @@ class HomeWidgetsModule extends Module {
         deactivateNokhte: AuxiliaryNokhteStore(),
         sessionJoinerNokhte: AuxiliaryNokhteStore(),
         storageNokhte: AuxiliaryNokhteStore(),
+        gestureCrossSmartText: SmartTextStore(),
       ),
     );
     i.add<NeedsUpdateWidgetsCoordinator>(

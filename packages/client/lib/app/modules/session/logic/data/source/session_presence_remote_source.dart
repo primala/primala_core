@@ -1,5 +1,4 @@
 import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte_backend/tables/company_presets.dart';
 import 'package:nokhte_backend/tables/finished_nokhte_sessions.dart';
 import 'package:nokhte_backend/tables/rt_active_nokhte_sessions.dart';
 import 'package:nokhte_backend/tables/st_active_nokhte_sessions.dart';
@@ -19,12 +18,9 @@ abstract class SessionPresenceRemoteSource {
     RallyParams params,
   );
   String getUserUID();
-  Future<List> getPresetInformation(String unifiedUID);
   Future<List> getStaticSessionMetadata();
   Future<FunctionResponse> completeTheSession();
   Future<FunctionResponse> startTheSession();
-  Future<List> checkIfHasDoneSessionBesides(String presetUID);
-  Future<List> checkIfHasDoneSessionSessionType(String presetUID);
   Future<List> getUserMetadata();
   Future<List> updateSpeakingTimerStart();
 }
@@ -34,14 +30,12 @@ class SessionPresenceRemoteSourceImpl implements SessionPresenceRemoteSource {
   final RTActiveNokhteSessionQueries rtQueries;
   final STActiveNokhteSessionQueries stQueries;
   final RTActiveNokhteSessionsStream stream;
-  final CompanyPresetsQueries presetsQueries;
   final FinishedNokhteSessionQueries finishedQueries;
   final UserMetadataQueries userMetadata;
   SessionPresenceRemoteSourceImpl({required this.supabase})
       : rtQueries = RTActiveNokhteSessionQueries(supabase: supabase),
         stQueries = STActiveNokhteSessionQueries(supabase: supabase),
         finishedQueries = FinishedNokhteSessionQueries(supabase: supabase),
-        presetsQueries = CompanyPresetsQueries(supabase: supabase),
         stream = RTActiveNokhteSessionsStream(supabase: supabase),
         userMetadata = UserMetadataQueries(supabase: supabase);
 
@@ -84,21 +78,6 @@ class SessionPresenceRemoteSourceImpl implements SessionPresenceRemoteSource {
 
   @override
   getStaticSessionMetadata() async => await stQueries.select();
-
-  @override
-  getPresetInformation(unifiedUID) async =>
-      await presetsQueries.getInfoFromUnifiedUID(unifiedUID);
-
-  @override
-  checkIfHasDoneSessionBesides(presetUID) async =>
-      await finishedQueries.selectOne(
-        unifiedUID: presetUID,
-        invertToNeq: true,
-      );
-
-  @override
-  checkIfHasDoneSessionSessionType(presetUID) async =>
-      await finishedQueries.selectOne(unifiedUID: presetUID);
 
   @override
   getUserMetadata() async => await userMetadata.getUserMetadata();

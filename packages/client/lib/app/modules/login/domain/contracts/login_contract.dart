@@ -1,10 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:nokhte/app/core/error/failure.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
-import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/modules/login/login.dart';
 
-abstract class LoginContract extends BaseGetUserInfoContract {
+abstract class LoginContract {
   Future<Either<Failure, AuthProviderEntity>> googleSignIn(NoParams params);
 
   Future<Either<Failure, AuthProviderEntity>> appleSignIn(NoParams params);
@@ -14,4 +13,6 @@ abstract class LoginContract extends BaseGetUserInfoContract {
   Stream<bool> getAuthState(NoParams params);
 
   Future<Either<Failure, bool>> addMetadata(NoParams params);
+
+  Future<Either<Failure, bool>> versionIsUpToDate();
 }

@@ -1,11 +1,13 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
+import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/constants/constants.dart';
 import 'package:nokhte/app/core/error/failure.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/modules/session_starters/session_starters.dart';
+import 'package:nokhte_backend/tables/company_presets.dart';
 part 'session_starters_logic_coordinator.g.dart';
 
 class SessionStartersLogicCoordinator = _SessionStartersLogicCoordinatorBase
@@ -83,7 +85,7 @@ abstract class _SessionStartersLogicCoordinatorBase with Store, BaseMobxLogic {
     if (shouldNuke) {
       await nuke();
     }
-    nokhteSessionSearchStatusIsListening = cancelStreamLogic(NoParams());
+    nokhteSessionSearchStatusIsListening = cancelStreamLogic(const NoParams());
     await collaboratorSearchStatus.close();
     await searchSubscription.cancel();
   }
@@ -91,7 +93,7 @@ abstract class _SessionStartersLogicCoordinatorBase with Store, BaseMobxLogic {
   @action
   listenToSessionActivation() async {
     nokhteSessionSearchStatusIsListening = true;
-    final result = await listenToSessionActivationLogic(NoParams());
+    final result = await listenToSessionActivationLogic(const NoParams());
     result.fold((failure) => errorUpdater(failure), (stream) {
       nokhteSearchStatus = ObservableStream(stream);
       nokhteSubscription = nokhteSearchStatus.listen((value) {
@@ -101,8 +103,10 @@ abstract class _SessionStartersLogicCoordinatorBase with Store, BaseMobxLogic {
   }
 
   @action
-  initialize() async {
-    final result = await initializeSessionLogic(NoParams());
+  initialize({
+    Either<NoParams, PresetTypes> params = const Left(NoParams()),
+  }) async {
+    final result = await initializeSessionLogic(params);
     result.fold((failure) => errorUpdater(failure),
         (entryStatus) => hasJoined = entryStatus);
   }
@@ -116,7 +120,8 @@ abstract class _SessionStartersLogicCoordinatorBase with Store, BaseMobxLogic {
 
   @action
   nuke() async {
-    final result = await nukeSessionLogic(NoParams());
+    hasJoined = false;
+    final result = await nukeSessionLogic(const NoParams());
     result.fold((failure) => errorUpdater(failure),
         (nukeStatus) => hasNuked = nukeStatus);
   }

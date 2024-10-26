@@ -52,22 +52,25 @@ class SessionStarterScreen extends HookWidget {
                 children: [
                   [
                     Observer(
-                        builder: (context) => Opacity(
-                              opacity: coordinator.widgets.hasNotSelectedPreset
-                                  ? .4
-                                  : 1,
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                  bottom: screenSize.height * .2,
-                                ),
-                                child: NokhteQrCode(
-                                  store: coordinator.widgets.qrCode,
-                                ),
-                              ),
-                            )),
+                      builder: (context) => AnimatedOpacity(
+                        duration: Seconds.get(1),
+                        opacity: coordinator.widgets.hasNotSelectedPreset ||
+                                coordinator.selectedSessionIsSolo
+                            ? .4
+                            : 1,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            bottom: screenSize.height * .2,
+                          ),
+                          child: NokhteQrCode(
+                            store: coordinator.widgets.qrCode,
+                          ),
+                        ),
+                      ),
+                    ),
                     SmartText(
                       store: coordinator.widgets.qrSubtitleSmartText,
-                      opacityDuration: Seconds.get(1),
+                      opacityDuration: Seconds.get(2),
                       topPadding: .13,
                       topBump: 0.003,
                     ),

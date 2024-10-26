@@ -9,7 +9,7 @@ export 'core/core.dart';
 export 'logic/session_logic.dart';
 export 'constants/constants.dart';
 export 'widgets/widgets.dart';
-export 'speaking/speaking.dart';
+export 'polymorphic/polymorphic.dart';
 export 'notes/notes.dart';
 export 'hybrid/hybrid.dart';
 
@@ -19,7 +19,7 @@ class SessionModule extends Module {
         SessionWidgetsModule(),
         SessionNotesModule(),
         SessionCoreModule(),
-        SessionSpeakingModule(),
+        SessionPolymorphicModule(),
         SessionHybridModule(),
         CleanUpCollaborationArtifactsModule(),
         PosthogModule(),
@@ -30,7 +30,8 @@ class SessionModule extends Module {
   @override
   void routes(r) {
     r.module(SessionConstants.notesModule, module: SessionNotesModule());
-    r.module(SessionConstants.speakingModule, module: SessionSpeakingModule());
+    r.module(SessionConstants.polymorphicModule,
+        module: SessionPolymorphicModule());
     r.module(SessionConstants.hybridModule, module: SessionHybridModule());
     r.module(SessionConstants.coreModule, module: SessionCoreModule());
     r.module(SessionConstants.monetizeModule, module: SessionMonetizeModule());

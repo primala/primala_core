@@ -54,7 +54,9 @@ abstract class _SmartTextStoreBase extends BaseWidgetStore with Store {
   @action
   @override
   setWidgetVisibility(bool newVisibility) {
-    setControl(Control.stop);
+    if (!newVisibility) {
+      setControl(Control.stop);
+    }
     super.setWidgetVisibility(newVisibility);
   }
 

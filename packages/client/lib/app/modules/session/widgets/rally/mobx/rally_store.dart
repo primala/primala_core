@@ -96,6 +96,8 @@ abstract class _RallyStoreBase extends BaseWidgetStore with Store, Reactions {
     Timer(Seconds.get(1), () {
       currentlySelectedIndex = -1;
       phase = RallyPhase.initial;
+      setGlowColor(GlowColor.transparent);
+      setCancelButtonVisibility(true);
     });
   }
 
