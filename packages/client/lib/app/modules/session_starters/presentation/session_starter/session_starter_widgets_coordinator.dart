@@ -256,11 +256,16 @@ abstract class _SessionStarterWidgetsCoordinatorBase
 
   @action
   scrollToBottom() {
+    // print(
+    //     "max scroll extent: ${sessionScroller.scrollController.position.maxScrollExtent}");
     sessionScroller.scrollController.animateTo(
       sessionScroller.scrollController.position.maxScrollExtent,
       duration: Seconds.get(1),
       curve: Curves.decelerate,
     );
+    Timer(Seconds.get(1), () {
+      presetCards.onTap(presetCards.currentHeldIndex);
+    });
   }
 
   @action

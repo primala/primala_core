@@ -42,6 +42,12 @@ abstract class _SessionStarterCoordinatorBase
   @observable
   bool isNavigatingAway = false;
 
+  @observable
+  StoreState presetsQueryState = StoreState.loaded;
+
+  @action
+  setPresetsQueryState(StoreState state) => presetsQueryState = state;
+
   @action
   toggleIsNavigatingAway() => isNavigatingAway = !isNavigatingAway;
 
@@ -77,6 +83,7 @@ abstract class _SessionStarterCoordinatorBase
     disposers.add(widgets.condensedPresetCardTapReactor(
       onClose: () async {
         if (widgets.presetArticle.hasAdjustedSessionPreferences) {
+          setPresetsQueryState(StoreState.loading);
           widgets.presetHeader.presetIcons
               .setTags(widgets.presetArticle.articleSectionsTags);
           await presetsLogic.upsertSessionPreferences(
@@ -87,13 +94,14 @@ abstract class _SessionStarterCoordinatorBase
           );
           await presetsLogic.getCompanyPresets(Left(GetAllPresetsParams()));
           await userInfo.getPreferredPreset();
+          setPresetsQueryState(StoreState.loaded);
         }
       },
     ));
   }
 
   tapReactor() => reaction((p0) => tap.doubleTapCount, (p0) async {
-        if (selectedSessionIsSolo) {
+        if (selectedSessionIsSolo && presetsQueryState == StoreState.loaded) {
           widgets.initTransition(true);
           await starterLogic.dispose();
         }
