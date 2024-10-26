@@ -66,7 +66,7 @@ mixin SessionSpeakingUtilities {
         BeachWaveMovieModes.halfAndHalfToDrySand,
       );
 
-      beachWaves.currentStore.initMovie(NoParams());
+      beachWaves.currentStore.initMovie(const NoParams());
       sessionNavigation.setWidgetVisibility(false);
       onHold?.call();
     }
