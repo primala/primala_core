@@ -43,7 +43,7 @@ class ActiveNokhteSessionEdgeFunctions with STActiveNokhteSessionsConstants {
     PresetTypes presetType = PresetTypes.none,
   }) async {
     String presetUID = '';
-    if (presetType == PresetTypes.none) {
+    if (presetType != PresetTypes.none) {
       presetUID = (await presetQueries.select(type: presetType))
           .first[CompanyPresetsQueries.UID];
     } else {

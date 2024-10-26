@@ -88,6 +88,7 @@ abstract class _PolymorphicSoloWidgetsCoordinatorBase
 
   @action
   initFullScreenNotes() {
+    if (isLeaving) return;
     baseInitFullScreenNotes(() {
       setTextVisibilities(false);
     });
@@ -101,6 +102,7 @@ abstract class _PolymorphicSoloWidgetsCoordinatorBase
 
   @action
   goHome() {
+    setIsLeaving(true);
     setTextVisibilities(false);
     backButton.setWidgetVisibility(false);
     borderGlow.setWidgetVisibility(false);
@@ -114,6 +116,7 @@ abstract class _PolymorphicSoloWidgetsCoordinatorBase
 
   @action
   onHold(GesturePlacement holdPosition) {
+    if (isLeaving) return;
     incrementHoldCount();
     setIsHolding(true);
     if (holdPosition == GesturePlacement.topHalf) {
@@ -133,6 +136,7 @@ abstract class _PolymorphicSoloWidgetsCoordinatorBase
 
   @action
   onLetGo() {
+    if (isLeaving) return;
     endSpeaking();
   }
 
