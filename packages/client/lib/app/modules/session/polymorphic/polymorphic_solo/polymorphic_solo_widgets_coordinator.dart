@@ -88,7 +88,7 @@ abstract class _PolymorphicSoloWidgetsCoordinatorBase
 
   @action
   initFullScreenNotes() {
-    if (isLeaving) return;
+    if (isLeaving || isHolding) return;
     baseInitFullScreenNotes(() {
       setTextVisibilities(false);
     });
