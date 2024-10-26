@@ -6,5 +6,9 @@ part 'nokhte_gradient_text_store.g.dart';
 class NokhteGradientTextStore = _NokhteGradientTextStoreBase
     with _$NokhteGradientTextStore;
 
-abstract class _NokhteGradientTextStoreBase extends BaseWidgetStore
-    with Store {}
+abstract class _NokhteGradientTextStoreBase extends BaseWidgetStore with Store {
+  @action
+  onTap() {
+    tapCount++;
+  }
+}
