@@ -24,21 +24,22 @@ class NokhteGradientText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Observer(
-        builder: (context) => AnimatedOpacity(
-          opacity: useWidgetOpacity(store.showWidget),
-          duration: Seconds.get(1),
-          child: Center(
-            child: Padding(
-              padding: padding,
-              child: GradientText(
-                content,
-                textScaleFactor: textScaleFactor,
-                colors: gradient,
-                style: GoogleFonts.jost(),
-                // colors: const [
-                //   Color(0xFFA1FFAA),
-                //   Color(0xFF39FF18),
-                // ],
+        builder: (context) => GestureDetector(
+          onTap: () {
+            store.onTap();
+          },
+          child: AnimatedOpacity(
+            opacity: useWidgetOpacity(store.showWidget),
+            duration: Seconds.get(1),
+            child: Center(
+              child: Padding(
+                padding: padding,
+                child: GradientText(
+                  content,
+                  textScaleFactor: textScaleFactor,
+                  colors: gradient,
+                  style: GoogleFonts.jost(),
+                ),
               ),
             ),
           ),

@@ -29,4 +29,7 @@ abstract class _PresetHeaderStoreBase extends BaseWidgetStore with Store {
     presetIcons.setTags(tags);
     presetIcons.setWidgetVisibility(true);
   }
+
+  @action
+  onTap() => tapCount++;
 }

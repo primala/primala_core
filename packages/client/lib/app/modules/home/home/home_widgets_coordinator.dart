@@ -153,6 +153,7 @@ abstract class _HomeWidgetsCoordinatorBase
 
   @action
   initSoloSession() {
+    if (hasInitiatedBlur) return;
     gestureCross.fadeAllOut();
     for (var element in auxNokhtes) {
       element.setWidgetVisibility(false);
