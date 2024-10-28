@@ -1,7 +1,5 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
-import 'dart:ui';
-
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/types/types.dart';
@@ -15,6 +13,7 @@ abstract class _CenterNokhteStoreBase
     extends BaseWidgetStore<AuxiliaryNokhtePositions> with Store {
   _CenterNokhteStoreBase() {
     setMovie(CenterNokhteMovies.scale(screenSize));
+    setWidgetVisibility(false);
   }
 
   @observable
@@ -24,16 +23,21 @@ abstract class _CenterNokhteStoreBase
   AuxiliaryNokhtePositions position = AuxiliaryNokhtePositions.initial;
 
   @observable
-  Size screenSize = Size.zero;
+  ScreenSizeData screenSize = ScreenSizeData.zero();
 
   @action
-  setScreenSize(Size value) => screenSize = value;
+  setScreenSize(ScreenSizeData value) => screenSize = value;
 
   @action
   fadeIn() {
-    setWidgetVisibility(false);
-    Timer(Seconds.get(0, milli: 1), () {
-      setWidgetVisibility(true);
+    Timer.periodic(const Duration(milliseconds: 1), (timer) {
+      if (screenSize.height != 0) {
+        setMovie(CenterNokhteMovies.scale(screenSize));
+        Timer(Seconds.get(0, milli: 1), () {
+          setWidgetVisibility(true);
+        });
+        timer.cancel();
+      }
     });
   }
 
@@ -46,15 +50,14 @@ abstract class _CenterNokhteStoreBase
   }
 
   @action
-  moveBackToCross({
-    required CenterNokhtePositions startingPosition,
-  }) {
+  moveBackToCross() {
     setMovieStatus(MovieStatus.inProgress);
     movieMode = CenterNokhteMovieModes.moveBack;
     setMovie(
-      CenterNokhteMovies.moveBackToCross(
+      CenterNokhteMovies.scale(
         screenSize,
-        startingPosition: startingPosition,
+        reverse: true,
+        // startingPosition: startingPosition,
       ),
     );
     setControl(Control.playFromStart);

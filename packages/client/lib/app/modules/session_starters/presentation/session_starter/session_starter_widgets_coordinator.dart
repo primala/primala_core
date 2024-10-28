@@ -234,9 +234,7 @@ abstract class _SessionStarterWidgetsCoordinatorBase
   @action
   dismissNokhte() {
     setSwipeDirection(GestureDirections.initial);
-    centerNokhte.moveBackToCross(
-      startingPosition: CenterNokhtePositions.center,
-    );
+    centerNokhte.moveBackToCross();
     gestureCross.strokeCrossNokhte.setWidgetVisibility(true);
     moveOtherNokhtes(shouldExpand: false);
     nokhteBlur.reverse();
@@ -295,9 +293,7 @@ abstract class _SessionStarterWidgetsCoordinatorBase
       dismissNokhte();
       setSwipeDirection(GestureDirections.initial);
       qrCode.setWidgetVisibility(false);
-      centerNokhte.moveBackToCross(
-        startingPosition: CenterNokhtePositions.center,
-      );
+      centerNokhte.moveBackToCross();
       gestureCross.strokeCrossNokhte.setWidgetVisibility(false);
       homeNokhte.initMovie(
         NokhteScaleState.shrink,

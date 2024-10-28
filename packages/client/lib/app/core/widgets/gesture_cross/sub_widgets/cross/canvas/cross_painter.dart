@@ -23,6 +23,10 @@ class CrossPainter extends CustomPainter {
   paintCross(Canvas canvas, Size size) {
     height = pathBounds.height;
     width = pathBounds.width;
+    final dx = (size.width - width) / 2 - pathBounds.left;
+    final dy = (size.height - height) / 2 - pathBounds.top;
+
+    canvas.translate(dx, dy);
 
     final crossPaint = Paint()
       ..shader = RadialGradient(
@@ -50,6 +54,7 @@ class CrossPainter extends CustomPainter {
     if (showGlowAndOutline) {
       canvas.drawPath(path, crossOutline);
     }
+    canvas.translate(-dx, -dy);
   }
 
   @override

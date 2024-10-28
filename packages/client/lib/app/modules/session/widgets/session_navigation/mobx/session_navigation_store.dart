@@ -199,9 +199,7 @@ abstract class _SessionNavigationStoreBase extends BaseWidgetStore
     swipeGuide.setWidgetVisibility(false);
     setHasInitiatedBlur(false);
     setSwipeDirection(GestureDirections.initial);
-    centerNokhte.moveBackToCross(
-      startingPosition: CenterNokhtePositions.center,
-    );
+    centerNokhte.moveBackToCross();
     moveAuxNokhtes(shouldExpand: false);
     tint.reverseMovie(const NoParams());
   }

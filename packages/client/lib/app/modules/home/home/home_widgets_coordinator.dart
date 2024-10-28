@@ -111,6 +111,7 @@ abstract class _HomeWidgetsCoordinatorBase
       if (hasInitiatedBlur && !hasSwiped()) {
         setSwipeDirection(GestureDirections.up);
         nokhteBlur.reverse();
+        gestureCrossSmartText.setWidgetVisibility(false);
         centerNokhte.initMovie(AuxiliaryNokhtePositions.top);
         sessionJoinerNokhte.disappear();
         deactivateNokhte.disappear();
@@ -314,9 +315,7 @@ abstract class _HomeWidgetsCoordinatorBase
     setHasInitiatedBlur(false);
     gestureCrossSmartText.setWidgetVisibility(false);
     setSwipeDirection(GestureDirections.initial);
-    centerNokhte.moveBackToCross(
-      startingPosition: CenterNokhtePositions.center,
-    );
+    centerNokhte.moveBackToCross();
     moveAuxNokhtes(shouldExpand: false);
     nokhteBlur.reverse();
     beachWaves.currentStore.setControl(Control.mirror);

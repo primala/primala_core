@@ -120,10 +120,7 @@ abstract class _SessionJoinerWidgetsCoordinatorBase
       setHasInitiatedBlur(false);
       qrScanner.fadeIn();
       moveSessionStarterNokhte(false);
-      final position = hasSwiped()
-          ? CenterNokhtePositions.left
-          : CenterNokhtePositions.center;
-      centerNokhte.moveBackToCross(startingPosition: position);
+      centerNokhte.moveBackToCross();
       setSwipeDirection(GestureDirections.initial);
     }
   }

@@ -5,7 +5,7 @@ import 'package:simple_animations/simple_animations.dart';
 
 class AuxiliaryNokhteMovies {
   static MovieTween scale(
-    Size screenSize, {
+    ScreenSizeData screenSize, {
     required AuxiliaryNokhtePositions position,
     required AuxiliaryNokhteColorways colorway,
     required NokhteScaleState direction,
@@ -61,7 +61,7 @@ class AuxiliaryNokhteMovies {
   }
 
   static MovieTween explode(
-    Size screenSize, {
+    ScreenSizeData screenSize, {
     required AuxiliaryNokhtePositions position,
     required AuxiliaryNokhteColorways colorway,
   }) {
@@ -106,7 +106,7 @@ class AuxiliaryNokhteMovies {
   }
 
   static MovieTween disappear(
-    Size screenSize, {
+    ScreenSizeData screenSize, {
     required AuxiliaryNokhtePositions position,
     required AuxiliaryNokhteColorways colorway,
   }) {
@@ -148,7 +148,7 @@ class AuxiliaryNokhteMovies {
   }
 
   static MovieTween fadeIn(
-    Size screenSize, {
+    ScreenSizeData screenSize, {
     required AuxiliaryNokhtePositions position,
     required AuxiliaryNokhteColorways colorway,
   }) {

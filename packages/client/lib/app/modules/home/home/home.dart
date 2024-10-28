@@ -44,10 +44,10 @@ class HomeScreen extends HookWidget {
                 return Center(
                   child: SmartText(
                     store: coordinator.widgets.smartText,
-                    topBump: 0.008,
+                    topBump: 0.000,
                     bottomPadding:
                         coordinator.widgets.smartTextBottomPaddingScalar,
-                    bottomBump: .008,
+                    bottomBump: .004,
                     opacityDuration: Seconds.get(1),
                   ),
                 );
@@ -56,7 +56,7 @@ class HomeScreen extends HookWidget {
                 child: SmartText(
                   store: coordinator.widgets.gestureCrossSmartText,
                   topPadding: .6,
-                  topBump: 0.008,
+                  topBump: 0.0005,
                   opacityDuration: Seconds.get(1),
                 ),
               ),
