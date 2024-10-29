@@ -23,7 +23,10 @@ class LetEmCook extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final containerSize = useFullScreenSize().height * 0.07;
+    final containerSize = useScaledSize(
+        baseValue: 0.08,
+        screenSize: useFullScreenSize(),
+        bumpPerHundredth: 0.0005);
     return Observer(builder: (context) {
       return AnimatedOpacity(
         opacity: useWidgetOpacity(store.showWidget),
@@ -53,7 +56,7 @@ class LetEmCook extends HookWidget {
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Jost(
                         'Let ${store.currentCook} cook',
-                        fontSize: 20,
+                        fontSize: containerSize * 0.3,
                       ),
                     ),
                   ],
