@@ -35,9 +35,9 @@ class AuxiliaryNokhte extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final size = useSquareSize(relativeLength: .20);
-    final screenSize = useFullScreenSize();
+    final screenSizeData = useScreenSizeData();
     useEffect(() {
-      store.setScreenSize(screenSize);
+      store.setScreenSize(screenSizeData);
       return null;
     }, []);
 

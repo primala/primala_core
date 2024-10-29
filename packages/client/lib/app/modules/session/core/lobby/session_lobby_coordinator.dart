@@ -97,6 +97,7 @@ abstract class _SessionLobbyCoordinatorBase
 
   canStartTheSessionReactor() =>
       reaction((p0) => sessionMetadata.canStartTheSession, (p0) {
+        print("hi can you start? ${p0}");
         if (p0) {
           widgets.onCanStartTheSession();
         } else {

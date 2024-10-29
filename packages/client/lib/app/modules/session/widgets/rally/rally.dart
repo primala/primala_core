@@ -44,7 +44,7 @@ class Rally extends HookWidget with RallyConstants {
                 Jost(
                   'Tap to rally',
                   fontColor: navyBlue,
-                  fontSize: 20,
+                  fontSize: containerSize * 0.3,
                   fontWeight: FontWeight.w300,
                 )
               ],
@@ -105,7 +105,7 @@ class Rally extends HookWidget with RallyConstants {
                               ),
                               child: Chivo(
                                 collaborator,
-                                fontSize: 20,
+                                fontSize: containerSize * 0.3,
                                 fontWeight: FontWeight.w300,
                               ),
                             ),
@@ -137,7 +137,7 @@ class Rally extends HookWidget with RallyConstants {
                     Jost(
                       'Rallying with ${store.currentPartnerFirstName}',
                       fontColor: navyBlue,
-                      fontSize: 20,
+                      fontSize: containerSize * 0.3,
                       fontWeight: FontWeight.w300,
                     ),
                   ],
@@ -164,7 +164,7 @@ class Rally extends HookWidget with RallyConstants {
                         Jost(
                           'Stop Rally',
                           fontColor: redGrad.first,
-                          fontSize: 20,
+                          fontSize: containerSize * 0.3,
                           fontWeight: FontWeight.w300,
                         ),
                       ],
@@ -190,7 +190,7 @@ class Rally extends HookWidget with RallyConstants {
               Jost(
                 'Rallying with ${store.currentInitiatorFirstName}',
                 fontColor: navyBlue,
-                fontSize: 20,
+                fontSize: containerSize * 0.3,
                 fontWeight: FontWeight.w300,
               ),
             ],
@@ -201,7 +201,10 @@ class Rally extends HookWidget with RallyConstants {
 
   @override
   Widget build(BuildContext context) {
-    final containerSize = useFullScreenSize().height * 0.07;
+    final containerSize = useScaledSize(
+        baseValue: 0.08,
+        screenSize: useFullScreenSize(),
+        bumpPerHundredth: 0.0004);
     useEffect(() {
       store.constructor();
       return () => store.dispose();

@@ -46,10 +46,11 @@ void main() {
   });
 
   test("initiateSession", () async {
-    await user1RTQueries.initializeSession();
-    final res = await user1STQueries.select();
-    expect(res[0]["leader_uid"], tSetup.firstUserUID);
-    expect(res[0]["collaborator_uids"], [tSetup.firstUserUID]);
+    final realTimeRes = await user1STQueries.initializeSession();
+    final staticRes = await user1STQueries.select();
+    expect(staticRes[0]["session_uid"], realTimeRes[0]["session_uid"]);
+    expect(staticRes[0]["leader_uid"], tSetup.firstUserUID);
+    expect(staticRes[0]["collaborator_uids"], [tSetup.firstUserUID]);
   });
 
   test("nukeSession", () async {
@@ -93,8 +94,8 @@ void main() {
     expect(parsed, isA<DateTime>());
   });
 
-  test("startTheSession", () async {
-    await user1STQueries.startTheSession();
+  test("beginSession", () async {
+    await user1RTQueries.beginSession();
     final res = await user1RTQueries.getHasBegun();
     expect(res.mainType, true);
   });

@@ -1,10 +1,12 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
 import 'dart:ui';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
+import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 part 'session_solo_hybrid_widgets_coordinator.g.dart';
@@ -22,7 +24,11 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   final SmartTextStore primarySmartText;
   final SmartTextStore secondarySmartText;
   final HalfScreenTintStore othersAreTalkingTint;
+  final CollaboratorPresenceIncidentsOverlayStore presenceOverlay;
+
   final RallyStore rally;
+  @override
+  final RefreshBannerStore refreshBanner;
   @override
   final SessionNavigationStore sessionNavigation;
   @override
@@ -39,9 +45,11 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   _SessionSoloHybridWidgetsCoordinatorBase({
     required this.primarySmartText,
     required this.rally,
+    required this.refreshBanner,
     required this.secondarySmartText,
     required this.sessionNavigation,
     required this.othersAreTalkingTint,
+    required this.presenceOverlay,
     required this.wifiDisconnectOverlay,
     required this.beachWaves,
     required this.borderGlow,
@@ -53,7 +61,7 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   }
 
   @action
-  constructor(bool userCanSpeak) {
+  constructor(bool userCanSpeak, bool everyoneIsOnline) {
     tapStopwatch.start();
     beachWaves.setMovieMode(BeachWaveMovieModes.halfAndHalfToDrySand);
     primarySmartText.setMessagesData(SessionLists.tapToTalk);
@@ -63,6 +71,11 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
     secondarySmartText.startRotatingText();
     if (!userCanSpeak) {
       othersAreTalkingTint.initMovie(const NoParams());
+    }
+    if (!everyoneIsOnline) {
+      Timer(Seconds.get(0, milli: 500), () {
+        onCollaboratorLeft();
+      });
     }
     setIsExiting(false);
     setIsGoingToNotes(false);
@@ -85,12 +98,27 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
 
   @action
   onCollaboratorLeft() {
+    if (!presenceOverlay.showWidget) {
+      presenceOverlay.setWidgetVisibility(true);
+    }
     setSmartTextVisibilities(false);
-    primarySmartText.setWidgetVisibility(false);
     sessionNavigation.setWidgetVisibility(false);
-    secondarySmartText.setWidgetVisibility(false);
-
     setCollaboratorHasLeft(true);
+  }
+
+  refresh(Function onRefresh) async {
+    if (!refreshBanner.showWidget) return;
+    sessionNavigation.setWidgetVisibility(false);
+    primarySmartText.setWidgetVisibility(false);
+    secondarySmartText.setWidgetVisibility(false);
+    setCollaboratorHasLeft(false);
+    othersAreTalkingTint.reverseMovie(const NoParams());
+
+    refreshBanner.setWidgetVisibility(false);
+    Timer(Seconds.get(1), () {
+      Modular.to.navigate(SessionConstants.refresh);
+    });
+    await onRefresh();
   }
 
   @action
@@ -157,6 +185,7 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
 
   @action
   onLetGoCompleted() {
+    refreshBanner.setWidgetVisibility(true);
     resetSpeakingVariables();
 
     isASecondarySpeaker = false;
@@ -219,6 +248,12 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
       ),
     );
   }
+
+  @override
+  borderGlowReactor() => reaction((p0) => borderGlow.currentWidth, (p0) {
+        if (isASecondarySpeaker) return;
+        borderGlowBody(p0);
+      });
 
   gestureCrossTapReactor({
     required Function onInit,

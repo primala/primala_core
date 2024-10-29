@@ -92,7 +92,6 @@ abstract class _SessionNavigationStoreBase extends BaseWidgetStore
       infoNokhte.disappear();
       swipeGuide.setWidgetVisibility(false);
     }
-
     //
   }
 
@@ -107,23 +106,24 @@ abstract class _SessionNavigationStoreBase extends BaseWidgetStore
   }
 
   swipeReactor({
-    required Function onSwipeUp,
-    required Function onSwipeDown,
+    Function? onSwipeUp,
+    Function? onSwipeDown,
   }) =>
       reaction((p0) => swipe.directionsType, (p0) async {
+        print("swipe down??");
         switch (p0) {
           case GestureDirections.down:
             if (hasInitiatedBlur) {
               this.onSwipeDown();
             } else {
-              onSwipeDown();
+              onSwipeDown?.call();
             }
             break;
           case GestureDirections.up:
             if (hasInitiatedBlur) {
               this.onSwipeUp();
             } else {
-              onSwipeUp();
+              onSwipeUp?.call();
             }
           default:
             break;
@@ -134,10 +134,7 @@ abstract class _SessionNavigationStoreBase extends BaseWidgetStore
     bool initSwipeReactor = true,
   }) {
     if (initSwipeReactor) {
-      disposers.add(swipeReactor(
-        onSwipeDown: () {},
-        onSwipeUp: () {},
-      ));
+      disposers.add(swipeReactor());
     }
 
     disposers.add(centerNokhteReactor());
@@ -199,9 +196,7 @@ abstract class _SessionNavigationStoreBase extends BaseWidgetStore
     swipeGuide.setWidgetVisibility(false);
     setHasInitiatedBlur(false);
     setSwipeDirection(GestureDirections.initial);
-    centerNokhte.moveBackToCross(
-      startingPosition: CenterNokhtePositions.center,
-    );
+    centerNokhte.moveBackToCross();
     moveAuxNokhtes(shouldExpand: false);
     tint.reverseMovie(const NoParams());
   }

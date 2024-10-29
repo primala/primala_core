@@ -1,6 +1,7 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:nokhte/app/modules/presets/presets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 
 export './solo_hybrid/solo_hybrid.dart';
@@ -10,6 +11,7 @@ class SessionHybridModule extends Module {
   @override
   List<Module> get imports => [
         PosthogModule(),
+        PresetsModule(),
         SessionLogicModule(),
       ];
   @override
@@ -21,6 +23,15 @@ class SessionHybridModule extends Module {
         widgets: Modular.get<SessionSoloHybridWidgetsCoordinator>(),
         presence: Modular.get<SessionPresenceCoordinator>(),
         swipe: SwipeDetector(),
+      ),
+    );
+    i.add<SessionRefreshCoordinator>(
+      () => SessionRefreshCoordinator(
+        captureStart: Modular.get<CaptureNokhteSessionStart>(),
+        presence: Modular.get<SessionPresenceCoordinator>(),
+        captureScreen: Modular.get<CaptureScreen>(),
+        tap: TapDetector(),
+        widgets: Modular.get<SessionRefreshWidgetsCoordinator>(), //
       ),
     );
     i.add<SessionGroupHybridCoordinator>(
@@ -41,6 +52,14 @@ class SessionHybridModule extends Module {
       transition: TransitionType.noTransition,
       child: (context) => SessionSoloHybridScreen(
         coordinator: Modular.get<SessionSoloHybridCoordinator>(),
+      ),
+    );
+
+    r.child(
+      SessionConstants.relativeRefresh,
+      transition: TransitionType.noTransition,
+      child: (context) => SessionRefreshScreen(
+        coordinator: Modular.get<SessionRefreshCoordinator>(),
       ),
     );
     r.child(

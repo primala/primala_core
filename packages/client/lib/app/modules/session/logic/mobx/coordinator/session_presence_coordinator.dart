@@ -18,6 +18,7 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
   _SessionPresenceCoordinatorBase({
     required this.contract,
     required this.sessionMetadataStore,
+    // required this.incidentsOverlayStore,
   }) : incidentsOverlayStore = CollaboratorPresenceIncidentsOverlayStore(
           sessionMetadataStore: sessionMetadataStore,
         ) {
@@ -68,8 +69,8 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
   @action
   dispose() async {
     setState(StoreState.loading);
-    final res = contract.cancelSessionMetadataStream(const NoParams());
-    sessionMetadataStore.dispose();
+    final res = await contract.cancelSessionMetadataStream(const NoParams());
+    await sessionMetadataStore.dispose();
     isListening = res;
     setState(StoreState.loaded);
   }

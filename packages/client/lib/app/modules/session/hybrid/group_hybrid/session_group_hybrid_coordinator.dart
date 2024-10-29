@@ -37,13 +37,18 @@ abstract class _SessionGroupHybridCoordinatorBase
 
   @action
   constructor() async {
-    widgets.constructor(sessionMetadata.someoneIsTakingANote);
+    widgets.constructor(
+      sessionMetadata.someoneIsTakingANote,
+      sessionMetadata.everyoneIsOnline,
+    );
     widgets.sessionNavigation.setup(
       sessionMetadata.screenType,
       sessionMetadata.presetType,
+      initSwipeReactor: false,
     );
     initReactors();
     await presence.updateCurrentPhase(2.0);
+    await onResumed();
     await captureScreen(SessionConstants.groupHybrid);
   }
 
@@ -56,6 +61,7 @@ abstract class _SessionGroupHybridCoordinatorBase
   initReactors() {
     disposers.add(holdReactor());
     disposers.add(letGoReactor());
+
     disposers.addAll(widgets.wifiDisconnectOverlay.initReactors(
       onQuickConnected: () => setDisableAllTouchFeedback(false),
       onLongReConnected: () {
@@ -88,6 +94,18 @@ abstract class _SessionGroupHybridCoordinatorBase
     disposers.add(glowColorReactor());
     disposers.add(secondarySpeakerSpotlightReactor());
     disposers.add(letEmCookTapReactor());
+    disposers.add(
+      widgets.sessionNavigation.swipeReactor(
+        onSwipeDown: () async {
+          widgets.refresh(() async {
+            if (presence.incidentsOverlayStore.showWidget) {
+              presence.incidentsOverlayStore.setWidgetVisibility(false);
+            }
+            await presence.dispose();
+          });
+        },
+      ),
+    );
   }
 
   userIsSpeakingReactor() =>

@@ -6,8 +6,10 @@ import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
+import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
+import 'package:simple_animations/simple_animations.dart';
 part 'session_group_hybrid_widgets_coordinator.g.dart';
 
 class SessionGroupHybridWidgetsCoordinator = _SessionGroupHybridWidgetsCoordinatorBase
@@ -19,6 +21,9 @@ abstract class _SessionGroupHybridWidgetsCoordinatorBase
   final LetEmCookStore letEmCook;
   final HalfScreenTintStore othersAreTakingNotesTint;
   final TintStore othersAreTalkingTint;
+
+  @override
+  final RefreshBannerStore refreshBanner;
   @override
   final SpeakLessSmileMoreStore speakLessSmileMore;
   @override
@@ -31,15 +36,18 @@ abstract class _SessionGroupHybridWidgetsCoordinatorBase
   final TouchRippleStore touchRipple;
   @override
   final WifiDisconnectOverlayStore wifiDisconnectOverlay;
+  final CollaboratorPresenceIncidentsOverlayStore presenceOverlay;
 
   _SessionGroupHybridWidgetsCoordinatorBase({
     required this.sessionNavigation,
     required this.letEmCook,
+    required this.refreshBanner,
     required this.othersAreTakingNotesTint,
     required this.othersAreTalkingTint,
     required this.wifiDisconnectOverlay,
     required this.mirroredText,
     required this.beachWaves,
+    required this.presenceOverlay,
     required this.borderGlow,
     required this.touchRipple,
     required this.speakLessSmileMore,
@@ -49,13 +57,22 @@ abstract class _SessionGroupHybridWidgetsCoordinatorBase
   }
 
   @action
-  constructor(bool someoneIsTakingANote) {
+  constructor(
+    bool someoneIsTakingANote,
+    bool everyoneIsOnline,
+  ) {
     beachWaves.setMovieMode(BeachWaveMovieModes.halfAndHalfToDrySand);
     mirroredText.setMessagesData(MirroredTextContent.hybrid);
     mirroredText.startBothRotatingText();
     if (someoneIsTakingANote) {
       othersAreTakingNotesTint.initMovie(const NoParams());
     }
+    if (!everyoneIsOnline) {
+      Timer(Seconds.get(0, milli: 500), () {
+        onCollaboratorLeft();
+      });
+    }
+
     setIsGoingToNotes(someoneIsTakingANote);
     initReactors();
   }
@@ -65,16 +82,28 @@ abstract class _SessionGroupHybridWidgetsCoordinatorBase
 
   @action
   onCollaboratorLeft() {
-    mirroredText.setWidgetVisibility(false);
-    sessionNavigation.setWidgetVisibility(false);
+    // Timer.periodic(Seconds.get(0, milli: 500), (timer) {
+//   if (constructorIsCalled) {
+    if (!presenceOverlay.showWidget) {
+      presenceOverlay.setWidgetVisibility(true);
+    }
     setCollaboratorHasLeft(true);
+    sessionNavigation.setWidgetVisibility(false);
+    mirroredText.setWidgetVisibility(false);
+    // timer.cancel();
+    //   }
+    // });
   }
 
   @action
   onCollaboratorJoined() {
+    // Timer.periodic(Seconds.get(0, milli: 500), (timer) {
+    // if (constructorIsCalled) {
     mirroredText.setWidgetVisibility(true);
     sessionNavigation.setWidgetVisibility(true);
     setCollaboratorHasLeft(false);
+    // }
+    // });
   }
 
   @action
@@ -109,6 +138,18 @@ abstract class _SessionGroupHybridWidgetsCoordinatorBase
     }
   }
 
+  refresh(Function onRefresh) async {
+    if (!refreshBanner.showWidget || someoneElseIsTalking) return;
+    sessionNavigation.setWidgetVisibility(false);
+    mirroredText.setWidgetVisibility(false);
+    othersAreTakingNotesTint.reverseMovie(const NoParams());
+    refreshBanner.setWidgetVisibility(false);
+    Timer(Seconds.get(1), () {
+      Modular.to.navigate(SessionConstants.refresh);
+    });
+    await onRefresh();
+  }
+
   @action
   onLetGo() {
     endSpeaking();
@@ -117,6 +158,7 @@ abstract class _SessionGroupHybridWidgetsCoordinatorBase
   @action
   onLetGoCompleted() {
     resetSpeakingVariables();
+    refreshBanner.setWidgetVisibility(true);
     if (!collaboratorHasLeft) {
       sessionNavigation.setWidgetVisibility(true);
       mirroredText.setWidgetVisibility(true);
@@ -134,6 +176,7 @@ abstract class _SessionGroupHybridWidgetsCoordinatorBase
   @action
   initReactors() {
     disposers.add(borderGlowReactor());
+
     disposers.add(baseBeachWavesMovieStatusReactor(
       onBorderGlowInitialized: () {
         borderGlow.initMovie(const NoParams());
@@ -173,4 +216,7 @@ abstract class _SessionGroupHybridWidgetsCoordinatorBase
   @computed
   bool get hasTappedOnTheTopHalf =>
       touchRipple.tapPlacement == GesturePlacement.topHalf;
+
+  @computed
+  bool get someoneElseIsTalking => othersAreTalkingTint.control == Control.play;
 }

@@ -44,7 +44,6 @@ abstract class _SessionJoinerCoordinatorBase
   constructor() async {
     widgets.constructor();
     initReactors();
-    await logic.nuke();
     logic.listenToSessionActivation();
     await captureScreen(SessionJoinerConstants.sessionJoiner);
   }

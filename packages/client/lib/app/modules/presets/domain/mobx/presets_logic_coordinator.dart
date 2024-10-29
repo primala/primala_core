@@ -43,9 +43,12 @@ abstract class _PresetsLogicCoordinatorBase with Store, BaseMobxLogic {
 
   @action
   upsertSessionPreferences(UpsertSessionPreferencesParams params) async {
+    setState(StoreState.loading);
+    preferencesAreUpdated = false;
     final result = await contract.upsertSessionPreferences(params);
     result.fold((failure) => errorUpdater(failure), (updateStatus) {
       preferencesAreUpdated = updateStatus;
+      setState(StoreState.loaded);
     });
   }
 }

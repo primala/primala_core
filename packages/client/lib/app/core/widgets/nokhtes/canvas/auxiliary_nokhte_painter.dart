@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nokhte/app/core/widgets/nokhtes/types/auxiliary_nokhte_colorways.dart';
+import 'package:nokhte/app/core/widgets/widgets.dart';
 
 class AuxiliaryNokhtePainter extends CustomPainter {
   final Offset offsets;
@@ -11,6 +11,10 @@ class AuxiliaryNokhtePainter extends CustomPainter {
   final String text;
   final double textOpacity;
   final AuxiliaryNokhteColorways colorway;
+  Path path = SvgAnimtionConstants.crossPath;
+  Rect pathBounds = SvgAnimtionConstants.crossPath.getBounds();
+  late double height;
+  late double width;
 
   AuxiliaryNokhtePainter({
     required this.offsets,
@@ -52,10 +56,14 @@ class AuxiliaryNokhtePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    height = pathBounds.height;
+    width = pathBounds.width;
+
     final center = Offset(
       offsets.dx,
       offsets.dy,
     );
+
     final rect = Rect.fromCircle(center: center, radius: radius);
 
     Paint paint = Paint();

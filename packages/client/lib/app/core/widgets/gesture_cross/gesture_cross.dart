@@ -21,27 +21,22 @@ class GestureCross extends HookWidget {
   Widget build(BuildContext context) {
     final size = useSquareSize(relativeLength: .20);
     return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Expanded(
-          child: Container(),
-        ),
         Container(
           alignment: Alignment.bottomCenter,
-          child: Container(
-            alignment: Alignment.topLeft,
+          child: SizedBox(
             width: size.width,
             height: size.height,
             child: GestureDetector(
               onTap: () => store.incrementTapCount(),
+              onDoubleTap: () => store.incrementTapCount(),
               child: MultiHitStack(
                 children: [
                   Cross(
                     showGlowAndOutline: showGlowAndOutline,
                     store: store.cross,
-                  ),
-                  StrokeCrossNokhte(
-                    store: store.strokeCrossNokhte,
-                    offsets: config.getStrokeOffsets(),
                   ),
                 ],
               ),

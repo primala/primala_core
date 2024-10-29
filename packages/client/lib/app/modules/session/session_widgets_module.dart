@@ -13,6 +13,7 @@ class SessionWidgetsModule extends Module {
         ConnectivityModule(),
         GestureCrossModule(),
         SessionNavigationModule(),
+        SessionLogicModule(),
       ];
   @override
   void exportedBinds(Injector i) {
@@ -35,6 +36,15 @@ class SessionWidgetsModule extends Module {
         // presetCard: ExpandedPresetCardsStore(),
       ),
     );
+
+    i.add<SessionRefreshWidgetsCoordinator>(
+      () => SessionRefreshWidgetsCoordinator(
+        wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
+        beachWaves: BeachWavesStore(),
+        // presetCard: ExpandedPresetCardsStore(),
+      ),
+    );
+
     i.add<SessionLobbyWidgetsCoordinator>(
       () => SessionLobbyWidgetsCoordinator(
         presetArticle: PresetArticleStore(
@@ -126,6 +136,9 @@ class SessionWidgetsModule extends Module {
   injectHybrid(i) {
     i.add<SessionSoloHybridWidgetsCoordinator>(
       () => SessionSoloHybridWidgetsCoordinator(
+        presenceOverlay:
+            Modular.get<SessionPresenceCoordinator>().incidentsOverlayStore,
+        refreshBanner: RefreshBannerStore(),
         sessionNavigation: Modular.get<SessionNavigationStore>(),
         rally: RallyStore(
           backButton: BackButtonStore(),
@@ -143,6 +156,9 @@ class SessionWidgetsModule extends Module {
     );
     i.add<SessionGroupHybridWidgetsCoordinator>(
       () => SessionGroupHybridWidgetsCoordinator(
+        presenceOverlay:
+            Modular.get<SessionPresenceCoordinator>().incidentsOverlayStore,
+        refreshBanner: RefreshBannerStore(),
         letEmCook: LetEmCookStore(),
         sessionNavigation: Modular.get<SessionNavigationStore>(),
         othersAreTalkingTint: TintStore(),

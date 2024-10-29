@@ -34,6 +34,8 @@ abstract class _PolymorphicSoloWidgetsCoordinatorBase
   @override
   final WifiDisconnectOverlayStore wifiDisconnectOverlay;
   final BackButtonStore backButton;
+  @override
+  late RefreshBannerStore? refreshBanner;
 
   _PolymorphicSoloWidgetsCoordinatorBase({
     required this.wifiDisconnectOverlay,
@@ -88,7 +90,7 @@ abstract class _PolymorphicSoloWidgetsCoordinatorBase
 
   @action
   initFullScreenNotes() {
-    if (isLeaving) return;
+    if (isLeaving || isHolding) return;
     baseInitFullScreenNotes(() {
       setTextVisibilities(false);
     });
