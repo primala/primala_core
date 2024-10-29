@@ -14,18 +14,10 @@ class SessionStartersLogicCoordinator = _SessionStartersLogicCoordinatorBase
     with _$SessionStartersLogicCoordinator;
 
 abstract class _SessionStartersLogicCoordinatorBase with Store, BaseMobxLogic {
-  final CancelSessionActivationStream cancelStreamLogic;
-  final InitializeSession initializeSessionLogic;
-  final JoinSession joinSessionLogic;
-  final NukeSession nukeSessionLogic;
-  final ListenToSessionActivationStatus listenToSessionActivationLogic;
+  final SessionStartersContract contract;
 
   _SessionStartersLogicCoordinatorBase({
-    required this.cancelStreamLogic,
-    required this.initializeSessionLogic,
-    required this.joinSessionLogic,
-    required this.nukeSessionLogic,
-    required this.listenToSessionActivationLogic,
+    required this.contract,
   }) {
     initBaseLogicActions();
   }
@@ -60,6 +52,9 @@ abstract class _SessionStartersLogicCoordinatorBase with Store, BaseMobxLogic {
   bool hasInitialized = false;
 
   @observable
+  bool hasUpdatedSessionType = false;
+
+  @observable
   ObservableStream<bool> collaboratorSearchStatus =
       ObservableStream(const Stream.empty());
 
@@ -85,7 +80,8 @@ abstract class _SessionStartersLogicCoordinatorBase with Store, BaseMobxLogic {
     if (shouldNuke) {
       await nuke();
     }
-    nokhteSessionSearchStatusIsListening = cancelStreamLogic(const NoParams());
+    nokhteSessionSearchStatusIsListening =
+        contract.cancelSessionActivationStream(const NoParams());
     await collaboratorSearchStatus.close();
     await searchSubscription.cancel();
   }
@@ -93,7 +89,8 @@ abstract class _SessionStartersLogicCoordinatorBase with Store, BaseMobxLogic {
   @action
   listenToSessionActivation() async {
     nokhteSessionSearchStatusIsListening = true;
-    final result = await listenToSessionActivationLogic(const NoParams());
+    final result =
+        await contract.listenToSessionActivationStatus(const NoParams());
     result.fold((failure) => errorUpdater(failure), (stream) {
       nokhteSearchStatus = ObservableStream(stream);
       nokhteSubscription = nokhteSearchStatus.listen((value) {
@@ -103,17 +100,25 @@ abstract class _SessionStartersLogicCoordinatorBase with Store, BaseMobxLogic {
   }
 
   @action
-  initialize({
-    Either<NoParams, PresetTypes> params = const Left(NoParams()),
-  }) async {
-    final result = await initializeSessionLogic(params);
+  initialize(
+    Either<NoParams, PresetTypes> params,
+  ) async {
+    final result = await contract.initializeSession(const Left(NoParams()));
     result.fold((failure) => errorUpdater(failure),
-        (entryStatus) => hasJoined = entryStatus);
+        (entryStatus) => hasInitialized = entryStatus);
+  }
+
+  @action
+  updateSessionType(String newPresetUID) async {
+    hasUpdatedSessionType = false;
+    final result = await contract.updateSessionType(newPresetUID);
+    result.fold((failure) => errorUpdater(failure),
+        (entryStatus) => hasUpdatedSessionType = entryStatus);
   }
 
   @action
   join(String collaboratorUID) async {
-    final result = await joinSessionLogic(collaboratorUID);
+    final result = await contract.joinSession(collaboratorUID);
     result.fold((failure) => errorUpdater(failure),
         (entryStatus) => hasJoined = entryStatus);
   }
@@ -121,7 +126,7 @@ abstract class _SessionStartersLogicCoordinatorBase with Store, BaseMobxLogic {
   @action
   nuke() async {
     hasJoined = false;
-    final result = await nukeSessionLogic(const NoParams());
+    final result = await contract.nukeSession(const NoParams());
     result.fold((failure) => errorUpdater(failure),
         (nukeStatus) => hasNuked = nukeStatus);
   }
