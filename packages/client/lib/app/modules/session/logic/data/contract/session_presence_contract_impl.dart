@@ -92,7 +92,7 @@ class SessionPresenceContractImpl
   startTheSession(params) async {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.startTheSession();
-      return fromFunctionResponse(res);
+      return fromSupabase(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }
@@ -109,8 +109,6 @@ class SessionPresenceContractImpl
       return Left(FailureConstants.internetConnectionFailure);
     }
   }
-
-
 
   @override
   usePowerUp(params) async {
