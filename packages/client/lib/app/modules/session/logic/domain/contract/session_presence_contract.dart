@@ -19,7 +19,7 @@ abstract class SessionPresenceContract {
   );
   Future<Either<Failure, Stream<NokhteSessionMetadata>>>
       listenToRTSessionMetadata(NoParams params);
-  bool cancelSessionMetadataStream(NoParams params);
+  Future<bool> cancelSessionMetadataStream(NoParams params);
 
   Future<Either<Failure, bool>> updateSpeakingTimerStart();
 }

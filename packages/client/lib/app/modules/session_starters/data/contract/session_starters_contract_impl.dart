@@ -18,7 +18,7 @@ class SessionStartersContractImpl
 
   @override
   cancelSessionActivationStream(NoParams params) async =>
-      remoteSource.cancelSessionActivationStream();
+      await remoteSource.cancelSessionActivationStream();
 
   @override
   listenToSessionActivationStatus(NoParams params) async {

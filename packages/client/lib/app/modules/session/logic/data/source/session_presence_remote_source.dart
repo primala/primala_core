@@ -11,7 +11,7 @@ abstract class SessionPresenceRemoteSource {
   Future<List> clearTheCurrentTalker();
   Future<List> updateCurrentPhase(double params);
   Stream<NokhteSessionMetadata> listenToSessionMetadata();
-  bool cancelSessionMetadataStream();
+  Future<bool> cancelSessionMetadataStream();
   Future<List> addContent(String content);
   Future<List> letEmCook();
   Future<List> rally(

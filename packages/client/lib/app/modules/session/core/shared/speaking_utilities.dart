@@ -10,6 +10,7 @@ mixin SessionSpeakingUtilities {
   BeachWavesStore get beachWaves;
   TouchRippleStore get touchRipple;
   BorderGlowStore get borderGlow;
+  RefreshBannerStore? get refreshBanner;
   SpeakLessSmileMoreStore get speakLessSmileMore;
 
   SessionNavigationStore get sessionNavigation;
@@ -65,6 +66,7 @@ mixin SessionSpeakingUtilities {
       beachWaves.setMovieMode(
         BeachWaveMovieModes.halfAndHalfToDrySand,
       );
+      refreshBanner?.setWidgetVisibility(false);
 
       beachWaves.currentStore.initMovie(const NoParams());
       sessionNavigation.setWidgetVisibility(false);
@@ -97,6 +99,7 @@ mixin SessionSpeakingUtilities {
   baseInitFullScreenNotes(Function onInit) {
     if (!sessionNavigation.hasInitiatedBlur) {
       setIsGoingToNotes(true);
+      refreshBanner?.setWidgetVisibility(false);
       sessionNavigation.setWidgetVisibility(false);
       beachWaves.setMovieMode(
         BeachWaveMovieModes.skyToHalfAndHalf,

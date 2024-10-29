@@ -36,17 +36,23 @@ abstract class _SessionSoloHybridCoordinatorBase
 
   @action
   constructor() async {
-    widgets.constructor(sessionMetadata.userCanSpeak);
+    widgets.constructor(
+        sessionMetadata.userCanSpeak, sessionMetadata.everyoneIsOnline);
     widgets.sessionNavigation.setup(
       sessionMetadata.screenType,
       sessionMetadata.presetType,
+      initSwipeReactor: false,
     );
     widgets.rally.setValues(
       fullNames: sessionMetadata.fullNames,
       canRally: sessionMetadata.canRallyArray,
     );
+    if (!sessionMetadata.everyoneIsOnline) {
+      widgets.onCollaboratorLeft();
+    }
     initReactors();
     await presence.updateCurrentPhase(2.0);
+    await onResumed();
     await captureScreen(SessionConstants.soloHybrid);
   }
 
@@ -62,6 +68,8 @@ abstract class _SessionSoloHybridCoordinatorBase
       onLongReConnected: () async {
         setDisableAllTouchFeedback(false);
         if (sessionMetadata.userIsSpeaking) {
+          presence.incidentsOverlayStore.setWidgetVisibility(true);
+
           await presence.updateWhoIsTalking(UpdateWhoIsTalkingParams.clearOut);
         }
       },
@@ -106,6 +114,18 @@ abstract class _SessionSoloHybridCoordinatorBase
     disposers.add(rallyReactor());
     disposers.add(glowColorReactor());
     disposers.add(secondarySpotlightReactor());
+    disposers.add(
+      widgets.sessionNavigation.swipeReactor(
+        onSwipeDown: () async {
+          widgets.refresh(() async {
+            if (presence.incidentsOverlayStore.showWidget) {
+              presence.incidentsOverlayStore.setWidgetVisibility(false);
+            }
+            await presence.dispose();
+          });
+        },
+      ),
+    );
   }
 
   glowColorReactor() => reaction(

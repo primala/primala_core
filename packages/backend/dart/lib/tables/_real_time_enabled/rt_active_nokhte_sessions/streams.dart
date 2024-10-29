@@ -13,7 +13,9 @@ class RTActiveNokhteSessionsStream extends RTActiveNokhteSessionQueries
   RTActiveNokhteSessionsStream({required super.supabase})
       : presetsQueries = CompanyPresetsQueries(supabase: supabase);
 
-  cancelSessionActivationStream() {
+  Future<bool> cancelSessionActivationStream() async {
+    final res = supabase.realtime.getChannels();
+    await res.first.unsubscribe();
     getActiveNokhteSessionCreationListingingStatus = false;
     return getActiveNokhteSessionCreationListingingStatus;
   }
@@ -32,7 +34,8 @@ class RTActiveNokhteSessionsStream extends RTActiveNokhteSessionQueries
     }
   }
 
-  cancelGetSessionMetadataStream() {
+  Future<bool> cancelGetSessionMetadataStream() async {
+    await supabase.realtime.removeAllChannels();
     sessionMetadataListeningStatus = false;
     return sessionMetadataListeningStatus;
   }

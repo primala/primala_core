@@ -139,6 +139,7 @@ abstract class _SessionMetadataStoreBase
           if (value.phases.length != currentPhases.length) {
             await _getStaticMetadata();
           }
+          print("are we listening? $value");
           everyoneIsOnline = value.everyoneIsOnline;
           final phases = value.phases.map((e) => double.parse(e.toString()));
           speakingTimerStart = value.speakingTimerStart;
@@ -270,10 +271,14 @@ abstract class _SessionMetadataStoreBase
   CompanyPresetsEntity get presetEntity => presetsLogic.presetsEntity;
 
   @computed
-  SessionScreenTypes get screenType => presetEntity.screenTypes.first;
+  SessionScreenTypes get screenType => presetEntity.articles.isEmpty
+      ? SessionScreenTypes.none
+      : presetEntity.screenTypes.first;
 
   @computed
-  PresetTypes get presetType => presetEntity.presets.first;
+  PresetTypes get presetType => presetEntity.articles.isEmpty
+      ? PresetTypes.none
+      : presetEntity.presets.first;
 
   @computed
   List<SessionTags> get tags {

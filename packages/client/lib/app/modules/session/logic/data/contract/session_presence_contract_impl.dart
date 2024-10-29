@@ -85,8 +85,8 @@ class SessionPresenceContractImpl
   }
 
   @override
-  cancelSessionMetadataStream(NoParams params) =>
-      remoteSource.cancelSessionMetadataStream();
+  cancelSessionMetadataStream(NoParams params) async =>
+      await remoteSource.cancelSessionMetadataStream();
 
   @override
   startTheSession(params) async {

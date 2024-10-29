@@ -31,16 +31,20 @@ class SessionLogicModule extends Module {
         networkInfo: Modular.get<NetworkInfoImpl>(),
       ),
     );
-    i.addSingleton<SessionMetadataStore>(
+    i.add<SessionMetadataStore>(
       () => SessionMetadataStore(
         presetsLogic: Modular.get<PresetsLogicCoordinator>(),
-        contract: i<SessionPresenceContractImpl>(),
+        contract: Modular.get<SessionPresenceContractImpl>(),
       ),
     );
-    i.add<SessionPresenceCoordinator>(
+
+    i.addSingleton<SessionPresenceCoordinator>(
       () => SessionPresenceCoordinator(
+        // incidentsOverlayStore: CollaboratorPresenceIncidentsOverlayStore(
+        //   sessionMetadataStore: Modular.get<SessionMetadataStore>(),
+        // ),
         contract: i<SessionPresenceContractImpl>(),
-        sessionMetadataStore: i<SessionMetadataStore>(),
+        sessionMetadataStore: Modular.get<SessionMetadataStore>(),
       ),
     );
   }

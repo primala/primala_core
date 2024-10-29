@@ -34,6 +34,8 @@ abstract class _PolymorphicSoloWidgetsCoordinatorBase
   @override
   final WifiDisconnectOverlayStore wifiDisconnectOverlay;
   final BackButtonStore backButton;
+  @override
+  late RefreshBannerStore? refreshBanner;
 
   _PolymorphicSoloWidgetsCoordinatorBase({
     required this.wifiDisconnectOverlay,

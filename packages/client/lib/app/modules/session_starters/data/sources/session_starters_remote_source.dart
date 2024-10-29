@@ -13,7 +13,7 @@ abstract class SessionStartersRemoteSource {
 
   Stream<bool> listenToSessionActivationStatus();
 
-  bool cancelSessionActivationStream();
+  Future<bool> cancelSessionActivationStream();
 }
 
 class SessionStartersRemoteSourceImpl implements SessionStartersRemoteSource {
@@ -29,8 +29,8 @@ class SessionStartersRemoteSourceImpl implements SessionStartersRemoteSource {
         currentUserUID = supabase.auth.currentUser?.id ?? '';
 
   @override
-  bool cancelSessionActivationStream() {
-    return stream.cancelSessionActivationStream();
+  cancelSessionActivationStream() async {
+    return await stream.cancelSessionActivationStream();
   }
 
   @override
