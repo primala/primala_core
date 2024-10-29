@@ -125,19 +125,23 @@ mixin SessionSpeakingUtilities {
         }
       });
 
-  borderGlowReactor() => reaction((p0) => borderGlow.currentWidth, (p0) {
-        if (p0 == 200) {
-          speakLessSmileMore.setSpeakLess(true);
-          Timer(Seconds.get(2), () {
-            if (borderGlow.currentWidth == 200) {
-              speakLessSmileMore.setSmileMore(true);
-            }
-          });
-        } else {
-          if (speakLessSmileMore.showSmileMore ||
-              speakLessSmileMore.showSpeakLess) {
-            speakLessSmileMore.hideBoth();
-          }
+  borderGlowBody(double param) {
+    if (param == 200) {
+      speakLessSmileMore.setSpeakLess(true);
+      Timer(Seconds.get(2), () {
+        if (borderGlow.currentWidth == 200) {
+          speakLessSmileMore.setSmileMore(true);
         }
+      });
+    } else {
+      if (speakLessSmileMore.showSmileMore ||
+          speakLessSmileMore.showSpeakLess) {
+        speakLessSmileMore.hideBoth();
+      }
+    }
+  }
+
+  borderGlowReactor() => reaction((p0) => borderGlow.currentWidth, (p0) {
+        borderGlowBody(p0);
       });
 }

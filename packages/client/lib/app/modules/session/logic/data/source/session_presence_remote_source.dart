@@ -20,7 +20,7 @@ abstract class SessionPresenceRemoteSource {
   String getUserUID();
   Future<List> getStaticSessionMetadata();
   Future<FunctionResponse> completeTheSession();
-  Future<FunctionResponse> startTheSession();
+  Future<List> startTheSession();
   Future<List> getUserMetadata();
   Future<List> updateSpeakingTimerStart();
 }
@@ -71,7 +71,7 @@ class SessionPresenceRemoteSourceImpl implements SessionPresenceRemoteSource {
   addContent(content) async => await stQueries.addContent(content);
 
   @override
-  startTheSession() async => await rtQueries.startTheSession();
+  startTheSession() async => await rtQueries.beginSession();
 
   @override
   getUserUID() => supabase.auth.currentUser?.id ?? '';

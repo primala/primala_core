@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/core/types/types.dart';
@@ -78,14 +79,17 @@ abstract class _SessionStarterCoordinatorBase
     ));
     disposers.add(nokhteSearchStatusReactor());
     disposers.add(tapReactor());
+    disposers.add(hasUpdatedSessionTypeReactor());
     disposers.add(hasInitiatedSessionReactor());
     disposers.add(widgets.presetSelectionReactor(onSelected));
     disposers.add(widgets.condensedPresetCardTapReactor(
       onClose: () async {
         if (widgets.presetArticle.hasAdjustedSessionPreferences) {
           setPresetsQueryState(StoreState.loading);
-          widgets.presetHeader.presetIcons
-              .setTags(widgets.presetArticle.articleSectionsTags);
+          if (userInfo.preferredPreset.name == 'Solo') {
+            widgets.presetHeader.presetIcons
+                .setTags(widgets.presetArticle.articleSectionsTags);
+          }
           await presetsLogic.upsertSessionPreferences(
             UpsertSessionPreferencesParams(
               type: PresetTypes.solo,
@@ -113,8 +117,7 @@ abstract class _SessionStarterCoordinatorBase
   onSelected(String presetUID) async {
     await userInfo.updatePreferredPreset(presetUID);
     await userInfo.getPreferredPreset();
-    await starterLogic.nuke();
-    await starterLogic.initialize();
+    await starterLogic.updateSessionType(presetUID);
   }
 
   @action
@@ -146,7 +149,8 @@ abstract class _SessionStarterCoordinatorBase
       reaction((p0) => userInfo.preferredPreset, (p0) async {
         if (userInfo.state == StoreState.loaded) {
           if (userInfo.hasAccessedQrCode) {
-            await starterLogic.initialize();
+            if (starterLogic.hasInitialized) return;
+            await starterLogic.initialize(const Left(NoParams()));
           } else {
             widgets.onNoPresetSelected();
           }
@@ -164,7 +168,6 @@ abstract class _SessionStarterCoordinatorBase
       for (var section in sections) {
         tags.add(section.tag);
       }
-
       widgets.onPreferredPresetReceived(
         sessionName: userInfo.preferredPreset.name,
         tags: tags,
@@ -175,7 +178,14 @@ abstract class _SessionStarterCoordinatorBase
   }
 
   hasInitiatedSessionReactor() =>
-      reaction((p0) => starterLogic.hasJoined, (p0) async {
+      reaction((p0) => starterLogic.hasInitialized, (p0) async {
+        if (p0) {
+          resetPresetInfo();
+        }
+      });
+
+  hasUpdatedSessionTypeReactor() =>
+      reaction((p0) => starterLogic.hasUpdatedSessionType, (p0) async {
         if (p0) {
           resetPresetInfo();
         }

@@ -31,7 +31,9 @@ abstract class _HomeCoordinatorBase
     required this.sessionStartersLogic,
     required this.getNokhteSessionArtifactsLogic,
     required this.captureScreen,
-  });
+  }) {
+    initBaseCoordinatorActions();
+  }
 
   @observable
   ObservableList<NokhteSessionArtifactEntity> nokhteSessionArtifacts =
@@ -68,8 +70,9 @@ abstract class _HomeCoordinatorBase
         ifTouchIsNotDisabled(() async {
           widgets.initSoloSession();
           await sessionStartersLogic.initialize(
-            params: const Right(PresetTypes.solo),
+            const Right(PresetTypes.solo),
           );
+          setDisableAllTouchFeedback(true);
         });
       });
 

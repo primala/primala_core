@@ -220,6 +220,12 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
     );
   }
 
+  @override
+  borderGlowReactor() => reaction((p0) => borderGlow.currentWidth, (p0) {
+        if (isASecondarySpeaker) return;
+        borderGlowBody(p0);
+      });
+
   gestureCrossTapReactor({
     required Function onInit,
     required Function onReverse,
