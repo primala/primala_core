@@ -1,116 +1,149 @@
 import 'package:flutter/material.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
+import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 
 class AuxiliaryNokhteUtils {
   static StartAndEndOffsets getOffsets(
-    Size screenSize, {
+    ScreenSizeData screenSize, {
     required AuxiliaryNokhtePositions position,
     required NokhteScaleState direction,
   }) {
     Offset start = Offset.zero;
     Offset end = Offset.zero;
+    Rect pathBounds = SvgAnimtionConstants.crossPath.getBounds();
+    double width = pathBounds.width;
+    double height = pathBounds.height;
+    final size =
+        useSquareSize(relativeLength: .2, screenSizeDataParam: screenSize);
+    final adjustmentdx = (size.width - width) / 2 - pathBounds.left;
+    final adjustmentdy = (size.height - height) / 2 - pathBounds.top;
     final screenCenter = Offset(
       screenSize.width / 2,
       screenSize.height / 2,
     );
+
     switch (position) {
       case AuxiliaryNokhtePositions.left:
+        final expandedOffset = Offset(
+          -useScaledSize(
+            baseValue: .115,
+            screenSize: screenSize.size,
+            bumpPerHundredth: .0002,
+          ),
+          (-screenCenter.dy) * .8,
+        );
+
+        final restingOffset = Offset(
+          CircleOffsets.left.dx + adjustmentdx,
+          CircleOffsets.left.dy + adjustmentdy,
+        );
+
         switch (direction) {
           case NokhteScaleState.enlarge:
-            start = Offset(CircleOffsets.left.dx, CircleOffsets.left.dy);
-            end = Offset(
-              -useScaledSize(
-                baseValue: .13,
-                screenSize: screenSize,
-                bumpPerHundredth: .0001,
-              ),
-              (-screenCenter.dy) * .8,
-            );
+            start = restingOffset;
+            end = expandedOffset;
           case NokhteScaleState.shrink:
-            start = Offset(
-              -useScaledSize(
-                baseValue: .13,
-                screenSize: screenSize,
-                bumpPerHundredth: .0001,
-              ),
-              (-screenCenter.dy) * .8,
-            );
-            end = Offset(CircleOffsets.left.dx, CircleOffsets.left.dy);
+            start = expandedOffset;
+            end = restingOffset;
         }
+        break;
+
       case AuxiliaryNokhtePositions.right:
+        final expandedOffset = Offset(
+          useScaledSize(
+            baseValue: .207,
+            screenSize: screenSize.size,
+            bumpPerHundredth: .0008,
+          ),
+          (-screenCenter.dy) * .8,
+        );
+
+        final restingOffset = Offset(
+          CircleOffsets.right.dx + adjustmentdx,
+          CircleOffsets.right.dy + adjustmentdy,
+        );
+
         switch (direction) {
           case NokhteScaleState.enlarge:
-            start = Offset(CircleOffsets.right.dx, CircleOffsets.right.dy);
-            end = Offset(
-              useScaledSize(
-                baseValue: .21,
-                screenSize: screenSize,
-                bumpPerHundredth: .0007,
-              ),
-              (-screenCenter.dy) * .8,
-            );
+            start = restingOffset;
+            end = expandedOffset;
           case NokhteScaleState.shrink:
-            start = Offset(
-              useScaledSize(
-                baseValue: .21,
-                screenSize: screenSize,
-                bumpPerHundredth: .0007,
-              ),
-              (-screenCenter.dy) * .8,
-            );
-            end = Offset(CircleOffsets.right.dx, CircleOffsets.right.dy);
+            start = expandedOffset;
+            end = restingOffset;
         }
+        break;
+
       case AuxiliaryNokhtePositions.top:
+        final expandedOffset = Offset(
+          CircleOffsets.center.dx + adjustmentdx,
+          -useScaledSize(
+            baseValue: .563,
+            screenSize: screenSize.size,
+            bumpPerHundredth: .0005,
+          ),
+        );
+
+        final restingOffset = Offset(
+          CircleOffsets.top.dx + adjustmentdx,
+          CircleOffsets.top.dy + adjustmentdy,
+        );
+
         switch (direction) {
           case NokhteScaleState.enlarge:
-            start = Offset(CircleOffsets.center.dx, CircleOffsets.top.dy);
-            end = Offset(
-              CircleOffsets.center.dx,
-              // (-screenCenter.dy) * 1.2,
-              -useScaledSize(
-                baseValue: .6,
-                screenSize: screenSize,
-                bumpPerHundredth: .0003,
-              ),
-            );
+            start = restingOffset;
+            end = expandedOffset;
           case NokhteScaleState.shrink:
-            start = Offset(
-              CircleOffsets.center.dx,
-              // (-screenCenter.dy) * 1.2,
-              -useScaledSize(
-                baseValue: .6,
-                screenSize: screenSize,
-                bumpPerHundredth: .0003,
-              ),
-            );
-            end = Offset(CircleOffsets.center.dx, CircleOffsets.top.dy);
+            start = expandedOffset;
+            end = restingOffset;
         }
+        break;
+
       case AuxiliaryNokhtePositions.bottom:
+        final expandedOffset = Offset(
+          CircleOffsets.center.dx + adjustmentdx,
+          -useScaledSize(
+            baseValue: .238,
+            screenSize: screenSize.size,
+            bumpPerHundredth: -.0006,
+          ),
+        );
+
+        final restingOffset = Offset(
+          CircleOffsets.bottom.dx + adjustmentdx,
+          CircleOffsets.bottom.dy + adjustmentdy,
+        );
+
         switch (direction) {
           case NokhteScaleState.enlarge:
-            start = Offset(CircleOffsets.center.dx, CircleOffsets.bottom.dy);
-            end = Offset(
-              CircleOffsets.center.dx,
-              -useScaledSize(
-                baseValue: .21,
-                screenSize: screenSize,
-                bumpPerHundredth: -.0005,
-              ),
-              // (-screenCenter.dy) * .4,
-            );
+            start = restingOffset;
+            end = expandedOffset;
           case NokhteScaleState.shrink:
-            start = Offset(
-              CircleOffsets.center.dx,
-              -useScaledSize(
-                baseValue: .21,
-                screenSize: screenSize,
-                bumpPerHundredth: -.0005,
-              ),
-              // (-screenCenter.dy) * .4,
-            );
-            end = Offset(CircleOffsets.center.dx, CircleOffsets.bottom.dy);
+            start = expandedOffset;
+            end = restingOffset;
         }
+        break;
+      case AuxiliaryNokhtePositions.center:
+        final expandedOffset = Offset(
+          CircleOffsets.center.dx + adjustmentdx,
+          -screenCenter.dy *
+              .8, // Adjust for an expanded position below the center
+        );
+
+        final restingOffset = Offset(
+          CircleOffsets.center.dx + adjustmentdx,
+          CircleOffsets.center.dy + adjustmentdy,
+        );
+
+        switch (direction) {
+          case NokhteScaleState.enlarge:
+            start = restingOffset;
+            end = expandedOffset;
+          case NokhteScaleState.shrink:
+            start = expandedOffset;
+            end = restingOffset;
+        }
+
       default:
         break;
     }

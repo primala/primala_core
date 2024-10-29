@@ -4,16 +4,17 @@ import 'package:flutter/material.dart';
 class ScreenSizeData extends Equatable {
   final double height;
   final double width;
+  final Size size;
   final EdgeInsets padding;
 
-  const ScreenSizeData({
+  ScreenSizeData({
     required this.height,
     required this.width,
     required this.padding,
-  });
+  }) : size = Size(width, height);
 
   static zero() =>
-      const ScreenSizeData(height: 0.0, width: 0.0, padding: EdgeInsets.zero);
+      ScreenSizeData(height: 0.0, width: 0.0, padding: EdgeInsets.zero);
 
   @override
   List<Object> get props => [height, width, padding];

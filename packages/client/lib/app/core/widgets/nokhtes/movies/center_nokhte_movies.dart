@@ -4,9 +4,12 @@ import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 class CenterNokhteMovies {
-  static MovieTween scale(Size screenSize, {bool reverse = false}) {
-    final screenCenter = Offset(screenSize.width / 2, screenSize.height / 2);
-
+  static MovieTween scale(ScreenSizeData screenSize, {bool reverse = false}) {
+    final offsets = AuxiliaryNokhteUtils.getOffsets(
+      screenSize,
+      position: AuxiliaryNokhtePositions.center,
+      direction: reverse ? NokhteScaleState.shrink : NokhteScaleState.enlarge,
+    );
     return MovieTween()
       ..scene(
         begin: Seconds.get(0),
@@ -15,15 +18,14 @@ class CenterNokhteMovies {
           .tween(
               'dx',
               Tween<double>(
-                begin: CircleOffsets.center.dx,
-                end: CircleOffsets.center.dx,
+                begin: offsets.start.dx,
+                end: offsets.end.dx,
               ))
           .tween(
             'dy',
             Tween<double>(
-              begin:
-                  reverse ? (-screenCenter.dy) * .8 : CircleOffsets.center.dy,
-              end: reverse ? CircleOffsets.center.dy : (-screenCenter.dy) * .8,
+              begin: offsets.start.dy,
+              end: offsets.end.dy,
             ),
             curve: Curves.easeInOutCubicEmphasized,
           )
@@ -37,79 +39,17 @@ class CenterNokhteMovies {
           );
   }
 
-  static MovieTween moveBackToCross(
-    Size screenSize, {
-    required CenterNokhtePositions startingPosition,
-  }) {
-    final screenCenter = Offset(
-      screenSize.width / 2,
-      screenSize.height / 2,
-    );
-    StartAndEndOffsets offsets = StartAndEndOffsets.initial();
-    AuxiliaryNokhtePositions position = AuxiliaryNokhtePositions.initial;
-    switch (startingPosition) {
-      case CenterNokhtePositions.top:
-        position = AuxiliaryNokhtePositions.top;
-      case CenterNokhtePositions.bottom:
-        position = AuxiliaryNokhtePositions.bottom;
-      case CenterNokhtePositions.right:
-        position = AuxiliaryNokhtePositions.right;
-      case CenterNokhtePositions.left:
-        position = AuxiliaryNokhtePositions.left;
-      default:
-        break;
-    }
-    offsets = AuxiliaryNokhteUtils.getOffsets(
-      screenSize,
-      position: position,
-      direction: NokhteScaleState.shrink,
-    );
-    if (startingPosition == CenterNokhtePositions.center) {
-      offsets = StartAndEndOffsets(
-        start: Offset(CircleOffsets.center.dx, (-screenCenter.dy) * .8),
-        end: Offset(CircleOffsets.center.dx, CircleOffsets.center.dy),
-      );
-    }
-    return MovieTween()
-      ..scene(
-        begin: Seconds.get(0),
-        end: Seconds.get(2),
-      )
-          .tween(
-            'dx',
-            Tween<double>(
-              begin: offsets.start.dx,
-              end: CircleOffsets.center.dx,
-            ),
-            curve: Curves.easeInOutCubicEmphasized,
-          )
-          .tween(
-            'dy',
-            Tween<double>(
-              begin: offsets.start.dy,
-              end: CircleOffsets.center.dy,
-            ),
-            curve: Curves.easeInOutCubicEmphasized,
-          )
-          .tween(
-            'radii',
-            Tween<double>(
-              begin: 25,
-              end: 4.5,
-            ),
-            curve: Curves.easeInOutCubicEmphasized,
-          );
-  }
-
   static MovieTween moveAround(
-    Size screenSize, {
+    ScreenSizeData screenSize, {
     required AuxiliaryNokhtePositions position,
   }) {
-    final screenCenter = Offset(
-      screenSize.width / 2,
-      screenSize.height / 2,
+    final offsets = AuxiliaryNokhteUtils.getOffsets(
+      screenSize,
+      position: AuxiliaryNokhtePositions.center,
+      direction: NokhteScaleState.enlarge,
     );
-    Offset start = Offset(CircleOffsets.center.dx, (-screenCenter.dy) * .8);
+
+    Offset start = offsets.end;
 
     Offset end = AuxiliaryNokhteUtils.getOffsets(
       screenSize,

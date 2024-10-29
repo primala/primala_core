@@ -41,8 +41,9 @@ class NokhteSessionArtifactModel extends NokhteSessionArtifactEntity {
             if (nokhteSession[FinishedNokhteSessionQueries.ALIASES][userIndex]
                 .isEmpty) {
               title = 'Session with ${collaboratorRow["first_name"]}';
-              if (nokhteSession[FinishedNokhteSessionQueries.COLLABORATOR_UIDS]
-                  .contains(userUID)) {
+              if (nokhteSession[
+                      FinishedNokhteSessionQueries.COLLABORATOR_UIDS] ==
+                  [userUID]) {
                 title = 'Solo Session';
               }
             } else {

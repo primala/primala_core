@@ -18,7 +18,7 @@ class SessionStartersContractImpl
 
   @override
   cancelSessionActivationStream(NoParams params) async =>
-      remoteSource.cancelSessionActivationStream();
+      await remoteSource.cancelSessionActivationStream();
 
   @override
   listenToSessionActivationStatus(NoParams params) async {
@@ -32,8 +32,8 @@ class SessionStartersContractImpl
   @override
   initializeSession(param) async {
     if (await networkInfo.isConnected) {
-      final res = await remoteSource.initializeSession(param);
-      return fromFunctionResponse(res);
+      final res = await remoteSource.initializeSession();
+      return fromSupabase(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }
@@ -58,5 +58,15 @@ class SessionStartersContractImpl
       return Left(FailureConstants.internetConnectionFailure);
     }
     //
+  }
+
+  @override
+  updateSessionType(newPresetUID) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.updateSessionType(newPresetUID);
+      return fromSupabase(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
   }
 }

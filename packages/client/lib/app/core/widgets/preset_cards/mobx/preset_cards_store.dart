@@ -99,7 +99,6 @@ abstract class _PresetCardsStoreBase extends BaseWidgetStore with Store {
   @action
   setCurrentHeldIndex(int i, {bool override = false}) {
     if (isEnabled[i] || override) {
-      // heldIndices.add(i);mB
       pastHeldIndex = currentHeldIndex;
       currentHeldIndex = i;
     }

@@ -24,6 +24,15 @@ class UserInformationQueries with UserInformationConstants {
   Future<List> getUserInfo() async =>
       await supabase.from(TABLE).select().eq(UID, userUID);
 
+  Future<String> getFullName() async {
+    final res = await getUserInfo();
+    if (res.isNotEmpty) {
+      return '${res.first[FIRST_NAME]} ${res.first[LAST_NAME]}';
+    } else {
+      return '';
+    }
+  }
+
   Future<List> deleteUserInfo() async =>
       await supabase.from(TABLE).delete().eq(UID, userUID).select();
 
