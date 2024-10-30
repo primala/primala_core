@@ -78,7 +78,6 @@ abstract class _SessionStarterCoordinatorBase
       },
     ));
     disposers.add(nokhteSearchStatusReactor());
-    disposers.add(tapReactor());
     disposers.add(hasUpdatedSessionTypeReactor());
     disposers.add(hasInitiatedSessionReactor());
     disposers.add(widgets.presetSelectionReactor(onSelected));
@@ -106,6 +105,7 @@ abstract class _SessionStarterCoordinatorBase
 
   tapReactor() => reaction((p0) => tap.doubleTapCount, (p0) async {
         if (selectedSessionIsSolo && presetsQueryState == StoreState.loaded) {
+          // make it so that this can only tap once use HOFs
           widgets.initTransition(true);
           await starterLogic.dispose();
         }
@@ -159,7 +159,8 @@ abstract class _SessionStarterCoordinatorBase
 
   @action
   resetPresetInfo() {
-    if (userInfo.preferredPreset.name.isNotEmpty) {
+    if (userInfo.preferredPreset.name.isNotEmpty &&
+        !widgets.isEnteringNokhteSession) {
       final index = presetsLogic.presetsEntity.uids
           .indexOf(userInfo.preferredPreset.presetUID);
       final sections =
@@ -181,6 +182,7 @@ abstract class _SessionStarterCoordinatorBase
       reaction((p0) => starterLogic.hasInitialized, (p0) async {
         if (p0) {
           resetPresetInfo();
+          disposers.add(tapReactor());
         }
       });
 
