@@ -4,6 +4,7 @@ import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mixins/response_to_status.dart';
 import 'package:nokhte/app/modules/session_starters/session_starters.dart';
 import 'package:nokhte/app/core/network/network_info.dart';
+import 'package:nokhte_backend/tables/company_presets.dart';
 
 class SessionStartersContractImpl
     with ResponseToStatus
@@ -32,7 +33,9 @@ class SessionStartersContractImpl
   @override
   initializeSession(param) async {
     if (await networkInfo.isConnected) {
-      final res = await remoteSource.initializeSession();
+      final rsParams =
+          param.fold((noParam) => PresetTypes.none, (presetType) => presetType);
+      final res = await remoteSource.initializeSession(rsParams);
       return fromSupabase(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);

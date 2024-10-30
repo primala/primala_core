@@ -71,7 +71,7 @@ abstract class _SessionJoinerWidgetsCoordinatorBase
     beachWaves.currentStore.initMovie(const NoParams());
     gestureCross.fadeAllOut();
     centerNokhte.setWidgetVisibility(false);
-    homeNokhte.setWidgetVisibility(false);
+    homeNokhte.fadeOut();
     qrScanner.fadeOut();
   }
 

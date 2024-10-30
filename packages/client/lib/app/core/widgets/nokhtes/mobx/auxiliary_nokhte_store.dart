@@ -70,6 +70,21 @@ abstract class _AuxiliaryNokhteStoreBase
   }
 
   @action
+  fadeOut() {
+    setMovie(
+      AuxiliaryNokhteMovies.fadeIn(
+        screenSize,
+        position: position,
+        colorway: colorway,
+      ),
+    );
+    Timer(Seconds.get(0, milli: 1), () {
+      setControl(Control.playReverseFromEnd);
+    });
+    setMovieStatus(MovieStatus.inProgress);
+  }
+
+  @action
   explode() {
     setMovieMode(AuxiliaryNokhteMovieModes.explode);
     setMovie(

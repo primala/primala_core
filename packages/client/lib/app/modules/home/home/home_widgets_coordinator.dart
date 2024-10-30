@@ -153,11 +153,12 @@ abstract class _HomeWidgetsCoordinatorBase
   }
 
   @action
-  initSoloSession() {
-    if (hasInitiatedBlur) return;
+  initSoloSession(Function onInit) async {
+    if (hasInitiatedBlur || !isAllowedToMakeGesture() || hasSwiped()) return;
+    setSwipeDirection(GestureDirections.up);
     gestureCross.fadeAllOut();
     for (var element in auxNokhtes) {
-      element.setWidgetVisibility(false);
+      element.fadeOut();
     }
     centerNokhte.setWidgetVisibility(false);
     smartText.setWidgetVisibility(false);
@@ -169,6 +170,7 @@ abstract class _HomeWidgetsCoordinatorBase
         endValue: beachWaves.currentAnimationValues.first,
       ),
     );
+    await onInit();
   }
 
   @action
@@ -274,7 +276,9 @@ abstract class _HomeWidgetsCoordinatorBase
 
   @action
   onGestureCrossTap() {
-    if (!isDisconnected && isAllowedToMakeGesture()) {
+    if (!isDisconnected &&
+        isAllowedToMakeGesture() &&
+        beachWaves.movieMode != BeachWaveMovieModes.anyToOnShore) {
       if (!hasInitiatedBlur) {
         setHasInitiatedBlur(true);
 
