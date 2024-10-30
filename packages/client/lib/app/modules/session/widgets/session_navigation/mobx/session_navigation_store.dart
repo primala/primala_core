@@ -110,7 +110,6 @@ abstract class _SessionNavigationStoreBase extends BaseWidgetStore
     Function? onSwipeDown,
   }) =>
       reaction((p0) => swipe.directionsType, (p0) async {
-        print("swipe down??");
         switch (p0) {
           case GestureDirections.down:
             if (hasInitiatedBlur) {
