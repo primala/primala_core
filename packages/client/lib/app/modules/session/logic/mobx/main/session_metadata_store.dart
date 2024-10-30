@@ -139,7 +139,6 @@ abstract class _SessionMetadataStoreBase
           if (value.phases.length != currentPhases.length) {
             await _getStaticMetadata();
           }
-          print("are we listening? $value");
           everyoneIsOnline = value.everyoneIsOnline;
           final phases = value.phases.map((e) => double.parse(e.toString()));
           speakingTimerStart = value.speakingTimerStart;
