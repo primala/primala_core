@@ -21,13 +21,17 @@ abstract class _PolymorphicSoloCoordinatorBase
   @override
   final CaptureScreen captureScreen;
   final TapDetector tap;
+  final CaptureNokhteSessionStart captureStart;
+  final SessionMetadataStore sessionMetadata;
+
   _PolymorphicSoloCoordinatorBase({
     required this.captureScreen,
+    required this.captureStart,
     required this.widgets,
     required this.presence,
     required this.hold,
     required this.tap,
-  }) {
+  }) : sessionMetadata = presence.sessionMetadataStore {
     initBaseCoordinatorActions();
   }
 
@@ -59,11 +63,14 @@ abstract class _PolymorphicSoloCoordinatorBase
   }
 
   sessionPresetReactor() =>
-      reaction((p0) => presence.sessionMetadataStore.presetsLogic.state,
-          (p0) async {
+      reaction((p0) => sessionMetadata.presetsLogic.state, (p0) async {
         if (p0 == StoreState.loaded) {
           widgets.postConstructor(tags);
           initPostConstructorReactors();
+          await captureStart(CaptureNokhteSessionStartParams(
+            numberOfCollaborators: sessionMetadata.numberOfCollaborators,
+            presetType: sessionMetadata.presetType,
+          ));
         }
       });
 

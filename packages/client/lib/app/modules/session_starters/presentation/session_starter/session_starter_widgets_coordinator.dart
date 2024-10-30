@@ -151,10 +151,12 @@ abstract class _SessionStarterWidgetsCoordinatorBase
     required String presetUID,
     required String userUID,
   }) {
-    presetHeader.setHeader(
-      sessionName,
-      tags,
-    );
+    if (presetHeader.showWidget) {
+      presetHeader.setHeader(
+        sessionName,
+        tags,
+      );
+    }
     onQrCodeReceived(userUID,
         isASoloSession: !tags.contains(SessionTags.flexibleSeating) &&
             !tags.contains(SessionTags.strictSeating));
@@ -194,7 +196,9 @@ abstract class _SessionStarterWidgetsCoordinatorBase
 
   @action
   initTransition(bool transitionToSolo) {
-    if (hasInitiatedBlur) return;
+    if (hasInitiatedBlur ||
+        isEnteringNokhteSession ||
+        !isAllowedToMakeGesture()) return;
     scrollToTop();
     presetHeader.presetIcons.setWidgetVisibility(false);
     isEnteringNokhteSession = true;
@@ -218,7 +222,7 @@ abstract class _SessionStarterWidgetsCoordinatorBase
     qrSubtitleSmartText.setWidgetVisibility(false);
     gestureCross.fadeAllOut();
     centerNokhte.setWidgetVisibility(false);
-    homeNokhte.setWidgetVisibility(false);
+    homeNokhte.fadeOut();
   }
 
   presetHeaderTapReactor() => reaction(
@@ -256,7 +260,7 @@ abstract class _SessionStarterWidgetsCoordinatorBase
   onPresetHeaderTap() {
     // print(
     //     "max scroll extent: ${sessionScroller.scrollController.position.maxScrollExtent}");
-    if (presetCards.currentHeldIndex == -1) return;
+    if (presetCards.currentHeldIndex == -1 || !presetCards.showWidget) return;
     sessionScroller.scrollController.animateTo(
       sessionScroller.scrollController.position.maxScrollExtent,
       duration: Seconds.get(1),

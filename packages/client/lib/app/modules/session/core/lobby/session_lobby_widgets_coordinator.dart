@@ -56,9 +56,10 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
     if (qrCode.qrCodeData.isEmpty) {
       qrCode.setWidgetVisibility(false);
     }
+
     disposers.add(smartTextIndexReactor());
-    primarySmartText.startRotatingText();
     Timer(Seconds.get(1), () {
+      primarySmartText.startRotatingText();
       constructorHasBeenCalled = true;
     });
   }
@@ -111,7 +112,9 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
   @action
   onCanStartTheSession() {
     Timer.periodic(Seconds.get(0, milli: 100), (timer) {
-      if (primarySmartText.currentIndex == 0 && constructorHasBeenCalled) {
+      if (primarySmartText.currentIndex == 0 &&
+          constructorHasBeenCalled &&
+          primarySmartText.isDoneAnimating) {
         primarySmartText.startRotatingText(isResuming: true);
         timer.cancel();
       }
@@ -121,7 +124,9 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
   @action
   onRevertCanStartSession() {
     Timer.periodic(Seconds.get(0, milli: 100), (timer) {
-      if (primarySmartText.currentIndex == 1 && constructorHasBeenCalled) {
+      if (primarySmartText.currentIndex == 1 &&
+          constructorHasBeenCalled &&
+          primarySmartText.isDoneAnimating) {
         primarySmartText.startRotatingText(isResuming: true);
         primarySmartText.setWidgetVisibility(false);
         timer.cancel();

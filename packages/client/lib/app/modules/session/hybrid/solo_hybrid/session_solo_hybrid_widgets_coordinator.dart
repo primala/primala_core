@@ -184,6 +184,18 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   }
 
   @action
+  onSomeoneElseIsTalking() {
+    othersAreTalkingTint.reverseMovie(const NoParams());
+    refreshBanner.setWidgetVisibility(false);
+  }
+
+  @action
+  onSomeoneElseIsDoneTalking() {
+    othersAreTalkingTint.initMovie(const NoParams());
+    refreshBanner.setWidgetVisibility(true);
+  }
+
+  @action
   onLetGoCompleted() {
     refreshBanner.setWidgetVisibility(true);
     resetSpeakingVariables();
@@ -222,6 +234,7 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   }) {
     speakingTimerStart = startTime;
     isASecondarySpeaker = true;
+    refreshBanner.setWidgetVisibility(false);
     sessionNavigation.setWidgetVisibility(false);
     rally.setCurrentInitiator(initiatorFullName);
     beachWaves.setMovieMode(
