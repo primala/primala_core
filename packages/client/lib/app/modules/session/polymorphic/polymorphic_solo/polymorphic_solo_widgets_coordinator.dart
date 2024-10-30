@@ -35,12 +35,13 @@ abstract class _PolymorphicSoloWidgetsCoordinatorBase
   final WifiDisconnectOverlayStore wifiDisconnectOverlay;
   final BackButtonStore backButton;
   @override
-  late RefreshBannerStore? refreshBanner;
+  final RefreshBannerStore refreshBanner;
 
   _PolymorphicSoloWidgetsCoordinatorBase({
     required this.wifiDisconnectOverlay,
     required this.mirroredText,
     required this.beachWaves,
+    required this.refreshBanner,
     required this.borderGlow,
     required this.backButton,
     required this.primarySmartText,
@@ -93,6 +94,7 @@ abstract class _PolymorphicSoloWidgetsCoordinatorBase
     if (isLeaving || isHolding) return;
     baseInitFullScreenNotes(() {
       setTextVisibilities(false);
+      backButton.setWidgetVisibility(false);
     });
   }
 

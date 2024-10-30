@@ -15,7 +15,9 @@ class RTActiveNokhteSessionsStream extends RTActiveNokhteSessionQueries
 
   Future<bool> cancelSessionActivationStream() async {
     final res = supabase.realtime.getChannels();
-    await res.first.unsubscribe();
+    if (res.isNotEmpty) {
+      await res.first.unsubscribe();
+    }
     getActiveNokhteSessionCreationListingingStatus = false;
     return getActiveNokhteSessionCreationListingingStatus;
   }

@@ -118,6 +118,7 @@ class SessionWidgetsModule extends Module {
   injectPolymorphic(i) {
     i.add<PolymorphicSoloWidgetsCoordinator>(
       () => PolymorphicSoloWidgetsCoordinator(
+        refreshBanner: RefreshBannerStore(),
         backButton: BackButtonStore(),
         primarySmartText: SmartTextStore(),
         secondarySmartText: SmartTextStore(),
