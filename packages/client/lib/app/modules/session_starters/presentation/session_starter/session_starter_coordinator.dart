@@ -107,7 +107,7 @@ abstract class _SessionStarterCoordinatorBase
         if (selectedSessionIsSolo && presetsQueryState == StoreState.loaded) {
           if (!widgets.isEnteringNokhteSession) {
             widgets.initTransition(true);
-            await starterLogic.dispose();
+            await starterLogic.dispose(shouldNuke: true);
           }
         }
       });

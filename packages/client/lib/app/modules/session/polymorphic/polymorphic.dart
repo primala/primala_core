@@ -2,6 +2,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
+import 'package:nokhte/app/modules/session_starters/session_starters.dart';
 export 'polymorphic_solo/polymorphic_solo.dart';
 
 class SessionPolymorphicModule extends Module {
@@ -9,6 +10,7 @@ class SessionPolymorphicModule extends Module {
   List<Module> get imports => [
         PosthogModule(),
         SessionLogicModule(),
+        SessionStartersLogicModule(),
       ];
   @override
   void exportedBinds(Injector i) {
@@ -21,6 +23,7 @@ class SessionPolymorphicModule extends Module {
         hold: HoldDetector(),
         tap: TapDetector(),
         captureEnd: Modular.get<CaptureNokhteSessionEnd>(),
+        sessionStartersLogic: Modular.get<SessionStartersLogicCoordinator>(),
       ),
     );
   }

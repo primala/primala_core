@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
+import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
@@ -9,6 +10,7 @@ import 'package:nokhte/app/core/widgets/utilities/utilities.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/presets/presets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
+import 'package:nokhte/app/modules/session_starters/session_starters.dart';
 import 'package:nokhte_backend/tables/company_presets.dart';
 part 'polymorphic_solo_coordinator.g.dart';
 
@@ -22,6 +24,7 @@ abstract class _PolymorphicSoloCoordinatorBase
   final SessionPresenceCoordinator presence;
   @override
   final CaptureScreen captureScreen;
+  final SessionStartersLogicCoordinator sessionStartersLogic;
   final TapDetector tap;
   final CaptureNokhteSessionStart captureStart;
   final CaptureNokhteSessionEnd captureEnd;
@@ -31,6 +34,7 @@ abstract class _PolymorphicSoloCoordinatorBase
   _PolymorphicSoloCoordinatorBase({
     required this.captureScreen,
     required this.captureStart,
+    required this.sessionStartersLogic,
     required this.captureEnd,
     required this.widgets,
     required this.presence,
@@ -45,13 +49,13 @@ abstract class _PolymorphicSoloCoordinatorBase
   constructor() async {
     widgets.constructor();
     initReactors();
-    await presence.listen();
-
+    await sessionStartersLogic.initialize(const Right(PresetTypes.solo));
     await captureScreen(SessionConstants.polymorphicSolo);
   }
 
   initReactors() {
     disposers.add(sessionPresetReactor());
+    disposers.add(sessionInitializationReactor());
   }
 
   initPostConstructorReactors() {
@@ -62,6 +66,13 @@ abstract class _PolymorphicSoloCoordinatorBase
     disposers.add(tapReactor());
     disposers.add(backButtonReactor());
   }
+
+  sessionInitializationReactor() =>
+      reaction((p0) => sessionStartersLogic.hasInitialized, (p0) async {
+        if (p0) {
+          await presence.listen();
+        }
+      });
 
   sessionPresetReactor() =>
       reaction((p0) => sessionMetadata.presetsLogic.state, (p0) async {

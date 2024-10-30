@@ -116,6 +116,7 @@ abstract class _SessionGroupHybridWidgetsCoordinatorBase
   @action
   onSomeoneElseIsSpeaking(String speakerName) {
     letEmCook.setCurrentCook(speakerName);
+    refreshBanner.setWidgetVisibility(false);
     mirroredText.setWidgetVisibility(false);
     othersAreTalkingTint.initMovie(const NoParams());
   }
@@ -124,6 +125,7 @@ abstract class _SessionGroupHybridWidgetsCoordinatorBase
   onSomeElseIsDoneSpreaking() {
     othersAreTalkingTint.reverseMovie(const NoParams());
     mirroredText.setWidgetVisibility(true);
+    refreshBanner.setWidgetVisibility(true);
   }
 
   @action

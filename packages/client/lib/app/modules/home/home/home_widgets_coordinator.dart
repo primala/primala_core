@@ -153,7 +153,7 @@ abstract class _HomeWidgetsCoordinatorBase
   }
 
   @action
-  initSoloSession(Function onInit) async {
+  initSoloSession() async {
     if (hasInitiatedBlur || !isAllowedToMakeGesture() || hasSwiped()) return;
     setSwipeDirection(GestureDirections.up);
     gestureCross.fadeAllOut();
@@ -170,7 +170,6 @@ abstract class _HomeWidgetsCoordinatorBase
         endValue: beachWaves.currentAnimationValues.first,
       ),
     );
-    await onInit();
   }
 
   @action
