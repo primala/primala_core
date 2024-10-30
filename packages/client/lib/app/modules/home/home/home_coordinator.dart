@@ -68,6 +68,7 @@ abstract class _HomeCoordinatorBase
 
   tapReactor() => reaction((p0) => tap.doubleTapCount, (p0) {
         ifTouchIsNotDisabled(() async {
+          if (widgets.hasInitiatedBlur) return;
           widgets.initSoloSession();
           await sessionStartersLogic.initialize(
             const Right(PresetTypes.solo),
