@@ -94,7 +94,9 @@ abstract class _PolymorphicSoloCoordinatorBase
             widgets.initFullScreenNotes();
           }
         } else {
-          tapTalkingLogic(tap.currentTapPlacement);
+          if (getTags().contains(SessionTags.tapToSpeak)) {
+            tapTalkingLogic(tap.currentTapPlacement);
+          }
         }
       });
 

@@ -105,9 +105,10 @@ abstract class _SessionStarterCoordinatorBase
 
   tapReactor() => reaction((p0) => tap.doubleTapCount, (p0) async {
         if (selectedSessionIsSolo && presetsQueryState == StoreState.loaded) {
-          // make it so that this can only tap once use HOFs
-          widgets.initTransition(true);
-          await starterLogic.dispose();
+          if (!widgets.isEnteringNokhteSession) {
+            widgets.initTransition(true);
+            await starterLogic.dispose();
+          }
         }
       });
 
