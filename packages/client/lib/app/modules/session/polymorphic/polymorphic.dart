@@ -20,6 +20,7 @@ class SessionPolymorphicModule extends Module {
         widgets: Modular.get<PolymorphicSoloWidgetsCoordinator>(),
         hold: HoldDetector(),
         tap: TapDetector(),
+        captureEnd: Modular.get<CaptureNokhteSessionEnd>(),
       ),
     );
   }

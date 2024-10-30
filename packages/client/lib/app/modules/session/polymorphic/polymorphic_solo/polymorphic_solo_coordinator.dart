@@ -1,11 +1,13 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
 import 'package:mobx/mobx.dart';
+import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/utilities/utilities.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:nokhte/app/modules/presets/presets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte_backend/tables/company_presets.dart';
 part 'polymorphic_solo_coordinator.g.dart';
@@ -22,16 +24,20 @@ abstract class _PolymorphicSoloCoordinatorBase
   final CaptureScreen captureScreen;
   final TapDetector tap;
   final CaptureNokhteSessionStart captureStart;
+  final CaptureNokhteSessionEnd captureEnd;
   final SessionMetadataStore sessionMetadata;
+  final PresetsLogicCoordinator presets;
 
   _PolymorphicSoloCoordinatorBase({
     required this.captureScreen,
     required this.captureStart,
+    required this.captureEnd,
     required this.widgets,
     required this.presence,
     required this.hold,
     required this.tap,
-  }) : sessionMetadata = presence.sessionMetadataStore {
+  })  : sessionMetadata = presence.sessionMetadataStore,
+        presets = presence.sessionMetadataStore.presetsLogic {
     initBaseCoordinatorActions();
   }
 
@@ -39,12 +45,7 @@ abstract class _PolymorphicSoloCoordinatorBase
   constructor() async {
     widgets.constructor();
     initReactors();
-    if (presence.sessionMetadataStore.tags.isEmpty) {
-      await presence.listen();
-    } else {
-      widgets.postConstructor(presence.sessionMetadataStore.tags);
-      initPostConstructorReactors();
-    }
+    await presence.listen();
 
     await captureScreen(SessionConstants.polymorphicSolo);
   }
@@ -54,7 +55,7 @@ abstract class _PolymorphicSoloCoordinatorBase
   }
 
   initPostConstructorReactors() {
-    if (tags.contains(SessionTags.holdToSpeak)) {
+    if (getTags().contains(SessionTags.holdToSpeak)) {
       disposers.add(holdReactor());
       disposers.add(letGoReactor());
     }
@@ -65,7 +66,7 @@ abstract class _PolymorphicSoloCoordinatorBase
   sessionPresetReactor() =>
       reaction((p0) => sessionMetadata.presetsLogic.state, (p0) async {
         if (p0 == StoreState.loaded) {
-          widgets.postConstructor(tags);
+          widgets.postConstructor(getTags());
           initPostConstructorReactors();
           await captureStart(CaptureNokhteSessionStartParams(
             numberOfCollaborators: sessionMetadata.numberOfCollaborators,
@@ -85,8 +86,8 @@ abstract class _PolymorphicSoloCoordinatorBase
 
   tapReactor() => reaction((p0) => tap.tapCount, (p0) {
         if (tap.currentTapPlacement == GesturePlacement.topHalf) {
-          if (tags.contains(SessionTags.deactivatedNotes)) {
-            if (tags.contains(SessionTags.tapToSpeak)) {
+          if (getTags().contains(SessionTags.deactivatedNotes)) {
+            if (getTags().contains(SessionTags.tapToSpeak)) {
               tapTalkingLogic(tap.currentTapPlacement);
             }
           } else {
@@ -102,6 +103,8 @@ abstract class _PolymorphicSoloCoordinatorBase
         if (widgets.backButton.showWidget) {
           widgets.goHome();
           await presence.completeTheSession();
+          await presence.dispose();
+          await captureEnd(const NoParams());
         }
       });
 
@@ -110,7 +113,7 @@ abstract class _PolymorphicSoloCoordinatorBase
           widgets.adjustSpeakLessSmileMoreRotation(hold.placement);
           widgets.onHold(hold.placement);
         } else {
-          if (tags.contains(SessionTags.deactivatedNotes)) {
+          if (getTags().contains(SessionTags.deactivatedNotes)) {
             widgets.adjustSpeakLessSmileMoreRotation(hold.placement);
             widgets.onHold(hold.placement);
           }
@@ -129,6 +132,11 @@ abstract class _PolymorphicSoloCoordinatorBase
     widgets.dispose();
   }
 
-  @computed
-  List<SessionTags> get tags => presence.sessionMetadataStore.tags;
+  List<SessionTags> getTags() {
+    final list = <SessionTags>[];
+    for (var section in presets.presetsEntity.articles.first.articleSections) {
+      list.add(section.tag);
+    }
+    return list;
+  }
 }
