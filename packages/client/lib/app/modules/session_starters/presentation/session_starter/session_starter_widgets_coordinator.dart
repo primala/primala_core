@@ -196,7 +196,9 @@ abstract class _SessionStarterWidgetsCoordinatorBase
 
   @action
   initTransition(bool transitionToSolo) {
-    if (hasInitiatedBlur) return;
+    if (hasInitiatedBlur ||
+        isEnteringNokhteSession ||
+        !isAllowedToMakeGesture()) return;
     scrollToTop();
     presetHeader.presetIcons.setWidgetVisibility(false);
     isEnteringNokhteSession = true;
@@ -220,7 +222,7 @@ abstract class _SessionStarterWidgetsCoordinatorBase
     qrSubtitleSmartText.setWidgetVisibility(false);
     gestureCross.fadeAllOut();
     centerNokhte.setWidgetVisibility(false);
-    homeNokhte.setWidgetVisibility(false);
+    homeNokhte.fadeOut();
   }
 
   presetHeaderTapReactor() => reaction(

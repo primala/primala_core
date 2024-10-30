@@ -148,11 +148,13 @@ abstract class _SessionStarterCoordinatorBase
   preferredPresetReactor() =>
       reaction((p0) => userInfo.preferredPreset, (p0) async {
         if (userInfo.state == StoreState.loaded) {
-          if (userInfo.hasAccessedQrCode) {
+          if (!userInfo.hasAccessedQrCode) {
+            widgets.onNoPresetSelected();
+            if (starterLogic.hasInitialized) return;
+            await starterLogic.initialize(const Right(PresetTypes.solo));
+          } else {
             if (starterLogic.hasInitialized) return;
             await starterLogic.initialize(const Left(NoParams()));
-          } else {
-            widgets.onNoPresetSelected();
           }
         }
       });

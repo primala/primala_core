@@ -1,9 +1,10 @@
+import 'package:nokhte_backend/tables/company_presets.dart';
 import 'package:nokhte_backend/tables/rt_active_nokhte_sessions.dart';
 import 'package:nokhte_backend/tables/st_active_nokhte_sessions.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class SessionStartersRemoteSource {
-  Future<List> initializeSession();
+  Future<List> initializeSession(PresetTypes presetType);
 
   Future<List> updateSessionType(String newPresetUID);
 
@@ -38,7 +39,9 @@ class SessionStartersRemoteSourceImpl implements SessionStartersRemoteSource {
       stream.listenToSessionActivationStatus();
 
   @override
-  initializeSession() async => await queries.initializeSession();
+  initializeSession(param) async => await queries.initializeSession(
+        presetType: param,
+      );
 
   @override
   joinSession(String leaderUID) async => await queries.joinSession(leaderUID);

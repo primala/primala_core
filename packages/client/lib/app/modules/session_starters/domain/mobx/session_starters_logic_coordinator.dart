@@ -103,7 +103,7 @@ abstract class _SessionStartersLogicCoordinatorBase with Store, BaseMobxLogic {
   initialize(
     Either<NoParams, PresetTypes> params,
   ) async {
-    final result = await contract.initializeSession(const Left(NoParams()));
+    final result = await contract.initializeSession(params);
     result.fold((failure) => errorUpdater(failure),
         (entryStatus) => hasInitialized = entryStatus);
   }
