@@ -5,7 +5,6 @@ import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/core/modules/user_metadata/user_metadata.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
-import 'package:nokhte/app/modules/session_starters/session_starters.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
 import 'home.dart';
 export 'constants/constants.dart';
@@ -22,7 +21,6 @@ class HomeModule extends Module {
   @override
   List<Module> get imports => [
         HomeWidgetsModule(),
-        SessionStartersLogicModule(),
         CleanUpCollaborationArtifactsModule(),
         UserInformationModule(),
         LegacyConnectivityModule(),
@@ -53,7 +51,6 @@ class HomeModule extends Module {
     i.add<HomeCoordinator>(
       () => HomeCoordinator(
         tap: TapDetector(),
-        sessionStartersLogic: Modular.get<SessionStartersLogicCoordinator>(),
         getNokhteSessionArtifactsLogic:
             Modular.get<GetNokhteSessionArtifacts>(),
         captureScreen: Modular.get<CaptureScreen>(),
