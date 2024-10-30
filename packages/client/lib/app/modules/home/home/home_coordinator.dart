@@ -67,14 +67,14 @@ abstract class _HomeCoordinatorBase
   }
 
   tapReactor() => reaction((p0) => tap.doubleTapCount, (p0) {
-        ifTouchIsNotDisabled(() async {
-          if (widgets.hasInitiatedBlur) return;
-          widgets.initSoloSession();
+        // ifTouchIsNotDisabled(() async {
+        widgets.initSoloSession(() async {
+          // setDisableAllTouchFeedback(true);
           await sessionStartersLogic.initialize(
             const Right(PresetTypes.solo),
           );
-          setDisableAllTouchFeedback(true);
         });
+        // });
       });
 
   swipeReactor() => reaction((p0) => swipe.directionsType, (p0) {
