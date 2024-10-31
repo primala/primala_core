@@ -85,14 +85,14 @@ class SessionPresenceContractImpl
   }
 
   @override
-  cancelSessionMetadataStream(NoParams params) =>
-      remoteSource.cancelSessionMetadataStream();
+  cancelSessionMetadataStream(NoParams params) async =>
+      await remoteSource.cancelSessionMetadataStream();
 
   @override
   startTheSession(params) async {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.startTheSession();
-      return fromFunctionResponse(res);
+      return fromSupabase(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }
@@ -111,26 +111,25 @@ class SessionPresenceContractImpl
   }
 
   @override
-  getSessionPresetInfo(unifiedUID) async {
+  usePowerUp(params) async {
     if (await networkInfo.isConnected) {
-      final res = await remoteSource.getPresetInformation(unifiedUID);
-      return Right(SessionPresetInfoModel.fromSupabase(res));
+      return params.fold((letEmCook) async {
+        final res = await remoteSource.letEmCook();
+        return fromSupabase(res);
+      }, (rally) async {
+        final res = await remoteSource.rally(rally);
+        return fromSupabase(res);
+      });
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }
   }
 
   @override
-  getInstructionType(params) async {
+  updateSpeakingTimerStart() async {
     if (await networkInfo.isConnected) {
-      final otherSessionsRes =
-          await remoteSource.checkIfHasDoneSessionBesides(params);
-      final currentPresetSessionsRes =
-          await remoteSource.checkIfHasDoneSessionSessionType(params);
-      return Right(toInstructionType(
-        otherSessions: otherSessionsRes,
-        currentPresetSessions: currentPresetSessionsRes,
-      ));
+      final res = await remoteSource.updateSpeakingTimerStart();
+      return fromSupabase(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }

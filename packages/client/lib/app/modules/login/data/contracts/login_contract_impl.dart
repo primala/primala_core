@@ -3,7 +3,6 @@ import 'package:nokhte/app/core/constants/failure_constants.dart';
 import 'package:nokhte/app/core/error/failure.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mixins/response_to_status.dart';
-import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/modules/login/login.dart';
 import 'package:nokhte/app/core/network/network_info.dart';
 
@@ -54,18 +53,10 @@ class LoginContractImpl with ResponseToStatus implements LoginContract {
   }
 
   @override
-  getUserInfo(params) async {
+  versionIsUpToDate() async {
     if (await networkInfo.isConnected) {
-      final userNamesRes = await remoteSource.getUserInfo();
-      final nokhteSessionsRes = await remoteSource.getFinishedNokhteSessions();
       final versionRes = await remoteSource.versionIsUpToDate();
-      return Right(
-        UserJourneyInfoModel.fromSupabase(
-          isUpToDate: versionRes,
-          userNamesRes: userNamesRes,
-          finishedNokhteSessionsRes: nokhteSessionsRes,
-        ),
-      );
+      return Right(versionRes);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }

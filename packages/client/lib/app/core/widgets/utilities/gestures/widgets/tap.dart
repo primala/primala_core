@@ -21,6 +21,7 @@ class Tap extends HookWidget {
     }, []);
     return GestureDetector(
       onTap: () => store.onTap(),
+      onDoubleTap: () => store.onDoubleTap(),
       onTapDown: (details) => store.onTapDown(details.globalPosition),
       child: child,
     );

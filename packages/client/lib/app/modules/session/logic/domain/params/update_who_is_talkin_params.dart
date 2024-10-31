@@ -1,0 +1,4 @@
+enum UpdateWhoIsTalkingParams {
+  clearOut,
+  setUserAsTalker,
+}

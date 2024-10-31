@@ -15,6 +15,7 @@ abstract class _HomeCoordinatorBase
     with Store, BaseCoordinator, BaseMobxLogic, Reactions {
   final GetNokhteSessionArtifacts getNokhteSessionArtifactsLogic;
   final HomeWidgetsCoordinator widgets;
+  final TapDetector tap;
   final SwipeDetector swipe;
   @override
   final CaptureScreen captureScreen;
@@ -22,9 +23,12 @@ abstract class _HomeCoordinatorBase
   _HomeCoordinatorBase({
     required this.swipe,
     required this.widgets,
+    required this.tap,
     required this.getNokhteSessionArtifactsLogic,
     required this.captureScreen,
-  });
+  }) {
+    initBaseCoordinatorActions();
+  }
 
   @observable
   ObservableList<NokhteSessionArtifactEntity> nokhteSessionArtifacts =
@@ -54,7 +58,12 @@ abstract class _HomeCoordinatorBase
       },
     ));
     disposers.add(swipeReactor());
+    disposers.add(tapReactor());
   }
+
+  tapReactor() => reaction((p0) => tap.doubleTapCount, (p0) {
+        widgets.initSoloSession();
+      });
 
   swipeReactor() => reaction((p0) => swipe.directionsType, (p0) {
         ifTouchIsNotDisabled(() {
@@ -75,7 +84,7 @@ abstract class _HomeCoordinatorBase
 
   @action
   getNokhteSessionArtifacts() async {
-    final res = await getNokhteSessionArtifactsLogic(NoParams());
+    final res = await getNokhteSessionArtifactsLogic(const NoParams());
     res.fold(
       (failure) => errorUpdater(failure),
       (artifacts) => nokhteSessionArtifacts = ObservableList.of(artifacts),

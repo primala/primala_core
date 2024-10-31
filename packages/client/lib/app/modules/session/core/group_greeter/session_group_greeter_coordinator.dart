@@ -75,7 +75,7 @@ abstract class _SessionGroupGreeterCoordinatorBase
         (p0) => ifTouchIsNotDisabled(() async {
           widgets.onTap(
             tap.currentTapPosition,
-            phoneType: sessionMetadata.sessionScreenType,
+            phoneType: sessionMetadata.screenType,
           );
         }),
       );

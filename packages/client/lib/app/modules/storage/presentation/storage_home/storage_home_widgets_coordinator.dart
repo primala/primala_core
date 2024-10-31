@@ -113,9 +113,7 @@ abstract class _StorageHomeWidgetsCoordinatorBase
         setSwipeDirection(GestureDirections.initial);
         setHasInitiatedBlur(false);
         secondarySmartText.startRotatingText(isResuming: true);
-        centerNokhte.moveBackToCross(
-          startingPosition: CenterNokhtePositions.left,
-        );
+        centerNokhte.moveBackToCross();
         sessionCard.setDisableTouchInput(false);
         homeNokhte.initMovie(
           NokhteScaleState.shrink,
@@ -156,8 +154,7 @@ abstract class _StorageHomeWidgetsCoordinatorBase
     sessionCard.setDisableTouchInput(false);
     setHasInitiatedBlur(false);
     blur.reverse();
-    centerNokhte.moveBackToCross(
-        startingPosition: CenterNokhtePositions.center);
+    centerNokhte.moveBackToCross();
     homeNokhte.initMovie(
       NokhteScaleState.shrink,
     );
@@ -171,7 +168,7 @@ abstract class _StorageHomeWidgetsCoordinatorBase
   @action
   onSessionCardTapped() {
     beachWaves.setMovieMode(BeachWaveMovieModes.skyToDrySand);
-    beachWaves.currentStore.initMovie(NoParams());
+    beachWaves.currentStore.initMovie(const NoParams());
     sessionCard.setWidgetVisibility(false);
     primarySmartText.setWidgetVisibility(false);
     centerNokhte.setWidgetVisibility(false);

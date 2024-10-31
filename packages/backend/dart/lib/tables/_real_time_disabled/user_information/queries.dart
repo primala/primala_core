@@ -1,5 +1,4 @@
 import 'package:nokhte_backend/tables/_real_time_disabled/company_presets/queries.dart';
-import 'package:nokhte_backend/tables/_real_time_disabled/unified_presets/constants.dart';
 
 import 'constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -25,6 +24,15 @@ class UserInformationQueries with UserInformationConstants {
   Future<List> getUserInfo() async =>
       await supabase.from(TABLE).select().eq(UID, userUID);
 
+  Future<String> getFullName() async {
+    final res = await getUserInfo();
+    if (res.isNotEmpty) {
+      return '${res.first[FIRST_NAME]} ${res.first[LAST_NAME]}';
+    } else {
+      return '';
+    }
+  }
+
   Future<List> deleteUserInfo() async =>
       await supabase.from(TABLE).delete().eq(UID, userUID).select();
 
@@ -49,25 +57,8 @@ class UserInformationQueries with UserInformationConstants {
 
   Future<List> getPreferredPresetInfo() async =>
       await supabase.from(TABLE).select('''
-        $PREFERRED_PRESET, ${UnifiedPresetsConstants.TABLE}(
-          ${UnifiedPresetsConstants.COMPANY_PRESET_ID}, ${UnifiedPresetsConstants.UID},
-           ${CompanyPresetsQueries.TABLE}(*))
+        $PREFERRED_PRESET, ${CompanyPresetsQueries.TABLE}(*)
            ''').eq(UID, userUID);
-
-  Future<List> updateUserFlag(String key, bool value) async {
-    final getRes = await getUserInfo();
-    final Map flags = getRes.first[FLAGS];
-    if (flags[key] == value) {
-      return getRes;
-    } else {
-      flags[key] = value;
-      return await supabase
-          .from(TABLE)
-          .update({FLAGS: flags})
-          .eq(UID, userUID)
-          .select();
-    }
-  }
 
   Future<List> getCollaboratorRows() async =>
       await supabase.from(TABLE).select().neq('uid', userUID);

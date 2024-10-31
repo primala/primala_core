@@ -29,7 +29,7 @@ abstract class _LoginCoordinatorBase
   final TapDetector tap;
   final IdentifyUser identifyUser;
   @override
-  final GetUserInfoStore getUserInfo;
+  final UserInformationCoordinator userInfo;
   @override
   final CaptureScreen captureScreen;
 
@@ -39,7 +39,7 @@ abstract class _LoginCoordinatorBase
     required this.addMetadata,
     required this.authStateStore,
     required this.addName,
-    required this.getUserInfo,
+    required this.userInfo,
     required this.identifyUser,
     required this.tap,
     required this.captureScreen,
@@ -59,10 +59,7 @@ abstract class _LoginCoordinatorBase
 
   @action
   constructor() async {
-    widgets.constructor(
-      onConnected,
-      onDisconnected,
-    );
+    widgets.constructor();
     authStateListener(authStateStore.authState);
     initReactors();
     await captureScreen(LoginConstants.root);
@@ -74,12 +71,11 @@ abstract class _LoginCoordinatorBase
         widgets.wifiDisconnectOverlay.initReactors(onQuickConnected: () {
       setDisableAllTouchFeedback(false);
     }, onLongReConnected: () {
-      widgets.onLongReConnected();
       setDisableAllTouchFeedback(false);
     }, onDisconnected: () {
       setDisableAllTouchFeedback(true);
     }));
-    disposers.add(widgets.layer2BeachWavesReactor(onAnimationComplete));
+    disposers.add(widgets.beachWavesReactor(onAnimationComplete));
   }
 
   @action
@@ -115,10 +111,10 @@ abstract class _LoginCoordinatorBase
       authStateStream.listen((isLoggedIn) async {
         if (isLoggedIn) {
           widgets.loggedInOnResumed();
-          await addName(NoParams());
-          await addMetadata(NoParams());
-          await getUserInfo(NoParams());
-          await identifyUser(NoParams());
+          await addName(const NoParams());
+          await addMetadata(const NoParams());
+          await userInfo.checkIfVersionIsUpToDate();
+          await identifyUser(const NoParams());
         }
       });
 

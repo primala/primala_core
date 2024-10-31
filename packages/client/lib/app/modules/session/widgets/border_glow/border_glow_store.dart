@@ -13,47 +13,48 @@ class BorderGlowStore = _BorderGlowStoreBase with _$BorderGlowStore;
 abstract class _BorderGlowStoreBase extends BaseWidgetStore<NoParams>
     with Store {
   _BorderGlowStoreBase() {
-    setMovie(BorderGlowUpMovie.movie);
+    setMovie(BorderGlowMovies.glowUp());
   }
-
-  @observable
-  bool isGlowingUp = false;
-
-  @computed
-  MovieTween get activeMovie => isGlowingUp ? movie : altMovie;
-
-  @computed
-  Control get activeControl => isGlowingUp ? control : altControl;
 
   @action
   @override
   initMovie(param) {
-    isGlowingUp = true;
+    setMovie(BorderGlowMovies.glowUp());
     setMovieStatus(MovieStatus.inProgress);
     setControl(Control.playFromStart);
   }
 
   @action
-  setAtCompleteWhiteOut() {
-    isGlowingUp = true;
-    setMovie(StaticWhiteOutMovie.movie);
-    setControl(Control.playReverseFromEnd);
-    setControl(Control.stop);
-  }
-
-  @action
-  initWhiteOut() {
-    isGlowingUp = true;
-    setMovie(BorderGlowWhiteOutMovie.movie);
-    setMovieStatus(MovieStatus.inProgress);
+  resetCurrentBackToGreen() {
+    setMovie(
+      BorderGlowMovies.glowUp(
+        startingColor: currentColor,
+        startingWidth: currentWidth,
+      ),
+    );
     setControl(Control.playFromStart);
   }
 
   @action
   initGlowDown() {
-    isGlowingUp = false;
-    setMovieStatus(MovieStatus.inProgress);
-    altControl = Control.playFromStart;
+    setMovie(BorderGlowMovies.glowDown(
+      lastColor: currentColor,
+      lastWidth: currentWidth,
+    ));
+    setControl(Control.playFromStart);
+  }
+
+  @action
+  synchronizeGlow(
+    DateTime startTime,
+  ) {
+    setMovie(
+      BorderGlowMovies.synchronizeGlow(
+        startTime: startTime,
+      ),
+    );
+
+    setControl(Control.playFromStart);
   }
 
   @observable
@@ -62,28 +63,12 @@ abstract class _BorderGlowStoreBase extends BaseWidgetStore<NoParams>
   @observable
   double currentWidth = 0.0;
 
-  @observable
-  Control altControl = Control.stop;
-
-  @action
-  setAltControl(Control newVal) => altControl = newVal;
-
-  @observable
-  MovieTween altMovie = BorderGlowDownMovie.getMovie();
-
   @action
   setAnimationValues({
     required Color color,
     required double width,
   }) {
-    if (isGlowingUp) {
-      currentColor = color;
-      currentWidth = width;
-
-      altMovie = BorderGlowDownMovie.getMovie(
-        lastColor: currentColor,
-        lastWidth: currentWidth,
-      );
-    }
+    currentColor = color;
+    currentWidth = width;
   }
 }

@@ -10,12 +10,10 @@ class UserMetadataCoordinator = _UserMetadataCoordinatorBase
 
 abstract class _UserMetadataCoordinatorBase
     with Store, BaseMobxLogic<NoParams, bool> {
-  final AddUserMetadata addUserMetadataLogic;
-  final GetUserMetadata getUserMetadataLogic;
+  final UserMetadataContract contract;
 
   _UserMetadataCoordinatorBase({
-    required this.addUserMetadataLogic,
-    required this.getUserMetadataLogic,
+    required this.contract,
   }) {
     initBaseLogicActions();
   }
@@ -31,7 +29,7 @@ abstract class _UserMetadataCoordinatorBase
 
   @action
   getMetadata() async {
-    final res = await getUserMetadataLogic(NoParams());
+    final res = await contract.getUserMetadata(const NoParams());
     res.fold((failure) {
       setErrorMessage(mapFailureToMessage(failure));
       setState(StoreState.initial);
@@ -45,7 +43,7 @@ abstract class _UserMetadataCoordinatorBase
   @action
   Future<void> addMetadata(NoParams param) async {
     setState(StoreState.loading);
-    final res = await addUserMetadataLogic(NoParams());
+    final res = await contract.addUserMetadata(const NoParams());
     res.fold((failure) {
       setErrorMessage(mapFailureToMessage(failure));
       setState(StoreState.initial);

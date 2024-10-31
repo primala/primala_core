@@ -14,16 +14,10 @@ export 'mobx/preset_cards_store.dart';
 
 class PresetsCards extends HookWidget {
   final PresetCardsStore store;
-  // final List names;
-  // final List unifiedUIDs;
-  // final List<String> taglines;
 
   const PresetsCards({
     super.key,
-    // required this.names,
     required this.store,
-    // required this.unifiedUIDs,
-    // required this.taglines,
   });
 
   Widget buildText(Movie value, String text, double height) {
@@ -85,14 +79,12 @@ class PresetsCards extends HookWidget {
                       borderRadius: BorderRadius.circular(19),
                       color: Colors.white.withOpacity(.2),
                     ),
-                    // decoration: buildSquareDecoration(value, text.isEmpty),
                     height: useScaledSize(
                       baseValue: .15,
                       screenSize: screenSize,
                       bumpPerHundredth: .0006,
                     ),
                     child: Column(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
@@ -142,11 +134,19 @@ class PresetsCards extends HookWidget {
           padding: EdgeInsets.only(top: height * 0.12),
           child: ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: store.names.length,
-            itemBuilder: (_, i) => Padding(
-              padding: EdgeInsets.symmetric(vertical: height * 0.02),
-              child: buildTile(store.names[i], height, width, size),
-            ),
+            itemCount: store.names.length, // Add an extra item for padding
+            itemBuilder: (_, i) {
+              return Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: useScaledSize(
+                    baseValue: 0.013,
+                    screenSize: size,
+                    bumpPerHundredth: 0,
+                  ),
+                ),
+                child: buildTile(store.names[i], height, width, size),
+              );
+            },
           ),
         ),
       ),

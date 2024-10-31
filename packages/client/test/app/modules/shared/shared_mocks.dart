@@ -8,7 +8,7 @@ import 'package:nokhte/app/core/widgets/widgets.dart';
   MockSpec<BeachWavesStore>(),
   MockSpec<GestureCrossStore>(),
   MockSpec<SmartTextStore>(),
-  MockSpec<GetUserInfoStore>(),
+  MockSpec<UserInformationCoordinator>(),
   MockSpec<NokhteBlurStore>(),
   MockSpec<TapDetector>(),
 ])

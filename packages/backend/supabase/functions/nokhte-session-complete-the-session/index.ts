@@ -61,7 +61,6 @@ serve(async (req) => {
           content: content,
           session_timestamp: sessionTimestamp,
           aliases: Array(collaboratorUIDsArr.length).fill(""),
-          preset_uid: presetUID,
           session_uid: sessionUID,
         })
         .select();

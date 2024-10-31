@@ -9,196 +9,187 @@ import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
+import 'package:simple_animations/simple_animations.dart';
 part 'session_group_hybrid_widgets_coordinator.g.dart';
 
 class SessionGroupHybridWidgetsCoordinator = _SessionGroupHybridWidgetsCoordinatorBase
     with _$SessionGroupHybridWidgetsCoordinator;
 
 abstract class _SessionGroupHybridWidgetsCoordinatorBase
-    with Store, BaseWidgetsCoordinator, Reactions {
+    with Store, BaseWidgetsCoordinator, Reactions, SessionSpeakingUtilities {
   final MirroredTextStore mirroredText;
-  final BeachWavesStore beachWaves;
-  final BorderGlowStore borderGlow;
-  final TouchRippleStore touchRipple;
-  final SpeakLessSmileMoreStore speakLessSmileMore;
+  final LetEmCookStore letEmCook;
   final HalfScreenTintStore othersAreTakingNotesTint;
   final TintStore othersAreTalkingTint;
+
+  @override
+  final RefreshBannerStore refreshBanner;
+  @override
+  final SpeakLessSmileMoreStore speakLessSmileMore;
+  @override
+  final SessionNavigationStore sessionNavigation;
+  @override
+  final BeachWavesStore beachWaves;
+  @override
+  final BorderGlowStore borderGlow;
+  @override
+  final TouchRippleStore touchRipple;
   @override
   final WifiDisconnectOverlayStore wifiDisconnectOverlay;
-  final SessionNavigationStore sessionNavigation;
+  final CollaboratorPresenceIncidentsOverlayStore presenceOverlay;
 
   _SessionGroupHybridWidgetsCoordinatorBase({
     required this.sessionNavigation,
+    required this.letEmCook,
+    required this.refreshBanner,
     required this.othersAreTakingNotesTint,
     required this.othersAreTalkingTint,
     required this.wifiDisconnectOverlay,
     required this.mirroredText,
     required this.beachWaves,
+    required this.presenceOverlay,
     required this.borderGlow,
     required this.touchRipple,
     required this.speakLessSmileMore,
   }) {
     initBaseWidgetsCoordinatorActions();
+    initSessionSpeakingUtilities();
   }
 
   @action
-  constructor(bool someoneIsTakingANote) {
+  constructor(
+    bool someoneIsTakingANote,
+    bool everyoneIsOnline,
+  ) {
     beachWaves.setMovieMode(BeachWaveMovieModes.halfAndHalfToDrySand);
     mirroredText.setMessagesData(MirroredTextContent.hybrid);
     mirroredText.startBothRotatingText();
     if (someoneIsTakingANote) {
-      othersAreTakingNotesTint.initMovie(NoParams());
+      othersAreTakingNotesTint.initMovie(const NoParams());
     }
-    setIsPickingUp(false);
-    isGoingToNotes = false;
+    if (!everyoneIsOnline) {
+      Timer(Seconds.get(0, milli: 500), () {
+        onCollaboratorLeft();
+      });
+    }
+
+    setIsGoingToNotes(someoneIsTakingANote);
     initReactors();
   }
-
-  @observable
-  bool isLettingGo = false;
-
-  @observable
-  bool isHolding = false;
-
-  @observable
-  bool canTap = false;
-
-  @observable
-  bool canHold = true;
-
-  @observable
-  bool isPickingUp = false;
-
-  @observable
-  bool isGoingToNotes = false;
-
-  @computed
-  bool get speakLessWriteMoreIsVisible => speakLessWriteMoreVisiblities.last;
-
-  @computed
-  bool get pastSpeakLessWriteMoreVisiblity =>
-      speakLessWriteMoreVisiblities[speakLessWriteMoreVisiblities.length - 2];
-
-  @observable
-  ObservableList speakLessWriteMoreVisiblities =
-      ObservableList.of(List.filled(2, false));
-
-  @action
-  setSpeakLessWriteMoreVisiblity(bool newVal) =>
-      speakLessWriteMoreVisiblities.add(newVal);
-
-  @action
-  setIsHolding(bool newBool) => isHolding = newBool;
-
-  @action
-  setIsPickingUp(bool newBool) => isPickingUp = newBool;
-
-  @observable
-  bool collaboratorHasLeft = false;
-
-  @observable
-  int holdCount = 0;
 
   @observable
   int tapCount = 0;
 
   @action
   onCollaboratorLeft() {
-    mirroredText.setWidgetVisibility(false);
+    // Timer.periodic(Seconds.get(0, milli: 500), (timer) {
+//   if (constructorIsCalled) {
+    if (!presenceOverlay.showWidget) {
+      presenceOverlay.setWidgetVisibility(true);
+    }
+    setCollaboratorHasLeft(true);
     sessionNavigation.setWidgetVisibility(false);
-    collaboratorHasLeft = true;
+    mirroredText.setWidgetVisibility(false);
+    // timer.cancel();
+    //   }
+    // });
   }
 
   @action
   onCollaboratorJoined() {
+    // Timer.periodic(Seconds.get(0, milli: 500), (timer) {
+    // if (constructorIsCalled) {
     mirroredText.setWidgetVisibility(true);
     sessionNavigation.setWidgetVisibility(true);
-    collaboratorHasLeft = false;
+    setCollaboratorHasLeft(false);
+    // }
+    // });
   }
 
   @action
   onHold(GesturePlacement holdPosition) {
-    if (holdPosition == GesturePlacement.bottomHalf && canHold) {
-      isHolding = true;
-      canHold = false;
-      holdCount++;
-      beachWaves.setMovieMode(
-        BeachWaveMovieModes.halfAndHalfToDrySand,
-      );
-      beachWaves.currentStore.initMovie(NoParams());
+    initSpeaking(holdPosition, onHold: () {
       mirroredText.setWidgetVisibility(false);
-    }
+    });
+  }
+
+  @action
+  onSomeoneElseIsSpeaking(String speakerName) {
+    letEmCook.setCurrentCook(speakerName);
+    refreshBanner.setWidgetVisibility(false);
+    mirroredText.setWidgetVisibility(false);
+    othersAreTalkingTint.initMovie(const NoParams());
+  }
+
+  @action
+  onSomeElseIsDoneSpreaking() {
+    othersAreTalkingTint.reverseMovie(const NoParams());
+    mirroredText.setWidgetVisibility(true);
+    refreshBanner.setWidgetVisibility(true);
   }
 
   @action
   onTap(Offset tapPosition, Function onTap) async {
     touchRipple.onTap(tapPosition, overridedColor: const Color(0xFFFFFFFF));
-    if (!speakLessWriteMoreIsVisible) {
-      if (!isHolding && canHold) {
-        tapCount++;
-        if (hasTappedOnTheTopHalf) {
-          initFullScreenNotes();
-          await onTap();
-        }
+    if (!isHolding && canHold) {
+      tapCount++;
+      if (hasTappedOnTheTopHalf) {
+        initFullScreenNotes();
+        await onTap();
       }
     }
   }
 
+  refresh(Function onRefresh) async {
+    if (!refreshBanner.showWidget || someoneElseIsTalking) return;
+    sessionNavigation.setWidgetVisibility(false);
+    mirroredText.setWidgetVisibility(false);
+    othersAreTakingNotesTint.reverseMovie(const NoParams());
+    refreshBanner.setWidgetVisibility(false);
+    Timer(Seconds.get(1), () {
+      Modular.to.navigate(SessionConstants.refresh);
+    });
+    await onRefresh();
+  }
+
   @action
   onLetGo() {
-    initGlowDown();
-    beachWaves.setMovieMode(BeachWaveMovieModes.anyToHalfAndHalf);
-    beachWaves.currentStore.initMovie(beachWaves.currentColorsAndStops);
-    speakLessSmileMore.hideBoth();
+    endSpeaking();
   }
 
   @action
   onLetGoCompleted() {
-    canHold = true;
-    isHolding = false;
-    isLettingGo = false;
+    resetSpeakingVariables();
+    refreshBanner.setWidgetVisibility(true);
     if (!collaboratorHasLeft) {
+      sessionNavigation.setWidgetVisibility(true);
       mirroredText.setWidgetVisibility(true);
     }
   }
 
   @action
   initFullScreenNotes() {
-    if (!sessionNavigation.hasInitiatedBlur) {
-      isGoingToNotes = true;
-      sessionNavigation.setWidgetVisibility(false);
+    baseInitFullScreenNotes(() {
       mirroredText.setWidgetVisibility(false);
-      beachWaves.setMovieMode(
-        BeachWaveMovieModes.skyToHalfAndHalf,
-      );
-      beachWaves.currentStore.reverseMovie(NoParams());
-      othersAreTakingNotesTint.reverseMovie(NoParams());
-    }
-    //
-  }
-
-  @action
-  initBorderGlow() {
-    borderGlow.initMovie(NoParams());
-  }
-
-  @action
-  initGlowDown() {
-    borderGlow.initGlowDown();
-  }
-
-  @action
-  onExit() {
-    setIsPickingUp(true);
-    mirroredText.setWidgetVisibility(false);
-    beachWaves.setMovieMode(BeachWaveMovieModes.skyToHalfAndHalf);
-    beachWaves.currentStore.reverseMovie(NoParams());
+      othersAreTakingNotesTint.reverseMovie(const NoParams());
+    });
   }
 
   @action
   initReactors() {
     disposers.add(borderGlowReactor());
-    disposers.add(beachWavesMovieStatusReactor());
+
+    disposers.add(baseBeachWavesMovieStatusReactor(
+      onBorderGlowInitialized: () {
+        borderGlow.initMovie(const NoParams());
+      },
+      onReturnToEquilibrium: () {
+        onLetGoCompleted();
+      },
+      onSkyTransition: () {
+        Modular.to.navigate(SessionConstants.notes);
+      },
+    ));
     disposers.add(
       gestureCrossTapReactor(
         onInit: () {
@@ -209,20 +200,6 @@ abstract class _SessionGroupHybridWidgetsCoordinatorBase
         },
       ),
     );
-  }
-
-  onBorderGlowComplete(MovieStatus p0, BorderGlowStore store) {
-    if (p0 == MovieStatus.finished &&
-        store.isGlowingUp &&
-        isHolding &&
-        beachWaves.movieMode == BeachWaveMovieModes.anyToSky) {
-      speakLessSmileMore.setSpeakLess(true);
-      Timer(Seconds.get(2), () {
-        if (isHolding) {
-          speakLessSmileMore.setSmileMore(true);
-        }
-      });
-    }
   }
 
   gestureCrossTapReactor({
@@ -238,37 +215,10 @@ abstract class _SessionGroupHybridWidgetsCoordinatorBase
         },
       );
 
-  beachWavesMovieStatusReactor() =>
-      reaction((p0) => beachWaves.movieStatus, (p0) {
-        if (p0 == MovieStatus.finished) {
-          if (beachWaves.movieMode == BeachWaveMovieModes.skyToHalfAndHalf) {
-            if (isPickingUp) {
-              Modular.to.navigate(SessionConstants.exit);
-            } else if (isGoingToNotes) {
-              Modular.to.navigate(SessionConstants.notes);
-            }
-          } else if (beachWaves.movieMode ==
-              BeachWaveMovieModes.anyToHalfAndHalf) {
-            onLetGoCompleted();
-          } else if (beachWaves.movieMode ==
-              BeachWaveMovieModes.halfAndHalfToDrySand) {
-            initBorderGlow();
-          }
-        }
-      });
-
-  borderGlowReactor() => reaction((p0) => borderGlow.movieStatus, (p0) {
-        if (p0 == MovieStatus.finished && borderGlow.isGlowingUp) {
-          speakLessSmileMore.setSpeakLess(true);
-          Timer(Seconds.get(2), () {
-            if (borderGlow.isGlowingUp) {
-              speakLessSmileMore.setSmileMore(true);
-            }
-          });
-        }
-      });
-
   @computed
   bool get hasTappedOnTheTopHalf =>
       touchRipple.tapPlacement == GesturePlacement.topHalf;
+
+  @computed
+  bool get someoneElseIsTalking => othersAreTalkingTint.control == Control.play;
 }

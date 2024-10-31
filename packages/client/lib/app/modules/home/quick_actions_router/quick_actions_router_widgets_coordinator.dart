@@ -69,10 +69,28 @@ abstract class _QuickActionsRouterWidgetsCoordinatorBase
     disposers.add(beachWavesMovieStatusReactor());
   }
 
+  @action
+  needsToUpdateConstructor() {
+    beachWaves.setMovieMode(BeachWaveMovieModes.anyToOnShore);
+    beachWaves.currentStore.initMovie(
+      const AnyToOnShoreParams(
+        startingColors: WaterColorsAndStops.onShoreWater,
+        endingColors: WaterColorsAndStops.onShoreWater,
+        endValue: -5.0,
+      ),
+    );
+    showBeachWaves = true;
+    disposers.add(beachWavesMovieStatusReactor());
+  }
+
   beachWavesMovieStatusReactor() =>
       reaction((p0) => beachWaves.movieStatus, (p0) {
-        if (p0 == MovieStatus.finished && shouldRotate) {
-          Modular.to.navigate(SessionStarterConstants.sessionStarter);
+        if (p0 == MovieStatus.finished) {
+          if (shouldRotate) {
+            Modular.to.navigate(SessionStarterConstants.sessionStarter);
+          } else {
+            Modular.to.navigate(HomeConstants.needsToUpdate);
+          }
         }
       });
 }

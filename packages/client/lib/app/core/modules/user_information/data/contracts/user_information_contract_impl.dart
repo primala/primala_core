@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:nokhte/app/core/constants/failure_constants.dart';
-import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mixins/response_to_status.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/core/network/network_info.dart';
@@ -17,25 +16,6 @@ class UserInformationContractImpl
   });
 
   @override
-  getUserInfo(NoParams params) async {
-    if (await networkInfo.isConnected) {
-      final userInfoRes = await remoteSource.getUserInfo();
-      final nokhteSessionsRes = await remoteSource.getFinishedNokhteSessions();
-      final appVersionRes = await remoteSource.versionIsUpToDate();
-
-      return Right(
-        UserJourneyInfoModel.fromSupabase(
-          isUpToDate: appVersionRes,
-          userNamesRes: userInfoRes,
-          finishedNokhteSessionsRes: nokhteSessionsRes,
-        ),
-      );
-    } else {
-      return Left(FailureConstants.internetConnectionFailure);
-    }
-  }
-
-  @override
   updatePreferredPreset(param) async {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.updatePreferredPreset(param);
@@ -46,20 +26,25 @@ class UserInformationContractImpl
   }
 
   @override
-  updateUserFlag(param) async {
+  getPreferredPreset(params) async {
     if (await networkInfo.isConnected) {
-      final res = await remoteSource.updateUserFlag(param);
-      return fromSupabase(res);
+      final presetRes = await remoteSource.getPreferredPreset();
+      final userInfoRes = await remoteSource.getUserInfo();
+
+      return Right(PreferredPresetModel.fromSupabase(
+        companyPresetRes: presetRes,
+        userInformationRes: userInfoRes,
+      ));
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }
   }
 
   @override
-  getPreferredPreset(params) async {
+  checkIfVersionIsUpToDate() async {
     if (await networkInfo.isConnected) {
-      final res = await remoteSource.getPreferredPreset();
-      return Right(PreferredPresetModel.fromSupabase(res));
+      final res = await remoteSource.versionIsUpToDate();
+      return Right(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }

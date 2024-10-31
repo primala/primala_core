@@ -68,10 +68,10 @@ abstract class _SessionJoinerWidgetsCoordinatorBase
   @action
   enterSession() {
     beachWaves.setMovieMode(BeachWaveMovieModes.emptyOceanToInvertedDeepSea);
-    beachWaves.currentStore.initMovie(NoParams());
+    beachWaves.currentStore.initMovie(const NoParams());
     gestureCross.fadeAllOut();
     centerNokhte.setWidgetVisibility(false);
-    homeNokhte.setWidgetVisibility(false);
+    homeNokhte.fadeOut();
     qrScanner.fadeOut();
   }
 
@@ -120,10 +120,7 @@ abstract class _SessionJoinerWidgetsCoordinatorBase
       setHasInitiatedBlur(false);
       qrScanner.fadeIn();
       moveSessionStarterNokhte(false);
-      final position = hasSwiped()
-          ? CenterNokhtePositions.left
-          : CenterNokhtePositions.center;
-      centerNokhte.moveBackToCross(startingPosition: position);
+      centerNokhte.moveBackToCross();
       setSwipeDirection(GestureDirections.initial);
     }
   }

@@ -51,9 +51,6 @@ abstract class _SessionLobbyCoordinatorBase
     widgets.constructor();
     await presence.listen();
     initReactors();
-    if (hasReceivedRoutingArgs) {
-      await presence.updateCurrentPhase(1.0);
-    }
     await captureScreen(SessionConstants.lobby);
   }
 
@@ -80,12 +77,7 @@ abstract class _SessionLobbyCoordinatorBase
     ));
     disposers.add(sessionStartReactor());
     disposers.add(widgets.beachWavesMovieStatusReactor(enterGreeter));
-    disposers.add(
-      widgets.presetArticleTapReactor(
-        onOpen: onOpen,
-        onClose: onClose,
-      ),
-    );
+    disposers.add(presetArticleTapReactor());
     disposers.add(sessionPresetReactor());
   }
 
@@ -112,20 +104,31 @@ abstract class _SessionLobbyCoordinatorBase
         }
       });
 
-  sessionPresetReactor() => reaction((p0) => sessionMetadata.state, (p0) {
+  sessionPresetReactor() =>
+      reaction((p0) => sessionMetadata.presetsLogic.state, (p0) async {
         if (p0 == StoreState.loaded) {
           showPresetInfo();
           if (hasReceivedRoutingArgs) {
+            await presence.updateCurrentPhase(1.0);
             disposers.add(tapReactor());
             disposers.add(canStartTheSessionReactor());
           }
         }
       });
 
+  presetArticleTapReactor() =>
+      reaction((p0) => widgets.presetArticle.tapCount, (p0) {
+        widgets.presetArticle.showBottomSheet(
+          sessionMetadata.presetEntity,
+          onOpen: onOpen,
+          onClose: onClose,
+        );
+      });
+
   @action
   showPresetInfo() {
     widgets.onPresetTypeReceived(
-      sessionMetadata.presetType,
+      sessionMetadata.presetEntity,
       onOpen: onOpen,
       onClose: onClose,
     );

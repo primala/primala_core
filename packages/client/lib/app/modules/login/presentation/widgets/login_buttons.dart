@@ -68,14 +68,18 @@ class LoginButtons extends HookWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if (Platform.isIOS)
-            buildLoginButton(
+          Opacity(
+            opacity: Platform.isIOS ? 1 : 0.5,
+            child: buildLoginButton(
               label: "Sign in with Apple",
               assetPath: 'assets/apple_icon.png',
               width: width,
-              onPressed: () async => await onSignInWithApple(),
+              onPressed: Platform.isIOS
+                  ? () async => await onSignInWithApple()
+                  : () {},
               bottomPadding: 8,
             ),
+          ),
           buildLoginButton(
             label: "Sign in with Google",
             assetPath: 'assets/google_icon.png',

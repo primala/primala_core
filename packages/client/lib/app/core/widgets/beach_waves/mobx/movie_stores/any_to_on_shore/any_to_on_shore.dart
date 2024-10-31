@@ -24,4 +24,16 @@ abstract class _AnyToOnShoreBase
     );
     control = Control.playFromStart;
   }
+
+  @override
+  @action
+  reverseMovie(AnyToOnShoreParams params) {
+    callsOnCompleteTwice = true;
+    movie = AnyToShoreMovie.getMovie(
+      params.startingColors,
+      endingColors: params.endingColors,
+      endValue: params.endValue,
+    );
+    control = Control.playReverseFromEnd;
+  }
 }

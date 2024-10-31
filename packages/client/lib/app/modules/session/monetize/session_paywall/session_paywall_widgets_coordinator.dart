@@ -12,6 +12,7 @@ import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
 import 'package:nokhte/app/core/modules/in_app_purchase/in_app_purchase.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:nokhte/app/modules/home/home.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 part 'session_paywall_widgets_coordinator.g.dart';
 
@@ -77,7 +78,9 @@ abstract class _SessionPaywallWidgetsCoordinatorBase
     secondarySmartText.setMessagesData(SessionLists.swipeUpToPay);
     tertiarySmartText.setMessagesData(SessionLists.swipeToDecide);
     setSmartTextBottomPaddingScalar(.1);
+
     disposers.add(multiplyNokhteReactor());
+    disposers.add(beachWaveMovieStatusReactor());
   }
 
   @action
@@ -248,13 +251,11 @@ abstract class _SessionPaywallWidgetsCoordinatorBase
     }
   }
 
-  beachWaveMovieStatusReactor({
-    required Function onReturnHome,
-  }) =>
+  beachWaveMovieStatusReactor() =>
       reaction((p0) => beachWaves.movieStatus, (p0) {
         if (p0 == MovieStatus.finished) {
           if (beachWaves.movieMode == BeachWaveMovieModes.anyToOnShore) {
-            onReturnHome();
+            Modular.to.navigate(HomeConstants.home);
           } else if (beachWaves.movieMode ==
               BeachWaveMovieModes.borealisToSky) {
             Modular.to.navigate(SessionConstants.groupGreeter);

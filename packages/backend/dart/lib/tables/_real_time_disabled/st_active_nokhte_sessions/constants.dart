@@ -8,7 +8,8 @@ mixin STActiveNokhteSessionsConstants {
   final String SESSION_UID = S_SESSION_UID;
   final String LEADER_UID = S_LEADER_UID;
   final String PRESET_UID = S_PRESET_UID;
-  final String SHOULD_SKIP_INSTRUCTIONS = S_SHOULD_SKIP_INSTRUCTIONS;
+  final String VERSION = S_VERSION;
+  final String COLLABORATOR_NAMES = S_COLLABORATOR_NAMES;
 
   static const String S_TABLE = "st_active_nokhte_sessions";
   static const String S_COLLABORATOR_UIDS = 'collaborator_uids';
@@ -17,5 +18,6 @@ mixin STActiveNokhteSessionsConstants {
   static const String S_SESSION_UID = 'session_uid';
   static const String S_LEADER_UID = 'leader_uid';
   static const String S_PRESET_UID = 'preset_uid';
-  static const String S_SHOULD_SKIP_INSTRUCTIONS = 'should_skip_instructions';
+  static const String S_VERSION = 'version';
+  static const String S_COLLABORATOR_NAMES = 'collaborator_names';
 }

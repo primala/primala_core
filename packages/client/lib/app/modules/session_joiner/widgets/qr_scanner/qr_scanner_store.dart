@@ -37,6 +37,11 @@ abstract class _QrScannerStoreBase extends BaseWidgetStore
     disposers.add(smartTextIndexReactor());
   }
 
+  @action
+  resetMostRecentScannedUID() {
+    mostRecentScannedUID = '';
+  }
+
   fadeIn() {
     Timer(Seconds.get(1), () {
       setWidgetVisibility(true);

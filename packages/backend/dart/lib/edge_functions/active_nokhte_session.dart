@@ -1,18 +1,11 @@
-import 'package:nokhte_backend/tables/_real_time_disabled/company_presets/queries.dart';
-import 'package:nokhte_backend/tables/_real_time_disabled/user_information/queries.dart';
+import 'package:nokhte_backend/tables/st_active_nokhte_sessions.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-import '../tables/_real_time_disabled/st_active_nokhte_sessions/constants.dart';
 
 class ActiveNokhteSessionEdgeFunctions with STActiveNokhteSessionsConstants {
   final SupabaseClient supabase;
   final String userUID;
-  final CompanyPresetsQueries presetQueries;
-  final UserInformationQueries userInformationQueries;
   ActiveNokhteSessionEdgeFunctions({required this.supabase})
-      : presetQueries = CompanyPresetsQueries(supabase: supabase),
-        userInformationQueries = UserInformationQueries(supabase: supabase),
-        userUID = supabase.auth.currentUser?.id ?? '';
+      : userUID = supabase.auth.currentUser?.id ?? '';
   String sessionUID = '';
   int userIndex = -1;
 
@@ -29,31 +22,6 @@ class ActiveNokhteSessionEdgeFunctions with STActiveNokhteSessionsConstants {
     }
   }
 
-  Future<FunctionResponse> startTheSession() async =>
-      await supabase.functions.invoke(
-        'nokhte-session-init-or-nuke-or-start',
-        body: {
-          "userUID": userUID,
-          "shouldInitialize": false,
-          "shouldStart": true,
-        },
-      );
-
-  Future<FunctionResponse> initializeSession({
-    PresetTypes presetType = PresetTypes.consultative,
-  }) async {
-    final presetUID = await userInformationQueries.getPreferredPresetUID();
-    return await supabase.functions.invoke(
-      'nokhte-session-init-or-nuke-or-start',
-      body: {
-        "presetUID": presetUID,
-        "userUID": userUID,
-        "shouldInitialize": true,
-        "shouldStart": false,
-      },
-    );
-  }
-
   Future<FunctionResponse> joinSession(String leaderUID) async =>
       await supabase.functions.invoke(
         'nokhte-session-join',
@@ -65,11 +33,9 @@ class ActiveNokhteSessionEdgeFunctions with STActiveNokhteSessionsConstants {
 
   Future<FunctionResponse> nukeSession() async =>
       await supabase.functions.invoke(
-        'nokhte-session-init-or-nuke-or-start',
+        'nokhte-session-nuke',
         body: {
           "userUID": userUID,
-          "shouldInitialize": false,
-          "shouldStart": false,
         },
       );
 

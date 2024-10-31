@@ -7,14 +7,14 @@ mixin SwipeGuideUtils {
   double getRightPadding(Size screenSize, int i, List orientations) {
     if (orientations[i] == SwipeGuideOrientation.left) {
       return useScaledSize(
-        baseValue: .07,
+        baseValue: .05,
         screenSize: screenSize,
-        bumpPerHundredth: .0001,
+        bumpPerHundredth: .0004,
       );
     } else if (orientations[i] == SwipeGuideOrientation.top ||
         orientations[i] == SwipeGuideOrientation.bottom) {
       return useScaledSize(
-        baseValue: .01,
+        baseValue: .00,
         screenSize: screenSize,
         bumpPerHundredth: .00001,
       );
@@ -28,7 +28,7 @@ mixin SwipeGuideUtils {
       return useScaledSize(
         baseValue: .05,
         screenSize: screenSize,
-        bumpPerHundredth: .0001,
+        bumpPerHundredth: .0004,
       );
     } else {
       return 0;
@@ -45,9 +45,9 @@ mixin SwipeGuideUtils {
       );
     } else if (orientations[i] == SwipeGuideOrientation.top) {
       return useScaledSize(
-        baseValue: .1,
+        baseValue: .08,
         screenSize: screenSize,
-        bumpPerHundredth: .0015,
+        bumpPerHundredth: .0018,
       );
     } else {
       // return 0;
@@ -79,10 +79,7 @@ mixin SwipeGuideUtils {
     final List<Widget> temp = [];
     for (int i = 0; i < orientations.length; i++) {
       double containerSize = useScaledSize(
-        baseValue: orientations[i] == SwipeGuideOrientation.top ||
-                orientations[i] == SwipeGuideOrientation.bottom
-            ? .25
-            : .21,
+        baseValue: .2,
         screenSize: screenSize,
         bumpPerHundredth: .00002,
       );

@@ -75,7 +75,7 @@ abstract class _SessionDuoGreeterCoordinatorBase
           widgets.onTap(
             tap.currentTapPosition,
             onFinalTap: () async => await presence.updateCurrentPhase(1),
-            phoneType: sessionMetadata.sessionScreenType,
+            phoneType: sessionMetadata.screenType,
           );
         }),
       );

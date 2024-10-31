@@ -45,22 +45,6 @@ void main() {
     expect(userNamesRes.first["last_name"], UserDataConstants.user1LastName);
     expect(userNamesRes.first["uid"], firstUserUID);
   });
-  test("updateUserFlag", () async {
-    final res = await user1UserInfoQueries.updateUserFlag(
-        UserInformationConstants.S_HAS_ENTERED_STORAGE, true);
-    final dupRes = await user1UserInfoQueries.updateUserFlag(
-        UserInformationConstants.S_HAS_ENTERED_STORAGE, true);
-    print(res);
-    expect(
-        res.first[UserInformationConstants.S_FLAGS]
-            [UserInformationConstants.S_HAS_ENTERED_STORAGE],
-        true);
-    expect(
-        dupRes.first[UserInformationConstants.S_FLAGS]
-            [UserInformationConstants.S_HAS_ENTERED_STORAGE],
-        true);
-    // expect(dupRes.first["has_entered_storage"], true);
-  });
 
   test("❌ shouldn't be able to insert another row if they already have one",
       () async {

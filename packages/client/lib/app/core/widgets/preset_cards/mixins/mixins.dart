@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:nokhte_backend/tables/company_presets.dart';
 
 mixin PresetTags {
   Widget getTag(double containerSize, Widget child, int i) => Padding(
@@ -11,33 +12,12 @@ mixin PresetTags {
       padding: EdgeInsets.only(left: containerSize * .02),
       child: Jost(text, fontSize: containerSize * .07));
 
-  Widget getPaddedTag(Widget tagWidget, bool addText, String tagCode,
+  Widget getPaddedTag(Widget tagWidget, bool addText, SessionTags tagCode,
           double containerSize) =>
-      addText
-          ? Row(children: [
-              tagWidget,
-              getTextWidget(getText(tagCode), containerSize)
-            ])
-          : tagWidget;
-
-  getText(String tagCode) {
-    if (tagCode == 'hold_to_speak') {
-      return 'Hold to speak';
-    } else if (tagCode == 'tap_to_speak') {
-      return 'Tap to speak';
-    } else if (tagCode == 'notes_during') {
-      return 'Take notes during the meeting';
-    } else if (tagCode == 'notes_after') {
-      return 'Take notes after the meeting';
-    } else if (tagCode == 'flexible_seating') {
-      return 'Sit wherever you want';
-    } else if (tagCode == 'strict_seating') {
-      return 'Sit next to each other';
-    }
-  }
+      tagWidget;
 
   List<Widget> fromTagsToWidgets(
-    List tags, {
+    List<SessionTags> tags, {
     required double containerSize,
     bool shouldAnimate = false,
     bool isHorizontal = true,
@@ -47,7 +27,7 @@ mixin PresetTags {
     final List<Widget> temp = [];
     for (int i = 0; i < tags.length; i++) {
       final tag = tags[i];
-      if (tag == 'hold_to_speak') {
+      if (tag == SessionTags.holdToSpeak) {
         if (i == 0 && isHorizontal) {
           temp.add(
             Container(
@@ -68,7 +48,7 @@ mixin PresetTags {
           tag,
           containerSize,
         ));
-      } else if (tag == 'tap_to_speak') {
+      } else if (tag == SessionTags.tapToSpeak) {
         temp.add(getPaddedTag(
           getTag(
               containerSize,
@@ -82,7 +62,8 @@ mixin PresetTags {
           tag,
           containerSize,
         ));
-      } else if (tag == 'notes_during' || tag == 'notes_after') {
+      } else if (tag == SessionTags.monoFocalNotes ||
+          tag == SessionTags.multiFocalNotes) {
         temp.add(getPaddedTag(
           getTag(
               containerSize,
@@ -95,7 +76,7 @@ mixin PresetTags {
           tag,
           containerSize,
         ));
-      } else if (tag == 'flexible_seating') {
+      } else if (tag == SessionTags.flexibleSeating) {
         temp.add(
           getPaddedTag(
             getTag(
@@ -110,7 +91,7 @@ mixin PresetTags {
             containerSize,
           ),
         );
-      } else if (tag == 'strict_seating') {
+      } else if (tag == SessionTags.strictSeating) {
         temp.add(
           getPaddedTag(
             getTag(

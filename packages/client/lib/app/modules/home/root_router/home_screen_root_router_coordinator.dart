@@ -17,7 +17,7 @@ abstract class _HomeScreenRootRouterCoordinatorBase
   final CleanUpCollaborationArtifactsCoordinator cleanUpCollaborationArtifacts;
   final HomeScreenRootRouterWidgetsCoordinator widgets;
   @override
-  final GetUserInfoStore getUserInfo;
+  final UserInformationCoordinator userInfo;
 
   @observable
   bool isConnected = true;
@@ -27,7 +27,7 @@ abstract class _HomeScreenRootRouterCoordinatorBase
 
   _HomeScreenRootRouterCoordinatorBase({
     required this.cleanUpCollaborationArtifacts,
-    required this.getUserInfo,
+    required this.userInfo,
     required this.widgets,
   }) {
     initEnRouteActions();
@@ -40,7 +40,7 @@ abstract class _HomeScreenRootRouterCoordinatorBase
   constructor() async {
     widgets.constructor();
     initReactors();
-    await cleanUpCollaborationArtifacts(NoParams());
+    await cleanUpCollaborationArtifacts(const NoParams());
     if (isConnected && !isRouting) {
       await decideAndRoute(setRoutingParams);
     }

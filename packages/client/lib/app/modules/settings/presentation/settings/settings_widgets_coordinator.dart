@@ -55,7 +55,7 @@ abstract class _SettingsWidgetsCoordinatorBase
       setShowButton(false);
       primarySmartText.setWidgetVisibility(false);
       secondarySmartText.setWidgetVisibility(false);
-      beachWaves.currentStore.initMovie(NoParams());
+      beachWaves.currentStore.initMovie(const NoParams());
       await onTap();
     }
   }

@@ -7,7 +7,8 @@ import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 export 'duo_greeter/duo_greeter.dart';
 export 'exit/exit.dart';
-export './information/information.dart';
+export 'information/information.dart';
+export 'refresh/refresh.dart';
 export 'group_greeter/group_greeter.dart';
 export 'lobby/lobby.dart';
 export './shared/shared.dart';
@@ -36,6 +37,7 @@ class SessionCoreModule extends Module {
         widgets: Modular.get<SessionInformationWidgetsCoordinator>(),
       ),
     );
+
     i.add<SessionLobbyCoordinator>(
       () => SessionLobbyCoordinator(
         captureStart: Modular.get<CaptureNokhteSessionStart>(),
@@ -83,7 +85,6 @@ class SessionCoreModule extends Module {
         captureEnd: Modular.get<CaptureNokhteSessionEnd>(),
         cleanUpCollaborationArtifacts:
             Modular.get<CleanUpCollaborationArtifactsCoordinator>(),
-        getUserInfo: Modular.get<GetUserInfoStore>(),
         swipe: SwipeDetector(),
         widgets: Modular.get<SessionExitWidgetsCoordinator>(),
         presence: Modular.get<SessionPresenceCoordinator>(),
@@ -110,6 +111,7 @@ class SessionCoreModule extends Module {
         coordinator: Modular.get<SocraticSpeakingExitCoordinator>(),
       ),
     );
+
     r.child(
       SessionConstants.relativeInformation,
       transition: TransitionType.noTransition,
@@ -117,6 +119,7 @@ class SessionCoreModule extends Module {
         coordinator: Modular.get<SessionInformationCoordinator>(),
       ),
     );
+
     r.child(
       SessionConstants.relativeLobby,
       transition: TransitionType.noTransition,

@@ -10,8 +10,8 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:nokhte/app/modules/presets/presets.dart';
 import 'package:nokhte/app/modules/session_starters/session_starters.dart';
-import 'package:nokhte_backend/tables/company_presets.dart';
 part 'session_lobby_widgets_coordinator.g.dart';
 
 class SessionLobbyWidgetsCoordinator = _SessionLobbyWidgetsCoordinatorBase
@@ -48,9 +48,6 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
     );
     primarySmartText.setMessagesData(SessionLists.lobby);
     primarySmartText.setWidgetVisibility(false);
-    Timer(Seconds.get(1), () {
-      primarySmartText.startRotatingText();
-    });
 
     if (hasReceivedRoutingArgs) {
       qrCode.setQrCodeData(
@@ -59,8 +56,16 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
     if (qrCode.qrCodeData.isEmpty) {
       qrCode.setWidgetVisibility(false);
     }
+
     disposers.add(smartTextIndexReactor());
-    constructorHasBeenCalled = true;
+
+    Timer(Seconds.get(1), () {
+      primarySmartText.startRotatingText();
+    });
+
+    Timer(Seconds.get(2), () {
+      constructorHasBeenCalled = true;
+    });
   }
 
   @observable
@@ -89,20 +94,19 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
 
   @action
   onPresetTypeReceived(
-    PresetTypes presetType, {
+    CompanyPresetsEntity entity, {
     required Function onOpen,
     required Function onClose,
   }) {
     presetArticle.setShowPreview(true);
     if (!hasReceivedRoutingArgs) {
       presetArticle.showBottomSheet(
-        presetType,
+        entity,
         onOpen: onOpen,
         onClose: onClose,
       );
     } else {
-      presetArticle.body.setPresetType(presetType);
-      // onOpen();
+      presetArticle.setPreset(entity);
     }
   }
 
@@ -112,7 +116,9 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
   @action
   onCanStartTheSession() {
     Timer.periodic(Seconds.get(0, milli: 100), (timer) {
-      if (primarySmartText.currentIndex == 0) {
+      if (primarySmartText.currentIndex == 0 &&
+          constructorHasBeenCalled &&
+          primarySmartText.isDoneAnimating) {
         primarySmartText.startRotatingText(isResuming: true);
         timer.cancel();
       }
@@ -122,7 +128,9 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
   @action
   onRevertCanStartSession() {
     Timer.periodic(Seconds.get(0, milli: 100), (timer) {
-      if (primarySmartText.currentIndex == 1) {
+      if (primarySmartText.currentIndex == 1 &&
+          constructorHasBeenCalled &&
+          primarySmartText.isDoneAnimating) {
         primarySmartText.startRotatingText(isResuming: true);
         primarySmartText.setWidgetVisibility(false);
         timer.cancel();
@@ -152,10 +160,10 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
   enterSession(bool isAValidSession) {
     if (isAValidSession) {
       beachWaves.setMovieMode(BeachWaveMovieModes.deepSeaToSky);
-      beachWaves.currentStore.initMovie(NoParams());
+      beachWaves.currentStore.initMovie(const NoParams());
     } else {
       beachWaves.setMovieMode(BeachWaveMovieModes.deepSeaToBorealis);
-      beachWaves.currentStore.initMovie(NoParams());
+      beachWaves.currentStore.initMovie(const NoParams());
     }
     presetArticle.setShowPreview(false);
     presetArticle.setWidgetVisibility(true);
@@ -168,38 +176,13 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
         if (p0 == beachWaves.movieStatus) onCompleted();
       });
 
-  presetArticleTapReactor({
-    required Function onOpen,
-    required Function onClose,
-  }) =>
-      reaction((p0) => presetArticle.tapCount, (p0) {
-        // if (!presetArticle.showWidget) {
-        presetArticle.showBottomSheet(
-          presetArticle.body.presetType,
-          onOpen: onOpen,
-          onClose: onClose,
-        );
-        // }
-        // if (isFirstTap) {
-        //   if (p0 == 3) {
-        //     primarySmartText.setCurrentIndex(1);
-        //     primarySmartText.startRotatingText(isResuming: true);
-        //     presetIcons.setWidgetVisibility(true);
-        //   }
-        // }
-      });
-
   smartTextIndexReactor() =>
       reaction((p0) => primarySmartText.currentIndex, (p0) {
         if (isFirstTap) {
           if (p0 == 2) {
             primarySmartText.setCurrentIndex(0);
             primarySmartText.setWidgetVisibility(true);
-            // primarySmartText.startRotatingText(isResuming: true);
           }
         }
       });
-
-  // @computed
-  // bool get isTheLeader => Modular.args.data.toString() != 'null';
 }

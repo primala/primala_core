@@ -25,8 +25,10 @@ class NokhteSessionArtifactModel extends NokhteSessionArtifactEntity {
 
     for (var nokhteSession in nokhteSessionRes) {
       for (var collaboratorRow in collaboratorRowsRes) {
-        if (nokhteSession[FinishedNokhteSessionQueries.COLLABORATOR_UIDS]
-                .contains(collaboratorRow["uid"]) &&
+        if ((nokhteSession[FinishedNokhteSessionQueries.COLLABORATOR_UIDS]
+                    .contains(collaboratorRow["uid"]) ||
+                nokhteSession[FinishedNokhteSessionQueries.COLLABORATOR_UIDS]
+                    .contains(userUID)) &&
             nokhteSession[FinishedNokhteSessionQueries.CONTENT].isNotEmpty) {
           final content = nokhteSession[FinishedNokhteSessionQueries.CONTENT];
           final contentString = content.toString();
@@ -39,6 +41,12 @@ class NokhteSessionArtifactModel extends NokhteSessionArtifactEntity {
             if (nokhteSession[FinishedNokhteSessionQueries.ALIASES][userIndex]
                 .isEmpty) {
               title = 'Session with ${collaboratorRow["first_name"]}';
+
+              if (nokhteSession[FinishedNokhteSessionQueries.COLLABORATOR_UIDS]
+                      .toString() ==
+                  [userUID].toString()) {
+                title = 'Solo Session';
+              }
             } else {
               title = nokhteSession[FinishedNokhteSessionQueries.ALIASES]
                   [userIndex];

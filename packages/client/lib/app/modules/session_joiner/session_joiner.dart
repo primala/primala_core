@@ -3,6 +3,7 @@ import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/widgets/modules.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:nokhte/app/modules/session/logic/session_logic.dart';
 import 'package:nokhte/app/modules/session_starters/session_starters.dart';
 import 'session_joiner.dart';
 export 'constants/constants.dart';
@@ -15,6 +16,7 @@ class SessionJoinerModule extends Module {
         ConnectivityModule(),
         GestureCrossModule(),
         SessionStartersLogicModule(),
+        SessionLogicModule(),
         PosthogModule(),
       ];
 
@@ -33,6 +35,7 @@ class SessionJoinerModule extends Module {
     );
     i.add<SessionJoinerCoordinator>(
       () => SessionJoinerCoordinator(
+        presence: Modular.get<SessionPresenceCoordinator>(),
         tap: TapDetector(),
         captureScreen: Modular.get<CaptureScreen>(),
         logic: Modular.get<SessionStartersLogicCoordinator>(),

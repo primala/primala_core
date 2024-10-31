@@ -29,6 +29,5 @@ abstract class _SettingsCoordinatorBase with Store {
   @action
   onNo() {
     widgets.onNo();
-    ;
   }
 }

@@ -43,10 +43,14 @@ mixin EnRouteWidgetsRouter on EnRoute, Reactions {
         }
       });
 
-  setupEnRouteWidgets() {
+  setupEnRouteWidgets({
+    bool initReator = true,
+  }) {
     initEnRouteActions();
     initEnRouteWidgetsActions();
-    disposers.add(beachWavesMovieStatusReactor());
+    if (initReator) {
+      disposers.add(beachWavesMovieStatusReactor());
+    }
   }
 }
 

@@ -1,5 +1,7 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
+
+import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
@@ -9,6 +11,7 @@ import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/presets/presets.dart';
 import 'package:nokhte/app/modules/session_starters/session_starters.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
+import 'package:nokhte_backend/tables/company_presets.dart';
 part 'session_starter_coordinator.g.dart';
 
 class SessionStarterCoordinator = _SessionStarterCoordinatorBase
@@ -40,6 +43,12 @@ abstract class _SessionStarterCoordinatorBase
   @observable
   bool isNavigatingAway = false;
 
+  @observable
+  StoreState presetsQueryState = StoreState.loaded;
+
+  @action
+  setPresetsQueryState(StoreState state) => presetsQueryState = state;
+
   @action
   toggleIsNavigatingAway() => isNavigatingAway = !isNavigatingAway;
 
@@ -48,15 +57,12 @@ abstract class _SessionStarterCoordinatorBase
     widgets.constructor();
     widgets.initReactors();
     initReactors();
-    await userInfo.getUserInfoStore(NoParams());
-    await presetsLogic.getCompanyPresets();
-    await starterLogic.initialize();
+    await presetsLogic.getCompanyPresets(Left(GetAllPresetsParams()));
     await captureScreen(SessionStarterConstants.sessionStarter);
     starterLogic.listenToSessionActivation();
   }
 
   initReactors() {
-    disposers.add(userInfoReactor());
     disposers.add(swipeReactor());
     disposers.add(companyPresetsReactor());
     disposers.add(preferredPresetReactor());
@@ -72,8 +78,39 @@ abstract class _SessionStarterCoordinatorBase
       },
     ));
     disposers.add(nokhteSearchStatusReactor());
+    disposers.add(hasUpdatedSessionTypeReactor());
+    disposers.add(hasInitiatedSessionReactor());
     disposers.add(widgets.presetSelectionReactor(onSelected));
+    disposers.add(widgets.condensedPresetCardTapReactor(
+      onClose: () async {
+        if (widgets.presetArticle.hasAdjustedSessionPreferences) {
+          setPresetsQueryState(StoreState.loading);
+          if (userInfo.preferredPreset.name == 'Solo') {
+            widgets.presetHeader.presetIcons
+                .setTags(widgets.presetArticle.articleSectionsTags);
+          }
+          await presetsLogic.upsertSessionPreferences(
+            UpsertSessionPreferencesParams(
+              type: PresetTypes.solo,
+              newTags: widgets.presetArticle.articleSectionsTags,
+            ),
+          );
+          await presetsLogic.getCompanyPresets(Left(GetAllPresetsParams()));
+          await userInfo.getPreferredPreset();
+          setPresetsQueryState(StoreState.loaded);
+        }
+      },
+    ));
   }
+
+  tapReactor() => reaction((p0) => tap.doubleTapCount, (p0) async {
+        if (selectedSessionIsSolo && presetsQueryState == StoreState.loaded) {
+          if (!widgets.isEnteringNokhteSession) {
+            widgets.initTransition(true);
+            await starterLogic.dispose(shouldNuke: true);
+          }
+        }
+      });
 
   swipeReactor() => reaction((p0) => swipe.directionsType, (p0) => onSwipe(p0));
 
@@ -81,8 +118,7 @@ abstract class _SessionStarterCoordinatorBase
   onSelected(String presetUID) async {
     await userInfo.updatePreferredPreset(presetUID);
     await userInfo.getPreferredPreset();
-    await starterLogic.nuke();
-    await starterLogic.initialize();
+    await starterLogic.updateSessionType(presetUID);
   }
 
   @action
@@ -106,48 +142,76 @@ abstract class _SessionStarterCoordinatorBase
       reaction((p0) => starterLogic.hasFoundNokhteSession, (p0) async {
         if (p0) {
           setDisableAllTouchFeedback(true);
-          await starterLogic.dispose();
-          widgets.initTransition();
+          widgets.initTransition(false);
         }
       });
 
-  userInfoReactor() =>
-      reaction((p0) => userInfo.getUserInfoStore.state, (p0) async {
-        if (p0 == StoreState.loaded) {
-          if (userInfo.getUserInfoStore.hasAccessedQrCode) {
-            widgets.onQrCodeReceived(userInfo.getUserInfoStore.userUID);
-            await userInfo.getPreferredPreset();
-          } else {
+  preferredPresetReactor() =>
+      reaction((p0) => userInfo.preferredPreset, (p0) async {
+        if (userInfo.state == StoreState.loaded) {
+          if (!userInfo.hasAccessedQrCode) {
             widgets.onNoPresetSelected();
+            if (starterLogic.hasInitialized) return;
+            await starterLogic.initialize(const Right(PresetTypes.solo));
+          } else {
+            if (starterLogic.hasInitialized) return;
+            await starterLogic.initialize(const Left(NoParams()));
           }
         }
       });
 
-  preferredPresetReactor() => reaction((p0) => userInfo.preferredPreset, (p0) {
-        if (p0.name.isNotEmpty) {
-          widgets.onPreferredPresetReceived(
-            sessionName: p0.name,
-            tags: p0.tags,
-            unifiedUID: userInfo.preferredPreset.unifiedUID,
-            userUID: userInfo.getUserInfoStore.userUID,
-          );
+  @action
+  resetPresetInfo() {
+    if (userInfo.preferredPreset.name.isNotEmpty &&
+        !widgets.isEnteringNokhteSession) {
+      final index = presetsLogic.presetsEntity.uids
+          .indexOf(userInfo.preferredPreset.presetUID);
+      final sections =
+          presetsLogic.presetsEntity.articles[index].articleSections;
+      final tags = <SessionTags>[];
+      for (var section in sections) {
+        tags.add(section.tag);
+      }
+      widgets.onPreferredPresetReceived(
+        sessionName: userInfo.preferredPreset.name,
+        tags: tags,
+        presetUID: userInfo.preferredPreset.presetUID,
+        userUID: userInfo.preferredPreset.userUID,
+      );
+    }
+  }
+
+  hasInitiatedSessionReactor() =>
+      reaction((p0) => starterLogic.hasInitialized, (p0) async {
+        if (p0) {
+          resetPresetInfo();
+          disposers.add(tapReactor());
         }
       });
 
-  companyPresetsReactor() => reaction((p0) => presetsLogic.names, (p0) {
-        widgets.onCompanyPresetsReceived(
-          unifiedUIDs: presetsLogic.unifiedUIDs,
-          names: presetsLogic.names,
-          tags: presetsLogic.tags,
-        );
-        if (!userInfo.getUserInfoStore.hasAccessedQrCode) {
-          widgets.presetCards.enableAllTouchFeedback();
+  hasUpdatedSessionTypeReactor() =>
+      reaction((p0) => starterLogic.hasUpdatedSessionType, (p0) async {
+        if (p0) {
+          resetPresetInfo();
         }
       });
 
-  deconstructor() {
-    starterLogic.dispose();
+  companyPresetsReactor() => reaction((p0) => presetsLogic.state, (p0) async {
+        if (p0 == StoreState.loaded) {
+          widgets.onCompanyPresetsReceived(presetsLogic.presetsEntity);
+          await userInfo.getPreferredPreset();
+          if (!userInfo.hasAccessedQrCode) {
+            widgets.presetCards.enableAllTouchFeedback();
+          }
+        }
+      });
+
+  deconstructor() async {
+    await starterLogic.dispose();
     dispose();
     widgets.dispose();
   }
+
+  @computed
+  bool get selectedSessionIsSolo => userInfo.preferredPreset.name == 'Solo';
 }

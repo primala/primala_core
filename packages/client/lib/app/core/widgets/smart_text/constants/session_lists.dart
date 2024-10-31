@@ -263,9 +263,9 @@ class SessionLists {
     SharedLists.emptyItem,
   ];
 
-  static List<RotatingTextData> touchToTalk = [
+  static List<RotatingTextData> holdToTalk = [
     RotatingTextData(
-      text: "Touch to talk",
+      text: "Hold to talk",
       pauseHere: true,
       mainFontSize: 19.0,
     ),

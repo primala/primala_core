@@ -4,6 +4,7 @@ import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mixins/response_to_status.dart';
 import 'package:nokhte/app/modules/session_starters/session_starters.dart';
 import 'package:nokhte/app/core/network/network_info.dart';
+import 'package:nokhte_backend/tables/company_presets.dart';
 
 class SessionStartersContractImpl
     with ResponseToStatus
@@ -18,7 +19,7 @@ class SessionStartersContractImpl
 
   @override
   cancelSessionActivationStream(NoParams params) async =>
-      remoteSource.cancelSessionActivationStream();
+      await remoteSource.cancelSessionActivationStream();
 
   @override
   listenToSessionActivationStatus(NoParams params) async {
@@ -30,10 +31,12 @@ class SessionStartersContractImpl
   }
 
   @override
-  initializeSession(NoParams param) async {
+  initializeSession(param) async {
     if (await networkInfo.isConnected) {
-      final res = await remoteSource.initializeSession();
-      return fromFunctionResponse(res);
+      final rsParams =
+          param.fold((noParam) => PresetTypes.none, (presetType) => presetType);
+      final res = await remoteSource.initializeSession(rsParams);
+      return fromSupabase(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }
@@ -58,5 +61,15 @@ class SessionStartersContractImpl
       return Left(FailureConstants.internetConnectionFailure);
     }
     //
+  }
+
+  @override
+  updateSessionType(newPresetUID) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.updateSessionType(newPresetUID);
+      return fromSupabase(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
   }
 }

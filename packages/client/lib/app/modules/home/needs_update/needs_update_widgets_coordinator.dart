@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
+import 'dart:io';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mixins/mixin.dart';
@@ -7,13 +8,20 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 part 'needs_update_widgets_coordinator.g.dart';
 
 class NeedsUpdateWidgetsCoordinator = _NeedsUpdateWidgetsCoordinatorBase
     with _$NeedsUpdateWidgetsCoordinator;
 
 abstract class _NeedsUpdateWidgetsCoordinatorBase
-    with Store, EnRoute, Reactions, EnRouteConsumer, BaseWidgetsCoordinator {
+    with
+        Store,
+        EnRoute,
+        Reactions,
+        EnRouteConsumer,
+        BaseWidgetsCoordinator,
+        EnRouteWidgetsRouter {
   final GestureCrossStore gestureCross;
   final TintStore tint;
   final NokhteGradientTextStore gradientText;
@@ -31,6 +39,7 @@ abstract class _NeedsUpdateWidgetsCoordinatorBase
   }) {
     initEnRouteActions();
     initBaseWidgetsCoordinatorActions();
+    setupEnRouteWidgets();
   }
 
   @action
@@ -38,19 +47,32 @@ abstract class _NeedsUpdateWidgetsCoordinatorBase
     consumeRoutingArgs();
     gestureCross.fadeInTheCross();
     disposers.add(beachWavesMovieStatusReactor());
-    tint.initMovie(NoParams());
+    tint.initMovie(const NoParams());
     gradientText.setWidgetVisibility(false);
     Timer(Seconds.get(1), () {
       gradientText.setWidgetVisibility(true);
     });
+    disposers.add(gradientTextTapReactor());
   }
 
-  beachWavesMovieStatusReactor() =>
-      reaction((p0) => beachWaves.movieStatus, (p0) {
-        if (p0 == MovieStatus.finished) {
-          if (beachWaves.movieMode == BeachWaveMovieModes.resumeOnShore) {
-            beachWaves.setMovieMode(BeachWaveMovieModes.onShore);
-          }
-        }
+  gradientTextTapReactor() =>
+      reaction((p0) => gradientText.tapCount, (p0) async {
+        await launchStoreUrl();
       });
+
+  Future<void> launchStoreUrl() async {
+    final Uri url;
+    if (Platform.isIOS) {
+      url = Uri.parse('https://apps.apple.com/us/app/nokhte/id6470394110');
+    } else {
+      url = Uri.parse(
+          'https://play.google.com/store/apps/details?id=com.nokhte.nokhte');
+    }
+    if (await canLaunchUrl(url)) {
+      await launchUrl(
+        url,
+        mode: LaunchMode.externalApplication,
+      );
+    }
+  }
 }

@@ -17,8 +17,7 @@ class LoginWidgetsModule extends Module {
       () => LoginScreenWidgetsCoordinator(
         wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
         smartTextStore: SmartTextStore(),
-        layer1BeachWaves: BeachWavesStore(),
-        layer2BeachWaves: BeachWavesStore(),
+        beachWaves: BeachWavesStore(),
       ),
     );
   }

@@ -49,9 +49,7 @@ abstract class _SessionNavigationStoreBase extends BaseWidgetStore
     centerNokhte.fadeIn();
     exitNokhte.setAndFadeIn(
       AuxiliaryNokhtePositions.bottom,
-      presetType == PresetTypes.socratic
-          ? AuxiliaryNokhteColorways.exitOrangeSand
-          : AuxiliaryNokhteColorways.exitVibrantBlue,
+      AuxiliaryNokhteColorways.exitVibrantBlue,
     );
     infoNokhte.setAndFadeIn(
       AuxiliaryNokhtePositions.top,
@@ -66,11 +64,7 @@ abstract class _SessionNavigationStoreBase extends BaseWidgetStore
     initSwipeReactor = true,
   }) {
     this.presetType = presetType;
-    Color color = SessionConstants.white;
-    if (screenType == SessionScreenTypes.soloHybrid ||
-        screenType == SessionScreenTypes.speaking) {
-      color = SessionConstants.blue;
-    }
+    Color color = SessionConstants.blue;
     gestureCross.cross.initStaticGlow(
       glowColor: color,
     );
@@ -98,19 +92,22 @@ abstract class _SessionNavigationStoreBase extends BaseWidgetStore
       infoNokhte.disappear();
       swipeGuide.setWidgetVisibility(false);
     }
-
     //
   }
 
   @override
   setWidgetVisibility(bool visibility) {
-    setControl(Control.stop);
+    centerNokhte.setControl(Control.stop);
+    exitNokhte.setControl(Control.stop);
+    infoNokhte.setControl(Control.stop);
+    tint.setControl(Control.stop);
+    swipeGuide.setControl(Control.stop);
     super.setWidgetVisibility(visibility);
   }
 
   swipeReactor({
-    required Function onSwipeUp,
-    required Function onSwipeDown,
+    Function? onSwipeUp,
+    Function? onSwipeDown,
   }) =>
       reaction((p0) => swipe.directionsType, (p0) async {
         switch (p0) {
@@ -118,14 +115,14 @@ abstract class _SessionNavigationStoreBase extends BaseWidgetStore
             if (hasInitiatedBlur) {
               this.onSwipeDown();
             } else {
-              onSwipeDown();
+              onSwipeDown?.call();
             }
             break;
           case GestureDirections.up:
             if (hasInitiatedBlur) {
               this.onSwipeUp();
             } else {
-              onSwipeUp();
+              onSwipeUp?.call();
             }
           default:
             break;
@@ -136,10 +133,7 @@ abstract class _SessionNavigationStoreBase extends BaseWidgetStore
     bool initSwipeReactor = true,
   }) {
     if (initSwipeReactor) {
-      disposers.add(swipeReactor(
-        onSwipeDown: () {},
-        onSwipeUp: () {},
-      ));
+      disposers.add(swipeReactor());
     }
 
     disposers.add(centerNokhteReactor());
@@ -150,11 +144,11 @@ abstract class _SessionNavigationStoreBase extends BaseWidgetStore
   exitNokhteReactor() => reaction((p0) => exitNokhte.movieStatus, (p0) {
         if (p0 == MovieStatus.finished &&
             exitNokhte.movieMode == AuxiliaryNokhteMovieModes.explode) {
-          if (presetType == PresetTypes.socratic) {
-            Modular.to.navigate(SessionConstants.socraticSpeakingExit);
-          } else {
-            Modular.to.navigate(SessionConstants.exit);
-          }
+          // if (presetType == PresetTypes.socratic) {
+          // Modular.to.navigate(SessionConstants.socraticSpeakingExit);
+          // } else {
+          Modular.to.navigate(SessionConstants.exit);
+          // }
         }
       });
 
@@ -184,7 +178,7 @@ abstract class _SessionNavigationStoreBase extends BaseWidgetStore
     if (isAllowedToMakeGesture() && showWidget) {
       if (!hasInitiatedBlur) {
         setHasInitiatedBlur(true);
-        tint.initMovie(NoParams());
+        tint.initMovie(const NoParams());
         centerNokhte.moveToCenter();
         swipeGuide.fadeIn();
         moveAuxNokhtes(shouldExpand: true);
@@ -201,11 +195,9 @@ abstract class _SessionNavigationStoreBase extends BaseWidgetStore
     swipeGuide.setWidgetVisibility(false);
     setHasInitiatedBlur(false);
     setSwipeDirection(GestureDirections.initial);
-    centerNokhte.moveBackToCross(
-      startingPosition: CenterNokhtePositions.center,
-    );
+    centerNokhte.moveBackToCross();
     moveAuxNokhtes(shouldExpand: false);
-    tint.reverseMovie(NoParams());
+    tint.reverseMovie(const NoParams());
   }
 
   @action

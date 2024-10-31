@@ -5,7 +5,6 @@ import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/core/modules/user_metadata/user_metadata.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
-import 'package:nokhte/app/modules/session_starters/session_starters.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
 import 'home.dart';
 export 'constants/constants.dart';
@@ -22,7 +21,6 @@ class HomeModule extends Module {
   @override
   List<Module> get imports => [
         HomeWidgetsModule(),
-        SessionStartersLogicModule(),
         CleanUpCollaborationArtifactsModule(),
         UserInformationModule(),
         LegacyConnectivityModule(),
@@ -36,7 +34,7 @@ class HomeModule extends Module {
       () => HomeScreenRootRouterCoordinator(
         cleanUpCollaborationArtifacts:
             Modular.get<CleanUpCollaborationArtifactsCoordinator>(),
-        getUserInfo: Modular.get<GetUserInfoStore>(),
+        userInfo: Modular.get<UserInformationCoordinator>(),
         widgets: Modular.get<HomeScreenRootRouterWidgetsCoordinator>(),
       ),
     );
@@ -45,12 +43,14 @@ class HomeModule extends Module {
         cleanUpCollaborationArtifacts:
             Modular.get<CleanUpCollaborationArtifactsCoordinator>(),
         widgets: Modular.get<QuickActionsRouterWidgetsCoordinator>(),
+        userInfo: Modular.get<UserInformationCoordinator>(),
         captureScreen: Modular.get<CaptureScreen>(),
       ),
     );
 
     i.add<HomeCoordinator>(
       () => HomeCoordinator(
+        tap: TapDetector(),
         getNokhteSessionArtifactsLogic:
             Modular.get<GetNokhteSessionArtifacts>(),
         captureScreen: Modular.get<CaptureScreen>(),
@@ -68,7 +68,7 @@ class HomeModule extends Module {
       () => HomeEntryCoordinator(
         captureScreen: Modular.get<CaptureScreen>(),
         widgets: Modular.get<HomeEntryWidgetsCoordinator>(),
-        getUserInfo: Modular.get<GetUserInfoStore>(),
+        userInfo: Modular.get<UserInformationCoordinator>(),
       ),
     );
   }

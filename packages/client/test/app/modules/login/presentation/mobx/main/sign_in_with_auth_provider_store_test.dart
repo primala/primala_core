@@ -27,16 +27,17 @@ void main() {
     );
   });
 
-  mockAppleReturnSuccessEntity() => when(mockSignInWithApple(NoParams()))
+  mockAppleReturnSuccessEntity() => when(mockSignInWithApple(const NoParams()))
       .thenAnswer((realInvocation) async => tAppleEntity);
 
-  mockGoogleReturnSuccessEntity() => when(mockSignInWithGoogle(NoParams()))
-      .thenAnswer((realInvocation) async => tGoogleEntity);
+  mockGoogleReturnSuccessEntity() =>
+      when(mockSignInWithGoogle(const NoParams()))
+          .thenAnswer((realInvocation) async => tGoogleEntity);
 
-  mockAppleFailure() => when(mockSignInWithApple(NoParams()))
+  mockAppleFailure() => when(mockSignInWithApple(const NoParams()))
       .thenAnswer((realInvocation) async => Left(FailureConstants.authFailure));
 
-  mockGoogleFailure() => when(mockSignInWithGoogle(NoParams()))
+  mockGoogleFailure() => when(mockSignInWithGoogle(const NoParams()))
       .thenAnswer((realInvocation) async => Left(FailureConstants.authFailure));
 
   group("initial values", () {
@@ -74,12 +75,12 @@ void main() {
     });
 
     test("call is passed an apple entity", () async {
-      when(mockSignInWithApple(NoParams())).thenAnswer((realInvocation) async =>
-          const Right(AuthProviderEntity(
+      when(mockSignInWithApple(const NoParams())).thenAnswer(
+          (realInvocation) async => const Right(AuthProviderEntity(
               authProvider: AuthProvider.apple, authProviderStatus: true)));
       await testStore(AuthProvider.apple);
       expect(testStore.authProviderRequestStatus, true);
-      verify(mockSignInWithApple(NoParams()));
+      verify(mockSignInWithApple(const NoParams()));
     });
   });
 }

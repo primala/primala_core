@@ -146,12 +146,12 @@ class WaterColorsAndStops {
 
   static const List<ColorAndStop> invertedHalfWaterAndSand = [
     ColorAndStop(Color(0xFFF5DC91), 0),
-    ColorAndStop(Color(0xFFFFFFDC), .19),
+    ColorAndStop(Color(0xFFFFFFDC), .09),
     ColorAndStop(Color(0xFFFAF2C3), .32),
-    ColorAndStop(Color(0xFFF9EFB7), .49),
-    ColorAndStop(Color(0xFF53DCE3), .57),
-    ColorAndStop(Color(0xFF4FD9E8), .79),
-    ColorAndStop(Color(0xFF49D6EF), .9),
+    ColorAndStop(Color(0xFFF9EFB7), .46),
+    ColorAndStop(Color(0xFF53DCE3), .65),
+    ColorAndStop(Color(0xFF4FD9E8), .85),
+    ColorAndStop(Color(0xFF49D6EF), .88),
     ColorAndStop(Color(0xFF43D3F5), 1.00),
   ];
 

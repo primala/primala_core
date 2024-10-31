@@ -1,9 +1,12 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
+import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/extensions/extensions.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
+import 'package:nokhte/app/core/types/types.dart';
+import 'package:nokhte/app/modules/presets/presets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte_backend/tables/company_presets.dart';
 import 'package:nokhte_backend/tables/rt_active_nokhte_sessions.dart';
@@ -14,15 +17,11 @@ class SessionMetadataStore = _SessionMetadataStoreBase
 
 abstract class _SessionMetadataStoreBase
     with Store, BaseMobxLogic<NoParams, Stream<NokhteSessionMetadata>> {
-  final ListenToSessionMetadata listenLogic;
-  final GetStaticSessionMetadata getterLogic;
-  final GetSessionPresetInfo presetLogic;
-  final GetInstructionType getInstructionTypeLogic;
+  final SessionPresenceContract contract;
+  final PresetsLogicCoordinator presetsLogic;
   _SessionMetadataStoreBase({
-    required this.listenLogic,
-    required this.getInstructionTypeLogic,
-    required this.getterLogic,
-    required this.presetLogic,
+    required this.contract,
+    required this.presetsLogic,
   }) {
     initBaseLogicActions();
   }
@@ -37,10 +36,26 @@ abstract class _SessionMetadataStoreBase
   bool userIsSpeaking = false;
 
   @observable
+  ObservableList<NameAndUID> namesAndUIDs = ObservableList.of([]);
+
+  @observable
+  String? currentSpeakerUID = '';
+
+  @observable
+  bool userIsInSecondarySpeakingSpotlight = false;
+
+  @observable
+  ObservableStream<DateTime> time =
+      Stream.periodic(Seconds.get(1)).map((_) => DateTime.now()).asObservable();
+
+  @observable
   bool userCanSpeak = false;
 
   @observable
   ObservableList<double> currentPhases = ObservableList.of(List.filled(9, -9));
+
+  @observable
+  bool secondarySpeakerSpotlightIsEmpty = false;
 
   @observable
   bool isAPremiumSession = false;
@@ -64,16 +79,7 @@ abstract class _SessionMetadataStoreBase
   String presetUID = '';
 
   @observable
-  String presetName = '';
-
-  @observable
-  ObservableList presetTags = ObservableList.of([]);
-
-  @observable
-  ObservableList oddConfiguration = ObservableList.of([]);
-
-  @observable
-  ObservableList evenConfiguration = ObservableList.of([]);
+  DateTime speakingTimerStart = DateTime.fromMillisecondsSinceEpoch(0);
 
   @observable
   SessionInstructionTypes instructionType = SessionInstructionTypes.initial;
@@ -91,7 +97,7 @@ abstract class _SessionMetadataStoreBase
   @action
   resetValues() {
     setState(StoreState.initial);
-    presetName = '';
+    presetsLogic.reset();
     currentPhases = ObservableList.of(List.filled(9, -9));
   }
 
@@ -102,32 +108,18 @@ abstract class _SessionMetadataStoreBase
   }
 
   @action
-  _getInstructionType(String unifiedUID) async {
-    final res = await getInstructionTypeLogic(unifiedUID);
-    res.fold(
-      (failure) => errorUpdater(failure),
-      (instructionType) => this.instructionType = instructionType,
-    );
-  }
-
-  @action
   _getStaticMetadata() async {
-    final res = await getterLogic(NoParams());
+    final res = await contract.getSTSessionMetadata(const NoParams());
     res.fold((failure) => mapFailureToMessage(failure), (entity) async {
       isAPremiumSession = entity.isAPremiumSession;
       isAValidSession = entity.isAValidSession;
-      if (presetName.isEmpty) {
+      if (presetsLogic.presetsEntity.uids.isEmpty) {
         userIndex = entity.userIndex;
         leaderIsWhitelisted = entity.leaderIsWhitelisted;
+        namesAndUIDs = ObservableList.of(entity.namesAndUIDs);
         presetUID = entity.presetUID;
         leaderUID = entity.leaderUID;
-        final res = await presetLogic(presetUID);
-        res.fold((failure) => mapFailureToMessage(failure), (presetEntity) {
-          presetName = presetEntity.name;
-          presetTags = ObservableList.of(presetEntity.tags);
-          oddConfiguration = ObservableList.of(presetEntity.oddConfiguration);
-          evenConfiguration = ObservableList.of(presetEntity.evenConfiguration);
-        });
+        await presetsLogic.getCompanyPresets(Right(entity.presetUID));
       }
     });
   }
@@ -135,7 +127,7 @@ abstract class _SessionMetadataStoreBase
   @action
   Future<void> get(params) async {
     resetValues();
-    final result = await listenLogic(params);
+    final result = await contract.listenToRTSessionMetadata(params);
     result.fold(
       (failure) {
         setErrorMessage(mapFailureToMessage(failure));
@@ -146,10 +138,14 @@ abstract class _SessionMetadataStoreBase
         streamSubscription = sessionMetadata.listen((value) async {
           if (value.phases.length != currentPhases.length) {
             await _getStaticMetadata();
-            await _getInstructionType(presetUID);
           }
           everyoneIsOnline = value.everyoneIsOnline;
           final phases = value.phases.map((e) => double.parse(e.toString()));
+          speakingTimerStart = value.speakingTimerStart;
+          secondarySpeakerSpotlightIsEmpty = value.secondarySpotlightIsEmpty;
+          userIsInSecondarySpeakingSpotlight =
+              value.userIsInSecondarySpeakingSpotlight;
+          currentSpeakerUID = value.speakerUID;
           currentPhases = ObservableList.of(phases);
           sessionHasBegun = value.sessionHasBegun;
           userIsSpeaking = value.userIsSpeaking;
@@ -161,17 +157,11 @@ abstract class _SessionMetadataStoreBase
     );
   }
 
-  SessionScreenTypes fromRawScreenType(String param) {
-    if (param.contains('solo')) {
-      return SessionScreenTypes.soloHybrid;
-    } else if (param.contains('group')) {
-      return SessionScreenTypes.groupHybrid;
-    } else if (param.contains('speaking')) {
-      return SessionScreenTypes.speaking;
-    } else if (param.contains('notes')) {
-      return SessionScreenTypes.notes;
-    } else {
-      return SessionScreenTypes.inital;
+  getUIDFromName(String name) {
+    for (var nameAndUID in namesAndUIDs) {
+      if (nameAndUID.name == name) {
+        return nameAndUID.uid;
+      }
     }
   }
 
@@ -204,44 +194,115 @@ abstract class _SessionMetadataStoreBase
   }
 
   @computed
-  PresetTypes get presetType {
-    if (presetName.contains('sultat')) {
-      return PresetTypes.consultative;
-    } else if (presetName.contains('llaborat')) {
-      return PresetTypes.collaborative;
-    } else if (presetName.contains('crat')) {
-      return PresetTypes.socratic;
+  DateTime get now => time.value ?? DateTime.now();
+
+  @computed
+  int get speakingLength =>
+      speakingTimerStart != DateTime.fromMillisecondsSinceEpoch(0)
+          ? now.difference(speakingTimerStart).inSeconds
+          : 0;
+
+  @computed
+  GlowColor get glowColor {
+    if (userCanSpeak) {
+      return GlowColor.transparent;
     } else {
-      return PresetTypes.none;
+      if (speakingLength <= 62) {
+        return GlowColor.green;
+      } else if (speakingLength > 62 && speakingLength <= 90) {
+        return GlowColor.yellow;
+      } else if (speakingLength > 90 && speakingLength < 107) {
+        return GlowColor.red;
+      } else {
+        return GlowColor.inflectionRed;
+      }
     }
   }
 
   @computed
-  SessionScreenTypes get sessionScreenType {
-    if (evenConfiguration.isEmpty || oddConfiguration.isEmpty) {
-      return SessionScreenTypes.inital;
-    } else {
-      if (evenConfiguration.length == 1 && oddConfiguration.length == 1) {
-        return fromRawScreenType(evenConfiguration.first);
-      } else {
-        final moduloIndex = userIndex % 2;
-        if (numberOfCollaborators.isOdd) {
-          if (userIndex == numberOfCollaborators - 1) {
-            return fromRawScreenType(oddConfiguration.last);
-          } else {
-            return fromRawScreenType(oddConfiguration[moduloIndex]);
-          }
-        } else {
-          return fromRawScreenType(evenConfiguration[moduloIndex]);
+  String get currentSpeakerFirstName {
+    if (currentSpeakerUID != null) {
+      String name = '';
+      for (var nameAndUID in namesAndUIDs) {
+        if (nameAndUID.uid == currentSpeakerUID) {
+          name = nameAndUID.name.split(' ').first;
         }
       }
+      return name;
+    } else {
+      return '';
     }
   }
+
+  @computed
+  bool get isCooking => !secondarySpeakerSpotlightIsEmpty && userIsSpeaking;
+
+  @computed
+  bool get isBeingRalliedWith =>
+      userIsInSecondarySpeakingSpotlight && !userIsSpeaking;
+
+  @computed
+  bool get showLetEmCook =>
+      !userIsSpeaking &&
+      secondarySpeakerSpotlightIsEmpty &&
+      glowColor != GlowColor.green;
 
   @computed
   int get numberOfCollaborators => currentPhases.length;
 
   @computed
   bool get someoneIsTakingANote =>
-      currentPhases.any((element) => element == 3.5);
+      currentPhases.any((element) => element == 2.5);
+
+  @computed
+  List<String> get fullNames {
+    final names = <String>[];
+    for (int i = 0; i < namesAndUIDs.length; i++) {
+      if (i != userIndex) {
+        names.add(namesAndUIDs[i].name);
+      }
+    }
+
+    return names;
+  }
+
+  @computed
+  CompanyPresetsEntity get presetEntity => presetsLogic.presetsEntity;
+
+  @computed
+  SessionScreenTypes get screenType => presetEntity.articles.isEmpty
+      ? SessionScreenTypes.none
+      : presetEntity.screenTypes.first;
+
+  @computed
+  PresetTypes get presetType => presetEntity.articles.isEmpty
+      ? PresetTypes.none
+      : presetEntity.presets.first;
+
+  @computed
+  List<SessionTags> get tags {
+    if (presetEntity.tags.isEmpty) {
+      return [];
+    } else {
+      final list = <SessionTags>[];
+      for (var section in presetEntity.articles.first.articleSections) {
+        list.add(section.tag);
+      }
+      return list;
+    }
+  }
+
+  @computed
+  PresetArticleEntity get article => presetEntity.articles.first;
+
+  @computed
+  List<bool> get canRallyArray {
+    final list = <bool>[];
+    for (int i = 0; i < currentPhases.length; i++) {
+      if (i != userIndex) {
+        list.add(currentPhases[i] == 2.0);
+      }
+    }
+    return list;
+  }
 }

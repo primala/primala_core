@@ -5,6 +5,7 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte/app/modules/session_joiner/session_joiner.dart';
 import 'package:nokhte/app/modules/session_starters/session_starters.dart';
 part 'session_joiner_coordinator.g.dart';
@@ -20,10 +21,12 @@ abstract class _SessionJoinerCoordinatorBase
   @override
   final CaptureScreen captureScreen;
   final SessionStartersLogicCoordinator logic;
+  final SessionPresenceCoordinator presence;
 
   _SessionJoinerCoordinatorBase({
     required this.widgets,
     required this.tap,
+    required this.presence,
     required this.swipe,
     required this.logic,
     required this.captureScreen,
@@ -41,7 +44,6 @@ abstract class _SessionJoinerCoordinatorBase
   constructor() async {
     widgets.constructor();
     initReactors();
-    await logic.nuke();
     logic.listenToSessionActivation();
     await captureScreen(SessionJoinerConstants.sessionJoiner);
   }
@@ -61,34 +63,24 @@ abstract class _SessionJoinerCoordinatorBase
     ));
     disposers.add(tapReactor());
     disposers.add(qrCodeScannerReactor());
+    disposers.add(hasFoundTheSessionReactor());
   }
 
   swipeReactor() => reaction((p0) => swipe.directionsType, (p0) => onSwipe(p0));
 
-  @observable
-  int retryCount = 0;
-
   qrCodeScannerReactor() =>
-      reaction((p0) => widgets.qrScanner.mostRecentScannedUID, (p0) {
+      reaction((p0) => widgets.qrScanner.mostRecentScannedUID, (p0) async {
         if (p0.isNotEmpty) {
-          widgets.qrScanner.rotateText();
-          Timer.periodic(Seconds.get(0, milli: 500), (timer) async {
-            if (!logic.hasFoundNokhteSession) {
-              if (retryCount < 5) {
-                retryCount++;
-                await logic.join(p0);
-              } else {
-                widgets.qrScanner.resetText();
-                retryCount = 0;
-                timer.cancel();
-              }
-            } else {
-              widgets.enterSession();
-              setDisableAllTouchFeedback(true);
-              widgets.qrScanner.rotateText();
-              timer.cancel();
-            }
-          });
+          await logic.join(p0);
+          widgets.qrScanner.resetMostRecentScannedUID();
+        }
+      });
+
+  hasFoundTheSessionReactor() =>
+      reaction((p0) => logic.hasFoundNokhteSession, (p0) async {
+        if (p0) {
+          widgets.enterSession();
+          setDisableAllTouchFeedback(true);
         }
       });
 
@@ -114,8 +106,8 @@ abstract class _SessionJoinerCoordinatorBase
         });
       });
 
-  deconstructor() {
-    logic.dispose();
+  deconstructor() async {
+    await logic.dispose();
     widgets.dispose();
     dispose();
   }

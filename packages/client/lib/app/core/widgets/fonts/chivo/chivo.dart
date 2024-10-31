@@ -8,6 +8,7 @@ class Chivo extends StatelessWidget {
   final bool shouldCenter;
   final bool shouldItalicize;
   final FontWeight fontWeight;
+
   const Chivo(
     this.content, {
     super.key,
@@ -20,19 +21,65 @@ class Chivo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      content,
-      textAlign: shouldCenter ? TextAlign.center : null,
-      // softWrap: true,
-      style: GoogleFonts.chivo(
-        fontSize: fontSize,
-        color: fontColor,
-        textStyle: TextStyle(
-          fontWeight: fontWeight,
-          fontStyle: shouldItalicize ? FontStyle.italic : FontStyle.normal,
-          overflow: TextOverflow.visible,
-        ),
-      ),
+    return RichText(
+      textAlign: shouldCenter ? TextAlign.center : TextAlign.start,
+      text: _parseBoldText(content),
     );
+  }
+
+  TextStyle chivo({
+    bool isBold = false,
+  }) =>
+      GoogleFonts.chivo(
+        fontSize: fontSize,
+        fontWeight: isBold ? FontWeight.w300 : fontWeight,
+        color: fontColor,
+        fontStyle: shouldItalicize ? FontStyle.italic : FontStyle.normal,
+      );
+
+  TextSpan _parseBoldText(String content) {
+    final regex = RegExp(r'\*\*(.*?)\*\*');
+    final matches = regex.allMatches(content);
+
+    if (matches.isEmpty) {
+      return TextSpan(
+        text: content,
+        style: chivo(),
+      );
+    }
+
+    List<TextSpan> spans = [];
+    int lastMatchEnd = 0;
+
+    for (final match in matches) {
+      if (match.start > lastMatchEnd) {
+        spans.add(
+          TextSpan(
+            text: content.substring(lastMatchEnd, match.start),
+            style: chivo(),
+          ),
+        );
+      }
+
+      spans.add(
+        TextSpan(
+          text: match.group(1),
+          style: chivo(isBold: true),
+        ),
+      );
+
+      lastMatchEnd = match.end;
+    }
+
+    if (lastMatchEnd < content.length) {
+      spans.add(
+        TextSpan(
+          text: content.substring(lastMatchEnd),
+          style: chivo(),
+        ),
+      );
+    }
+
+    return TextSpan(children: spans);
   }
 }

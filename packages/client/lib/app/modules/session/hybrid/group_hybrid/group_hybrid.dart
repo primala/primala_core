@@ -51,8 +51,14 @@ class SessionGroupHybridScreen extends HookWidget {
               MirroredText(
                 store: coordinator.widgets.mirroredText,
               ),
+              RefreshBanner(
+                store: coordinator.widgets.refreshBanner,
+              ),
               SpeakLessSmileMore(
                 store: coordinator.widgets.speakLessSmileMore,
+              ),
+              LetEmCook(
+                store: coordinator.widgets.letEmCook,
               ),
               FullScreen(
                 child: TouchRipple(

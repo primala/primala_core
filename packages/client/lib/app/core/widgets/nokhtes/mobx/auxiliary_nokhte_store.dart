@@ -1,6 +1,5 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
-import 'dart:ui';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/types/types.dart';
@@ -25,7 +24,13 @@ abstract class _AuxiliaryNokhteStoreBase
   }
 
   @observable
-  Size screenSize = Size.zero;
+  ScreenSizeData screenSize = ScreenSizeData.zero();
+
+  @action
+  setScreenSize(ScreenSizeData value) {
+    // print("SET SCREENSIZE");
+    return screenSize = value;
+  }
 
   @observable
   AuxiliaryNokhteMovieModes movieMode = AuxiliaryNokhteMovieModes.initial;
@@ -40,15 +45,32 @@ abstract class _AuxiliaryNokhteStoreBase
   AuxiliaryNokhteColorways colorway = AuxiliaryNokhteColorways.beachWave;
 
   @action
-  setScreenSize(Size value) => screenSize = value;
-
-  @action
   setAndFadeIn(
     AuxiliaryNokhtePositions position,
     AuxiliaryNokhteColorways colorway,
   ) {
-    this.position = position;
-    this.colorway = colorway;
+    Timer.periodic(const Duration(milliseconds: 1), (timer) {
+      if (screenSize.height != 0) {
+        this.position = position;
+        this.colorway = colorway;
+        setMovie(
+          AuxiliaryNokhteMovies.fadeIn(
+            screenSize,
+            position: position,
+            colorway: colorway,
+          ),
+        );
+        Timer(Seconds.get(0, milli: 1), () {
+          setControl(Control.playFromStart);
+        });
+        setMovieStatus(MovieStatus.inProgress);
+        timer.cancel();
+      }
+    });
+  }
+
+  @action
+  fadeOut() {
     setMovie(
       AuxiliaryNokhteMovies.fadeIn(
         screenSize,
@@ -57,7 +79,7 @@ abstract class _AuxiliaryNokhteStoreBase
       ),
     );
     Timer(Seconds.get(0, milli: 1), () {
-      setControl(Control.playFromStart);
+      setControl(Control.playReverseFromEnd);
     });
     setMovieStatus(MovieStatus.inProgress);
   }

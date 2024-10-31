@@ -1,9 +1,9 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
+import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
-import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 part 'session_presence_coordinator.g.dart';
 
@@ -11,25 +11,14 @@ class SessionPresenceCoordinator = _SessionPresenceCoordinatorBase
     with _$SessionPresenceCoordinator;
 
 abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
-  final UpdateOnlineStatus updateOnlineStatusLogic;
-  final UpdateCurrentPhase updateCurrentPhaseLogic;
-  final CancelSessionMetadataStream cancelSessionMetadataStreamLogic;
   final SessionMetadataStore sessionMetadataStore;
   final CollaboratorPresenceIncidentsOverlayStore incidentsOverlayStore;
-  final AddContent addContentLogic;
-  final CompleteTheSession completeTheSessionLogic;
-  final StartTheSession startTheSessionLogic;
-  final UpdateWhoIsTalking updateWhoIsTalkingLogic;
+  final SessionPresenceContract contract;
 
   _SessionPresenceCoordinatorBase({
-    required this.cancelSessionMetadataStreamLogic,
-    required this.updateWhoIsTalkingLogic,
-    required this.updateCurrentPhaseLogic,
-    required this.updateOnlineStatusLogic,
+    required this.contract,
     required this.sessionMetadataStore,
-    required this.addContentLogic,
-    required this.startTheSessionLogic,
-    required this.completeTheSessionLogic,
+    // required this.incidentsOverlayStore,
   }) : incidentsOverlayStore = CollaboratorPresenceIncidentsOverlayStore(
           sessionMetadataStore: sessionMetadataStore,
         ) {
@@ -55,6 +44,9 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
   bool currentPhaseIsUpdated = false;
 
   @observable
+  bool powerUpIsUsed = false;
+
+  @observable
   bool isListening = false;
 
   @observable
@@ -62,6 +54,9 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
 
   @observable
   bool speakerSpotlightIsUpdated = false;
+
+  @observable
+  bool speakingTimerStartIsUpdated = false;
 
   @action
   ReactionDisposer initReactors({
@@ -74,8 +69,8 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
   @action
   dispose() async {
     setState(StoreState.loading);
-    final res = cancelSessionMetadataStreamLogic(NoParams());
-    sessionMetadataStore.dispose();
+    final res = await contract.cancelSessionMetadataStream(const NoParams());
+    await sessionMetadataStore.dispose();
     isListening = res;
     setState(StoreState.loaded);
   }
@@ -83,13 +78,13 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
   @action
   listen() {
     setState(StoreState.loading);
-    sessionMetadataStore.get(NoParams());
+    sessionMetadataStore.get(const NoParams());
     setState(StoreState.loaded);
   }
 
   @action
   addContent(String params) async {
-    final res = await addContentLogic(params);
+    final res = await contract.addContent(params);
     res.fold(
       (failure) => errorUpdater(failure),
       (contentUpdateStatus) => contentIsUpdated = contentUpdateStatus,
@@ -99,7 +94,7 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
 
   @action
   completeTheSession() async {
-    final res = await completeTheSessionLogic(NoParams());
+    final res = await contract.completeTheSession(const NoParams());
     res.fold(
       (failure) => errorUpdater(failure),
       (sessionUpdateStatus) => sessionIsFinished = sessionUpdateStatus,
@@ -109,7 +104,7 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
 
   @action
   updateWhoIsTalking(UpdateWhoIsTalkingParams params) async {
-    final res = await updateWhoIsTalkingLogic(params);
+    final res = await contract.updateWhoIsTalking(params);
     res.fold(
       (failure) => errorUpdater(failure),
       (gyroscopeUpdateStatus) =>
@@ -119,10 +114,21 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
   }
 
   @action
+  updateSpeakingTimerStart() async {
+    final res = await contract.updateSpeakingTimerStart();
+    res.fold(
+      (failure) => errorUpdater(failure),
+      (speakingTimerStatus) =>
+          speakingTimerStartIsUpdated = speakingTimerStatus,
+    );
+    setState(StoreState.loaded);
+  }
+
+  @action
   updateOnlineStatus(bool params) async {
     onlineStatusIsUpdated = false;
     setState(StoreState.loading);
-    final res = await updateOnlineStatusLogic(params);
+    final res = await contract.updateOnlineStatus(params);
     res.fold((failure) => errorUpdater(failure),
         (status) => onlineStatusIsUpdated = status);
     setState(StoreState.loaded);
@@ -130,27 +136,32 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
 
   @action
   updateCurrentPhase(double params) async {
-    Timer.periodic(Seconds.get(0, milli: 500), (timer) async {
-      if (sessionMetadataStore.userPhase != params) {
-        currentPhaseIsUpdated = false;
-        setState(StoreState.loading);
-        final res = await updateCurrentPhaseLogic(params);
-        res.fold((failure) => errorUpdater(failure),
-            (status) => currentPhaseIsUpdated = status);
-        setState(StoreState.loaded);
-      } else {
-        timer.cancel();
-      }
-    });
+    currentPhaseIsUpdated = false;
+    setState(StoreState.loading);
+    final res = await contract.updateCurrentPhase(params);
+    res.fold((failure) => errorUpdater(failure),
+        (status) => currentPhaseIsUpdated = status);
+    setState(StoreState.loaded);
   }
 
   @action
   startTheSession() async {
     setState(StoreState.loading);
-    final res = await startTheSessionLogic(NoParams());
+    final res = await contract.startTheSession(const NoParams());
     res.fold(
       (failure) => errorUpdater(failure),
       (status) => sessionStartStatusIsUpdated = status,
+    );
+    setState(StoreState.loaded);
+  }
+
+  @action
+  usePowerUp(Either<LetEmCookParams, RallyParams> params) async {
+    setState(StoreState.loading);
+    final res = await contract.usePowerUp(params);
+    res.fold(
+      (failure) => errorUpdater(failure),
+      (status) => powerUpIsUsed = status,
     );
     setState(StoreState.loaded);
   }
