@@ -203,22 +203,27 @@ abstract class _SessionStarterWidgetsCoordinatorBase
     presetHeader.presetIcons.setWidgetVisibility(false);
     isEnteringNokhteSession = true;
     setSwipeDirection(GestureDirections.up);
-    if (transitionToSolo) {
-      beachWaves.setMovieMode(BeachWaveMovieModes.anyToOnShore);
-      beachWaves.currentStore.reverseMovie(
-        AnyToOnShoreParams(
-          startingColors: WaterColorsAndStops.invertedHalfWaterAndSand,
-          endingColors: WaterColorsAndStops.invertedBeachWater,
-          endValue: beachWaves.currentAnimationValues.first,
-        ),
-      );
-      qrCode.setWidgetVisibility(false);
-    } else {
-      beachWaves
-          .setMovieMode(BeachWaveMovieModes.invertedOnShoreToInvertedDeepSea);
-      beachWaves.currentStore
-          .initMovie(beachWaves.currentAnimationValues.first);
-    }
+    Timer(
+        Duration(
+          milliseconds: sessionScroller.scrollController.offset > 0 ? 1100 : 0,
+        ), () {
+      if (transitionToSolo) {
+        beachWaves.setMovieMode(BeachWaveMovieModes.anyToOnShore);
+        beachWaves.currentStore.reverseMovie(
+          AnyToOnShoreParams(
+            startingColors: WaterColorsAndStops.invertedHalfWaterAndSand,
+            endingColors: WaterColorsAndStops.invertedBeachWater,
+            endValue: beachWaves.currentAnimationValues.first,
+          ),
+        );
+        qrCode.setWidgetVisibility(false);
+      } else {
+        beachWaves
+            .setMovieMode(BeachWaveMovieModes.invertedOnShoreToInvertedDeepSea);
+        beachWaves.currentStore
+            .initMovie(beachWaves.currentAnimationValues.first);
+      }
+    });
     qrSubtitleSmartText.setWidgetVisibility(false);
     gestureCross.fadeAllOut();
     centerNokhte.setWidgetVisibility(false);
@@ -249,6 +254,7 @@ abstract class _SessionStarterWidgetsCoordinatorBase
 
   @action
   scrollToTop() {
+    if (sessionScroller.scrollController.offset == 0.0) return;
     sessionScroller.scrollController.animateTo(
       0,
       duration: Seconds.get(1),
@@ -258,8 +264,6 @@ abstract class _SessionStarterWidgetsCoordinatorBase
 
   @action
   onPresetHeaderTap() {
-    // print(
-    //     "max scroll extent: ${sessionScroller.scrollController.position.maxScrollExtent}");
     if (presetCards.currentHeldIndex == -1 || !presetCards.showWidget) return;
     sessionScroller.scrollController.animateTo(
       sessionScroller.scrollController.position.maxScrollExtent,
@@ -329,7 +333,8 @@ abstract class _SessionStarterWidgetsCoordinatorBase
             Modular.to.navigate(SessionConstants.lobby, arguments: {
               SessionStarterConstants.QR_CODE_DATA: qrCode.qrCodeData,
             });
-          } else {
+          } else if (beachWaves.movieMode == BeachWaveMovieModes.anyToOnShore) {
+            // print("finished");
             Modular.to.navigate(SessionConstants.polymorphicSolo);
           }
         }

@@ -49,7 +49,7 @@ abstract class _PolymorphicSoloCoordinatorBase
   constructor() async {
     widgets.constructor();
     initReactors();
-    if (!getTags().isNotEmpty) {
+    if (getTags().isEmpty) {
       await sessionStartersLogic.initialize(const Right(PresetTypes.solo));
     } else {
       widgets.postConstructor(getTags());
@@ -122,6 +122,7 @@ abstract class _PolymorphicSoloCoordinatorBase
           widgets.goHome();
           await presence.completeTheSession();
           await presence.dispose();
+          await presets.reset();
           await captureEnd(const NoParams());
         }
       });
