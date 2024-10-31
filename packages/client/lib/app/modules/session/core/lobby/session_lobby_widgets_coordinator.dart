@@ -58,8 +58,12 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
     }
 
     disposers.add(smartTextIndexReactor());
+
     Timer(Seconds.get(1), () {
       primarySmartText.startRotatingText();
+    });
+
+    Timer(Seconds.get(2), () {
       constructorHasBeenCalled = true;
     });
   }

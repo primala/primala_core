@@ -19,16 +19,19 @@ class CompanyPresetsPreferencesQueries {
 
   Future<List> insert({
     PresetTypes type = PresetTypes.solo,
+    List<SessionTags> newTags = const [],
   }) async {
     final companyPresetUID = (await companyPresets.select(
       type: type,
     ))
         .first[CompanyPresetsQueries.UID];
-    final othertags = mapTypeToChosenDefaultStringTags(type);
-    if (othertags.isNotEmpty) {
+    final userTags = newTags.isEmpty
+        ? mapTypeToChosenDefaultStringTags(type)
+        : CompanyPresetsUtils.mapEnumsToTags(newTags);
+    if (userTags.isNotEmpty) {
       return await supabase.from(TABLE).insert({
         COMPANY_PRESET: companyPresetUID,
-        TAGS: othertags,
+        TAGS: userTags,
       }).select();
     } else {
       return [];
@@ -50,6 +53,7 @@ class CompanyPresetsPreferencesQueries {
     if (checkRes.isEmpty) {
       return await insert(
         type: type,
+        newTags: newTags,
       );
     } else {
       if (newTags.isNotEmpty) {
