@@ -49,7 +49,12 @@ abstract class _PolymorphicSoloCoordinatorBase
   constructor() async {
     widgets.constructor();
     initReactors();
-    await sessionStartersLogic.initialize(const Right(PresetTypes.solo));
+    if (!getTags().isNotEmpty) {
+      await sessionStartersLogic.initialize(const Right(PresetTypes.solo));
+    } else {
+      widgets.postConstructor(getTags());
+      initPostConstructorReactors();
+    }
     await captureScreen(SessionConstants.polymorphicSolo);
   }
 
@@ -146,6 +151,7 @@ abstract class _PolymorphicSoloCoordinatorBase
   }
 
   List<SessionTags> getTags() {
+    if (presets.presetsEntity.articles.isEmpty) return [];
     final list = <SessionTags>[];
     for (var section in presets.presetsEntity.articles.first.articleSections) {
       list.add(section.tag);
