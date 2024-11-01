@@ -31,12 +31,14 @@ jobs:
           echo "PROD_SUPABASE_ANON_KEY='$PROD_SUPABASE_ANON_KEY'" >> .env
           echo "STAGING_SUPABASE_URL='$STAGING_SUPABASE_URL'" >> .env
           echo "STAGING_SUPABASE_ANON_KEY='$STAGING_SUPABASE_ANON_KEY'" >> .env
-
+          echo "APP_ID='$APP_ID'" >> .env
         env:
           PROD_SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL }}
           PROD_SUPABASE_ANON_KEY: ${{ secrets.PROD_SUPABASE_ANON_KEY }}
           STAGING_SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
           STAGING_SUPABASE_ANON_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY }}
+          APP_ID: ${{ secrets.PROD_APP_ID }}
+
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.0"
