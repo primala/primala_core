@@ -147,7 +147,7 @@ abstract class _SessionLobbyCoordinatorBase
               tap.currentTapPosition,
               onTap: () async {
                 await presence.startTheSession();
-                await captureStart(CaptureNokhteSessionStartParams(
+                await captureStart(CaptureSessionStartParams(
                   numberOfCollaborators: sessionMetadata.numberOfCollaborators,
                   presetType: sessionMetadata.presetType,
                 ));
@@ -160,7 +160,7 @@ abstract class _SessionLobbyCoordinatorBase
   sessionStartReactor() =>
       reaction((p0) => sessionMetadata.sessionHasBegun, (p0) {
         if (p0) {
-          widgets.enterSession(sessionMetadata.isAValidSession);
+          widgets.enterSession();
         }
       });
 
@@ -169,18 +169,14 @@ abstract class _SessionLobbyCoordinatorBase
 
   @computed
   String get route {
-    if (groupIsLargerThanTwo) {
-      if (isAPremiumSession) {
-        if (sessionMetadata.isAValidSession) {
-          return premiumSessionPath;
-        } else {
-          return monetizationSessionPath;
-        }
-      } else {
-        return chooseGreeterType(SessionConstants.groupGreeter);
-      }
+    if (sessionMetadata.presetType == PresetTypes.collaborative) {
+      return SessionConstants.collaborationGreeter;
     } else {
-      return chooseGreeterType(SessionConstants.duoGreeter);
+      if (groupIsLargerThanTwo) {
+        return SessionConstants.groupGreeter;
+      } else {
+        return SessionConstants.duoGreeter;
+      }
     }
   }
 
@@ -190,32 +186,6 @@ abstract class _SessionLobbyCoordinatorBase
   }
 
   @computed
-  String get monetizationSessionPath =>
-      userMetadata.isSubscribed ? '' : isNotSubscribedPath;
-
-  String get isNotSubscribedPath =>
-      userMetadata.hasUsedTrial ? SessionConstants.paywall : '';
-
-  @computed
-  String get premiumSessionPath {
-    return chooseGreeterType(
-        // isConsumingTrialSession
-        //   ? SessionConstants.trialGreeter:
-        SessionConstants.groupGreeter);
-  }
-
-  @computed
   bool get groupIsLargerThanTwo =>
       sessionMetadata.numberOfCollaborators.isGreaterThan(2);
-
-  @computed
-  bool get isConsumingTrialSession =>
-      isAPremiumSession &&
-      !userMetadata.hasUsedTrial &&
-      !userMetadata.isSubscribed &&
-      !sessionMetadata.leaderIsWhitelisted;
-
-  @computed
-  bool get isAPremiumSession =>
-      sessionMetadata.numberOfCollaborators.isGreaterThanOrEqualTo(4);
 }
