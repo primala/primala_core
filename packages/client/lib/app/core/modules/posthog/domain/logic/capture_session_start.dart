@@ -3,21 +3,21 @@ import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte_backend/tables/company_presets.dart';
 
-class CaptureNokhteSessionStart
-    implements AbstractFutureLogic<void, CaptureNokhteSessionStartParams> {
+class CaptureSessionStart
+    implements AbstractFutureLogic<void, CaptureSessionStartParams> {
   final PosthogContract contract;
 
-  CaptureNokhteSessionStart({required this.contract});
+  CaptureSessionStart({required this.contract});
 
   @override
-  call(params) async => await contract.captureNokhteSessionStart(params);
+  call(params) async => await contract.captureSessionStart(params);
 }
 
-class CaptureNokhteSessionStartParams extends Equatable {
+class CaptureSessionStartParams extends Equatable {
   final int numberOfCollaborators;
   final PresetTypes presetType;
 
-  const CaptureNokhteSessionStartParams({
+  const CaptureSessionStartParams({
     required this.numberOfCollaborators,
     required this.presetType,
   });

@@ -4,10 +4,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class PosthogRemoteSource {
   Future<void> identifyUser();
-  Future<void> captureNokhteSessionStart(
-    CaptureNokhteSessionStartParams params,
+  Future<void> captureSessionStart(
+    CaptureSessionStartParams params,
   );
-  Future<void> captureNokhteSessionEnd();
+  Future<void> captureSessionEnd(
+    CaptureSessionEndParams params,
+  );
   Future<void> captureScreen(String screenRoute);
 }
 
@@ -25,20 +27,27 @@ class PosthogRemoteSourceImpl
   }
 
   final Posthog posthog = Posthog();
-
   @override
-  captureNokhteSessionEnd() async {
-    await Posthog().capture(eventName: END_NOKHTE_SESSION, properties: {
-      "sent_at": DateTime.now().toIso8601String(),
-    });
+  captureSessionEnd(params) async {
+    final durationInMinutes =
+        DateTime.now().difference(params.sessionsStartTime).inSeconds / 60;
+    print('durationInMinutes: $durationInMinutes');
+    if (durationInMinutes < 5) return;
+    await Posthog().capture(
+      eventName: END_SESSION,
+      properties: {
+        "duration_minutes": durationInMinutes,
+        "preset_type": params.presetType.toString(),
+      },
+    );
   }
 
   @override
-  captureNokhteSessionStart(
-    CaptureNokhteSessionStartParams params,
+  captureSessionStart(
+    params,
   ) async =>
       await Posthog().capture(
-        eventName: STARTED_NOKHTE_SESSION,
+        eventName: START_SESSION,
         properties: {
           "sent_at": DateTime.now().toIso8601String(),
           "number_of_collaborators": params.numberOfCollaborators,

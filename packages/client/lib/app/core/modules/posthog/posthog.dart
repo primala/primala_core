@@ -23,13 +23,13 @@ class PosthogModule extends Module {
         contract: Modular.get<PosthogContractImpl>(),
       ),
     );
-    i.add<CaptureNokhteSessionEnd>(
-      () => CaptureNokhteSessionEnd(
+    i.add<CaptureSessionEnd>(
+      () => CaptureSessionEnd(
         contract: Modular.get<PosthogContractImpl>(),
       ),
     );
-    i.add<CaptureNokhteSessionStart>(
-      () => CaptureNokhteSessionStart(
+    i.add<CaptureSessionStart>(
+      () => CaptureSessionStart(
         contract: Modular.get<PosthogContractImpl>(),
       ),
     );

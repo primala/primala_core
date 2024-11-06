@@ -2,7 +2,6 @@
 import 'dart:async';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
-import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mixins/mixin.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/clean_up_collaboration_artifacts/clean_up_collaboration_artifacts.dart';
@@ -30,7 +29,7 @@ abstract class _SessionExitCoordinatorBase
   @override
   final SessionMetadataStore sessionMetadata;
   final CleanUpCollaborationArtifactsCoordinator cleanUpCollaborationArtifacts;
-  final CaptureNokhteSessionEnd captureEnd;
+  final CaptureSessionEnd captureEnd;
   @override
   final SessionPresenceCoordinator presence;
   @override
@@ -129,7 +128,12 @@ abstract class _SessionExitCoordinatorBase
     presence.dispose();
     if (sessionMetadata.userIndex == 0) {
       await presence.completeTheSession();
-      await captureEnd(const NoParams());
+      await captureEnd(
+        CaptureSessionEndParams(
+          sessionsStartTime: sessionMetadata.sessionStartTime,
+          presetType: sessionMetadata.presetType,
+        ),
+      );
     }
     widgets.initHomeTransition();
   }

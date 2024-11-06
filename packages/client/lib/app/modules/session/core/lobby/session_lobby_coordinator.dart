@@ -9,6 +9,7 @@ import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/modules/user_metadata/user_metadata.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
+import 'package:nokhte_backend/tables/company_presets.dart';
 part 'session_lobby_coordinator.g.dart';
 
 class SessionLobbyCoordinator = _SessionLobbyCoordinatorBase
@@ -25,7 +26,7 @@ abstract class _SessionLobbyCoordinatorBase
   final SessionLobbyWidgetsCoordinator widgets;
   final TapDetector tap;
   final UserMetadataCoordinator userMetadata;
-  final CaptureNokhteSessionStart captureStart;
+  final CaptureSessionStart captureStart;
   @override
   final SessionPresenceCoordinator presence;
   @override

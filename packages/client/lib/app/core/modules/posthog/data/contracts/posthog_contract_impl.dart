@@ -10,9 +10,9 @@ class PosthogContractImpl implements PosthogContract {
   PosthogContractImpl({required this.remoteSource, required this.networkInfo});
 
   @override
-  captureNokhteSessionEnd(params) async {
+  captureSessionEnd(startTime) async {
     if (await networkInfo.isConnected) {
-      await remoteSource.captureNokhteSessionEnd();
+      await remoteSource.captureSessionEnd(startTime);
       return const Right(null);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
@@ -20,9 +20,9 @@ class PosthogContractImpl implements PosthogContract {
   }
 
   @override
-  captureNokhteSessionStart(params) async {
+  captureSessionStart(params) async {
     if (await networkInfo.isConnected) {
-      await remoteSource.captureNokhteSessionStart(params);
+      await remoteSource.captureSessionStart(params);
       return const Right(null);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
