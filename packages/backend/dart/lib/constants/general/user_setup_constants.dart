@@ -8,9 +8,9 @@ class UserSetupConstants {
     final List<String> userUIDs = [];
     try {
       for (var i = 0; i < 4; i++) {
-        final number = '987654321${i + 1}';
         await supabase.auth.signUp(
-          phone: number,
+          email: 'test${i + 1}@test.com',
+          // phone: number,
           password: UserDataConstants.universalPassword,
         );
         userUIDs.add(supabase.auth.currentUser?.id ?? '');
@@ -18,9 +18,8 @@ class UserSetupConstants {
       }
     } catch (e) {
       for (var i = 0; i < 4; i++) {
-        final number = '987654321${i + 1}';
         await supabase.auth.signInWithPassword(
-          phone: number,
+          email: 'test${i + 1}@test.com',
           password: UserDataConstants.universalPassword,
         );
         userUIDs.add(supabase.auth.currentUser?.id ?? '');
