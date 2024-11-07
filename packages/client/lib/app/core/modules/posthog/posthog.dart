@@ -1,5 +1,6 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/network/network_info.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'posthog.dart';
 export 'constants/constants.dart';
 export 'data/data.dart';
@@ -10,7 +11,9 @@ class PosthogModule extends Module {
   @override
   exportedBinds(i) {
     i.add<PosthogRemoteSourceImpl>(
-      () => PosthogRemoteSourceImpl(),
+      () => PosthogRemoteSourceImpl(
+        supabase: Modular.get<SupabaseClient>(),
+      ),
     );
     i.add<PosthogContractImpl>(
       () => PosthogContractImpl(

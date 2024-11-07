@@ -1,4 +1,5 @@
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
+import 'package:nokhte_backend/tables/user_information.dart';
 import 'package:posthog_flutter/posthog_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -16,6 +17,11 @@ abstract class PosthogRemoteSource {
 class PosthogRemoteSourceImpl
     with PosthogEventConstants
     implements PosthogRemoteSource {
+  final SupabaseClient supabase;
+  late UserInformationQueries userInfoQueries;
+
+  PosthogRemoteSourceImpl({required this.supabase});
+
   String formatRoute(String input) {
     if (input.startsWith('/')) {
       input = input.substring(1);
@@ -31,13 +37,13 @@ class PosthogRemoteSourceImpl
   captureSessionEnd(params) async {
     final durationInMinutes =
         DateTime.now().difference(params.sessionsStartTime).inSeconds / 60;
-    print('durationInMinutes: $durationInMinutes');
     if (durationInMinutes < 5) return;
     await Posthog().capture(
       eventName: END_SESSION,
       properties: {
         "duration_minutes": durationInMinutes,
         "preset_type": params.presetType.toString(),
+        "number_of_collaborators": params.numberOfCollaborators,
       },
     );
   }
@@ -57,8 +63,15 @@ class PosthogRemoteSourceImpl
 
   @override
   identifyUser() async {
-    final supabase = Supabase.instance.client;
-    await posthog.identify(userId: supabase.auth.currentUser!.id);
+    userInfoQueries = UserInformationQueries(supabase: supabase);
+    final fullNameRes = await userInfoQueries.getFullName();
+    await posthog.identify(
+      userId: supabase.auth.currentUser!.id,
+      userProperties: {
+        "email": supabase.auth.currentUser!.email ?? '',
+        "name": fullNameRes,
+      },
+    );
   }
 
   @override
