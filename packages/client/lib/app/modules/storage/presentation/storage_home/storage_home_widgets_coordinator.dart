@@ -61,6 +61,7 @@ abstract class _StorageHomeWidgetsCoordinatorBase
     beachWaves.currentStore.initMovie(const NoParams());
     sessionCard.setWidgetVisibility(false);
     headerText.setWidgetVisibility(false);
+    backButton.setWidgetVisibility(false);
   }
 
   deconstructor() {

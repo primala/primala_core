@@ -60,7 +60,7 @@ class StorageHomeScreen extends HookWidget {
               BackButton(
                 store: coordinator.widgets.backButton,
                 overridedColor: Colors.white,
-                topPaddingScalar: .09,
+                topPaddingScalar: .085,
               ),
               WifiDisconnectOverlay(
                 store: coordinator.widgets.wifiDisconnectOverlay,
