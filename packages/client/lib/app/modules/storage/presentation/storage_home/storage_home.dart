@@ -1,7 +1,6 @@
 export 'storage_home_coordinator.dart';
 export 'storage_home_widgets_coordinator.dart';
-import 'package:dartz/dartz.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide BackButton;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
@@ -39,15 +38,14 @@ class StorageHomeScreen extends HookWidget {
               ),
               Center(
                 child: SmartText(
-                  store: coordinator.widgets.primarySmartText,
+                  store: coordinator.widgets.headerText,
                   bottomPadding: .75,
                   opacityDuration: Seconds.get(1),
                 ),
               ),
               Observer(builder: (context) {
                 return Padding(
-                  padding:
-                      EdgeInsets.only(top: height * .13, bottom: height * .15),
+                  padding: EdgeInsets.only(top: height * .13),
                   child: SessionCard(
                     store: coordinator.widgets.sessionCard,
                     sessions: coordinator.nokhteSessionArtifacts,
@@ -59,29 +57,10 @@ class StorageHomeScreen extends HookWidget {
                   store: coordinator.widgets.blur,
                 ),
               ),
-              Center(
-                child: SmartText(
-                  store: coordinator.widgets.secondarySmartText,
-                  topPadding: .15,
-                  topBump: .002,
-                  opacityDuration: Seconds.get(1),
-                ),
-              ),
-              GestureCross(
-                showGlowAndOutline: true,
-                config: GestureCrossConfiguration(
-                  left: Right(EmptySpace()),
-                ),
-                store: coordinator.widgets.gestureCross,
-              ),
-              CenterNokhte(
-                store: coordinator.widgets.centerNokhte,
-              ),
-              SwipeGuide(
-                  store: coordinator.widgets.swipeGuide,
-                  orientations: const [SwipeGuideOrientation.left]),
-              AuxiliaryNokhte(
-                store: coordinator.widgets.homeNokhte,
+              BackButton(
+                store: coordinator.widgets.backButton,
+                overridedColor: Colors.white,
+                topPaddingScalar: .09,
               ),
               WifiDisconnectOverlay(
                 store: coordinator.widgets.wifiDisconnectOverlay,
