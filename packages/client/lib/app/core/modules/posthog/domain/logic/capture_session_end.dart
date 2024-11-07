@@ -16,10 +16,12 @@ class CaptureSessionEnd
 class CaptureSessionEndParams extends Equatable {
   final DateTime sessionsStartTime;
   final PresetTypes presetType;
+  final int numberOfCollaborators;
 
   const CaptureSessionEndParams({
     required this.sessionsStartTime,
     required this.presetType,
+    required this.numberOfCollaborators,
   });
 
   @override

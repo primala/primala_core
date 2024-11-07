@@ -132,6 +132,7 @@ abstract class _SessionExitCoordinatorBase
         CaptureSessionEndParams(
           sessionsStartTime: sessionMetadata.sessionStartTime,
           presetType: sessionMetadata.presetType,
+          numberOfCollaborators: sessionMetadata.numberOfCollaborators,
         ),
       );
     }

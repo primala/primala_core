@@ -124,6 +124,7 @@ abstract class _PolymorphicSoloCoordinatorBase
             CaptureSessionEndParams(
               sessionsStartTime: sessionMetadata.sessionStartTime,
               presetType: sessionMetadata.presetType,
+              numberOfCollaborators: sessionMetadata.numberOfCollaborators,
             ),
           );
           await presence.dispose();
