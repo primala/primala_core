@@ -62,6 +62,7 @@ abstract class _LoginCoordinatorBase
     widgets.constructor();
     authStateListener(authStateStore.authState);
     initReactors();
+    await userInfo.checkIfVersionIsUpToDate();
     await captureScreen(LoginConstants.root);
   }
 
@@ -113,7 +114,6 @@ abstract class _LoginCoordinatorBase
           widgets.loggedInOnResumed();
           await addName(const NoParams());
           await addMetadata(const NoParams());
-          await userInfo.checkIfVersionIsUpToDate();
           await identifyUser(const NoParams());
         }
       });

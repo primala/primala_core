@@ -15,20 +15,17 @@ class NameAndUID extends Equatable {
 
 class StaticSessionMetadataEntity extends Equatable {
   final int userIndex;
-  final bool isAPremiumSession;
-  final bool leaderIsWhitelisted;
+  final DateTime createdAt;
+
   final String leaderUID;
-  final bool isAValidSession;
   final List<NameAndUID> namesAndUIDs;
   final String presetUID;
 
   const StaticSessionMetadataEntity({
     required this.userIndex,
+    required this.createdAt,
     required this.leaderUID,
-    required this.isAPremiumSession,
     required this.namesAndUIDs,
-    this.leaderIsWhitelisted = false,
-    this.isAValidSession = true,
     required this.presetUID,
   });
 
@@ -36,10 +33,7 @@ class StaticSessionMetadataEntity extends Equatable {
   List<Object> get props => [
         namesAndUIDs,
         userIndex,
-        isAPremiumSession,
         leaderUID,
-        leaderIsWhitelisted,
-        isAValidSession,
         presetUID,
       ];
 }

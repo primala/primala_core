@@ -71,7 +71,7 @@ abstract class _SessionPaywallCoordinatorBase
     disposers.add(purchaseSuccessReactor());
     disposers.add(purchaseErrorReactor());
     disposers.add(phaseReactor());
-    disposers.add(validSessionReactor());
+    // disposers.add(validSessionReactor());
   }
 
   subscriptionInfoReactor() => reaction((p0) => iap.skuProductEntity, (p0) {
@@ -85,10 +85,10 @@ abstract class _SessionPaywallCoordinatorBase
         }
       });
 
-  validSessionReactor() =>
-      reaction((p0) => sessionMetadata.isAValidSession, (p0) {
-        // Modular.to.navigate(SessionConstants.waitingPatron);
-      });
+  // validSessionReactor() =>
+  //     reaction((p0) => sessionMetadata.isAValidSession, (p0) {
+  //       // Modular.to.navigate(SessionConstants.waitingPatron);
+  //     });
 
   purchaseSuccessReactor() =>
       reaction((p0) => iap.hasPurchasedSubscription, (p0) async {

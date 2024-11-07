@@ -76,11 +76,11 @@ mixin CompanyPresetsUtils {
   }
 
   static SessionScreenTypes fromRawScreenType(String param) {
-    if (param.contains('solo')) {
+    if (param == 'solo_hybrid') {
       return SessionScreenTypes.soloHybrid;
-    } else if (param.contains('group')) {
+    } else if (param == 'group_hybrid') {
       return SessionScreenTypes.groupHybrid;
-    } else if (param.contains('poly')) {
+    } else if (param == 'polymorphic_solo') {
       return SessionScreenTypes.polymorphicSolo;
     } else {
       return SessionScreenTypes.none;
