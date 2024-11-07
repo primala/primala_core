@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:glassfy_flutter/models.dart';
 
 class SkuProductEntity extends Equatable {
   final String period;
@@ -20,7 +19,7 @@ class SkuProductEntity extends Equatable {
         currencyCode: 'NO_CURRENCY_CODE',
       );
 
-  factory SkuProductEntity.fromSku(GlassfyOfferings offering) {
+  factory SkuProductEntity.fromSku(dynamic offering) {
     var premiumOffering = offering.all
         ?.singleWhere((offering) => offering.offeringId == 'nokhte_premium');
     final premiumSku = premiumOffering?.skus?.first.product;
