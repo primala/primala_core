@@ -30,7 +30,7 @@ class SessionCoreModule extends Module {
   void exportedBinds(i) {
     i.add<SessionInformationCoordinator>(
       () => SessionInformationCoordinator(
-        captureStart: Modular.get<CaptureNokhteSessionStart>(),
+        captureStart: Modular.get<CaptureSessionStart>(),
         presence: Modular.get<SessionPresenceCoordinator>(),
         captureScreen: Modular.get<CaptureScreen>(),
         tap: TapDetector(),
@@ -40,7 +40,7 @@ class SessionCoreModule extends Module {
 
     i.add<SessionLobbyCoordinator>(
       () => SessionLobbyCoordinator(
-        captureStart: Modular.get<CaptureNokhteSessionStart>(),
+        captureStart: Modular.get<CaptureSessionStart>(),
         userMetadata: Modular.get<UserMetadataCoordinator>(),
         presence: Modular.get<SessionPresenceCoordinator>(),
         captureScreen: Modular.get<CaptureScreen>(),
@@ -82,7 +82,7 @@ class SessionCoreModule extends Module {
     );
     i.add<SessionExitCoordinator>(
       () => SessionExitCoordinator(
-        captureEnd: Modular.get<CaptureNokhteSessionEnd>(),
+        captureEnd: Modular.get<CaptureSessionEnd>(),
         cleanUpCollaborationArtifacts:
             Modular.get<CleanUpCollaborationArtifactsCoordinator>(),
         swipe: SwipeDetector(),

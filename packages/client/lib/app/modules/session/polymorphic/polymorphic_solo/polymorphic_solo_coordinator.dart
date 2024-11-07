@@ -2,7 +2,6 @@
 import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
-import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/types/types.dart';
@@ -26,8 +25,8 @@ abstract class _PolymorphicSoloCoordinatorBase
   final CaptureScreen captureScreen;
   final SessionStartersLogicCoordinator sessionStartersLogic;
   final TapDetector tap;
-  final CaptureNokhteSessionStart captureStart;
-  final CaptureNokhteSessionEnd captureEnd;
+  final CaptureSessionStart captureStart;
+  final CaptureSessionEnd captureEnd;
   final SessionMetadataStore sessionMetadata;
   final PresetsLogicCoordinator presets;
 
@@ -84,7 +83,7 @@ abstract class _PolymorphicSoloCoordinatorBase
         if (p0 == StoreState.loaded) {
           widgets.postConstructor(getTags());
           initPostConstructorReactors();
-          await captureStart(CaptureNokhteSessionStartParams(
+          await captureStart(CaptureSessionStartParams(
             numberOfCollaborators: sessionMetadata.numberOfCollaborators,
             presetType: sessionMetadata.presetType,
           ));
@@ -121,9 +120,15 @@ abstract class _PolymorphicSoloCoordinatorBase
         if (widgets.backButton.showWidget) {
           widgets.goHome();
           await presence.completeTheSession();
+          await captureEnd(
+            CaptureSessionEndParams(
+              sessionsStartTime: sessionMetadata.sessionStartTime,
+              presetType: sessionMetadata.presetType,
+              numberOfCollaborators: sessionMetadata.numberOfCollaborators,
+            ),
+          );
           await presence.dispose();
           await presets.reset();
-          await captureEnd(const NoParams());
         }
       });
 

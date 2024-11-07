@@ -3,12 +3,13 @@
 import 'package:nokhte/app/modules/session/logic/domain/domain.dart';
 import 'package:nokhte_backend/tables/st_active_nokhte_sessions.dart';
 import 'package:nokhte_backend/tables/user_metadata.dart';
+import 'package:nokhte_backend/types/types.dart';
 
 class StaticSessionMetadataModel extends StaticSessionMetadataEntity {
   const StaticSessionMetadataModel({
     required super.namesAndUIDs,
     required super.userIndex,
-    required super.isAPremiumSession,
+    required super.createdAt,
     required super.presetUID,
     required super.leaderUID,
   });
@@ -21,7 +22,7 @@ class StaticSessionMetadataModel extends StaticSessionMetadataEntity {
       return const StaticSessionMetadataModel(
         userIndex: 0,
         namesAndUIDs: [],
-        isAPremiumSession: false,
+        createdAt: ConstDateTime.fromMillisecondsSinceEpoch(0),
         presetUID: '',
         leaderUID: '',
       );
@@ -29,15 +30,16 @@ class StaticSessionMetadataModel extends StaticSessionMetadataEntity {
       final m = UserMetadataConstants();
       final UID = m.UID;
       const LEADER_UID = STActiveNokhteSessionsConstants.S_LEADER_UID;
+      const CREATED_AT = STActiveNokhteSessionsConstants.S_CREATED_AT;
       const COLLABORATOR_UIDS =
           STActiveNokhteSessionsConstants.S_COLLABORATOR_UIDS;
       const COLLABORATOR_NAMES =
           STActiveNokhteSessionsConstants.S_COLLABORATOR_NAMES;
       const PRESET_UID = STActiveNokhteSessionsConstants.S_PRESET_UID;
       final leaderUID = sessionRes.first[LEADER_UID];
+      final createdAt = DateTime.parse(sessionRes.first[CREATED_AT]);
       final orderedCollaboratorUIDs = sessionRes.first[COLLABORATOR_UIDS];
       final userIndex = orderedCollaboratorUIDs.indexOf(metadataRes.first[UID]);
-      final isAPremiumSession = sessionRes.first[COLLABORATOR_UIDS].length > 3;
       final presetUID = sessionRes.first[PRESET_UID];
       final names = sessionRes.first[COLLABORATOR_NAMES];
       final namesAndUIDs = <NameAndUID>[];
@@ -54,8 +56,8 @@ class StaticSessionMetadataModel extends StaticSessionMetadataEntity {
         namesAndUIDs: namesAndUIDs,
         leaderUID: leaderUID,
         presetUID: presetUID,
+        createdAt: createdAt,
         userIndex: userIndex,
-        isAPremiumSession: isAPremiumSession,
       );
     }
   }

@@ -16,14 +16,10 @@ class StorageWidgetsModule extends Module {
     i.add<StorageHomeWidgetsCoordinator>(
       () => StorageHomeWidgetsCoordinator(
         blur: NokhteBlurStore(),
-        centerNokhte: CenterNokhteStore(),
-        homeNokhte: AuxiliaryNokhteStore(),
-        swipeGuide: SwipeGuideStore(),
+        backButton: BackButtonStore(),
         sessionCard: SessionCardStore(),
-        primarySmartText: SmartTextStore(),
-        secondarySmartText: SmartTextStore(),
+        headerText: SmartTextStore(),
         beachWaves: BeachWavesStore(),
-        gestureCross: Modular.get<GestureCrossStore>(),
         wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
       ),
     );

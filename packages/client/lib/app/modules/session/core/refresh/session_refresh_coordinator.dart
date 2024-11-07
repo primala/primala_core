@@ -17,7 +17,7 @@ abstract class _SessionRefreshCoordinatorBase
   final SessionRefreshWidgetsCoordinator widgets;
   final TapDetector tap;
   final SessionMetadataStore sessionMetadata;
-  final CaptureNokhteSessionStart captureStart;
+  final CaptureSessionStart captureStart;
   // @override
   final SessionPresenceCoordinator presence;
   @override

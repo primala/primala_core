@@ -16,13 +16,13 @@ class SessionPolymorphicModule extends Module {
   void exportedBinds(Injector i) {
     i.add<PolymorphicSoloCoordinator>(
       () => PolymorphicSoloCoordinator(
-        captureStart: Modular.get<CaptureNokhteSessionStart>(),
+        captureStart: Modular.get<CaptureSessionStart>(),
         presence: Modular.get<SessionPresenceCoordinator>(),
         captureScreen: Modular.get<CaptureScreen>(),
         widgets: Modular.get<PolymorphicSoloWidgetsCoordinator>(),
         hold: HoldDetector(),
         tap: TapDetector(),
-        captureEnd: Modular.get<CaptureNokhteSessionEnd>(),
+        captureEnd: Modular.get<CaptureSessionEnd>(),
         sessionStartersLogic: Modular.get<SessionStartersLogicCoordinator>(),
       ),
     );

@@ -27,7 +27,7 @@ class SessionHybridModule extends Module {
     );
     i.add<SessionRefreshCoordinator>(
       () => SessionRefreshCoordinator(
-        captureStart: Modular.get<CaptureNokhteSessionStart>(),
+        captureStart: Modular.get<CaptureSessionStart>(),
         presence: Modular.get<SessionPresenceCoordinator>(),
         captureScreen: Modular.get<CaptureScreen>(),
         tap: TapDetector(),
