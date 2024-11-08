@@ -58,28 +58,22 @@ abstract class _SessionMetadataStoreBase
   bool secondarySpeakerSpotlightIsEmpty = false;
 
   @observable
-  bool isAPremiumSession = false;
-
-  @observable
   bool sessionHasBegun = false;
 
   @observable
   double affirmativePhase = -1.0;
 
   @observable
-  bool leaderIsWhitelisted = false;
-
-  @observable
   String leaderUID = '';
-
-  @observable
-  bool isAValidSession = false;
 
   @observable
   String presetUID = '';
 
   @observable
   DateTime speakingTimerStart = DateTime.fromMillisecondsSinceEpoch(0);
+
+  @observable
+  DateTime sessionStartTime = DateTime.fromMillisecondsSinceEpoch(0);
 
   @observable
   SessionInstructionTypes instructionType = SessionInstructionTypes.initial;
@@ -111,13 +105,11 @@ abstract class _SessionMetadataStoreBase
   _getStaticMetadata() async {
     final res = await contract.getSTSessionMetadata(const NoParams());
     res.fold((failure) => mapFailureToMessage(failure), (entity) async {
-      isAPremiumSession = entity.isAPremiumSession;
-      isAValidSession = entity.isAValidSession;
       if (presetsLogic.presetsEntity.uids.isEmpty) {
         userIndex = entity.userIndex;
-        leaderIsWhitelisted = entity.leaderIsWhitelisted;
         namesAndUIDs = ObservableList.of(entity.namesAndUIDs);
         presetUID = entity.presetUID;
+        sessionStartTime = entity.createdAt;
         leaderUID = entity.leaderUID;
         await presetsLogic.getCompanyPresets(Right(entity.presetUID));
       }

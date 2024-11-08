@@ -85,29 +85,29 @@ abstract class _StorageHomeCoordinatorBase
   }
 
   initReactors() {
-    disposers.add(tapReactor());
-    disposers.add(swipeReactor());
+    // disposers.add(tapReactor());
+    // disposers.add(swipeReactor());
     disposers.add(beachWavesMovieStatusReactor());
     disposers.add(sessionCardEditReactor());
     disposers.add(sessionCardTapReactor());
   }
 
-  tapReactor() => reaction((p0) => tap.tapCount, (p0) {
-        ifTouchIsNotDisabled(() {
-          widgets.onTap();
-        });
-      });
+  // tapReactor() => reaction((p0) => tap.tapCount, (p0) {
+  //       ifTouchIsNotDisabled(() {
+  //         widgets.onTap();
+  //       });
+  //     });
 
-  swipeReactor() => reaction((p0) => swipe.directionsType, (p0) {
-        switch (p0) {
-          case GestureDirections.left:
-            ifTouchIsNotDisabled(() {
-              widgets.onSwipeLeft();
-            });
-          default:
-            break;
-        }
-      });
+  // swipeReactor() => reaction((p0) => swipe.directionsType, (p0) {
+  //       switch (p0) {
+  //         case GestureDirections.left:
+  //           ifTouchIsNotDisabled(() {
+  //             widgets.onSwipeLeft();
+  //           });
+  //         default:
+  //           break;
+  //       }
+  //     });
 
   beachWavesMovieStatusReactor() =>
       reaction((p0) => widgets.beachWaves.movieStatus, (p0) {

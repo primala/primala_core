@@ -111,7 +111,6 @@ class CompanyPresetsModel extends CompanyPresetsEntity {
     } else {
       final userTags = CompanyPresetsUtils.mapTagsToEnum(
           userPrefsRes.first[CompanyPresetsQueries.TAGS]);
-      // print(userTags);
 
       sections = userTags.map((tag) {
         return ArticleSection(

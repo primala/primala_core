@@ -36,7 +36,11 @@ class BackButton extends HookWidget {
         child: Padding(
           padding: EdgeInsets.only(
             left: screenSize.width * .05,
-            top: screenSize.height * topPaddingScalar,
+            top: useScaledSize(
+              baseValue: topPaddingScalar,
+              screenSize: screenSize,
+              bumpPerHundredth: -.0003,
+            ),
           ),
           child: GestureDetector(
             onTap: () {
