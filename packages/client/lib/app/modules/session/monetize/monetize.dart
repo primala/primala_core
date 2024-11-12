@@ -2,7 +2,6 @@ export 'session_paywall/session_paywall.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/modules/clean_up_collaboration_artifacts/clean_up_collaboration_artifacts.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
-import 'package:nokhte/app/core/modules/in_app_purchase/in_app_purchase.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/core/widgets/modules.dart';
@@ -17,7 +16,6 @@ class SessionMonetizeModule extends Module {
         GestureCrossModule(),
         PosthogModule(),
         UserInformationModule(),
-        InAppPurchaseModule(),
         CleanUpCollaborationArtifactsModule(),
       ];
 
@@ -27,7 +25,6 @@ class SessionMonetizeModule extends Module {
       () => SessionPaywallCoordinator(
         cleanUpCollaborationArtifacts:
             Modular.get<CleanUpCollaborationArtifactsCoordinator>(),
-        iap: Modular.get<InAppPurchaseCoordinator>(),
         presence: Modular.get<SessionPresenceCoordinator>(),
         captureScreen: Modular.get<CaptureScreen>(),
         widgets: Modular.get<SessionPaywallWidgetsCoordinator>(),

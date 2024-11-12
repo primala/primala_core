@@ -1,12 +1,10 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api,
 import 'dart:async';
 import 'package:mobx/mobx.dart';
-import 'package:nokhte/app/core/constants/failure_constants.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mixins/mixin.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/clean_up_collaboration_artifacts/clean_up_collaboration_artifacts.dart';
-import 'package:nokhte/app/core/modules/in_app_purchase/in_app_purchase.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
@@ -24,7 +22,6 @@ abstract class _SessionPaywallCoordinatorBase
   final SessionPresenceCoordinator presence;
   final SessionMetadataStore sessionMetadata;
   final SwipeDetector swipe;
-  final InAppPurchaseCoordinator iap;
   final CleanUpCollaborationArtifactsCoordinator cleanUpCollaborationArtifacts;
   @override
   final CaptureScreen captureScreen;
@@ -36,7 +33,6 @@ abstract class _SessionPaywallCoordinatorBase
     required this.tap,
     required this.presence,
     required this.swipe,
-    required this.iap,
   }) : sessionMetadata = presence.sessionMetadataStore {
     initEnRouteActions();
     initBaseCoordinatorActions();
@@ -47,7 +43,6 @@ abstract class _SessionPaywallCoordinatorBase
     widgets.constructor();
     initReactors();
     swipe.setMinDistance(100.0);
-    await iap.getSubscriptionInfo();
     await captureScreen(SessionConstants.paywall);
   }
 
@@ -67,35 +62,8 @@ abstract class _SessionPaywallCoordinatorBase
         widgets.setDisableTouchInput(true);
       },
     ));
-    disposers.add(subscriptionInfoReactor());
-    disposers.add(purchaseSuccessReactor());
-    disposers.add(purchaseErrorReactor());
     disposers.add(phaseReactor());
-    // disposers.add(validSessionReactor());
   }
-
-  subscriptionInfoReactor() => reaction((p0) => iap.skuProductEntity, (p0) {
-        widgets.onProductInfoReceived(p0);
-      });
-
-  purchaseErrorReactor() => reaction((p0) => iap.errorMessage, (p0) {
-        if (p0 == FailureConstants.cancelledPurchaseFailureMsg) {
-          widgets.onPaymentFailure();
-          iap.setErrorMessage('');
-        }
-      });
-
-  // validSessionReactor() =>
-  //     reaction((p0) => sessionMetadata.isAValidSession, (p0) {
-  //       // Modular.to.navigate(SessionConstants.waitingPatron);
-  //     });
-
-  purchaseSuccessReactor() =>
-      reaction((p0) => iap.hasPurchasedSubscription, (p0) async {
-        if (p0) {
-          // Modular.to.navigate(SessionConstants.waitingPatron);
-        }
-      });
 
   phaseReactor() => reaction((p0) => sessionMetadata.currentPhases, (p0) async {
         if (p0.contains(-1.0)) {
@@ -120,9 +88,7 @@ abstract class _SessionPaywallCoordinatorBase
   swipeReactor() => reaction((p0) => swipe.directionsType, (p0) async {
         switch (p0) {
           case GestureDirections.up:
-            widgets.onSwipeUp(
-              () async => await iap.buySubscription(),
-            );
+            widgets.onSwipeUp(() {});
           case GestureDirections.down:
             if (!hasSwipedDown) {
               await cleanUpCollaborationArtifacts(const NoParams());

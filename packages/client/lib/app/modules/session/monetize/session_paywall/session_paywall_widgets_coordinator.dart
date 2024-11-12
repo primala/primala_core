@@ -9,7 +9,6 @@ import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/extensions/extensions.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
-import 'package:nokhte/app/core/modules/in_app_purchase/in_app_purchase.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/home/home.dart';
@@ -84,7 +83,7 @@ abstract class _SessionPaywallWidgetsCoordinatorBase
   }
 
   @action
-  onProductInfoReceived(SkuProductEntity product) {
+  onProductInfoReceived(product) {
     primarySmartText.setMessagesData(
       SessionLists.paywallPrimaryList(
         currencyCode: NumberFormat.simpleCurrency(
