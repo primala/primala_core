@@ -6,17 +6,13 @@ import '../../../fixtures/authentication_stack_mock_gen.mocks.dart';
 
 void main() {
   late LoginScreenWidgetsCoordinator mockWidgetsStore;
-  late MockSignInWithAuthProviderStore mockAuthProviderStore;
-  late MockGetLoginStateStore mockAuthStateStore;
   late TapDetector mockTapDetector;
   late LoginCoordinator testStore;
   late BeachWavesStore mockLayer1BeachWavesStore;
   late SmartTextStore smartTextStore;
   late MockWifiDisconnectOverlayStore wifiDisconnectOverlayStore;
-  late MockAddName mockAddNameToDatabase;
 
   setUp(() {
-    mockAddNameToDatabase = MockAddName();
     wifiDisconnectOverlayStore = MockWifiDisconnectOverlayStore();
     mockLayer1BeachWavesStore = BeachWavesStore();
     smartTextStore = SmartTextStore();
@@ -25,18 +21,13 @@ void main() {
       beachWaves: mockLayer1BeachWavesStore,
       smartTextStore: smartTextStore,
     );
-    mockAuthStateStore = MockGetLoginStateStore();
-    mockAuthProviderStore = MockSignInWithAuthProviderStore();
     mockTapDetector = TapDetector();
     testStore = LoginCoordinator(
       identifyUser: MockIdentifyUser(),
-      addMetadata: MockAddMetadata(),
+      contract: MockLoginContract(),
       captureScreen: MockCaptureScreen(),
       userInfo: MockUserInformationCoordinator(),
-      addName: mockAddNameToDatabase,
       widgets: mockWidgetsStore,
-      signInWithAuthProvider: mockAuthProviderStore,
-      authStateStore: mockAuthStateStore,
       tap: mockTapDetector,
     );
   });
