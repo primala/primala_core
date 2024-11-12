@@ -26,7 +26,7 @@ src/packages
                 | test/table_test.dart
                 | ...
 --------backend/supabase
-                | migrations.sql
+                | migrations/migration.sql
                 | functions/edge_function/index.ts
                 | ...
 --------client
