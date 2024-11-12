@@ -26,9 +26,7 @@ class StorageModule extends Module {
     i.add<StorageHomeCoordinator>(
       () => StorageHomeCoordinator(
         tap: TapDetector(),
-        getNokhteSessionArtifactsLogic:
-            Modular.get<GetNokhteSessionArtifacts>(),
-        updateSessionAliasLogic: Modular.get<UpdateSessionAlias>(),
+        contract: Modular.get<StorageContractImpl>(),
         captureScreen: Modular.get<CaptureScreen>(),
         widgets: Modular.get<StorageHomeWidgetsCoordinator>(),
         swipe: SwipeDetector(),
