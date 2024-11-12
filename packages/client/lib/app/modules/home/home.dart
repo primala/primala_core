@@ -51,8 +51,6 @@ class HomeModule extends Module {
     i.add<HomeCoordinator>(
       () => HomeCoordinator(
         tap: TapDetector(),
-        getNokhteSessionArtifactsLogic:
-            Modular.get<GetNokhteSessionArtifacts>(),
         captureScreen: Modular.get<CaptureScreen>(),
         swipe: SwipeDetector(),
         widgets: Modular.get<HomeWidgetsCoordinator>(),

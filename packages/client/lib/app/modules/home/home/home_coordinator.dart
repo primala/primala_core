@@ -1,6 +1,5 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api,  overridden_fields
 import 'package:mobx/mobx.dart';
-import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/types/types.dart';
@@ -13,7 +12,6 @@ class HomeCoordinator = _HomeCoordinatorBase with _$HomeCoordinator;
 
 abstract class _HomeCoordinatorBase
     with Store, BaseCoordinator, BaseMobxLogic, Reactions {
-  final GetNokhteSessionArtifacts getNokhteSessionArtifactsLogic;
   final HomeWidgetsCoordinator widgets;
   final TapDetector tap;
   final SwipeDetector swipe;
@@ -24,7 +22,6 @@ abstract class _HomeCoordinatorBase
     required this.swipe,
     required this.widgets,
     required this.tap,
-    required this.getNokhteSessionArtifactsLogic,
     required this.captureScreen,
   }) {
     initBaseCoordinatorActions();
@@ -39,7 +36,6 @@ abstract class _HomeCoordinatorBase
     widgets.constructor();
     initReactors();
     await captureScreen(HomeConstants.home);
-    await getNokhteSessionArtifacts();
   }
 
   initReactors() {
@@ -81,15 +77,6 @@ abstract class _HomeCoordinatorBase
           }
         });
       });
-
-  @action
-  getNokhteSessionArtifacts() async {
-    final res = await getNokhteSessionArtifactsLogic(const NoParams());
-    res.fold(
-      (failure) => errorUpdater(failure),
-      (artifacts) => nokhteSessionArtifacts = ObservableList.of(artifacts),
-    );
-  }
 
   deconstructor() {
     dispose();
