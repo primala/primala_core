@@ -5,7 +5,7 @@ import 'package:nokhte/app/core/modules/hive/mixin/mixin.dart';
 import 'package:nokhte/app/core/modules/hive/types/boxes.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/core/modules/user_metadata/user_metadata.dart';
-import 'package:nokhte/app/modules/login/login.dart' hide SignInWithApple;
+import 'package:nokhte/app/modules/login/login.dart';
 import 'package:nokhte_backend/tables/finished_nokhte_sessions.dart';
 import 'package:nokhte_backend/tables/user_information.dart';
 import 'package:package_info_plus/package_info_plus.dart';

@@ -3,7 +3,6 @@ import 'package:nokhte/app/core/modules/legacy_connectivity/legacy_connectivity.
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
-import 'package:nokhte/app/modules/login/domain/logic/add_metadata.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/network/network_info.dart';
@@ -37,54 +36,15 @@ class LoginModule extends Module {
         networkInfo: Modular.get<NetworkInfoImpl>(),
       ),
     );
-    i.add<AddName>(
-      () => AddName(
-        contract: i.get<LoginContractImpl>(),
-      ),
-    );
 
-    i.add<GetLoginState>(
-      () => GetLoginState(
-        contract: i.get<LoginContractImpl>(),
-      ),
-    );
-    i.add<SignInWithApple>(
-      () => SignInWithApple(
-        contract: i.get<LoginContractImpl>(),
-      ),
-    );
-    i.add<AddMetadata>(
-      () => AddMetadata(
-        contract: i.get<LoginContractImpl>(),
-      ),
-    );
-    i.add<SignInWithGoogle>(
-      () => SignInWithGoogle(
-        contract: i.get<LoginContractImpl>(),
-      ),
-    );
-    i.add<SignInWithAuthProviderStore>(
-      () => SignInWithAuthProviderStore(
-        signInWithApple: i.get<SignInWithApple>(),
-        signInWithGoogle: i.get<SignInWithGoogle>(),
-      ),
-    );
-    i.add<GetLoginStateStore>(
-      () => GetLoginStateStore(
-        logic: i<GetLoginState>(),
-      ),
-    );
     i.add<LoginCoordinator>(
       () => LoginCoordinator(
+        contract: i.get<LoginContractImpl>(),
         identifyUser: Modular.get<IdentifyUser>(),
-        addMetadata: Modular.get<AddMetadata>(),
         captureScreen: Modular.get<CaptureScreen>(),
         userInfo: Modular.get<UserInformationCoordinator>(),
         tap: TapDetector(),
-        addName: Modular.get<AddName>(),
         widgets: Modular.get<LoginScreenWidgetsCoordinator>(),
-        signInWithAuthProvider: i<SignInWithAuthProviderStore>(),
-        authStateStore: i<GetLoginStateStore>(),
       ),
     );
   }

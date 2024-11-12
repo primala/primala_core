@@ -6,7 +6,6 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
-import 'package:nokhte/app/modules/login/domain/logic/add_metadata.dart';
 import 'package:nokhte/app/modules/login/login.dart';
 import 'package:nokhte/app/modules/home/home.dart';
 part 'login_coordinator.g.dart';
@@ -22,10 +21,7 @@ abstract class _LoginCoordinatorBase
         BaseCoordinator,
         Reactions {
   final LoginScreenWidgetsCoordinator widgets;
-  final SignInWithAuthProviderStore signInWithAuthProvider;
-  final AddName addName;
-  final AddMetadata addMetadata;
-  final GetLoginStateStore authStateStore;
+  final LoginContract contract;
   final TapDetector tap;
   final IdentifyUser identifyUser;
   @override
@@ -34,11 +30,8 @@ abstract class _LoginCoordinatorBase
   final CaptureScreen captureScreen;
 
   _LoginCoordinatorBase({
-    required this.signInWithAuthProvider,
+    required this.contract,
     required this.widgets,
-    required this.addMetadata,
-    required this.authStateStore,
-    required this.addName,
     required this.userInfo,
     required this.identifyUser,
     required this.tap,
@@ -54,13 +47,17 @@ abstract class _LoginCoordinatorBase
   @observable
   bool hasAttemptedToLogin = false;
 
+  @observable
+  ObservableStream<bool> authStateStream =
+      ObservableStream(const Stream.empty());
+
   @action
   toggleHasAttemptedToLogin() => hasAttemptedToLogin = !hasAttemptedToLogin;
 
   @action
   constructor() async {
     widgets.constructor();
-    authStateListener(authStateStore.authState);
+    listenToAuthState();
     initReactors();
     await userInfo.checkIfVersionIsUpToDate();
     await captureScreen(LoginConstants.root);
@@ -68,6 +65,7 @@ abstract class _LoginCoordinatorBase
 
   initReactors() {
     disposers.add(tapReactor());
+    disposers.add(authStateReactor());
     disposers.addAll(
         widgets.wifiDisconnectOverlay.initReactors(onQuickConnected: () {
       setDisableAllTouchFeedback(false);
@@ -96,7 +94,7 @@ abstract class _LoginCoordinatorBase
   @action
   logIn(AuthProvider provider) async {
     if (widgets.showLoginButtons) {
-      await signInWithAuthProvider.routeAuthProviderRequest(provider);
+      await contract.routeAuthProviderRequest(provider);
     } else {
       widgets.onTap();
     }
@@ -107,16 +105,23 @@ abstract class _LoginCoordinatorBase
         (p0) => ifTouchIsNotDisabled(() => widgets.onTap()),
       );
 
-  @action
-  authStateListener(Stream<bool> authStateStream) =>
-      authStateStream.listen((isLoggedIn) async {
-        if (isLoggedIn) {
+  authStateReactor() => reaction((p0) => isLoggedIn, (p0) async {
+        if (p0) {
           widgets.loggedInOnResumed();
-          await addName(const NoParams());
-          await addMetadata(const NoParams());
+          await contract.addName(const NoParams());
+          await contract.addMetadata(const NoParams());
           await identifyUser(const NoParams());
+          await authStateStream.close();
         }
       });
+
+  @action
+  listenToAuthState() {
+    authStateStream = ObservableStream(contract.getAuthState(const NoParams()));
+    authStateStream.listen((isLoggedIn) {
+      this.isLoggedIn = isLoggedIn;
+    });
+  }
 
   deconstructor() {
     dispose();
