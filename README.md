@@ -50,7 +50,7 @@ src/packages
 ## Local Development
 1. clone your forked GitHub repository
       ```sh
-   git clone https://github.com/<github_username>/supabase.git
+   git clone https://github.com/<github_username>/nokhte.git
    ```
 2. Go to the backend directory and start supabase
       ```sh
