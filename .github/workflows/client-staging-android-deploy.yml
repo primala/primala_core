@@ -25,7 +25,6 @@ jobs:
         with:
           flutter-version: "3.19.3"
           channel: "stable"
-      - uses: bluefireteam/melos-action@v3
       - run: |
           echo "PROD_SUPABASE_URL='$PROD_SUPABASE_URL'" >> .env
           echo "PROD_SUPABASE_ANON_KEY='$PROD_SUPABASE_ANON_KEY'" >> .env
