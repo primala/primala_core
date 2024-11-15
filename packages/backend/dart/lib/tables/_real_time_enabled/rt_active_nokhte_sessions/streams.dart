@@ -61,6 +61,7 @@ class RTActiveNokhteSessionsStream extends RTActiveNokhteSessionQueries
           userIsInSecondarySpeakingSpotlight:
               event.first[SECONDARY_SPEAKER_SPOTLIGHT] == userUID,
           phases: event.first[CURRENT_PHASES],
+          currentPurpose: event.first[CURRENT_PURPOSE],
           userCanSpeak: event.first[SPEAKER_SPOTLIGHT] == null,
           userIsSpeaking: event.first[SPEAKER_SPOTLIGHT] == userUID,
           sessionHasBegun: event.first[HAS_BEGUN],
