@@ -56,6 +56,9 @@ class SessionSoloHybridScreen extends HookWidget {
               RefreshBanner(
                 store: coordinator.widgets.refreshBanner,
               ),
+              PurposeBanner(
+                store: coordinator.widgets.purposeBanner,
+              ),
               Center(
                 child: SmartText(
                   store: coordinator.widgets.primarySmartText,

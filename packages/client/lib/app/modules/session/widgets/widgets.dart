@@ -3,6 +3,7 @@ export './let_em_cook/let_em_cook.dart';
 export 'rally/rally.dart';
 export 'session_navigation/session_navigation.dart';
 export 'collaborator_presence_incidents_overlay/collaborator_presence_incidents_overlay.dart';
+export 'purpose_banner/purpose_banner.dart';
 export 'exit_status_indicator/exit_status_indicator.dart';
 export 'half_screen_tint/half_screen_tint.dart';
 export 'hold_timer_indicator/hold_timer_indicator.dart';
