@@ -1,8 +1,5 @@
-// ignore_for_file: overridden_fields
-
 import 'package:dartz/dartz.dart';
 import 'package:nokhte/app/core/constants/constants.dart';
-import 'package:nokhte/app/core/error/failure.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mixins/mixin.dart';
 import 'package:nokhte/app/core/network/network_info.dart';
@@ -19,7 +16,7 @@ class SessionPresenceContractImpl
   });
 
   @override
-  Future<Either<Failure, bool>> addContent(String params) async {
+  addContent(params) async {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.addContent(params);
       return fromSupabase(res);
@@ -29,7 +26,7 @@ class SessionPresenceContractImpl
   }
 
   @override
-  Future<Either<Failure, bool>> completeTheSession(NoParams params) async {
+  completeTheSession(params) async {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.completeTheSession();
       return fromFunctionResponse(res);
@@ -39,7 +36,7 @@ class SessionPresenceContractImpl
   }
 
   @override
-  listenToRTSessionMetadata(NoParams params) async {
+  listenToRTSessionMetadata(params) async {
     if (await networkInfo.isConnected) {
       final res = remoteSource.listenToSessionMetadata();
       return Right(res);
@@ -129,6 +126,16 @@ class SessionPresenceContractImpl
   updateSpeakingTimerStart() async {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.updateSpeakingTimerStart();
+      return fromSupabase(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  @override
+  updateCurrentPurpose(newPurpose) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.updateCurrentPurpose(newPurpose);
       return fromSupabase(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);

@@ -18,7 +18,6 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
   _SessionPresenceCoordinatorBase({
     required this.contract,
     required this.sessionMetadataStore,
-    // required this.incidentsOverlayStore,
   }) : incidentsOverlayStore = CollaboratorPresenceIncidentsOverlayStore(
           sessionMetadataStore: sessionMetadataStore,
         ) {
@@ -27,6 +26,9 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
 
   @observable
   bool contentIsUpdated = false;
+
+  @observable
+  bool purposeIsUpdated = false;
 
   @observable
   bool sessionIsFinished = false;
@@ -162,6 +164,17 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
     res.fold(
       (failure) => errorUpdater(failure),
       (status) => powerUpIsUsed = status,
+    );
+    setState(StoreState.loaded);
+  }
+
+  @action
+  updateCurrentPurpose(String params) async {
+    setState(StoreState.loading);
+    final res = await contract.updateCurrentPurpose(params);
+    res.fold(
+      (failure) => errorUpdater(failure),
+      (status) => purposeIsUpdated = status,
     );
     setState(StoreState.loaded);
   }
