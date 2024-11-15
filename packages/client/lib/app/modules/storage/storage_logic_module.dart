@@ -24,16 +24,5 @@ class StorageLogicModule extends Module {
         remoteSource: Modular.get<StorageRemoteSourceImpl>(),
       ),
     );
-
-    i.add<GetNokhteSessionArtifacts>(
-      () => GetNokhteSessionArtifacts(
-        contract: Modular.get<StorageContractImpl>(),
-      ),
-    );
-    i.add<UpdateSessionAlias>(
-      () => UpdateSessionAlias(
-        contract: Modular.get<StorageContractImpl>(),
-      ),
-    );
   }
 }

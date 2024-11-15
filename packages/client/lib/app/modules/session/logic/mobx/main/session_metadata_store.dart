@@ -42,6 +42,9 @@ abstract class _SessionMetadataStoreBase
   String? currentSpeakerUID = '';
 
   @observable
+  String currentPurpose = '';
+
+  @observable
   bool userIsInSecondarySpeakingSpotlight = false;
 
   @observable
@@ -138,6 +141,7 @@ abstract class _SessionMetadataStoreBase
           userIsInSecondarySpeakingSpotlight =
               value.userIsInSecondarySpeakingSpotlight;
           currentSpeakerUID = value.speakerUID;
+          currentPurpose = value.currentPurpose;
           currentPhases = ObservableList.of(phases);
           sessionHasBegun = value.sessionHasBegun;
           userIsSpeaking = value.userIsSpeaking;

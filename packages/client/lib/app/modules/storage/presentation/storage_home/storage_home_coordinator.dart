@@ -23,8 +23,7 @@ abstract class _StorageHomeCoordinatorBase
         BaseMobxLogic,
         Reactions {
   final StorageHomeWidgetsCoordinator widgets;
-  final GetNokhteSessionArtifacts getNokhteSessionArtifactsLogic;
-  final UpdateSessionAlias updateSessionAliasLogic;
+  final StorageContract contract;
   @override
   final CaptureScreen captureScreen;
   final TapDetector tap;
@@ -32,8 +31,7 @@ abstract class _StorageHomeCoordinatorBase
   final SwipeDetector swipe;
   _StorageHomeCoordinatorBase({
     required this.captureScreen,
-    required this.getNokhteSessionArtifactsLogic,
-    required this.updateSessionAliasLogic,
+    required this.contract,
     required this.widgets,
     required this.swipe,
     required this.tap,
@@ -66,7 +64,7 @@ abstract class _StorageHomeCoordinatorBase
 
   @action
   getNokhteSessionArtifacts() async {
-    final res = await getNokhteSessionArtifactsLogic(const NoParams());
+    final res = await contract.getNokhteSessionArtifacts(const NoParams());
     res.fold(
       (failure) => errorUpdater(failure),
       (artifacts) {
@@ -77,7 +75,7 @@ abstract class _StorageHomeCoordinatorBase
 
   @action
   updateSessionAlias(UpdateSessionAliasParams params) async {
-    final res = await updateSessionAliasLogic(params);
+    final res = await contract.updateSessionAlias(params);
     res.fold(
       (failure) => errorUpdater(failure),
       (updateStatus) => aliasIsUpdated = updateStatus,
@@ -85,29 +83,10 @@ abstract class _StorageHomeCoordinatorBase
   }
 
   initReactors() {
-    // disposers.add(tapReactor());
-    // disposers.add(swipeReactor());
     disposers.add(beachWavesMovieStatusReactor());
     disposers.add(sessionCardEditReactor());
     disposers.add(sessionCardTapReactor());
   }
-
-  // tapReactor() => reaction((p0) => tap.tapCount, (p0) {
-  //       ifTouchIsNotDisabled(() {
-  //         widgets.onTap();
-  //       });
-  //     });
-
-  // swipeReactor() => reaction((p0) => swipe.directionsType, (p0) {
-  //       switch (p0) {
-  //         case GestureDirections.left:
-  //           ifTouchIsNotDisabled(() {
-  //             widgets.onSwipeLeft();
-  //           });
-  //         default:
-  //           break;
-  //       }
-  //     });
 
   beachWavesMovieStatusReactor() =>
       reaction((p0) => widgets.beachWaves.movieStatus, (p0) {

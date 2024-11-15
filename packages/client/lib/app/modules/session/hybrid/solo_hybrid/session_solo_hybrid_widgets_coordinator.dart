@@ -41,6 +41,7 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   final TouchRippleStore touchRipple;
   @override
   final WifiDisconnectOverlayStore wifiDisconnectOverlay;
+  final PurposeBannerStore purposeBanner;
 
   _SessionSoloHybridWidgetsCoordinatorBase({
     required this.primarySmartText,
@@ -53,6 +54,7 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
     required this.wifiDisconnectOverlay,
     required this.beachWaves,
     required this.borderGlow,
+    required this.purposeBanner,
     required this.touchRipple,
     required this.speakLessSmileMore,
   }) {
@@ -61,8 +63,13 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   }
 
   @action
-  constructor(bool userCanSpeak, bool everyoneIsOnline) {
+  constructor({
+    required bool userCanSpeak,
+    required bool everyoneIsOnline,
+    required String purpose,
+  }) {
     tapStopwatch.start();
+    purposeBanner.setPurpose(purpose);
     beachWaves.setMovieMode(BeachWaveMovieModes.halfAndHalfToDrySand);
     primarySmartText.setMessagesData(SessionLists.tapToTalk);
     secondarySmartText.setMessagesData(SessionLists.tapToTakeANote);
@@ -102,6 +109,7 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
       presenceOverlay.setWidgetVisibility(true);
     }
     setSmartTextVisibilities(false);
+    purposeBanner.setWidgetVisibility(false);
     sessionNavigation.setWidgetVisibility(false);
     setCollaboratorHasLeft(true);
   }
@@ -110,6 +118,7 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
     if (!refreshBanner.showWidget) return;
     sessionNavigation.setWidgetVisibility(false);
     primarySmartText.setWidgetVisibility(false);
+    purposeBanner.setWidgetVisibility(false);
     secondarySmartText.setWidgetVisibility(false);
     setCollaboratorHasLeft(false);
     othersAreTalkingTint.reverseMovie(const NoParams());
@@ -124,6 +133,7 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   @action
   onCollaboratorJoined() {
     setCollaboratorHasLeft(false);
+    purposeBanner.setWidgetVisibility(true);
     primarySmartText.setWidgetVisibility(true);
     sessionNavigation.setWidgetVisibility(true);
     secondarySmartText.setWidgetVisibility(true);
@@ -139,6 +149,7 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   onHold(GesturePlacement holdPosition) {
     initSpeaking(holdPosition, onHold: () {
       setSmartTextVisibilities(false);
+      purposeBanner.setWidgetVisibility(false);
     });
   }
 
@@ -198,6 +209,8 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   @action
   onLetGoCompleted() {
     refreshBanner.setWidgetVisibility(true);
+    purposeBanner.setWidgetVisibility(true);
+
     resetSpeakingVariables();
 
     isASecondarySpeaker = false;
@@ -212,6 +225,7 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   initFullScreenNotes() {
     baseInitFullScreenNotes(() {
       setSmartTextVisibilities(false);
+      purposeBanner.setWidgetVisibility(false);
       othersAreTalkingTint.reverseMovie(const NoParams());
     });
   }
@@ -252,10 +266,12 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
       gestureCrossTapReactor(
         onInit: () {
           primarySmartText.setWidgetVisibility(false);
+          purposeBanner.setWidgetVisibility(false);
           secondarySmartText.setWidgetVisibility(false);
         },
         onReverse: () {
           primarySmartText.setWidgetVisibility(true);
+          purposeBanner.setWidgetVisibility(true);
           secondarySmartText.setWidgetVisibility(true);
         },
       ),

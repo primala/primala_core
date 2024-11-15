@@ -18,12 +18,15 @@ class LoginContractImpl with ResponseToStatus implements LoginContract {
   });
 
   @override
-  Future<Either<Failure, AuthProviderEntity>> googleSignIn(params) async =>
-      await _signInWith(() => remoteSource.signInWithGoogle());
+  routeAuthProviderRequest(params) async {
+    switch (params) {
+      case AuthProvider.google:
+        return await _signInWith(() => remoteSource.signInWithGoogle());
 
-  @override
-  Future<Either<Failure, AuthProviderEntity>> appleSignIn(params) async =>
-      await _signInWith(() => remoteSource.signInWithApple());
+      case AuthProvider.apple:
+        return await _signInWith(() => remoteSource.signInWithApple());
+    }
+  }
 
   Future<Either<Failure, AuthProviderEntity>> _signInWith(
       _AppleOrGoogleChooser getOAuthProvider) async {
