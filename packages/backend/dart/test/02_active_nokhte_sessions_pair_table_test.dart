@@ -126,6 +126,14 @@ void main() {
     expect(res2.mainType, isNull);
   });
 
+  test("updateCurrentPurpose", () async {
+    final res1 = await user1RTQueries.getCurrentPurpose();
+    expect(res1.mainType, "");
+    await user1RTQueries.updateCurrentPurpose("new purpose");
+    final res2 = await user1RTQueries.getCurrentPurpose();
+    expect(res2.mainType, "new purpose");
+  });
+
   test("updateCurrentPhases", () async {
     await user1RTQueries.updateCurrentPhases(1);
     final currentPhases = (await user1RTQueries.getCurrentPhases()).mainType;
@@ -144,6 +152,7 @@ void main() {
       emits(
         NokhteSessionMetadata(
           secondarySpotlightIsEmpty: true,
+          currentPurpose: "new purpose",
           speakerUID: null,
           userCanSpeak: true,
           speakingTimerStart: DateTime.fromMillisecondsSinceEpoch(0),

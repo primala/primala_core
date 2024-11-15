@@ -14,6 +14,7 @@ abstract class SessionPresenceRemoteSource {
   Future<bool> cancelSessionMetadataStream();
   Future<List> addContent(String content);
   Future<List> letEmCook();
+  Future<List> updateCurrentPurpose(String newPurpose);
   Future<List> rally(
     RallyParams params,
   );
@@ -96,4 +97,8 @@ class SessionPresenceRemoteSourceImpl implements SessionPresenceRemoteSource {
   @override
   updateSpeakingTimerStart() async =>
       await rtQueries.updateSpeakingTimerStart();
+
+  @override
+  updateCurrentPurpose(newPurpose) async =>
+      await rtQueries.updateCurrentPurpose(newPurpose);
 }

@@ -37,7 +37,10 @@ abstract class _SessionSoloHybridCoordinatorBase
   @action
   constructor() async {
     widgets.constructor(
-        sessionMetadata.userCanSpeak, sessionMetadata.everyoneIsOnline);
+      userCanSpeak: sessionMetadata.userCanSpeak,
+      everyoneIsOnline: sessionMetadata.everyoneIsOnline,
+      purpose: sessionMetadata.currentPurpose,
+    );
     widgets.sessionNavigation.setup(
       sessionMetadata.screenType,
       sessionMetadata.presetType,
@@ -94,6 +97,7 @@ abstract class _SessionSoloHybridCoordinatorBase
       },
     ));
     disposers.add(tapReactor());
+    disposers.add(currentPurposeReactor());
     disposers.add(
       widgets.baseBeachWavesMovieStatusReactor(
         onBorderGlowInitialized: () async {
@@ -219,6 +223,13 @@ abstract class _SessionSoloHybridCoordinatorBase
               await presence.updateCurrentPhase(2.5);
             },
           );
+        },
+      );
+
+  currentPurposeReactor() => reaction(
+        (p0) => sessionMetadata.currentPurpose,
+        (p0) {
+          widgets.purposeBanner.setPurpose(p0);
         },
       );
 
