@@ -17,12 +17,12 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
   @action
   setPurpose(String purpose) {
     setWidgetVisibility(false);
-    if (purpose.isEmpty) {
-      this.purpose = 'No purpose yet';
-    } else {
-      this.purpose = purpose;
-    }
     Timer(Seconds.get(0, milli: 500), () {
+      if (purpose.isEmpty) {
+        this.purpose = 'No purpose yet';
+      } else {
+        this.purpose = purpose;
+      }
       setWidgetVisibility(true);
     });
   }

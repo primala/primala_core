@@ -37,14 +37,11 @@ class StorageContentScreen extends HookWidget {
             ),
             Padding(
               padding: EdgeInsets.only(
-                  top: useScaledSize(
-                    baseValue: .11,
-                    screenSize: screenSize,
-                  ),
-                  bottom: useScaledSize(
-                    baseValue: .15,
-                    screenSize: screenSize,
-                  )),
+                top: useScaledSize(
+                  baseValue: .11,
+                  screenSize: screenSize,
+                ),
+              ),
               child: ContentCard(
                 store: coordinator.widgets.contentCard,
                 content: coordinator.nokhteSessionArtifacts.content,

@@ -246,6 +246,7 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
     required DateTime startTime,
     required String initiatorFullName,
   }) {
+    purposeBanner.setWidgetVisibility(false);
     speakingTimerStart = startTime;
     isASecondarySpeaker = true;
     refreshBanner.setWidgetVisibility(false);
