@@ -125,7 +125,7 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
 
     refreshBanner.setWidgetVisibility(false);
     Timer(Seconds.get(1), () {
-      Modular.to.navigate(SessionConstants.refresh);
+      Modular.to.navigate(SessionConstants.pause);
     });
     await onRefresh();
   }

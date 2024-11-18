@@ -1,6 +1,7 @@
 export 'border_glow/border_glow.dart';
 export './let_em_cook/let_em_cook.dart';
 export 'rally/rally.dart';
+export 'pause_icon/pause_icon.dart';
 export 'session_navigation/session_navigation.dart';
 export 'collaborator_presence_incidents_overlay/collaborator_presence_incidents_overlay.dart';
 export 'purpose_banner/purpose_banner.dart';

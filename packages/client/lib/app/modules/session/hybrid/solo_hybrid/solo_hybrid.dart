@@ -72,9 +72,6 @@ class SessionSoloHybridScreen extends HookWidget {
               SpeakLessSmileMore(
                 store: coordinator.widgets.speakLessSmileMore,
               ),
-              SessionNavigation(
-                store: coordinator.widgets.sessionNavigation,
-              ),
               FullScreen(
                 child: TouchRipple(
                   store: coordinator.widgets.touchRipple,

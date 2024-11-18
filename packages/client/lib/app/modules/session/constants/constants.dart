@@ -18,7 +18,7 @@ mixin SessionConstants {
   static const relativeSocraticSpeakingExit = '/socratic_speaking_exit';
   static const relativeLobby = '/lobby';
   static const relativeInformation = '/info';
-  static const relativeRefresh = '/refresh';
+  static const relativePause = '/pause';
   static const relativeRefreshRouter = '/refresh_router';
   static const relativeDuoGreeter = '/duo_greeter';
   static const relativeGroupGreeter = '/group_greeter';
@@ -38,7 +38,7 @@ mixin SessionConstants {
       '$module$coreModule$relativeSocraticSpeakingExit';
   static const lobby = '$module$coreModule$relativeLobby';
   static const information = '$module$coreModule$relativeInformation';
-  static const refresh = '$module$hybridModule$relativeRefresh';
+  static const pause = '$module$hybridModule$relativePause';
   static const refreshRouter = '$module$coreModule$relativeRefreshRouter';
   static const collaborationGreeter =
       '$module$coreModule$relativeCollaborationGreeter';

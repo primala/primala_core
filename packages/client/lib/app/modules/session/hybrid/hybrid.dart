@@ -25,13 +25,13 @@ class SessionHybridModule extends Module {
         swipe: SwipeDetector(),
       ),
     );
-    i.add<SessionRefreshCoordinator>(
-      () => SessionRefreshCoordinator(
+    i.add<SessionPauseCoordinator>(
+      () => SessionPauseCoordinator(
         captureStart: Modular.get<CaptureSessionStart>(),
         presence: Modular.get<SessionPresenceCoordinator>(),
         captureScreen: Modular.get<CaptureScreen>(),
         tap: TapDetector(),
-        widgets: Modular.get<SessionRefreshWidgetsCoordinator>(), //
+        widgets: Modular.get<SessionPauseWidgetsCoordinator>(), //
       ),
     );
     i.add<SessionGroupHybridCoordinator>(
@@ -56,10 +56,10 @@ class SessionHybridModule extends Module {
     );
 
     r.child(
-      SessionConstants.relativeRefresh,
+      SessionConstants.relativePause,
       transition: TransitionType.noTransition,
-      child: (context) => SessionRefreshScreen(
-        coordinator: Modular.get<SessionRefreshCoordinator>(),
+      child: (context) => SessionPauseScreen(
+        coordinator: Modular.get<SessionPauseCoordinator>(),
       ),
     );
     r.child(

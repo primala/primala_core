@@ -37,9 +37,12 @@ class SessionWidgetsModule extends Module {
       ),
     );
 
-    i.add<SessionRefreshWidgetsCoordinator>(
-      () => SessionRefreshWidgetsCoordinator(
+    i.add<SessionPauseWidgetsCoordinator>(
+      () => SessionPauseWidgetsCoordinator(
+        tint: TintStore(),
+        pauseIcon: PauseIconStore(),
         wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
+        sessionNavigation: Modular.get<SessionNavigationStore>(),
         beachWaves: BeachWavesStore(),
         // presetCard: ExpandedPresetCardsStore(),
       ),
