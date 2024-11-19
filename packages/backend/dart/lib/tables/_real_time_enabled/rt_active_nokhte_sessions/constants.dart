@@ -10,5 +10,5 @@ mixin RTActiveNokhteSessionsConstants {
   String SESSION_UID = 'session_uid';
   String HAS_BEGUN = 'has_begun';
   String VERSION = 'version';
-  String CURRENT_PURPOSE = 'current_purpose';
+  String CONTENT = "content";
 }

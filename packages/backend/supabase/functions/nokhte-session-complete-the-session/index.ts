@@ -37,14 +37,11 @@ serve(async (req) => {
   };
 
   if (isNotEmptyOrNull(stSessionRes?.data)) {
-    const leaderUID = stSessionRes?.data?.[0]["leader_uid"];
-    const content = stSessionRes?.data?.[0]["content"];
+    const content = rtSessionRes?.data?.[0]["content"];
     const sessionTimestamp = stSessionRes?.data?.[0]["created_at"];
     const sessionUID = stSessionRes?.data?.[0]["session_uid"];
     let collaboratorUIDsArr = stSessionRes?.data?.[0]["collaborator_uids"];
     collaboratorUIDsArr = collaboratorUIDsArr.sort();
-    // const currentPhases = rtSessionRes?.data?.[0]["current_phases"];
-    const presetUID = stSessionRes?.data?.[0]["preset_uid"];
 
     const duplicateCheckRes = (
       await supabaseAdmin
@@ -66,18 +63,6 @@ serve(async (req) => {
         .select();
 
       for (let i = 0; i < collaboratorUIDsArr.length; i++) {
-        //   if (
-        //     collaboratorUIDsArr.length > 3 &&
-        //     currentPhases.every((e: any) => e >= 2)
-        //   ) {
-        //     await supabaseAdmin
-        //       .from("user_metadata")
-        //       .update({
-        //         has_used_trial: true,
-        //       })
-        //       .eq("uid", collaboratorUIDsArr[i]);
-        //   }
-
         const userAuthorizedViewersRes = (
           await supabaseAdmin
             .from("user_information")

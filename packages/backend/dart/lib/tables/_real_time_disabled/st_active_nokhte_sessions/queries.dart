@@ -34,35 +34,11 @@ class STActiveNokhteSessionQueries extends ActiveNokhteSessionEdgeFunctions
 
   Future<SessionResponse<String>> getCreatedAt() async =>
       await _getProperty<String>(CREATED_AT);
-  Future<SessionResponse<List>> getContent() async =>
-      await _getProperty<List>(CONTENT);
+
   Future<SessionResponse<String>> getSessionUID() async =>
       await _getProperty<String>(SESSION_UID);
   Future<SessionResponse<String>> getLeaderUID<String>() async =>
       await _getProperty(LEADER_UID);
-
-  Future<List> addContent(String content) async {
-    await computeCollaboratorInformation();
-    final contentRes = await getContent();
-    final currentContent = contentRes.mainType;
-    final currentVersion = contentRes.currentVersion;
-    currentContent.add(content);
-
-    return await retry<List>(
-      action: () async {
-        return await _onCurrentActiveNokhteSession(
-          supabase.from(TABLE).update({
-            CONTENT: currentContent,
-            VERSION: currentVersion + 1,
-          }),
-          version: currentVersion,
-        );
-      },
-      shouldRetry: (result) {
-        return result.isEmpty;
-      },
-    );
-  }
 
   Future<List> initializeSession({
     PresetTypes presetType = PresetTypes.none,

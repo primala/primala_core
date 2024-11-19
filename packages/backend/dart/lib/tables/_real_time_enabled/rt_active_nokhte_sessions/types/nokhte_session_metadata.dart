@@ -10,7 +10,7 @@ class NokhteSessionMetadata extends Equatable {
   final bool userIsInSecondarySpeakingSpotlight;
   final String? speakerUID;
   final DateTime speakingTimerStart;
-  final String currentPurpose;
+  final List content;
 
   NokhteSessionMetadata({
     required this.everyoneIsOnline,
@@ -21,7 +21,7 @@ class NokhteSessionMetadata extends Equatable {
     required this.speakerUID,
     required this.sessionHasBegun,
     required this.speakingTimerStart,
-    required this.currentPurpose,
+    required this.content,
     required this.userIsInSecondarySpeakingSpotlight,
   });
 
@@ -29,7 +29,7 @@ class NokhteSessionMetadata extends Equatable {
   List<Object> get props => [
         everyoneIsOnline,
         phases,
-        currentPurpose,
+        content,
         sessionHasBegun,
         userCanSpeak,
         userIsSpeaking,

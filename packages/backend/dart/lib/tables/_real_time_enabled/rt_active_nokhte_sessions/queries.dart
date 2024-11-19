@@ -25,8 +25,8 @@ class RTActiveNokhteSessionQueries extends ActiveNokhteSessionEdgeFunctions
   Future<SessionResponse<List>> getWhoIsOnline() async =>
       await _getProperty(IS_ONLINE);
 
-  Future<SessionResponse<List>> getCurrentPurpose() async =>
-      await _getProperty(CURRENT_PURPOSE);
+  Future<SessionResponse<List>> getContent() async =>
+      await _getProperty<List>(CONTENT);
 
   Future<SessionResponse<String?>> getSpeakerSpotlight() async =>
       await _getProperty(SPEAKER_SPOTLIGHT);
@@ -74,6 +74,29 @@ class RTActiveNokhteSessionQueries extends ActiveNokhteSessionEdgeFunctions
     return [];
   }
 
+  Future<List> addContent(String content) async {
+    await computeCollaboratorInformation();
+    final contentRes = await getContent();
+    final currentContent = contentRes.mainType;
+    final currentVersion = contentRes.currentVersion;
+    currentContent.add(content);
+
+    return await retry<List>(
+      action: () async {
+        return await _onCurrentActiveNokhteSession(
+          supabase.from(TABLE).update({
+            CONTENT: currentContent,
+            VERSION: currentVersion + 1,
+          }),
+          version: currentVersion,
+        );
+      },
+      shouldRetry: (result) {
+        return result.isEmpty;
+      },
+    );
+  }
+
   Future<List> beginSession() async {
     await computeCollaboratorInformation();
     final res = await getWhoIsOnline();
@@ -104,28 +127,6 @@ class RTActiveNokhteSessionQueries extends ActiveNokhteSessionEdgeFunctions
               SPEAKING_TIMER_START: DateTime.now().toUtc().toIso8601String(),
               VERSION: res.currentVersion + 1,
               SECONDARY_SPEAKER_SPOTLIGHT: userUID,
-            },
-          ),
-          version: res.currentVersion,
-        );
-      },
-      shouldRetry: (result) {
-        return result.isEmpty;
-      },
-      maxRetries: 9,
-    );
-  }
-
-  Future<List> updateCurrentPurpose(String newPurpose) async {
-    await computeCollaboratorInformation();
-    final res = await getSpeakerSpotlight();
-    return await retry<List>(
-      action: () async {
-        return await _onCurrentActiveNokhteSession(
-          supabase.from(TABLE).update(
-            {
-              VERSION: res.currentVersion + 1,
-              CURRENT_PURPOSE: newPurpose,
             },
           ),
           version: res.currentVersion,
