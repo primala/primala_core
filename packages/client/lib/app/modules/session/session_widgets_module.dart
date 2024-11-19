@@ -140,7 +140,9 @@ class SessionWidgetsModule extends Module {
   injectHybrid(i) {
     i.add<SessionSoloHybridWidgetsCoordinator>(
       () => SessionSoloHybridWidgetsCoordinator(
-        purposeBanner: PurposeBannerStore(),
+        purposeBanner: PurposeBannerStore(
+          nokhteBlur: NokhteBlurStore(),
+        ),
         presenceOverlay:
             Modular.get<SessionPresenceCoordinator>().incidentsOverlayStore,
         refreshBanner: RefreshBannerStore(),

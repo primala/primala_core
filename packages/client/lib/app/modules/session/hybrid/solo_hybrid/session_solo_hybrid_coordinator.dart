@@ -39,7 +39,7 @@ abstract class _SessionSoloHybridCoordinatorBase
     widgets.constructor(
       userCanSpeak: sessionMetadata.userCanSpeak,
       everyoneIsOnline: sessionMetadata.everyoneIsOnline,
-      purpose: sessionMetadata.currentPurpose,
+      content: sessionMetadata.content,
     );
     widgets.rally.setValues(
       fullNames: sessionMetadata.fullNames,
@@ -228,7 +228,7 @@ abstract class _SessionSoloHybridCoordinatorBase
   currentPurposeReactor() => reaction(
         (p0) => sessionMetadata.currentPurpose,
         (p0) {
-          widgets.purposeBanner.setPurpose(p0);
+          widgets.purposeBanner.setPurpose(sessionMetadata.content);
         },
       );
 
