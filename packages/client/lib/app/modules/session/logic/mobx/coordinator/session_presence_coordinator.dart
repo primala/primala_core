@@ -167,15 +167,4 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
     );
     setState(StoreState.loaded);
   }
-
-  @action
-  updateCurrentPurpose(String params) async {
-    setState(StoreState.loading);
-    final res = await contract.updateCurrentPurpose(params);
-    res.fold(
-      (failure) => errorUpdater(failure),
-      (status) => purposeIsUpdated = status,
-    );
-    setState(StoreState.loaded);
-  }
 }

@@ -42,9 +42,6 @@ abstract class _SessionMetadataStoreBase
   String? currentSpeakerUID = '';
 
   @observable
-  String currentPurpose = '';
-
-  @observable
   bool userIsInSecondarySpeakingSpotlight = false;
 
   @observable
@@ -56,6 +53,9 @@ abstract class _SessionMetadataStoreBase
 
   @observable
   ObservableList<double> currentPhases = ObservableList.of(List.filled(9, -9));
+
+  @observable
+  ObservableList<String> content = ObservableList.of([]);
 
   @observable
   bool secondarySpeakerSpotlightIsEmpty = false;
@@ -141,7 +141,10 @@ abstract class _SessionMetadataStoreBase
           userIsInSecondarySpeakingSpotlight =
               value.userIsInSecondarySpeakingSpotlight;
           currentSpeakerUID = value.speakerUID;
-          currentPurpose = value.currentPurpose;
+          final strContent = value.content.map((e) => e.toString());
+          // print('strContent: $strContent');
+          content = ObservableList.of(strContent);
+          // print('content: $content');
           currentPhases = ObservableList.of(phases);
           sessionHasBegun = value.sessionHasBegun;
           userIsSpeaking = value.userIsSpeaking;
@@ -188,6 +191,10 @@ abstract class _SessionMetadataStoreBase
     }
     return count;
   }
+
+  @computed
+  String get currentPurpose =>
+      content.isEmpty ? 'No purpose yet' : content.last;
 
   @computed
   DateTime get now => time.value ?? DateTime.now();
