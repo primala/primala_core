@@ -112,8 +112,8 @@ void main() {
   });
 
   test("addContent", () async {
-    await user1STQueries.addContent('test');
-    final res = ((await user1STQueries.getContent())).mainType;
+    await user1RTQueries.addContent('test');
+    final res = ((await user1RTQueries.getContent())).mainType;
     expect(res, ["test"]);
   });
 
@@ -124,14 +124,6 @@ void main() {
     await user1RTQueries.updateSpeakerSpotlight(addUserToSpotlight: false);
     final res2 = await user1RTQueries.getSpeakerSpotlight();
     expect(res2.mainType, isNull);
-  });
-
-  test("updateCurrentPurpose", () async {
-    final res1 = await user1RTQueries.getCurrentPurpose();
-    expect(res1.mainType, "");
-    await user1RTQueries.updateCurrentPurpose("new purpose");
-    final res2 = await user1RTQueries.getCurrentPurpose();
-    expect(res2.mainType, "new purpose");
   });
 
   test("updateCurrentPhases", () async {
@@ -152,7 +144,7 @@ void main() {
       emits(
         NokhteSessionMetadata(
           secondarySpotlightIsEmpty: true,
-          currentPurpose: "new purpose",
+          content: ["new purpose"],
           speakerUID: null,
           userCanSpeak: true,
           speakingTimerStart: DateTime.fromMillisecondsSinceEpoch(0),

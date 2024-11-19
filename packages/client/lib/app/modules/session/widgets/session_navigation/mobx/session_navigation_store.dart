@@ -1,6 +1,5 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:ui';
-
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
@@ -8,7 +7,6 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte_backend/tables/company_presets.dart';
 import 'package:simple_animations/simple_animations.dart';
 part 'session_navigation_store.g.dart';
 
@@ -41,11 +39,8 @@ abstract class _SessionNavigationStoreBase extends BaseWidgetStore
     centerNokhte.setWidgetVisibility(false);
   }
 
-  @observable
-  PresetTypes presetType = PresetTypes.none;
-
   @action
-  resetNokhtes(PresetTypes presetType) {
+  resetNokhtes() {
     centerNokhte.fadeIn();
     exitNokhte.setAndFadeIn(
       AuxiliaryNokhtePositions.bottom,
@@ -58,19 +53,14 @@ abstract class _SessionNavigationStoreBase extends BaseWidgetStore
   }
 
   @action
-  setup(
-    SessionScreenTypes screenType,
-    PresetTypes presetType, {
-    initSwipeReactor = true,
-  }) {
-    this.presetType = presetType;
+  setup() {
     Color color = SessionConstants.blue;
     gestureCross.cross.initStaticGlow(
       glowColor: color,
     );
     gestureCross.fadeInTheCross();
-    resetNokhtes(presetType);
-    initReactors(initSwipeReactor: initSwipeReactor);
+    resetNokhtes();
+    initReactors();
   }
 
   @action
@@ -129,13 +119,7 @@ abstract class _SessionNavigationStoreBase extends BaseWidgetStore
         }
       });
 
-  initReactors({
-    bool initSwipeReactor = true,
-  }) {
-    if (initSwipeReactor) {
-      disposers.add(swipeReactor());
-    }
-
+  initReactors() {
     disposers.add(centerNokhteReactor());
     disposers.add(exitNokhteReactor());
     disposers.add(infoNokhteReactor());
@@ -144,11 +128,7 @@ abstract class _SessionNavigationStoreBase extends BaseWidgetStore
   exitNokhteReactor() => reaction((p0) => exitNokhte.movieStatus, (p0) {
         if (p0 == MovieStatus.finished &&
             exitNokhte.movieMode == AuxiliaryNokhteMovieModes.explode) {
-          // if (presetType == PresetTypes.socratic) {
-          // Modular.to.navigate(SessionConstants.socraticSpeakingExit);
-          // } else {
           Modular.to.navigate(SessionConstants.exit);
-          // }
         }
       });
 

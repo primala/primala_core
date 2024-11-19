@@ -18,6 +18,7 @@ class SessionNavigation extends HookWidget {
   @override
   Widget build(BuildContext context) {
     useEffect(() {
+      store.setup();
       return () => store.dispose();
     }, []);
     return Observer(builder: (context) {

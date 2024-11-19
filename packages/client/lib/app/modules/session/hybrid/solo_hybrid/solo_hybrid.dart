@@ -29,65 +29,62 @@ class SessionSoloHybridScreen extends HookWidget {
             ));
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Tap(
-        store: coordinator.tap,
-        child: Swipe(
-          store: coordinator.swipe,
-          child: MultiHitStack(
-            children: [
-              FullScreen(
+      body: Swipe(
+        store: coordinator.swipe,
+        child: MultiHitStack(
+          children: [
+            Tap(
+              store: coordinator.tap,
+              child: FullScreen(
                 child: BeachWaves(
                   store: coordinator.widgets.beachWaves,
                 ),
               ),
-              HalfScreenTint(
-                store: coordinator.widgets.othersAreTalkingTint,
+            ),
+            HalfScreenTint(
+              store: coordinator.widgets.othersAreTalkingTint,
+            ),
+            BorderGlow(
+              store: coordinator.widgets.borderGlow,
+            ),
+            Center(
+              child: SmartText(
+                store: coordinator.widgets.secondarySmartText,
+                bottomPadding: .3,
+                opacityDuration: Seconds.get(1),
               ),
-              BorderGlow(
-                store: coordinator.widgets.borderGlow,
+            ),
+            RefreshBanner(
+              store: coordinator.widgets.refreshBanner,
+            ),
+            Center(
+              child: SmartText(
+                store: coordinator.widgets.primarySmartText,
+                topPadding: .3,
+                opacityDuration: Seconds.get(1),
               ),
-              Center(
-                child: SmartText(
-                  store: coordinator.widgets.secondarySmartText,
-                  bottomPadding: .3,
-                  opacityDuration: Seconds.get(1),
-                ),
+            ),
+            Rally(
+              store: coordinator.widgets.rally,
+            ),
+            PurposeBanner(
+              store: coordinator.widgets.purposeBanner,
+            ),
+            SpeakLessSmileMore(
+              store: coordinator.widgets.speakLessSmileMore,
+            ),
+            FullScreen(
+              child: TouchRipple(
+                store: coordinator.widgets.touchRipple,
               ),
-              RefreshBanner(
-                store: coordinator.widgets.refreshBanner,
-              ),
-              PurposeBanner(
-                store: coordinator.widgets.purposeBanner,
-              ),
-              Center(
-                child: SmartText(
-                  store: coordinator.widgets.primarySmartText,
-                  topPadding: .3,
-                  opacityDuration: Seconds.get(1),
-                ),
-              ),
-              Rally(
-                store: coordinator.widgets.rally,
-              ),
-              SpeakLessSmileMore(
-                store: coordinator.widgets.speakLessSmileMore,
-              ),
-              SessionNavigation(
-                store: coordinator.widgets.sessionNavigation,
-              ),
-              FullScreen(
-                child: TouchRipple(
-                  store: coordinator.widgets.touchRipple,
-                ),
-              ),
-              CollaboratorPresenceIncidentsOverlay(
-                store: coordinator.presence.incidentsOverlayStore,
-              ),
-              WifiDisconnectOverlay(
-                store: coordinator.widgets.wifiDisconnectOverlay,
-              ),
-            ],
-          ),
+            ),
+            CollaboratorPresenceIncidentsOverlay(
+              store: coordinator.presence.incidentsOverlayStore,
+            ),
+            WifiDisconnectOverlay(
+              store: coordinator.widgets.wifiDisconnectOverlay,
+            ),
+          ],
         ),
       ),
       // ),

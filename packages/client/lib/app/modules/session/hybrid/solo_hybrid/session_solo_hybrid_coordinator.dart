@@ -39,12 +39,7 @@ abstract class _SessionSoloHybridCoordinatorBase
     widgets.constructor(
       userCanSpeak: sessionMetadata.userCanSpeak,
       everyoneIsOnline: sessionMetadata.everyoneIsOnline,
-      purpose: sessionMetadata.currentPurpose,
-    );
-    widgets.sessionNavigation.setup(
-      sessionMetadata.screenType,
-      sessionMetadata.presetType,
-      initSwipeReactor: false,
+      content: sessionMetadata.content,
     );
     widgets.rally.setValues(
       fullNames: sessionMetadata.fullNames,
@@ -118,19 +113,23 @@ abstract class _SessionSoloHybridCoordinatorBase
     disposers.add(rallyReactor());
     disposers.add(glowColorReactor());
     disposers.add(secondarySpotlightReactor());
-    disposers.add(
-      widgets.sessionNavigation.swipeReactor(
-        onSwipeDown: () async {
-          widgets.refresh(() async {
-            if (presence.incidentsOverlayStore.showWidget) {
-              presence.incidentsOverlayStore.setWidgetVisibility(false);
-            }
-            await presence.dispose();
-          });
-        },
-      ),
-    );
+    disposers.add(swipeReactor());
   }
+
+  swipeReactor() => reaction((p0) => swipe.directionsType, (p0) async {
+        switch (p0) {
+          case GestureDirections.down:
+            widgets.refresh(() async {
+              if (presence.incidentsOverlayStore.showWidget) {
+                presence.incidentsOverlayStore.setWidgetVisibility(false);
+              }
+              await presence.dispose();
+            });
+
+          default:
+            break;
+        }
+      });
 
   glowColorReactor() => reaction(
         (p0) => sessionMetadata.glowColor,
@@ -229,7 +228,7 @@ abstract class _SessionSoloHybridCoordinatorBase
   currentPurposeReactor() => reaction(
         (p0) => sessionMetadata.currentPurpose,
         (p0) {
-          widgets.purposeBanner.setPurpose(p0);
+          widgets.purposeBanner.setPurpose(sessionMetadata.content);
         },
       );
 

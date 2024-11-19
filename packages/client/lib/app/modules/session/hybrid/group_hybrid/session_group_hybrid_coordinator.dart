@@ -41,11 +41,6 @@ abstract class _SessionGroupHybridCoordinatorBase
       sessionMetadata.someoneIsTakingANote,
       sessionMetadata.everyoneIsOnline,
     );
-    widgets.sessionNavigation.setup(
-      sessionMetadata.screenType,
-      sessionMetadata.presetType,
-      initSwipeReactor: false,
-    );
     initReactors();
     await presence.updateCurrentPhase(2.0);
     await onResumed();

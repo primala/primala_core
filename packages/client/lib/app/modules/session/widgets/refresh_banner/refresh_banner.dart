@@ -34,7 +34,7 @@ class RefreshBanner extends HookWidget {
                 padding: EdgeInsets.only(top: size),
                 child: Center(
                   child: Jost(
-                    "Swipe down to refresh",
+                    "Swipe down to pause",
                     fontSize: size * .3,
                   ),
                 ),

@@ -131,14 +131,4 @@ class SessionPresenceContractImpl
       return Left(FailureConstants.internetConnectionFailure);
     }
   }
-
-  @override
-  updateCurrentPurpose(newPurpose) async {
-    if (await networkInfo.isConnected) {
-      final res = await remoteSource.updateCurrentPurpose(newPurpose);
-      return fromSupabase(res);
-    } else {
-      return Left(FailureConstants.internetConnectionFailure);
-    }
-  }
 }
