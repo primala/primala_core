@@ -4,17 +4,18 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
+import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte_backend/tables/company_presets.dart';
-part 'session_refresh_coordinator.g.dart';
+part 'session_pause_coordinator.g.dart';
 
-class SessionRefreshCoordinator = _SessionRefreshCoordinatorBase
-    with _$SessionRefreshCoordinator;
+class SessionPauseCoordinator = _SessionPauseCoordinatorBase
+    with _$SessionPauseCoordinator;
 
-abstract class _SessionRefreshCoordinatorBase
+abstract class _SessionPauseCoordinatorBase
     with Store, BaseCoordinator, Reactions {
-  final SessionRefreshWidgetsCoordinator widgets;
+  final SessionPauseWidgetsCoordinator widgets;
   final TapDetector tap;
   final SessionMetadataStore sessionMetadata;
   final CaptureSessionStart captureStart;
@@ -23,7 +24,7 @@ abstract class _SessionRefreshCoordinatorBase
   @override
   final CaptureScreen captureScreen;
 
-  _SessionRefreshCoordinatorBase({
+  _SessionPauseCoordinatorBase({
     required this.captureScreen,
     required this.widgets,
     required this.captureStart,
@@ -34,10 +35,13 @@ abstract class _SessionRefreshCoordinatorBase
   }
 
   @observable
-  bool isNavigatingAway = false;
+  bool hasTapped = true;
 
   @action
   constructor() async {
+    Timer(Seconds.get(0, milli: 1), () {
+      hasTapped = false;
+    });
     widgets.constructor();
     initReactors();
     Modular.dispose<SessionLogicModule>();
@@ -55,21 +59,33 @@ abstract class _SessionRefreshCoordinatorBase
         setDisableAllTouchFeedback(true);
       },
     ));
+
     disposers.add(sessionPresetReactor());
   }
+
+  tapReactor() => reaction((p0) => tap.tapCount, (p0) async {
+        if (!hasTapped && !widgets.sessionNavigation.hasInitiatedBlur) {
+          hasTapped = true;
+          widgets.onTap();
+          Timer(Seconds.get(1), () {
+            Modular.to.navigate(
+              sessionMetadata.presetType == PresetTypes.collaborative
+                  ? SessionConstants.soloHybrid
+                  : SessionConstants.groupHybrid,
+            );
+          });
+        }
+      });
 
   sessionPresetReactor() =>
       reaction((p0) => sessionMetadata.presetsLogic.state, (p0) async {
         if (p0 == StoreState.loaded) {
-          Modular.to.navigate(
-            sessionMetadata.presetType == PresetTypes.collaborative
-                ? SessionConstants.soloHybrid
-                : SessionConstants.groupHybrid,
-          );
+          disposers.add(tapReactor());
         }
       });
 
   deconstructor() {
     dispose();
+    widgets.dispose();
   }
 }

@@ -96,7 +96,6 @@ abstract class _SessionNotesCoordinatorBase
   @action
   onSwipeUp(String param) async {
     await presence.addContent(param);
-    await presence.updateCurrentPurpose(param);
     await presence.updateCurrentPhase(3.0);
   }
 

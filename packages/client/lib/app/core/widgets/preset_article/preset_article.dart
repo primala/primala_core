@@ -45,7 +45,10 @@ class PresetArticle extends HookWidget {
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(19),
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(19),
+                              topRight: Radius.circular(19),
+                            ),
                             color: Colors.white.withOpacity(.2),
                           ),
                           height: height * 0.18,

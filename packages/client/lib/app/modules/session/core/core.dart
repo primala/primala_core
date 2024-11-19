@@ -8,7 +8,7 @@ import 'package:nokhte/app/modules/session/session.dart';
 export 'duo_greeter/duo_greeter.dart';
 export 'exit/exit.dart';
 export 'information/information.dart';
-export 'refresh/refresh.dart';
+export 'pause/pause.dart';
 export 'group_greeter/group_greeter.dart';
 export 'lobby/lobby.dart';
 export './shared/shared.dart';

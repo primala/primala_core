@@ -37,9 +37,12 @@ class SessionWidgetsModule extends Module {
       ),
     );
 
-    i.add<SessionRefreshWidgetsCoordinator>(
-      () => SessionRefreshWidgetsCoordinator(
+    i.add<SessionPauseWidgetsCoordinator>(
+      () => SessionPauseWidgetsCoordinator(
+        tint: TintStore(),
+        pauseIcon: PauseIconStore(),
         wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
+        sessionNavigation: Modular.get<SessionNavigationStore>(),
         beachWaves: BeachWavesStore(),
         // presetCard: ExpandedPresetCardsStore(),
       ),
@@ -137,7 +140,9 @@ class SessionWidgetsModule extends Module {
   injectHybrid(i) {
     i.add<SessionSoloHybridWidgetsCoordinator>(
       () => SessionSoloHybridWidgetsCoordinator(
-        purposeBanner: PurposeBannerStore(),
+        purposeBanner: PurposeBannerStore(
+          nokhteBlur: NokhteBlurStore(),
+        ),
         presenceOverlay:
             Modular.get<SessionPresenceCoordinator>().incidentsOverlayStore,
         refreshBanner: RefreshBannerStore(),
