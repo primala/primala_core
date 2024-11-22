@@ -39,7 +39,6 @@ class PurposeBanner extends HookWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    // print('Pressed');
                     store.onTap();
                   },
                   child: Container(
@@ -50,16 +49,30 @@ class PurposeBanner extends HookWidget {
                       ),
                       color: Colors.black.withOpacity(.2),
                     ),
-                    // height: height * 0.18,
                     width: width,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
+                          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                          child: Center(
+                            child: Container(
+                              height: 4,
+                              width: width * 0.15,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.8),
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            ),
+                          ),
+                        ),
+                        // Content
+                        Padding(
                           padding: EdgeInsets.only(
-                            top: height * .02,
                             left: height * .03,
-                            bottom: height * .02,
+                            right: height * .03,
+                            top: height * .01,
+                            bottom: height * .04,
                           ),
                           child: Text(
                             store.purpose,
