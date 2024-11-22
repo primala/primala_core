@@ -125,7 +125,8 @@ abstract class _SessionSoloHybridCoordinatorBase
               }
               await presence.dispose();
             });
-
+          case GestureDirections.up:
+            widgets.purposeBanner.onTap();
           default:
             break;
         }
