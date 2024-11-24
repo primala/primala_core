@@ -48,6 +48,7 @@ abstract class _SessionSoloHybridCoordinatorBase
     if (!sessionMetadata.everyoneIsOnline) {
       widgets.onCollaboratorLeft();
     }
+    widgets.purposeBanner.setAddContent(presence.addContent);
     initReactors();
     await presence.updateCurrentPhase(2.0);
     await onResumed();
@@ -227,7 +228,7 @@ abstract class _SessionSoloHybridCoordinatorBase
       );
 
   currentPurposeReactor() => reaction(
-        (p0) => sessionMetadata.currentPurpose,
+        (p0) => sessionMetadata.content.toString(),
         (p0) {
           widgets.purposeBanner.setPurpose(sessionMetadata.content);
         },

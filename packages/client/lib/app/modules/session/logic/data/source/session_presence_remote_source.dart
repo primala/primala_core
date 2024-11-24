@@ -12,7 +12,7 @@ abstract class SessionPresenceRemoteSource {
   Future<List> updateCurrentPhase(double params);
   Stream<NokhteSessionMetadata> listenToSessionMetadata();
   Future<bool> cancelSessionMetadataStream();
-  Future<List> addContent(String content);
+  Future<List> addContent(AddContentParams content);
   Future<List> letEmCook();
   Future<List> rally(
     RallyParams params,
@@ -68,7 +68,10 @@ class SessionPresenceRemoteSourceImpl implements SessionPresenceRemoteSource {
   completeTheSession() async => await rtQueries.completeTheSession();
 
   @override
-  addContent(content) async => await rtQueries.addContent(content);
+  addContent(param) async => await rtQueries.addContent(
+        param.content,
+        insertionIndex: param.insertAt,
+      );
 
   @override
   startTheSession() async => await rtQueries.beginSession();

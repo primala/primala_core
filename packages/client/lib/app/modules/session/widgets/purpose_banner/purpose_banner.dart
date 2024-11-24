@@ -6,7 +6,7 @@ import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'purpose_banner.dart';
-export 'purpose_banner.dart';
+export 'widgets/widgets.dart';
 export 'purpose_banner_store.dart';
 
 class PurposeBanner extends HookWidget {
