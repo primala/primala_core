@@ -81,6 +81,8 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
           purpose.isEmpty) {
         setWidgetVisibility(false);
       }
+    } else {
+      setWidgetVisibility(false);
     }
     Timer(Seconds.get(0, milli: 500), () {
       if (content.isEmpty) {
