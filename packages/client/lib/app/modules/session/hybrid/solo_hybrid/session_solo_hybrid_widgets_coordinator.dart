@@ -149,7 +149,6 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   onHold(GesturePlacement holdPosition) {
     initSpeaking(holdPosition, onHold: () {
       setSmartTextVisibilities(false);
-      purposeBanner.setWidgetVisibility(false);
     });
   }
 
@@ -209,8 +208,6 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   @action
   onLetGoCompleted() {
     refreshBanner.setWidgetVisibility(true);
-    purposeBanner.setWidgetVisibility(true);
-
     resetSpeakingVariables();
 
     isASecondarySpeaker = false;
@@ -246,7 +243,6 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
     required DateTime startTime,
     required String initiatorFullName,
   }) {
-    purposeBanner.setWidgetVisibility(false);
     speakingTimerStart = startTime;
     isASecondarySpeaker = true;
     refreshBanner.setWidgetVisibility(false);

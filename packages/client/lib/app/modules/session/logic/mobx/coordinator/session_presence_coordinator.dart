@@ -85,7 +85,7 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
   }
 
   @action
-  addContent(String params) async {
+  addContent(AddContentParams params) async {
     final res = await contract.addContent(params);
     res.fold(
       (failure) => errorUpdater(failure),

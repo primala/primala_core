@@ -51,9 +51,11 @@ abstract class _SessionPauseWidgetsCoordinatorBase
     disposers.add(
       sessionNavigation.swipeReactor(
         onSwipeUp: () {
+          if (!sessionNavigation.hasInitiatedBlur) return;
           tint.reverseMovie(const NoParams());
         },
         onSwipeDown: () {
+          if (!sessionNavigation.hasInitiatedBlur) return;
           tint.reverseMovie(const NoParams());
         },
       ),
