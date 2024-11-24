@@ -74,12 +74,20 @@ class RTActiveNokhteSessionQueries extends ActiveNokhteSessionEdgeFunctions
     return [];
   }
 
-  Future<List> addContent(String content) async {
+  Future<List> addContent(
+    String content, {
+    int insertionIndex = -1,
+  }) async {
     await computeCollaboratorInformation();
     final contentRes = await getContent();
     final currentContent = contentRes.mainType;
     final currentVersion = contentRes.currentVersion;
-    currentContent.add(content);
+
+    if (insertionIndex == -1) {
+      currentContent.add(content);
+    } else {
+      currentContent.insert(insertionIndex, content);
+    }
 
     return await retry<List>(
       action: () async {
