@@ -7,6 +7,7 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:nokhte/app/modules/home/home/home.dart';
 import 'package:nokhte/app/modules/session/constants/constants.dart';
 import 'package:nokhte/app/modules/session_joiner/session_joiner.dart';
 import 'package:nokhte/app/modules/session_starters/session_starters.dart';
@@ -36,6 +37,7 @@ abstract class _HomeWidgetsCoordinatorBase
   SwipeGuideStore swipeGuides;
   final NokhteBlurStore nokhteBlur;
   final GestureCrossStore gestureCross;
+  final NavigationCarouselStore navigationCarousel;
   final SmartTextStore smartText;
   final SmartTextStore gestureCrossSmartText;
   @override
@@ -50,6 +52,7 @@ abstract class _HomeWidgetsCoordinatorBase
   _HomeWidgetsCoordinatorBase({
     required this.nokhteBlur,
     required this.beachWaves,
+    required this.navigationCarousel,
     required this.wifiDisconnectOverlay,
     required this.gestureCross,
     required this.smartText,
