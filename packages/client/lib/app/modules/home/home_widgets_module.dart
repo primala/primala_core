@@ -24,12 +24,15 @@ class HomeWidgetsModule extends Module {
         beachWaves: BeachWavesStore(),
       ),
     );
+    i.addSingleton<BeachWavesStore>(
+      () => BeachWavesStore(),
+    );
     i.add<HomeWidgetsCoordinator>(
       () => HomeWidgetsCoordinator(
         swipeGuides: SwipeGuideStore(),
         nokhteBlur: NokhteBlurStore(),
         smartText: SmartTextStore(),
-        beachWaves: BeachWavesStore(),
+        beachWaves: Modular.get<BeachWavesStore>(),
         wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
         gestureCross: Modular.get<GestureCrossStore>(),
         centerNokhte: CenterNokhteStore(),
@@ -38,6 +41,11 @@ class HomeWidgetsModule extends Module {
         sessionJoinerNokhte: AuxiliaryNokhteStore(),
         storageNokhte: AuxiliaryNokhteStore(),
         gestureCrossSmartText: SmartTextStore(),
+        navigationCarousel: NavigationCarouselStore(
+          tint: TintStore(),
+          swipe: SwipeDetector(),
+          beachWaves: Modular.get<BeachWavesStore>(),
+        ),
       ),
     );
     i.add<NeedsUpdateWidgetsCoordinator>(
