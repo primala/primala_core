@@ -7,3 +7,4 @@ export 'custom_duration.dart';
 export 'duration_and_gradient.dart';
 export 'sand_types.dart';
 export 'water_direction.dart';
+export 'gradient_config.dart';
