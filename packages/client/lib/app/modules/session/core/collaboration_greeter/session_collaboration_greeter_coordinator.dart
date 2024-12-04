@@ -7,7 +7,6 @@ import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte_backend/tables/_real_time_disabled/company_presets/queries.dart';
 part 'session_collaboration_greeter_coordinator.g.dart';
 
 class SessionCollaborationGreeterCoordinator = _SessionCollaborationGreeterCoordinatorBase
@@ -77,11 +76,7 @@ abstract class _SessionCollaborationGreeterCoordinatorBase
   rippleCompletionStatusReactor() =>
       reaction((p0) => widgets.touchRipple.movieStatus, (p0) {
         if (p0 == MovieStatus.finished) {
-          widgets.route(
-            isACollaborativeSession:
-                sessionMetadata.presetType == PresetTypes.collaborative,
-          );
-          // Modular.to.navigate(route);
+          widgets.route(isACollaborativeSession: true);
         }
       });
 

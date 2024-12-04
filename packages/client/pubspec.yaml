@@ -74,6 +74,7 @@ flutter:
     - assets/home_beach_icon.png
     - assets/end_session_icon.png
     - assets/session_information_icon.png
+    - assets/pause_icon.png
 flutter_icons:
   image_path: "assets/app_logo.png"
   android: true
