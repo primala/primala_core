@@ -152,6 +152,7 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   onHold(GesturePlacement holdPosition) {
     initSpeaking(holdPosition, onHold: () {
       setSmartTextVisibilities(false);
+      navigationMenu.setWidgetVisibility(false);
     });
   }
 
@@ -199,18 +200,18 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   @action
   onSomeoneElseIsTalking() {
     othersAreTalkingTint.reverseMovie(const NoParams());
-    refreshBanner.setWidgetVisibility(false);
+    navigationMenu.setWidgetVisibility(false);
   }
 
   @action
   onSomeoneElseIsDoneTalking() {
     othersAreTalkingTint.initMovie(const NoParams());
-    refreshBanner.setWidgetVisibility(true);
+    navigationMenu.setWidgetVisibility(true);
   }
 
   @action
   onLetGoCompleted() {
-    refreshBanner.setWidgetVisibility(true);
+    navigationMenu.setWidgetVisibility(true);
     resetSpeakingVariables();
 
     isASecondarySpeaker = false;
@@ -224,6 +225,7 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   @action
   initFullScreenNotes() {
     baseInitFullScreenNotes(() {
+      navigationMenu.setWidgetVisibility(false);
       setSmartTextVisibilities(false);
       purposeBanner.setWidgetVisibility(false);
       othersAreTalkingTint.reverseMovie(const NoParams());
@@ -248,7 +250,7 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   }) {
     speakingTimerStart = startTime;
     isASecondarySpeaker = true;
-    refreshBanner.setWidgetVisibility(false);
+    navigationMenu.setWidgetVisibility(false);
     sessionNavigation.setWidgetVisibility(false);
     rally.setCurrentInitiator(initiatorFullName);
     beachWaves.setMovieMode(

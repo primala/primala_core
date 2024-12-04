@@ -44,6 +44,7 @@ abstract class _SessionPauseCoordinatorBase
     });
     widgets.constructor();
     initReactors();
+    await presence.dispose();
     Modular.dispose<SessionLogicModule>();
     await presence.listen();
   }
