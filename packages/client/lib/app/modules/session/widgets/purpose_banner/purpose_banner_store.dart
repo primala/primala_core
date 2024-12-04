@@ -11,8 +11,6 @@ import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 import 'package:simple_animations/simple_animations.dart';
-
-import 'widgets/widgets.dart';
 part 'purpose_banner_store.g.dart';
 
 class PurposeBannerStore = _PurposeBannerStoreBase with _$PurposeBannerStore;

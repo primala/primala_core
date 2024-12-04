@@ -29,7 +29,7 @@ abstract class _NokhteBlurStoreBase extends BaseWidgetStore with Store {
       ),
     );
     setMovieStatus(MovieStatus.inProgress);
-    setControl(Control.playFromStart);
+    setControl(Control.play);
   }
 
   @action
@@ -42,6 +42,6 @@ abstract class _NokhteBlurStoreBase extends BaseWidgetStore with Store {
   reverse() {
     hasBlurredIn = false;
     setMovieStatus(MovieStatus.inProgress);
-    setControl(Control.playReverseFromEnd);
+    setControl(Control.playReverse);
   }
 }

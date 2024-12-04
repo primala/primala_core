@@ -14,3 +14,5 @@ export 'swipe_guide/swipe_guide.dart';
 export 'smart_text/smart_text.dart';
 export './tint/tint.dart';
 export 'touch_ripple/touch_ripple.dart';
+export 'navigation_menu/navigation_menu.dart';
+export 'modules.dart';

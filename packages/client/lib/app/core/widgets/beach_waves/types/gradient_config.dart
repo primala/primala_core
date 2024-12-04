@@ -11,6 +11,8 @@ class GradientConfig {
   }) : assert(colors.length == stops.length,
             'Colors and stops must have the same length');
 
+  factory GradientConfig.empty() => GradientConfig(colors: [], stops: []);
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

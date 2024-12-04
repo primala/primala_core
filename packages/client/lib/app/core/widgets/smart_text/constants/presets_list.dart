@@ -8,4 +8,12 @@ class PresetsLists {
       mainFontSize: 45.0,
     ),
   ];
+
+  static List<RotatingTextData> playlistsHeader = [
+    RotatingTextData(
+      text: "Playlists",
+      pauseHere: true,
+      mainFontSize: 45.0,
+    ),
+  ];
 }

@@ -4,13 +4,17 @@ import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/core/modules/user_metadata/user_metadata.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:nokhte/app/modules/presets/presets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
+import 'package:nokhte/app/modules/session_starters/session_starters.dart';
 export 'duo_greeter/duo_greeter.dart';
 export 'exit/exit.dart';
 export 'information/information.dart';
 export 'pause/pause.dart';
 export 'group_greeter/group_greeter.dart';
 export 'lobby/lobby.dart';
+export 'playlists/playlists.dart';
+export 'presets/presets.dart';
 export './shared/shared.dart';
 export 'trial_greeter/trial_greeter.dart';
 export 'socratic_speaking_exit/socratic_speaking_exit.dart';
@@ -23,6 +27,9 @@ class SessionCoreModule extends Module {
         PosthogModule(),
         SessionLogicModule(),
         UserMetadataModule(),
+        UserInformationModule(),
+        SessionStartersLogicModule(),
+        PresetsModule(),
         UserInformationModule(),
       ];
 
@@ -38,10 +45,29 @@ class SessionCoreModule extends Module {
       ),
     );
 
+    i.add<SessionPresetsCoordinator>(
+      () => SessionPresetsCoordinator(
+        userInfo: Modular.get<UserInformationCoordinator>(),
+        starterLogic: Modular.get<SessionStartersLogicCoordinator>(),
+        captureScreen: Modular.get<CaptureScreen>(),
+        presetsLogic: Modular.get<PresetsLogicCoordinator>(),
+        tap: TapDetector(),
+        widgets: Modular.get<SessionPresetsWidgetsCoordinator>(),
+      ),
+    );
+
+    i.add<SessionPlaylistsCoordinator>(
+      () => SessionPlaylistsCoordinator(
+        captureScreen: Modular.get<CaptureScreen>(),
+        tap: TapDetector(),
+        widgets: Modular.get<SessionPlaylistsWidgetsCoordinator>(),
+      ),
+    );
+
     i.add<SessionLobbyCoordinator>(
       () => SessionLobbyCoordinator(
         captureStart: Modular.get<CaptureSessionStart>(),
-        userMetadata: Modular.get<UserMetadataCoordinator>(),
+        starterLogic: Modular.get<SessionStartersLogicCoordinator>(),
         presence: Modular.get<SessionPresenceCoordinator>(),
         captureScreen: Modular.get<CaptureScreen>(),
         tap: TapDetector(),
@@ -109,6 +135,22 @@ class SessionCoreModule extends Module {
       transition: TransitionType.noTransition,
       child: (context) => SocraticSpeakingExitScreen(
         coordinator: Modular.get<SocraticSpeakingExitCoordinator>(),
+      ),
+    );
+
+    r.child(
+      SessionConstants.relativePresets,
+      transition: TransitionType.noTransition,
+      child: (context) => SessionPresetsScreen(
+        coordinator: Modular.get<SessionPresetsCoordinator>(),
+      ),
+    );
+
+    r.child(
+      SessionConstants.relativePlaylists,
+      transition: TransitionType.noTransition,
+      child: (context) => SessionPlaylistsScreen(
+        coordinator: Modular.get<SessionPlaylistsCoordinator>(),
       ),
     );
 

@@ -49,6 +49,11 @@ class STActiveNokhteSessionQueries extends ActiveNokhteSessionEdgeFunctions
       if (presetType == PresetTypes.none) {
         preferredPreset =
             await userInformationQueries.getPreferredPresetUID() ?? '';
+        if (preferredPreset.isEmpty) {
+          preferredPreset = (await companyPresetsQueries.select(
+                  type: PresetTypes.collaborative))
+              .first[CompanyPresetsQueries.UID];
+        }
       } else {
         preferredPreset = (await companyPresetsQueries.select(
           type: presetType,

@@ -7,6 +7,7 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/home/home.dart';
+import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte/app/modules/session_joiner/session_joiner.dart';
 import 'package:nokhte/app/modules/session_starters/constants/constants.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
@@ -30,6 +31,9 @@ abstract class _QuickActionsRouterWidgetsCoordinatorBase
   @observable
   bool shouldRotate = false;
 
+  @observable
+  bool needsUpdate = false;
+
   @action
   setShowBeachWaves(bool value) => showBeachWaves = value;
 
@@ -43,15 +47,15 @@ abstract class _QuickActionsRouterWidgetsCoordinatorBase
     if (hasReceivedRoutingArgs) {
       final args = Modular.args.data[HomeConstants.QUICK_ACTIONS_ROUTE];
       if (args == SessionStarterConstants.sessionStarter) {
-        shouldRotate = true;
-        beachWaves.setMovieMode(BeachWaveMovieModes.anyToOnShore);
-        beachWaves.currentStore.initMovie(
-          const AnyToOnShoreParams(
-            startingColors: WaterColorsAndStops.simpleInvertedBeachWater,
-            endingColors: WaterColorsAndStops.invertedBeachWater,
-            endValue: -5.0,
-          ),
-        );
+        beachWaves.setMovieMode(BeachWaveMovieModes.deepSeaToSky);
+        Timer(Seconds.get(1), () {
+          Modular.to.navigate(
+            SessionConstants.lobby,
+            arguments: {
+              SessionConstants.isTheHost: true,
+            },
+          );
+        });
       } else if (args == SessionJoinerConstants.sessionJoiner) {
         shouldRotate = true;
         beachWaves.setMovieMode(BeachWaveMovieModes.emptyTheOcean);
@@ -63,6 +67,24 @@ abstract class _QuickActionsRouterWidgetsCoordinatorBase
         Timer(Seconds.get(1), () {
           Modular.to.navigate(StorageConstants.home);
         });
+      } else if (args == SessionConstants.information) {
+        beachWaves.setMovieMode(BeachWaveMovieModes.halfAndHalfToDrySand);
+        Timer(Seconds.get(1), () {
+          Modular.to.navigate(SessionConstants.information);
+        });
+      } else if (args == SessionConstants.exit) {
+        beachWaves.setMovieMode(BeachWaveMovieModes.skyToDrySand);
+        Timer(Seconds.get(1), () {
+          Modular.to.navigate(SessionConstants.exit);
+        });
+      } else if (args == HomeConstants.home) {
+        beachWaves.setMovieMode(BeachWaveMovieModes.anyToOnShore);
+        beachWaves.currentStore.initMovie(
+          const AnyToOnShoreParams(
+            startingColors: WaterColorsAndStops.onShoreWater,
+            endValue: -5.0,
+          ),
+        );
       }
     }
     showBeachWaves = true;
@@ -71,6 +93,7 @@ abstract class _QuickActionsRouterWidgetsCoordinatorBase
 
   @action
   needsToUpdateConstructor() {
+    needsUpdate = true;
     beachWaves.setMovieMode(BeachWaveMovieModes.anyToOnShore);
     beachWaves.currentStore.initMovie(
       const AnyToOnShoreParams(
@@ -86,10 +109,10 @@ abstract class _QuickActionsRouterWidgetsCoordinatorBase
   beachWavesMovieStatusReactor() =>
       reaction((p0) => beachWaves.movieStatus, (p0) {
         if (p0 == MovieStatus.finished) {
-          if (shouldRotate) {
-            Modular.to.navigate(SessionStarterConstants.sessionStarter);
-          } else {
+          if (needsUpdate) {
             Modular.to.navigate(HomeConstants.needsToUpdate);
+          } else {
+            Modular.to.navigate(HomeConstants.home);
           }
         }
       });

@@ -31,7 +31,7 @@ abstract class _SettingsWidgetsCoordinatorBase
 
   @action
   constructor() {
-    beachWaves.setMovieMode(BeachWaveMovieModes.deeperBlueToBlackOut);
+    beachWaves.setMovieMode(BeachWaveMovieModes.invertedDeeperBlueToDeepSea);
     primarySmartText.setMessagesData(SettingsLists.header);
     secondarySmartText.setMessagesData(SettingsLists.question);
     primarySmartText.startRotatingText();

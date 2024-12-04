@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/types/seconds.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:nokhte/app/modules/session_starters/session_starters_widgets.dart';
 import 'package:simple_animations/simple_animations.dart';
 export 'movies/movies.dart';
 export 'icons/icons.dart';
@@ -58,7 +59,11 @@ class PresetsCards extends HookWidget {
           tween: store.movies[i],
           duration: store.movies[i].duration,
           control: store.controls[i],
-          onCompleted: () => store.onAnimationCompleted(i),
+          onCompleted: () {
+            if (store.controls[i] == Control.stop) return;
+            store.onAnimationCompleted(i);
+          },
+          
           builder: (context, value, child) {
             if (i == store.currentHeldIndex) {
               store.setSelectedPresetColors(
@@ -130,24 +135,29 @@ class PresetsCards extends HookWidget {
       builder: (context) => AnimatedOpacity(
         opacity: useWidgetOpacity(store.showWidget),
         duration: Seconds.get(1),
-        child: Padding(
-          padding: EdgeInsets.only(top: height * 0.12),
-          child: ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: store.names.length, // Add an extra item for padding
-            itemBuilder: (_, i) {
-              return Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: useScaledSize(
-                    baseValue: 0.013,
-                    screenSize: size,
-                    bumpPerHundredth: 0,
-                  ),
-                ),
-                child: buildTile(store.names[i], height, width, size),
-              );
-            },
-          ),
+        child: MultiHitStack(
+          children: [
+            const PresetKey(),
+            Padding(
+              padding: EdgeInsets.only(top: height * 0.12),
+              child: ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: store.names.length, // Add an extra item for padding
+                itemBuilder: (_, i) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: useScaledSize(
+                        baseValue: 0.013,
+                        screenSize: size,
+                        bumpPerHundredth: 0,
+                      ),
+                    ),
+                    child: buildTile(store.names[i], height, width, size),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );

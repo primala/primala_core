@@ -1,6 +1,5 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
-import 'package:nokhte/app/core/widgets/modules.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'home.dart';
 
@@ -24,27 +23,15 @@ class HomeWidgetsModule extends Module {
         beachWaves: BeachWavesStore(),
       ),
     );
-    i.addSingleton<BeachWavesStore>(
-      () => BeachWavesStore(),
-    );
     i.add<HomeWidgetsCoordinator>(
       () => HomeWidgetsCoordinator(
         swipeGuides: SwipeGuideStore(),
-        nokhteBlur: NokhteBlurStore(),
-        smartText: SmartTextStore(),
-        beachWaves: Modular.get<BeachWavesStore>(),
         wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
-        gestureCross: Modular.get<GestureCrossStore>(),
-        centerNokhte: CenterNokhteStore(),
-        sessionStarterNokhte: AuxiliaryNokhteStore(),
-        deactivateNokhte: AuxiliaryNokhteStore(),
-        sessionJoinerNokhte: AuxiliaryNokhteStore(),
-        storageNokhte: AuxiliaryNokhteStore(),
-        gestureCrossSmartText: SmartTextStore(),
-        navigationCarousel: NavigationCarouselStore(
+        navigationMenu: NavigationMenuStore(
+          blur: NokhteBlurStore(),
           tint: TintStore(),
           swipe: SwipeDetector(),
-          beachWaves: Modular.get<BeachWavesStore>(),
+          beachWaves: BeachWavesStore(),
         ),
       ),
     );

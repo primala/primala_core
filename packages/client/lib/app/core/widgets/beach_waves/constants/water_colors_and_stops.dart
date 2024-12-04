@@ -13,6 +13,17 @@ class WaterColorsAndStops {
     ColorAndStop(Color(0xFF51A18D), 1.00),
   ];
 
+  static const List<ColorAndStop> translucent = [
+    ColorAndStop(Color(0x00122430), 0),
+    ColorAndStop(Color(0x001D3741), .1563),
+    ColorAndStop(Color(0x00214147), .3111),
+    ColorAndStop(Color(0x00274D4F), .4583),
+    ColorAndStop(Color(0x00326562), .5885),
+    ColorAndStop(Color(0x003E8077), .7240),
+    ColorAndStop(Color(0x00499384), .8438),
+    ColorAndStop(Color(0x0051A18D), 1.00),
+  ];
+
   static const List<ColorAndStop> blackOut = [
     ColorAndStop(Color(0xFF000000), 0),
     ColorAndStop(Color(0xFF000000), 0),
@@ -22,6 +33,17 @@ class WaterColorsAndStops {
     ColorAndStop(Color(0xFF000000), 0),
     ColorAndStop(Color(0xFF000000), 0),
     ColorAndStop(Color(0xFF000000), 0),
+  ];
+
+  static const List<ColorAndStop> playlistColorway = [
+    ColorAndStop(Color(0xFF0C6CA3), 0),
+    ColorAndStop(Color(0xFF088DC4), 0.1),
+    ColorAndStop(Color(0xFF03B1E8), 0.3),
+    ColorAndStop(Color(0xFF00C8FF), 0.6),
+    ColorAndStop(Color(0xFF1ADEFF), 1.0),
+    ColorAndStop(Color(0xFF1ADEFF), 1.0),
+    ColorAndStop(Color(0xFF1ADEFF), 1.0),
+    ColorAndStop(Color(0xFF1ADEFF), 1.0),
   ];
 
   static const List<ColorAndStop> oceanDiveWater = [
