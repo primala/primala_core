@@ -2,12 +2,9 @@ export 'home_coordinator.dart';
 export 'home_widgets_coordinator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
-import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/home/home.dart';
-export 'widgets/widgets.dart';
 
 class HomeScreen extends HookWidget {
   final HomeCoordinator coordinator;
@@ -26,85 +23,17 @@ class HomeScreen extends HookWidget {
       resizeToAvoidBottomInset: false,
       body: Tap(
         store: coordinator.tap,
-        child: Swipe(
-          store: coordinator.swipe,
-          child: MultiHitStack(
-            children: [
-              FullScreen(
-                child: BeachWaves(
-                  store: coordinator.widgets.beachWaves,
-                ),
-              ),
-              FullScreen(
-                child: NokhteBlur(
-                  store: coordinator.widgets.nokhteBlur,
-                ),
-              ),
-              Observer(builder: (context) {
-                return Center(
-                  child: SmartText(
-                    store: coordinator.widgets.smartText,
-                    topBump: 0.000,
-                    bottomPadding:
-                        coordinator.widgets.smartTextBottomPaddingScalar,
-                    bottomBump: .004,
-                    opacityDuration: Seconds.get(1),
-                  ),
-                );
-              }),
-              NavigationCarousel(
-                store: coordinator.widgets.navigationCarousel,
-              ),
-              Center(
-                child: SmartText(
-                  store: coordinator.widgets.gestureCrossSmartText,
-                  topPadding: .6,
-                  topBump: 0.0005,
-                  opacityDuration: Seconds.get(1),
-                ),
-              ),
-              // GestureCross(
-              //   showGlowAndOutline: true,
-              //   config: GestureCrossConfiguration(
-              //     top: Right(EmptySpace()),
-              //     right: Right(EmptySpace()),
-              //     bottom: Right(EmptySpace()),
-              //     left: Right(EmptySpace()),
-              //   ),
-              //   store: coordinator.widgets.gestureCross,
-              // ),
-              // SwipeGuide(
-              //   store: coordinator.widgets.swipeGuides,
-              //   orientations: const [
-              //     SwipeGuideOrientation.top,
-              //     SwipeGuideOrientation.bottom,
-              //     SwipeGuideOrientation.right,
-              //     SwipeGuideOrientation.left,
-              //   ],
-              // ),
-              // CenterNokhte(
-              //   store: coordinator.widgets.centerNokhte,
-              // ),
-              // AuxiliaryNokhte(
-              //   store: coordinator.widgets.sessionStarterNokhte,
-              // ),
-              // AuxiliaryNokhte(
-              //   store: coordinator.widgets.deactivateNokhte,
-              // ),
-              // AuxiliaryNokhte(
-              //   store: coordinator.widgets.sessionJoinerNokhte,
-              // ),
-              // AuxiliaryNokhte(
-              //   store: coordinator.widgets.storageNokhte,
-              // ),
-              WifiDisconnectOverlay(
-                store: coordinator.widgets.wifiDisconnectOverlay,
-              ),
-            ],
-          ),
+        child: MultiHitStack(
+          children: [
+            NavigationMenu(
+              store: coordinator.widgets.navigationMenu,
+            ),
+            WifiDisconnectOverlay(
+              store: coordinator.widgets.wifiDisconnectOverlay,
+            ),
+          ],
         ),
       ),
-      // ),
     );
   }
 }

@@ -42,6 +42,9 @@ abstract class _PresetArticleStoreBase extends BaseWidgetStore with Store {
   bool showPreview = false;
 
   @observable
+  bool renderPreview = false;
+
+  @observable
   bool hasAdjustedSessionPreferences = false;
 
   @observable
@@ -52,6 +55,9 @@ abstract class _PresetArticleStoreBase extends BaseWidgetStore with Store {
 
   @action
   setCurrentPosition(double position) => currentPosition = position;
+
+  @action
+  setRenderPreview(bool value) => renderPreview = value;
 
   @action
   reset() {
@@ -105,7 +111,6 @@ abstract class _PresetArticleStoreBase extends BaseWidgetStore with Store {
     Function? onClose,
   }) async {
     setPreset(preset, activeIndex: activeIndex);
-
     if (!showWidget) {
       setWidgetVisibility(true);
       nokhteBlur.init(

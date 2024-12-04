@@ -90,6 +90,10 @@ class PurposeWithConclusions extends StatelessWidget {
                 right: 16.0,
                 top: 8.0,
               ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 5,
+                vertical: 3,
+              ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16.0),
                 border: const GradientBoxBorder(

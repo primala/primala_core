@@ -4,7 +4,6 @@ import 'package:nokhte/app/core/modules/clean_up_collaboration_artifacts/clean_u
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
-import 'package:nokhte/app/core/widgets/modules.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/monetize/session_paywall/session_paywall.dart';
 import 'package:nokhte/app/modules/session/session.dart';

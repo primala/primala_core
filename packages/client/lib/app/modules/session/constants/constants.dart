@@ -8,6 +8,8 @@ mixin SessionConstants {
     Color(0xFF39FF18),
   ];
 
+  static const isTheHost = 'isTheHost';
+
   static const shouldRefreshStream = 'shouldRefreshStream';
 
   static const module = '/session';
@@ -16,6 +18,7 @@ mixin SessionConstants {
   static const coreModule = '/core';
 
   static const relativeSocraticSpeakingExit = '/socratic_speaking_exit';
+  static const relativePresets = '/presets';
   static const relativeLobby = '/lobby';
   static const relativeInformation = '/info';
   static const relativePause = '/pause';
@@ -25,6 +28,7 @@ mixin SessionConstants {
   static const relativeCollaborationGreeter = '/collaboration_greeter';
   static const relativeTrialGreeter = '/trial_greeter';
   static const relativeExit = '/exit';
+  static const relativePlaylists = '/playlists';
 
   static const relativeNotes = '/notes';
 
@@ -46,7 +50,8 @@ mixin SessionConstants {
   static const groupGreeter = '$module$coreModule$relativeGroupGreeter';
   static const trialGreeter = '$module$coreModule$relativeTrialGreeter';
   static const exit = '$module$coreModule$relativeExit';
-
+  static const presets = '$module$coreModule$relativePresets';
+  static const playlists = '$module$coreModule$relativePlaylists';
   static const hybridModule = '/hybrid';
 
   static const relativeGroupHybrid = '/group_hybrid';

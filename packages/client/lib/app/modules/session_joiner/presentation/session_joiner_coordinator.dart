@@ -1,9 +1,7 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
-import 'dart:async';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
-import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte/app/modules/session_joiner/session_joiner.dart';
@@ -49,7 +47,6 @@ abstract class _SessionJoinerCoordinatorBase
   }
 
   initReactors() {
-    disposers.add(swipeReactor());
     disposers.addAll(widgets.wifiDisconnectOverlay.initReactors(
       onQuickConnected: () => setDisableAllTouchFeedback(false),
       onLongReConnected: () {
@@ -61,12 +58,9 @@ abstract class _SessionJoinerCoordinatorBase
         widgets.setIsDisconnected(true);
       },
     ));
-    disposers.add(tapReactor());
     disposers.add(qrCodeScannerReactor());
     disposers.add(hasFoundTheSessionReactor());
   }
-
-  swipeReactor() => reaction((p0) => swipe.directionsType, (p0) => onSwipe(p0));
 
   qrCodeScannerReactor() =>
       reaction((p0) => widgets.qrScanner.mostRecentScannedUID, (p0) async {
@@ -82,28 +76,6 @@ abstract class _SessionJoinerCoordinatorBase
           widgets.enterSession();
           setDisableAllTouchFeedback(true);
         }
-      });
-
-  @action
-  onSwipe(GestureDirections direction) {
-    if (!isNavigatingAway) {
-      switch (direction) {
-        case GestureDirections.up:
-          ifTouchIsNotDisabled(() {
-            if (!logic.hasFoundNokhteSession) {
-              widgets.onSwipeUp();
-            }
-          });
-        default:
-          break;
-      }
-    }
-  }
-
-  tapReactor() => reaction((p0) => tap.tapCount, (p0) {
-        ifTouchIsNotDisabled(() {
-          widgets.onTap();
-        });
       });
 
   deconstructor() async {

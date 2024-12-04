@@ -1,14 +1,16 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
+import 'package:dartz/dartz.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/extensions/extensions.dart';
+import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mixins/mixin.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
-import 'package:nokhte/app/core/modules/user_metadata/user_metadata.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
+import 'package:nokhte/app/modules/session_starters/session_starters.dart';
 import 'package:nokhte_backend/tables/company_presets.dart';
 part 'session_lobby_coordinator.g.dart';
 
@@ -25,7 +27,7 @@ abstract class _SessionLobbyCoordinatorBase
         SessionPresence {
   final SessionLobbyWidgetsCoordinator widgets;
   final TapDetector tap;
-  final UserMetadataCoordinator userMetadata;
+  final SessionStartersLogicCoordinator starterLogic;
   final CaptureSessionStart captureStart;
   @override
   final SessionPresenceCoordinator presence;
@@ -38,8 +40,8 @@ abstract class _SessionLobbyCoordinatorBase
     required this.widgets,
     required this.captureStart,
     required this.tap,
+    required this.starterLogic,
     required this.presence,
-    required this.userMetadata,
     required this.captureScreen,
   }) : sessionMetadata = presence.sessionMetadataStore {
     initBaseCoordinatorActions();
@@ -50,7 +52,17 @@ abstract class _SessionLobbyCoordinatorBase
   @action
   constructor() async {
     widgets.constructor();
-    await presence.listen();
+    disposers.add(sessionInitializationReactor());
+    if (hasReceivedRoutingArgs) {
+      await starterLogic.initialize(const Left(NoParams()));
+    } else {
+      widgets.navigationMenu.setWidgetVisibility(false);
+      await presence.listen();
+    }
+    print('number of collaborators ${sessionMetadata.numberOfCollaborators}');
+    if (sessionMetadata.numberOfCollaborators.isGreaterThan(1)) {
+      widgets.navigationMenu.setWidgetVisibility(false);
+    }
     initReactors();
     await captureScreen(SessionConstants.lobby);
   }
@@ -80,11 +92,13 @@ abstract class _SessionLobbyCoordinatorBase
     disposers.add(widgets.beachWavesMovieStatusReactor(enterGreeter));
     disposers.add(presetArticleTapReactor());
     disposers.add(sessionPresetReactor());
+    disposers.add(numberOfCollaboratorsReactor());
   }
 
   @action
   onOpen() async {
     await presence.updateCurrentPhase(0.0);
+    widgets.navigationMenu.setWidgetVisibility(false);
     widgets.qrCode.setWidgetVisibility(false);
     widgets.primarySmartText.setWidgetVisibility(false);
   }
@@ -93,6 +107,9 @@ abstract class _SessionLobbyCoordinatorBase
   onClose() async {
     await presence.updateCurrentPhase(1.0);
     widgets.qrCode.setWidgetVisibility(true);
+    if (hasReceivedRoutingArgs) {
+      widgets.navigationMenu.setWidgetVisibility(true);
+    }
     widgets.primarySmartText.setWidgetVisibility(true);
   }
 
@@ -102,6 +119,13 @@ abstract class _SessionLobbyCoordinatorBase
           widgets.onCanStartTheSession();
         } else {
           widgets.onRevertCanStartSession();
+        }
+      });
+
+  numberOfCollaboratorsReactor() =>
+      reaction((p0) => sessionMetadata.numberOfCollaborators, (p0) {
+        if (p0.isGreaterThan(1)) {
+          widgets.navigationMenu.setWidgetVisibility(false);
         }
       });
 
@@ -119,6 +143,7 @@ abstract class _SessionLobbyCoordinatorBase
 
   presetArticleTapReactor() =>
       reaction((p0) => widgets.presetArticle.tapCount, (p0) {
+        if (widgets.navigationMenu.swipeUpBannerVisibility) return;
         widgets.presetArticle.showBottomSheet(
           sessionMetadata.presetEntity,
           onOpen: onOpen,
@@ -134,9 +159,9 @@ abstract class _SessionLobbyCoordinatorBase
       onClose: onClose,
     );
     widgets.onQrCodeReady(sessionMetadata.leaderUID);
-    if (!hasReceivedRoutingArgs) {
-      widgets.qrCode.setWidgetVisibility(false);
-    }
+    // if (!hasReceivedRoutingArgs) {
+    //   widgets.qrCode.setWidgetVisibility(false);
+    // }
   }
 
   tapReactor() => reaction(
@@ -156,6 +181,13 @@ abstract class _SessionLobbyCoordinatorBase
           }
         }),
       );
+
+  sessionInitializationReactor() =>
+      reaction((p0) => starterLogic.hasInitialized, (p0) async {
+        if (p0) {
+          await presence.listen();
+        }
+      });
 
   sessionStartReactor() =>
       reaction((p0) => sessionMetadata.sessionHasBegun, (p0) {
@@ -180,7 +212,9 @@ abstract class _SessionLobbyCoordinatorBase
     }
   }
 
-  deconstructor() {
+  deconstructor() async {
+    await starterLogic.nuke();
+    sessionMetadata.resetValues();
     dispose();
     widgets.dispose();
   }

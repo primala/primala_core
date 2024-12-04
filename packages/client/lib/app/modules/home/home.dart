@@ -52,7 +52,6 @@ class HomeModule extends Module {
       () => HomeCoordinator(
         tap: TapDetector(),
         captureScreen: Modular.get<CaptureScreen>(),
-        swipe: SwipeDetector(),
         widgets: Modular.get<HomeWidgetsCoordinator>(),
       ),
     );

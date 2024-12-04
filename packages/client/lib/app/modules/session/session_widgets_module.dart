@@ -1,6 +1,5 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
-import 'package:nokhte/app/core/widgets/modules.dart';
 import 'package:nokhte/app/core/widgets/widget_modules/mirrored_text_module.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'monetize/monetize.dart';
@@ -12,6 +11,7 @@ class SessionWidgetsModule extends Module {
         MirroredTextModule(),
         ConnectivityModule(),
         GestureCrossModule(),
+        NavigationMenuModule(),
         SessionNavigationModule(),
         SessionLogicModule(),
       ];
@@ -50,6 +50,7 @@ class SessionWidgetsModule extends Module {
 
     i.add<SessionLobbyWidgetsCoordinator>(
       () => SessionLobbyWidgetsCoordinator(
+        navigationMenu: Modular.get<NavigationMenuStore>(),
         presetArticle: PresetArticleStore(
           nokhteBlur: NokhteBlurStore(),
         ),
@@ -57,9 +58,29 @@ class SessionWidgetsModule extends Module {
         primarySmartText: SmartTextStore(),
         qrCode: NokhteQrCodeStore(),
         wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
-        beachWaves: BeachWavesStore(),
       ),
     );
+
+    i.add<SessionPresetsWidgetsCoordinator>(
+      () => SessionPresetsWidgetsCoordinator(
+        navigationMenu: Modular.get<NavigationMenuStore>(),
+        presetArticle: PresetArticleStore(
+          nokhteBlur: NokhteBlurStore(),
+        ),
+        headerText: SmartTextStore(),
+        presetCards: PresetCardsStore(),
+        wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
+      ),
+    );
+
+    i.add<SessionPlaylistsWidgetsCoordinator>(
+      () => SessionPlaylistsWidgetsCoordinator(
+        navigationMenu: Modular.get<NavigationMenuStore>(),
+        headerText: SmartTextStore(),
+        wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
+      ),
+    );
+
     i.add<SessionDuoGreeterWidgetsCoordinator>(
       () => SessionDuoGreeterWidgetsCoordinator(
         touchRipple: TouchRippleStore(),

@@ -1,28 +1,36 @@
-// ignore_for_file: must_be_immutable, library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, must_be_immutable
 import 'dart:async';
-
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
-import 'package:nokhte/app/modules/settings/settings.dart';
-import 'package:nokhte/app/modules/storage/storage.dart';
-part 'navigation_carousel_store.g.dart';
+import 'package:nokhte/app/modules/session/session.dart';
+part 'navigation_menu_store.g.dart';
 
-class NavigationCarouselStore = _NavigationCarouselStoreBase
-    with _$NavigationCarouselStore;
+class NavigationMenuStore = _NavigationMenuStoreBase with _$NavigationMenuStore;
 
-abstract class _NavigationCarouselStoreBase extends BaseWidgetStore
+abstract class _NavigationMenuStoreBase extends BaseWidgetStore
     with Store, Reactions {
   final BeachWavesStore beachWaves;
   final SwipeDetector swipe;
   final TintStore tint;
+  final NokhteBlurStore blur;
 
-  _NavigationCarouselStoreBase({
+  @observable
+  NavigationMenuType navigationMenuType = NavigationMenuType.homescreen;
+
+  @action
+  setNavigationMenuType(NavigationMenuType type) {
+    navigationMenuType = type;
+    carouselPosition = configuration.startIndex.toDouble();
+  }
+
+  _NavigationMenuStoreBase({
     required this.beachWaves,
     required this.swipe,
+    required this.blur,
     required this.tint,
   });
 
@@ -34,51 +42,41 @@ abstract class _NavigationCarouselStoreBase extends BaseWidgetStore
     disposers.add(swipeReactor());
   }
 
-  List carouselItems = [
-    "settings",
-    "home",
-    "storage",
-  ];
-
   @observable
   double carouselPosition = 1.0;
 
   @action
   onSwipeDown() {
-    if (hasSwipedDown ||
+    if (!showWidget ||
+        hasSwipedDown ||
         tint.movieStatus == MovieStatus.inProgress ||
+        blur.movieStatus == MovieStatus.inProgress ||
         carouselPosition % 1 != 0) return;
-    // if (carouselPosition == 1) {
-    // } else {
-    //   Timer(Seconds.get(1), () {
-    //     if (carouselPosition == 0) {
-    //       Modular.to.navigate(SettingsConstants.settings);
-    //     } else {
-    //       Modular.to.navigate(StorageConstants.home);
-    //     }
-    //   });
-    // }
     swipeUpBannerVisibility = true;
     swipeDownBannerVisibility = false;
     hasSwipedDown = true;
+    blur.init();
     tint.initMovie(const NoParams());
   }
 
   @action
   onSwipeUp() {
     if (!hasSwipedDown ||
+        !showWidget ||
         tint.movieStatus == MovieStatus.inProgress ||
+        blur.movieStatus == MovieStatus.inProgress ||
         carouselPosition % 1 != 0) return;
-
-    if (carouselPosition == 1) {
+    blur.reverse();
+    if (carouselPosition == configuration.startIndex) {
       swipeDownBannerVisibility = true;
     } else {
       Timer(Seconds.get(1), () {
-        if (carouselPosition == 0) {
-          Modular.to.navigate(SettingsConstants.settings);
-        } else {
-          Modular.to.navigate(StorageConstants.home);
-        }
+        final route =
+            configuration.carouselInfo.routes[carouselPosition.toInt()];
+        Modular.to.navigate(
+          route,
+          arguments: route == SessionConstants.lobby ? {} : null,
+        );
       });
     }
     swipeUpBannerVisibility = false;
@@ -110,4 +108,9 @@ abstract class _NavigationCarouselStoreBase extends BaseWidgetStore
             break;
         }
       });
+
+  @computed
+  NavigationMenuConfiguration get configuration => NavigationMenuConfiguration(
+        navigationMenuType,
+      );
 }

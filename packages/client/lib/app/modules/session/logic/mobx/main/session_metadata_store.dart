@@ -52,7 +52,7 @@ abstract class _SessionMetadataStoreBase
   bool userCanSpeak = false;
 
   @observable
-  ObservableList<double> currentPhases = ObservableList.of(List.filled(9, -9));
+  ObservableList<double> currentPhases = ObservableList.of([]);
 
   @observable
   ObservableList<String> content = ObservableList.of([]);
@@ -95,7 +95,7 @@ abstract class _SessionMetadataStoreBase
   resetValues() {
     setState(StoreState.initial);
     presetsLogic.reset();
-    currentPhases = ObservableList.of(List.filled(9, -9));
+    currentPhases = ObservableList.of([]);
   }
 
   @action
@@ -165,7 +165,10 @@ abstract class _SessionMetadataStoreBase
   }
 
   @computed
-  bool get canStartTheSession => currentPhases.every((e) => e >= 1.0);
+  bool get canStartTheSession =>
+      (currentPhases.every((e) => e >= 1.0) &&
+          currentPhases.length.isGreaterThan(1)) ||
+      presetType == PresetTypes.solo;
 
   @computed
   bool get canStartUsingSession =>

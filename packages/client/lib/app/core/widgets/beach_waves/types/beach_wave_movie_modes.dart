@@ -7,7 +7,7 @@ enum BeachWaveMovieModes {
   blackOutToDrySand,
   deepSeaToSky,
   deepSeaToHalfAndHalf,
-  deeperBlueToBlackOut,
+  invertedDeeperBlueToDeepSea,
   deepSeaToInvertedHalfAndHalf,
   deepSeaToBorealis,
   drySandToSky,

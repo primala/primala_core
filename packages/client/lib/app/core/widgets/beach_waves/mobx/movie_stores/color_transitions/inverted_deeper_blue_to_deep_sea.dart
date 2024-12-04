@@ -3,21 +3,21 @@ import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:simple_animations/simple_animations.dart';
-part 'deeper_blue_to_black_out.g.dart';
+part 'inverted_deeper_blue_to_deep_sea.g.dart';
 
-class DeeperBlueToBlackOut = _DeeperBlueToBlackOutBase
-    with _$DeeperBlueToBlackOut;
+class InvertedDeeperBlueToDeepSea = _InvertedDeeperBlueToDeepSeaBase
+    with _$InvertedDeeperBlueToDeepSea;
 
-abstract class _DeeperBlueToBlackOutBase
+abstract class _InvertedDeeperBlueToDeepSeaBase
     extends BaseBeachWaveMovieStore<NoParams> with Store {
-  _DeeperBlueToBlackOutBase()
+  _InvertedDeeperBlueToDeepSeaBase()
       : super(
           shouldPaintSand: TwoSecondBeachTransitionMovie.shouldPaintSand,
         ) {
     movie = TwoSecondBeachTransitionMovie.getMovie(
       MovieTween(),
-      WaterColorsAndStops.deeperBlue,
-      WaterColorsAndStops.blackOut,
+      WaterColorsAndStops.invertedDeeperBlue,
+      WaterColorsAndStops.deepSeaWater,
     );
   }
 

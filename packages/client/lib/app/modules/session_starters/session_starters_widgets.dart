@@ -1,6 +1,5 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
-import 'package:nokhte/app/core/widgets/modules.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'session_starters.dart';
 export 'constants/constants.dart';

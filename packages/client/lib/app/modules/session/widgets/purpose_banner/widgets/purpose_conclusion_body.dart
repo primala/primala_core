@@ -18,18 +18,24 @@ class PurposeConclusionBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Observer(builder: (context) {
       final parsedData = _parseSessionContent(sessionContent);
+      final bottomPadding = MediaQuery.of(context).viewInsets.bottom;
       return SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: parsedData.map((group) {
-            final absoluteIndex = group["index"]; // Get the absolute index
-            return PurposeWithConclusions(
-              onTap: onTap, // Pass the absolute index
-              purpose: group["P"]!.first,
-              conclusions: group["C"]!,
-              index: absoluteIndex,
-            );
-          }).toList(),
+          children: [
+            ...parsedData.map((group) {
+              final absoluteIndex = group["index"];
+              return PurposeWithConclusions(
+                onTap: onTap,
+                purpose: group["P"]!.first,
+                conclusions: group["C"]!,
+                index: absoluteIndex,
+              );
+            }),
+            SizedBox(
+              height: bottomPadding + 80,
+            ),
+          ],
         ),
       );
     });
