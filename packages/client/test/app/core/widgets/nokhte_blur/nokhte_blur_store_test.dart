@@ -10,11 +10,11 @@ void main() {
   group("actions", () {
     test("init", () {
       testStore.init();
-      expect(testStore.control, Control.playFromStart);
+      expect(testStore.control, Control.play);
     });
     test('reverse', () {
       testStore.reverse();
-      expect(testStore.control, Control.playReverseFromEnd);
+      expect(testStore.control, Control.playReverse);
     });
   });
 }
