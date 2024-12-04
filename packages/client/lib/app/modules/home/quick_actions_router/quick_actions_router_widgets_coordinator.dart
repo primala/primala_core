@@ -85,7 +85,7 @@ abstract class _QuickActionsRouterWidgetsCoordinatorBase
         beachWaves.currentStore.initMovie(
           const AnyToOnShoreParams(
             startingColors: WaterColorsAndStops.onShoreWater,
-            endValue: -5.0,
+            endValue: -10.0,
           ),
         );
       }
@@ -102,7 +102,7 @@ abstract class _QuickActionsRouterWidgetsCoordinatorBase
       const AnyToOnShoreParams(
         startingColors: WaterColorsAndStops.onShoreWater,
         endingColors: WaterColorsAndStops.onShoreWater,
-        endValue: -5.0,
+        endValue: -10.0,
       ),
     );
     showBeachWaves = true;
