@@ -34,9 +34,6 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
   bool sessionIsFinished = false;
 
   @observable
-  bool gyroscopeAvailabilityIsUpdated = false;
-
-  @observable
   bool onlineStatusIsUpdated = false;
 
   @observable

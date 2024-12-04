@@ -41,7 +41,7 @@ class PresetKey extends HookWidget {
       child: Padding(
         padding: EdgeInsets.only(
           top: useScaledSize(
-            baseValue: 0.24,
+            baseValue: 0.13,
             bumpPerHundredth: -0.001,
             screenSize: screenSize,
           ),

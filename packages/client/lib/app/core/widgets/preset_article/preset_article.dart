@@ -12,11 +12,9 @@ export 'types/types.dart';
 
 class PresetArticle extends HookWidget {
   final PresetArticleStore store;
-  final bool showBottomCard;
   const PresetArticle({
     super.key,
     required this.store,
-    this.showBottomCard = false,
   });
 
   @override
@@ -32,7 +30,7 @@ class PresetArticle extends HookWidget {
     return Observer(builder: (context) {
       return MultiHitStack(
         children: [
-          showBottomCard
+          store.renderPreview
               ? AnimatedOpacity(
                   opacity: useWidgetOpacity(store.showPreview),
                   duration: Seconds.get(1),

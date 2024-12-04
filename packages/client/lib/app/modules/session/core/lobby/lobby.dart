@@ -34,42 +34,42 @@ class SessionLobbyScreen extends HookWidget {
         store: coordinator.tap,
         child: MultiHitStack(
           children: [
-            FullScreen(
-              child: BeachWaves(
-                store: coordinator.widgets.beachWaves,
-              ),
-            ),
-            BorderGlow(store: BorderGlowStore()),
-            SmartText(
-              store: coordinator.widgets.primarySmartText,
-              topPadding: .25,
-              topBump: 0.0015,
-              opacityDuration: Seconds.get(1),
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                  bottom: useScaledSize(
-                baseValue: .09,
-                screenSize: screenSize,
-                bumpPerHundredth: .0021,
-              )
-                  // screenSize.height * .06,
+            NavigationMenu(
+              store: coordinator.widgets.navigationMenu,
+              inBetweenWidgets: Stack(
+                children: [
+                  SmartText(
+                    store: coordinator.widgets.primarySmartText,
+                    topPadding: .25,
+                    topBump: 0.0015,
+                    opacityDuration: Seconds.get(1),
                   ),
-              child: NokhteQrCode(
-                store: coordinator.widgets.qrCode,
+                  Padding(
+                    padding: EdgeInsets.only(
+                        bottom: useScaledSize(
+                      baseValue: .09,
+                      screenSize: screenSize,
+                      bumpPerHundredth: .0021,
+                    )
+                        // screenSize.height * .06,
+                        ),
+                    child: NokhteQrCode(
+                      store: coordinator.widgets.qrCode,
+                    ),
+                  ),
+                  FullScreen(
+                    child: TouchRipple(
+                      store: coordinator.widgets.touchRipple,
+                    ),
+                  ),
+                  CollaboratorPresenceIncidentsOverlay(
+                    store: coordinator.presence.incidentsOverlayStore,
+                  ),
+                  PresetArticle(
+                    store: coordinator.widgets.presetArticle,
+                  ),
+                ],
               ),
-            ),
-            FullScreen(
-              child: TouchRipple(
-                store: coordinator.widgets.touchRipple,
-              ),
-            ),
-            CollaboratorPresenceIncidentsOverlay(
-              store: coordinator.presence.incidentsOverlayStore,
-            ),
-            PresetArticle(
-              store: coordinator.widgets.presetArticle,
-              showBottomCard: true,
             ),
             WifiDisconnectOverlay(
               store: coordinator.widgets.wifiDisconnectOverlay,

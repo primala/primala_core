@@ -1,7 +1,6 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
-import 'package:nokhte/app/core/widgets/modules.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/logic/session_logic.dart';
 import 'package:nokhte/app/modules/session_starters/session_starters.dart';
@@ -18,19 +17,16 @@ class SessionJoinerModule extends Module {
         SessionStartersLogicModule(),
         SessionLogicModule(),
         PosthogModule(),
+        NavigationMenuModule(),
       ];
 
   @override
   void binds(Injector i) {
     i.add<SessionJoinerWidgetsCoordinator>(
       () => SessionJoinerWidgetsCoordinator(
-        swipeGuide: SwipeGuideStore(),
         qrScanner: QrScannerStore(),
-        homeNokhte: AuxiliaryNokhteStore(),
-        gestureCross: Modular.get<GestureCrossStore>(),
-        beachWaves: BeachWavesStore(),
+        navigationMenu: Modular.get<NavigationMenuStore>(),
         wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
-        centerNokhte: CenterNokhteStore(),
       ),
     );
     i.add<SessionJoinerCoordinator>(

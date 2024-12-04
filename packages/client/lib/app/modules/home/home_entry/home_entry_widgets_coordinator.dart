@@ -27,7 +27,7 @@ abstract class _HomeEntryWidgetsCoordinatorBase
     beachWaves.setMovieMode(BeachWaveMovieModes.anyToOnShore);
     beachWaves.currentStore.initMovie(
       const AnyToOnShoreParams(
-        startingColors: WaterColorsAndStops.simpleBeachWater,
+        startingColors: WaterColorsAndStops.onShoreWater,
         endingColors: WaterColorsAndStops.onShoreWater,
       ),
     );
