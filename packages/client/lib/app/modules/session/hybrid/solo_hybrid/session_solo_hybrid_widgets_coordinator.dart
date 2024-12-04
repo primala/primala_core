@@ -42,6 +42,7 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   @override
   final WifiDisconnectOverlayStore wifiDisconnectOverlay;
   final PurposeBannerStore purposeBanner;
+  final NavigationMenuStore navigationMenu;
 
   _SessionSoloHybridWidgetsCoordinatorBase({
     required this.primarySmartText,
@@ -57,6 +58,7 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
     required this.purposeBanner,
     required this.touchRipple,
     required this.speakLessSmileMore,
+    required this.navigationMenu,
   }) {
     initBaseWidgetsCoordinatorActions();
     initSessionSpeakingUtilities();
@@ -68,6 +70,7 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
     required bool everyoneIsOnline,
     required ObservableList<String> content,
   }) {
+    navigationMenu.setNavigationMenuType(NavigationMenuType.inSession);
     tapStopwatch.start();
     purposeBanner.setPurpose(content);
     beachWaves.setMovieMode(BeachWaveMovieModes.halfAndHalfToDrySand);

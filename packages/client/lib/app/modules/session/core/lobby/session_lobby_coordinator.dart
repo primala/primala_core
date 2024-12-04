@@ -92,6 +92,7 @@ abstract class _SessionLobbyCoordinatorBase
     disposers.add(widgets.beachWavesMovieStatusReactor(enterGreeter));
     disposers.add(presetArticleTapReactor());
     disposers.add(sessionPresetReactor());
+    disposers.add(sessionInitializationReactor());
     disposers.add(numberOfCollaboratorsReactor());
   }
 
@@ -213,7 +214,9 @@ abstract class _SessionLobbyCoordinatorBase
   }
 
   deconstructor() async {
-    await starterLogic.nuke();
+    if (!sessionMetadata.sessionHasBegun) {
+      await starterLogic.nuke();
+    }
     sessionMetadata.resetValues();
     dispose();
     widgets.dispose();

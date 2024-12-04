@@ -37,9 +37,6 @@ class SessionInformationScreen extends HookWidget {
               ),
             ),
             BorderGlow(store: BorderGlowStore()),
-            Tint(
-              store: coordinator.widgets.tint,
-            ),
             PresetArticle(
               store: coordinator.widgets.presetArticle,
             ),

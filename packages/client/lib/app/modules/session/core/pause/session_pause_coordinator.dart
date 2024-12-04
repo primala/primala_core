@@ -64,7 +64,7 @@ abstract class _SessionPauseCoordinatorBase
   }
 
   tapReactor() => reaction((p0) => tap.tapCount, (p0) async {
-        if (!hasTapped && !widgets.sessionNavigation.hasInitiatedBlur) {
+        if (!hasTapped) {
           hasTapped = true;
           widgets.onTap();
           Timer(Seconds.get(1), () {

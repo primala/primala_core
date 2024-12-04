@@ -38,9 +38,6 @@ class SessionPauseScreen extends HookWidget {
             PauseIcon(
               store: coordinator.widgets.pauseIcon,
             ),
-            SessionNavigation(
-              store: coordinator.widgets.sessionNavigation,
-            ),
             WifiDisconnectOverlay(
               store: coordinator.widgets.wifiDisconnectOverlay,
             ),

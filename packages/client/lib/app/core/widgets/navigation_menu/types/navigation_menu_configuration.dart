@@ -131,11 +131,20 @@ class NavigationMenuConfiguration extends Equatable {
   void _configureInSession() {
     sliderInfo = [
       _createSliderItem(
-          'assets/session_information_icon.png',
-          'Session Information',
-          () => _navigateQuickActions(SessionConstants.information)),
-      _createSliderItem('assets/end_session_icon.png', 'End Session',
-          () => _navigateQuickActions(SessionConstants.exit)),
+        'assets/session_information_icon.png',
+        'Session Information',
+        () => _navigateQuickActions(SessionConstants.information),
+      ),
+      _createSliderItem(
+        'assets/end_session_icon.png',
+        'End Session',
+        () => _navigateQuickActions(SessionConstants.exit),
+      ),
+      _createSliderItem(
+        'assets/pause_icon.png',
+        'Pause Session',
+        () => _navigateQuickActions(SessionConstants.pause),
+      ),
     ];
 
     carouselInfo = _createCarouselInfo([

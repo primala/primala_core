@@ -124,7 +124,7 @@ abstract class _PresetArticleStoreBase extends BaseWidgetStore with Store {
           ),
         ),
         isScrollControlled: true,
-        backgroundColor: Colors.white.withOpacity(.2),
+        backgroundColor: Colors.black.withOpacity(.2),
         context: buildContext,
         builder: (context) {
           return Observer(builder: (context) {

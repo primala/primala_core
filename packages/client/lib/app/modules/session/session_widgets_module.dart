@@ -42,7 +42,6 @@ class SessionWidgetsModule extends Module {
         tint: TintStore(),
         pauseIcon: PauseIconStore(),
         wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
-        sessionNavigation: Modular.get<SessionNavigationStore>(),
         beachWaves: BeachWavesStore(),
         // presetCard: ExpandedPresetCardsStore(),
       ),
@@ -164,6 +163,7 @@ class SessionWidgetsModule extends Module {
         purposeBanner: PurposeBannerStore(
           nokhteBlur: NokhteBlurStore(),
         ),
+        navigationMenu: Modular.get<NavigationMenuStore>(),
         presenceOverlay:
             Modular.get<SessionPresenceCoordinator>().incidentsOverlayStore,
         refreshBanner: RefreshBannerStore(),
