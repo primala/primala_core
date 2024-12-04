@@ -29,6 +29,7 @@ abstract class _HomeEntryWidgetsCoordinatorBase
       const AnyToOnShoreParams(
         startingColors: WaterColorsAndStops.onShoreWater,
         endingColors: WaterColorsAndStops.onShoreWater,
+        endValue: -10.0,
       ),
     );
   }

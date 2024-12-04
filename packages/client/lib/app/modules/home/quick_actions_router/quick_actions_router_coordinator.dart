@@ -37,7 +37,9 @@ abstract class _QuickActionsRouterCoordinatorBase
   constructor() async {
     widgets.preconstructor();
     final args = Modular.args.data[HomeConstants.QUICK_ACTIONS_ROUTE];
-    if (args != SessionConstants.information && args != SessionConstants.exit) {
+    if (args != SessionConstants.information &&
+        args != SessionConstants.exit &&
+        args != SessionConstants.pause) {
       await cleanUpCollaborationArtifacts(const NoParams());
     }
     await userInfo.checkIfVersionIsUpToDate();

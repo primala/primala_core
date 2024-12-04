@@ -71,7 +71,9 @@ abstract class _QuickActionsRouterWidgetsCoordinatorBase
           args == SessionConstants.pause) {
         beachWaves.setMovieMode(BeachWaveMovieModes.halfAndHalfToDrySand);
         Timer(Seconds.get(1), () {
-          Modular.to.navigate(SessionConstants.information);
+          Modular.to.navigate(args == SessionConstants.information
+              ? SessionConstants.information
+              : SessionConstants.pause);
         });
       } else if (args == SessionConstants.exit) {
         beachWaves.setMovieMode(BeachWaveMovieModes.skyToDrySand);
