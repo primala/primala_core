@@ -70,7 +70,8 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
     required bool everyoneIsOnline,
     required ObservableList<String> content,
   }) {
-    navigationMenu.setNavigationMenuType(NavigationMenuType.inSession);
+    navigationMenu.setNavigationMenuType(NavigationMenuType.inSession,
+        shouldInitReactors: false);
     tapStopwatch.start();
     purposeBanner.setPurpose(content);
     beachWaves.setMovieMode(BeachWaveMovieModes.halfAndHalfToDrySand);

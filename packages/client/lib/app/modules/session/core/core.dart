@@ -16,6 +16,7 @@ export 'lobby/lobby.dart';
 export 'playlists/playlists.dart';
 export 'presets/presets.dart';
 export './shared/shared.dart';
+export 'action_slider_router/action_slider_router.dart';
 export 'trial_greeter/trial_greeter.dart';
 export 'socratic_speaking_exit/socratic_speaking_exit.dart';
 export 'collaboration_greeter/collaboration_greeter.dart';
@@ -106,6 +107,7 @@ class SessionCoreModule extends Module {
         tap: TapDetector(),
       ),
     );
+
     i.add<SessionExitCoordinator>(
       () => SessionExitCoordinator(
         captureEnd: Modular.get<CaptureSessionEnd>(),
@@ -114,6 +116,14 @@ class SessionCoreModule extends Module {
         swipe: SwipeDetector(),
         widgets: Modular.get<SessionExitWidgetsCoordinator>(),
         presence: Modular.get<SessionPresenceCoordinator>(),
+        captureScreen: Modular.get<CaptureScreen>(),
+      ),
+    );
+
+    i.add<ActionSliderRouterCoordinator>(
+      () => ActionSliderRouterCoordinator(
+        presence: Modular.get<SessionPresenceCoordinator>(),
+        widgets: Modular.get<ActionSliderRouterWidgetsCoordinator>(),
         captureScreen: Modular.get<CaptureScreen>(),
       ),
     );
@@ -135,6 +145,14 @@ class SessionCoreModule extends Module {
       transition: TransitionType.noTransition,
       child: (context) => SocraticSpeakingExitScreen(
         coordinator: Modular.get<SocraticSpeakingExitCoordinator>(),
+      ),
+    );
+
+    r.child(
+      SessionConstants.relativeActionSliderRouter,
+      transition: TransitionType.noTransition,
+      child: (context) => ActionSliderRouterScreen(
+        coordinator: Modular.get<ActionSliderRouterCoordinator>(),
       ),
     );
 

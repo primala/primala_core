@@ -10,7 +10,6 @@ export 'types/types.dart';
 export 'widgets/widgets.dart';
 export 'widgets/navigation_beach_waves/stepwise_beach_waves_painter.dart';
 
-// Example Usage with MobX Observer
 class NavigationMenu extends HookWidget with ArticleBodyUtils {
   final NavigationMenuStore store;
   final BeachWavesStore beachWaves;
@@ -106,8 +105,10 @@ class NavigationMenu extends HookWidget with ArticleBodyUtils {
                                             assetPath: sliderConfig.assetPath,
                                             sliderText: sliderConfig.sliderText,
                                             onSlideComplete: () {
-                                              if (!store.showWidget) return;
-                                              sliderConfig.callback();
+                                              store.setCurrentlySelectedSlider(
+                                                sliderConfig.actionSliderOption,
+                                              );
+                                              // sliderConfig.callback();
                                             },
                                           ),
                                         ),

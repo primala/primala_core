@@ -44,9 +44,6 @@ abstract class _SessionPauseCoordinatorBase
     });
     widgets.constructor();
     initReactors();
-    await presence.dispose();
-    Modular.dispose<SessionLogicModule>();
-    await presence.listen();
   }
 
   @action
@@ -60,8 +57,7 @@ abstract class _SessionPauseCoordinatorBase
         setDisableAllTouchFeedback(true);
       },
     ));
-
-    disposers.add(sessionPresetReactor());
+    disposers.add(tapReactor());
   }
 
   tapReactor() => reaction((p0) => tap.tapCount, (p0) async {
@@ -75,13 +71,6 @@ abstract class _SessionPauseCoordinatorBase
                   : SessionConstants.groupHybrid,
             );
           });
-        }
-      });
-
-  sessionPresetReactor() =>
-      reaction((p0) => sessionMetadata.presetsLogic.state, (p0) async {
-        if (p0 == StoreState.loaded) {
-          disposers.add(tapReactor());
         }
       });
 

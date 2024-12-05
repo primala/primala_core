@@ -37,13 +37,18 @@ class SessionWidgetsModule extends Module {
       ),
     );
 
+    i.add<ActionSliderRouterWidgetsCoordinator>(
+      () => ActionSliderRouterWidgetsCoordinator(
+        beachWaves: BeachWavesStore(),
+      ),
+    );
+
     i.add<SessionPauseWidgetsCoordinator>(
       () => SessionPauseWidgetsCoordinator(
         tint: TintStore(),
         pauseIcon: PauseIconStore(),
         wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
         beachWaves: BeachWavesStore(),
-        // presetCard: ExpandedPresetCardsStore(),
       ),
     );
 

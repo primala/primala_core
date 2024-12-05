@@ -1,0 +1,61 @@
+// ignore_for_file: must_be_immutable, library_private_types_in_public_api
+import 'dart:async';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:mobx/mobx.dart';
+import 'package:nokhte/app/core/mixins/mixin.dart';
+import 'package:nokhte/app/core/mobx/mobx.dart';
+import 'package:nokhte/app/core/types/types.dart';
+import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:nokhte/app/modules/home/home.dart';
+import 'package:nokhte/app/modules/session/session.dart';
+import 'package:simple_animations/simple_animations.dart';
+part 'action_slider_router_widgets_coordinator.g.dart';
+
+class ActionSliderRouterWidgetsCoordinator = _ActionSliderRouterWidgetsCoordinatorBase
+    with _$ActionSliderRouterWidgetsCoordinator;
+
+abstract class _ActionSliderRouterWidgetsCoordinatorBase
+    with Store, RoutingArgs, Reactions {
+  final BeachWavesStore beachWaves;
+
+  _ActionSliderRouterWidgetsCoordinatorBase({
+    required this.beachWaves,
+  });
+
+  @observable
+  bool showBeachWaves = false;
+
+  @observable
+  bool shouldRotate = false;
+
+  @observable
+  bool needsUpdate = false;
+
+  @action
+  setShowBeachWaves(bool value) => showBeachWaves = value;
+
+  @action
+  preconstructor() {
+    beachWaves.currentStore.setControl(Control.stop);
+  }
+
+  @action
+  constructor() {
+    if (hasReceivedRoutingArgs) {
+      final args = Modular.args.data[HomeConstants.QUICK_ACTIONS_ROUTE];
+      if (args == SessionConstants.information ||
+          args == SessionConstants.pause) {
+        beachWaves.setMovieMode(BeachWaveMovieModes.halfAndHalfToDrySand);
+        Timer(Seconds.get(1), () {
+          Modular.to.navigate(args);
+        });
+      } else if (args == SessionConstants.exit) {
+        beachWaves.setMovieMode(BeachWaveMovieModes.skyToDrySand);
+        Timer(Seconds.get(1), () {
+          Modular.to.navigate(SessionConstants.exit);
+        });
+      }
+    }
+    showBeachWaves = true;
+  }
+}
