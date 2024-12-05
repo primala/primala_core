@@ -120,6 +120,12 @@ abstract class _SessionMetadataStoreBase
   }
 
   @action
+  refetchStaticMetadata() async {
+    presetsLogic.reset();
+    await _getStaticMetadata();
+  }
+
+  @action
   Future<void> get(params) async {
     resetValues();
     final result = await contract.listenToRTSessionMetadata(params);

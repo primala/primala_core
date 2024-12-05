@@ -54,7 +54,11 @@ abstract class _SessionLobbyCoordinatorBase
     widgets.constructor();
     disposers.add(sessionInitializationReactor());
     if (hasReceivedRoutingArgs) {
-      await starterLogic.initialize(const Left(NoParams()));
+      if (sessionMetadata.presetType == PresetTypes.none) {
+        await starterLogic.initialize(const Left(NoParams()));
+      } else {
+        await sessionMetadata.refetchStaticMetadata();
+      }
     } else {
       widgets.navigationMenu.setWidgetVisibility(false);
       await presence.listen();
@@ -114,6 +118,16 @@ abstract class _SessionLobbyCoordinatorBase
     widgets.primarySmartText.setWidgetVisibility(true);
   }
 
+  @action
+  onPresetInfoReceived() async {
+    showPresetInfo();
+    if (hasReceivedRoutingArgs) {
+      await presence.updateCurrentPhase(1.0);
+      disposers.add(tapReactor());
+      disposers.add(canStartTheSessionReactor());
+    }
+  }
+
   canStartTheSessionReactor() =>
       reaction((p0) => sessionMetadata.canStartTheSession, (p0) {
         if (p0) {
@@ -133,12 +147,7 @@ abstract class _SessionLobbyCoordinatorBase
   sessionPresetReactor() =>
       reaction((p0) => sessionMetadata.presetsLogic.state, (p0) async {
         if (p0 == StoreState.loaded) {
-          showPresetInfo();
-          if (hasReceivedRoutingArgs) {
-            await presence.updateCurrentPhase(1.0);
-            disposers.add(tapReactor());
-            disposers.add(canStartTheSessionReactor());
-          }
+          await onPresetInfoReceived();
         }
       });
 
@@ -214,10 +223,12 @@ abstract class _SessionLobbyCoordinatorBase
   }
 
   deconstructor() async {
-    if (!sessionMetadata.sessionHasBegun) {
-      await starterLogic.nuke();
-    }
-    sessionMetadata.resetValues();
+    // if (!sessionMetadata.sessionHasBegun) {
+    // sessionMetadata.resetValues();
+    // await starterLogic.nuke();
+    // await presence.dispose();
+    // Modular.dispose<SessionLogicModule>();
+    // }
     dispose();
     widgets.dispose();
   }
