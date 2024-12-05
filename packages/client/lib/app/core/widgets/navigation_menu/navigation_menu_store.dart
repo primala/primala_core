@@ -6,7 +6,10 @@ import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:nokhte/app/modules/home/home.dart';
 import 'package:nokhte/app/modules/session/session.dart';
+import 'package:nokhte/app/modules/session_joiner/session_joiner.dart';
+import 'package:nokhte/app/modules/session_starters/session_starters.dart';
 part 'navigation_menu_store.g.dart';
 
 class NavigationMenuStore = _NavigationMenuStoreBase with _$NavigationMenuStore;
@@ -17,15 +20,6 @@ abstract class _NavigationMenuStoreBase extends BaseWidgetStore
   final SwipeDetector swipe;
   final TintStore tint;
   final NokhteBlurStore blur;
-
-  @observable
-  NavigationMenuType navigationMenuType = NavigationMenuType.homescreen;
-
-  @action
-  setNavigationMenuType(NavigationMenuType type) {
-    navigationMenuType = type;
-    carouselPosition = configuration.startIndex.toDouble();
-  }
 
   _NavigationMenuStoreBase({
     required this.beachWaves,
@@ -39,14 +33,54 @@ abstract class _NavigationMenuStoreBase extends BaseWidgetStore
     Timer(Seconds.get(0, milli: 1), () {
       swipeDownBannerVisibility = true;
     });
+  }
+
+  initReactors() {
     disposers.add(swipeReactor());
+    disposers.add(actionSliderReactor());
+  }
+
+  @observable
+  NavigationMenuType navigationMenuType = NavigationMenuType.homescreen;
+
+  @observable
+  ActionSliderOptions currentlySelectedSlider = ActionSliderOptions.none;
+
+  @action
+  setCurrentlySelectedSlider(ActionSliderOptions slider) {
+    if (!showWidget) return;
+    currentlySelectedSlider = slider;
+  }
+
+  @action
+  setNavigationMenuType(
+    NavigationMenuType type, {
+    bool shouldInitReactors = true,
+  }) {
+    navigationMenuType = type;
+    carouselPosition = configuration.startIndex.toDouble();
+    if (shouldInitReactors) {
+      initReactors();
+    }
   }
 
   @observable
   double carouselPosition = 1.0;
 
+  navigateQuickActions() {
+    Modular.to.navigate(
+      navigationMenuType == NavigationMenuType.inSession
+          ? SessionConstants.actionSliderRouter
+          : HomeConstants.quickActionsRouter,
+      arguments: {
+        HomeConstants.QUICK_ACTIONS_ROUTE: quickActionsRoute,
+      },
+    );
+  }
+
+// we need to add the functionality for basically having custom swipe down and swipe up higher level functions
   @action
-  onSwipeDown() {
+  showNavigationMenu() {
     if (!showWidget ||
         hasSwipedDown ||
         tint.movieStatus == MovieStatus.inProgress ||
@@ -60,7 +94,7 @@ abstract class _NavigationMenuStoreBase extends BaseWidgetStore
   }
 
   @action
-  onSwipeUp() {
+  hideNavigationMenu() {
     if (!hasSwipedDown ||
         !showWidget ||
         tint.movieStatus == MovieStatus.inProgress ||
@@ -96,16 +130,33 @@ abstract class _NavigationMenuStoreBase extends BaseWidgetStore
   @observable
   bool swipeUpBannerVisibility = false;
 
-  swipeReactor() => reaction((p0) => swipe.directionsType, (p0) {
+  swipeReactor({
+    Function? onSwipeUp,
+  }) =>
+      reaction((p0) => swipe.directionsType, (p0) async {
         switch (p0) {
           case GestureDirections.up:
-            onSwipeUp();
+            if (hasSwipedDown) {
+              hideNavigationMenu();
+            } else {
+              await onSwipeUp?.call();
+            }
 
           case GestureDirections.down:
-            onSwipeDown();
+            showNavigationMenu();
 
           default:
             break;
+        }
+      });
+
+  actionSliderReactor({
+    Function? onActionSliderSelected,
+  }) =>
+      reaction((p0) => currentlySelectedSlider, (p0) async {
+        if (p0 != ActionSliderOptions.none) {
+          await onActionSliderSelected?.call();
+          navigateQuickActions();
         }
       });
 
@@ -113,4 +164,24 @@ abstract class _NavigationMenuStoreBase extends BaseWidgetStore
   NavigationMenuConfiguration get configuration => NavigationMenuConfiguration(
         navigationMenuType,
       );
+
+  @computed
+  String get quickActionsRoute {
+    switch (currentlySelectedSlider) {
+      case ActionSliderOptions.startSession:
+        return SessionStarterConstants.sessionStarter;
+      case ActionSliderOptions.joinSession:
+        return SessionJoinerConstants.sessionJoiner;
+      case ActionSliderOptions.homeScreen:
+        return HomeConstants.home;
+      case ActionSliderOptions.sessionInformation:
+        return SessionConstants.information;
+      case ActionSliderOptions.endSession:
+        return SessionConstants.exit;
+      case ActionSliderOptions.pauseSession:
+        return SessionConstants.pause;
+      case ActionSliderOptions.none:
+        return HomeConstants.home;
+    }
+  }
 }

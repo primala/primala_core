@@ -81,7 +81,7 @@ abstract class _SessionPresetsCoordinatorBase
   onSelected(String presetUID) async {
     await userInfo.updatePreferredPreset(presetUID);
     await userInfo.getPreferredPreset();
-    // await starterLogic.updateSessionType(presetUID);
+    await starterLogic.updateSessionType(presetUID);
   }
 
   @action

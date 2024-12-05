@@ -23,6 +23,7 @@ abstract class _SessionSoloHybridCoordinatorBase
   final SessionPresenceCoordinator presence;
   @override
   final CaptureScreen captureScreen;
+  final NavigationMenuStore navigationMenu;
 
   _SessionSoloHybridCoordinatorBase({
     required this.widgets,
@@ -30,7 +31,8 @@ abstract class _SessionSoloHybridCoordinatorBase
     required this.tap,
     required this.captureScreen,
     required this.presence,
-  }) : sessionMetadata = presence.sessionMetadataStore {
+  })  : sessionMetadata = presence.sessionMetadataStore,
+        navigationMenu = widgets.navigationMenu {
     initBaseCoordinatorActions();
   }
 
@@ -114,7 +116,19 @@ abstract class _SessionSoloHybridCoordinatorBase
     disposers.add(rallyReactor());
     disposers.add(glowColorReactor());
     disposers.add(secondarySpotlightReactor());
-    disposers.add(swipeReactor());
+    disposers.add(navigationMenu.swipeReactor(onSwipeUp: () {
+      widgets.purposeBanner.onTap();
+    }));
+    disposers.add(
+      navigationMenu.actionSliderReactor(
+        onActionSliderSelected: () async {
+          // if (navigationMenu.currentlySelectedSlider ==
+          //     ActionSliderOptions.pauseSession) {
+          await presence.dispose();
+          // }
+        },
+      ),
+    );
   }
 
   swipeReactor() => reaction((p0) => swipe.directionsType, (p0) async {

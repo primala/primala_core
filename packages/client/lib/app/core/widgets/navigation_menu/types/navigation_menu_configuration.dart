@@ -3,8 +3,6 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/home/home.dart';
 import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte/app/modules/session_joiner/session_joiner.dart';
-import 'package:nokhte/app/modules/session_starters/constants/constants.dart';
 import 'package:nokhte/app/modules/settings/settings.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
 
@@ -48,10 +46,8 @@ class NavigationMenuConfiguration extends Equatable {
     int startIndex = 1,
   }) {
     sliderInfo = [
-      _createSliderItem('assets/qr_code_icon.png', 'Start Session',
-          () => _navigateQuickActions(SessionStarterConstants.sessionStarter)),
-      _createSliderItem('assets/camera_icon.png', 'Join Session',
-          () => _navigateQuickActions(SessionJoinerConstants.sessionJoiner)),
+      _createSliderItem(ActionSliderOptions.startSession),
+      _createSliderItem(ActionSliderOptions.joinSession),
     ];
 
     carouselInfo = _createCarouselInfo([
@@ -82,8 +78,9 @@ class NavigationMenuConfiguration extends Equatable {
     int startIndex = 1,
   }) {
     sliderInfo = [
-      _createSliderItem('assets/home_beach_icon.png', 'Home Screen',
-          () => _navigateQuickActions(HomeConstants.home)),
+      _createSliderItem(
+        ActionSliderOptions.homeScreen,
+      ),
     ];
 
     carouselInfo = _createCarouselInfo([
@@ -130,21 +127,9 @@ class NavigationMenuConfiguration extends Equatable {
 
   void _configureInSession() {
     sliderInfo = [
-      _createSliderItem(
-        'assets/session_information_icon.png',
-        'Session Information',
-        () => _navigateQuickActions(SessionConstants.information),
-      ),
-      _createSliderItem(
-        'assets/end_session_icon.png',
-        'End Session',
-        () => _navigateQuickActions(SessionConstants.exit),
-      ),
-      _createSliderItem(
-        'assets/pause_icon.png',
-        'Pause Session',
-        () => _navigateQuickActions(SessionConstants.pause),
-      ),
+      _createSliderItem(ActionSliderOptions.sessionInformation),
+      _createSliderItem(ActionSliderOptions.endSession),
+      _createSliderItem(ActionSliderOptions.pauseSession),
     ];
 
     carouselInfo = _createCarouselInfo([
@@ -164,17 +149,12 @@ class NavigationMenuConfiguration extends Equatable {
     startIndex = 1;
   }
 
-  // Helper method to create slider items
   ActionSliderInformation _createSliderItem(
-      String assetPath, String sliderText, Function callback) {
-    return ActionSliderInformation(
-      assetPath: assetPath,
-      sliderText: sliderText,
-      callback: callback,
-    );
+    ActionSliderOptions actionSliderOption,
+  ) {
+    return ActionSliderInformation(actionSliderOption: actionSliderOption);
   }
 
-  // Helper method to create carousel info
   NavigationCarouselInformation _createCarouselInfo(
       List<GradientConfig> gradients,
       List<String> labels,
@@ -186,7 +166,6 @@ class NavigationMenuConfiguration extends Equatable {
     );
   }
 
-  // Helper method to navigate quick actions
   void _navigateQuickActions(String route) {
     Modular.to.navigate(
       HomeConstants.quickActionsRouter,

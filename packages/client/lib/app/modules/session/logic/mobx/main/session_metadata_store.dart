@@ -120,6 +120,12 @@ abstract class _SessionMetadataStoreBase
   }
 
   @action
+  refetchStaticMetadata() async {
+    presetsLogic.reset();
+    await _getStaticMetadata();
+  }
+
+  @action
   Future<void> get(params) async {
     resetValues();
     final result = await contract.listenToRTSessionMetadata(params);
@@ -142,9 +148,7 @@ abstract class _SessionMetadataStoreBase
               value.userIsInSecondarySpeakingSpotlight;
           currentSpeakerUID = value.speakerUID;
           final strContent = value.content.map((e) => e.toString());
-          // print('strContent: $strContent');
           content = ObservableList.of(strContent);
-          // print('content: $content');
           currentPhases = ObservableList.of(phases);
           sessionHasBegun = value.sessionHasBegun;
           userIsSpeaking = value.userIsSpeaking;

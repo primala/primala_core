@@ -143,7 +143,9 @@ abstract class _SessionExitCoordinatorBase
   SessionScreenTypes get phoneRole => sessionMetadata.screenType;
 
   deconstructor() {
-    presence.dispose();
+    if (isGoingHome) {
+      presence.dispose();
+    }
     dispose();
   }
 }
