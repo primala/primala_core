@@ -117,7 +117,7 @@ abstract class _SessionSoloHybridCoordinatorBase
     disposers.add(glowColorReactor());
     disposers.add(secondarySpotlightReactor());
     disposers.add(navigationMenu.swipeReactor(onSwipeUp: () {
-      widgets.purposeBanner.onTap();
+      widgets.openPurposeModal();
     }));
     disposers.add(
       navigationMenu.actionSliderReactor(
@@ -141,7 +141,7 @@ abstract class _SessionSoloHybridCoordinatorBase
               await presence.dispose();
             });
           case GestureDirections.up:
-            widgets.purposeBanner.onTap();
+            widgets.openPurposeModal();
           default:
             break;
         }
