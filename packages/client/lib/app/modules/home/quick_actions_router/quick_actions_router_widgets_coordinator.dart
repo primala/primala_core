@@ -67,19 +67,6 @@ abstract class _QuickActionsRouterWidgetsCoordinatorBase
         Timer(Seconds.get(1), () {
           Modular.to.navigate(StorageConstants.home);
         });
-      } else if (args == SessionConstants.information ||
-          args == SessionConstants.pause) {
-        beachWaves.setMovieMode(BeachWaveMovieModes.halfAndHalfToDrySand);
-        Timer(Seconds.get(1), () {
-          Modular.to.navigate(args == SessionConstants.information
-              ? SessionConstants.information
-              : SessionConstants.pause);
-        });
-      } else if (args == SessionConstants.exit) {
-        beachWaves.setMovieMode(BeachWaveMovieModes.skyToDrySand);
-        Timer(Seconds.get(1), () {
-          Modular.to.navigate(SessionConstants.exit);
-        });
       } else if (args == HomeConstants.home) {
         beachWaves.setMovieMode(BeachWaveMovieModes.anyToOnShore);
         beachWaves.currentStore.initMovie(

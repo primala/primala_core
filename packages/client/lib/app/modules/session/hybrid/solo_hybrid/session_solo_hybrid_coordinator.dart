@@ -122,10 +122,10 @@ abstract class _SessionSoloHybridCoordinatorBase
     disposers.add(
       navigationMenu.actionSliderReactor(
         onActionSliderSelected: () async {
-          // if (navigationMenu.currentlySelectedSlider ==
-          //     ActionSliderOptions.pauseSession) {
-          await presence.dispose();
-          // }
+          if (navigationMenu.currentlySelectedSlider ==
+              ActionSliderOptions.pauseSession) {
+            await presence.dispose();
+          }
         },
       ),
     );
