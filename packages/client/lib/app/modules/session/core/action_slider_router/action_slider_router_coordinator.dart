@@ -1,9 +1,10 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
-import 'package:flutter_modular/flutter_modular.dart';
+import 'dart:async';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mixins/mixin.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
+import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 part 'action_slider_router_coordinator.g.dart';
 
@@ -32,15 +33,8 @@ abstract class _ActionSliderRouterCoordinatorBase
   @action
   constructor() async {
     widgets.preconstructor();
-    disposers.add(sessionPresetReactor());
-    Modular.dispose<SessionLogicModule>();
-    await presence.listen();
+    Timer(Seconds.get(0, milli: 250), () {
+      widgets.constructor();
+    });
   }
-
-  sessionPresetReactor() =>
-      reaction((p0) => sessionMetadata.presetsLogic.state, (p0) async {
-        if (p0 == StoreState.loaded) {
-          widgets.constructor();
-        }
-      });
 }

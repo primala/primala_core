@@ -1,5 +1,4 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mixins/mixin.dart';
@@ -9,7 +8,6 @@ import 'package:nokhte/app/core/modules/clean_up_collaboration_artifacts/mobx/mo
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/modules/home/home.dart';
-import 'package:nokhte/app/modules/session/session.dart';
 part 'quick_actions_router_coordinator.g.dart';
 
 class QuickActionsRouterCoordinator = _QuickActionsRouterCoordinatorBase
@@ -36,12 +34,7 @@ abstract class _QuickActionsRouterCoordinatorBase
   @action
   constructor() async {
     widgets.preconstructor();
-    final args = Modular.args.data[HomeConstants.QUICK_ACTIONS_ROUTE];
-    if (args != SessionConstants.information &&
-        args != SessionConstants.exit &&
-        args != SessionConstants.pause) {
-      await cleanUpCollaborationArtifacts(const NoParams());
-    }
+    await cleanUpCollaborationArtifacts(const NoParams());
     await userInfo.checkIfVersionIsUpToDate();
 
     if (userInfo.isOnMostRecentVersion) {

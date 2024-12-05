@@ -135,6 +135,12 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   }
 
   @action
+  openPurposeModal() {
+    purposeBanner.onTap();
+    sessionNavigation.setWidgetVisibility(false);
+  }
+
+  @action
   onCollaboratorJoined() {
     setCollaboratorHasLeft(false);
     purposeBanner.setWidgetVisibility(true);
