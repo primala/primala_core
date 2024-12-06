@@ -75,6 +75,9 @@ flutter:
     - assets/end_session_icon.png
     - assets/session_information_icon.png
     - assets/pause_icon.png
+    - assets/storage_icon.png
+    - assets/queue_icon.png
+    - assets/add_remove_icon.png
 flutter_icons:
   image_path: "assets/app_logo.png"
   android: true

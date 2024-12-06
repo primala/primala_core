@@ -42,8 +42,7 @@ abstract class _StorageHomeCoordinatorBase
   }
 
   @observable
-  ObservableList<NokhteSessionArtifactEntity> nokhteSessionArtifacts =
-      ObservableList();
+  ObservableList<GroupInformationEntity> groups = ObservableList.of([]);
 
   @observable
   bool aliasIsUpdated = false;
@@ -58,17 +57,18 @@ abstract class _StorageHomeCoordinatorBase
   constructor() async {
     widgets.constructor();
     initReactors();
-    await getNokhteSessionArtifacts();
+    await getGroups();
     await captureScreen(StorageConstants.home);
   }
 
   @action
-  getNokhteSessionArtifacts() async {
-    final res = await contract.getNokhteSessionArtifacts(const NoParams());
+  getGroups() async {
+    final res = await contract.getGroups(const NoParams());
     res.fold(
       (failure) => errorUpdater(failure),
       (artifacts) {
-        nokhteSessionArtifacts = ObservableList.of(artifacts);
+        print('artifacts: $artifacts');
+        groups = ObservableList.of(artifacts);
       },
     );
   }
@@ -84,9 +84,34 @@ abstract class _StorageHomeCoordinatorBase
 
   initReactors() {
     disposers.add(beachWavesMovieStatusReactor());
-    disposers.add(sessionCardEditReactor());
-    disposers.add(sessionCardTapReactor());
+    // disposers.add(sessionCardEditReactor());
+    // disposers.add(sessionCardTapReactor());
+    disposers.add(groupReactor());
+    disposers.add(groupDisplayedDragReactor());
+    disposers.add(widgets.groupRegistrationReactor(onGroupCreated));
   }
+
+  @action
+  onGroupCreated() async {
+    await contract.createNewGroup(widgets.groupRegistration.params);
+    await getGroups();
+  }
+
+  groupReactor() => reaction(
+        (p0) => groups,
+        (p0) {
+          // if (p0.isNotEmpty) {
+          widgets.groupDisplay.onGroupsReceived(p0);
+          // }
+        },
+      );
+
+  groupDisplayedDragReactor() =>
+      reaction((p0) => widgets.groupDisplay.successfulDragsCount, (p0) async {
+        widgets.groupDisplay.setWidgetVisibility(false);
+        await contract.deleteGroup(widgets.groupDisplay.groupUIDToDelete);
+        await getGroups();
+      });
 
   beachWavesMovieStatusReactor() =>
       reaction((p0) => widgets.beachWaves.movieStatus, (p0) {
@@ -94,14 +119,15 @@ abstract class _StorageHomeCoordinatorBase
             widgets.beachWaves.movieMode == BeachWaveMovieModes.anyToOnShore) {
           widgets.dispose();
           Modular.to.navigate(HomeConstants.home);
-        } else if (p0 == MovieStatus.finished &&
-            widgets.beachWaves.movieMode == BeachWaveMovieModes.skyToDrySand) {
-          widgets.dispose();
-          Modular.to.navigate(StorageConstants.content, arguments: {
-            "content":
-                nokhteSessionArtifacts[widgets.sessionCard.lastTappedIndex],
-          });
         }
+        // else if (p0 == MovieStatus.finished &&
+        //   widgets.beachWaves.movieMode == BeachWaveMovieModes.skyToDrySand) {
+        // widgets.dispose();
+        // Modular.to.navigate(StorageConstants.content, arguments: {
+        //   "content":
+        //       nokhteSessionArtifacts[widgets.sessionCard.lastTappedIndex],
+        // });
+        // }
       });
 
   sessionCardEditReactor() => reaction(

@@ -63,7 +63,6 @@ abstract class _SessionLobbyCoordinatorBase
       widgets.navigationMenu.setWidgetVisibility(false);
       await presence.listen();
     }
-    print('number of collaborators ${sessionMetadata.numberOfCollaborators}');
     if (sessionMetadata.numberOfCollaborators.isGreaterThan(1)) {
       widgets.navigationMenu.setWidgetVisibility(false);
     }
@@ -103,16 +102,15 @@ abstract class _SessionLobbyCoordinatorBase
   @action
   onOpen() async {
     await presence.updateCurrentPhase(0.0);
-    widgets.navigationMenu.setWidgetVisibility(false);
-    widgets.qrCode.setWidgetVisibility(false);
-    widgets.primarySmartText.setWidgetVisibility(false);
+    widgets.onModalOpened();
   }
 
   @action
   onClose() async {
     await presence.updateCurrentPhase(1.0);
     widgets.qrCode.setWidgetVisibility(true);
-    if (hasReceivedRoutingArgs) {
+    if (hasReceivedRoutingArgs &&
+        sessionMetadata.numberOfCollaborators.isLessThan(2)) {
       widgets.navigationMenu.setWidgetVisibility(true);
     }
     widgets.primarySmartText.setWidgetVisibility(true);

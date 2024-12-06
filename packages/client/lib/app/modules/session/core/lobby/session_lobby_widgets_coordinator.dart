@@ -135,6 +135,13 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
   }
 
   @action
+  onModalOpened() {
+    navigationMenu.setWidgetVisibility(false);
+    qrCode.setWidgetVisibility(false);
+    primarySmartText.setWidgetVisibility(false);
+  }
+
+  @action
   onCollaboratorLeft() {
     primarySmartText.setWidgetVisibility(false);
     presetArticle.setShowPreview(false);

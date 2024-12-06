@@ -136,6 +136,7 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
 
   @action
   openPurposeModal() {
+    if (navigationMenu.hasSwipedDown) return;
     purposeBanner.onTap();
     sessionNavigation.setWidgetVisibility(false);
   }

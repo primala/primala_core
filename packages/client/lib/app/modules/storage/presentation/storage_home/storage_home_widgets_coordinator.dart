@@ -20,6 +20,8 @@ abstract class _StorageHomeWidgetsCoordinatorBase
   final SmartTextStore headerText;
   final BackButtonStore backButton;
   final NokhteBlurStore blur;
+  final GroupDisplayStore groupDisplay;
+  final GroupRegistrationStore groupRegistration;
 
   @override
   final WifiDisconnectOverlayStore wifiDisconnectOverlay;
@@ -27,6 +29,8 @@ abstract class _StorageHomeWidgetsCoordinatorBase
     required this.wifiDisconnectOverlay,
     required this.beachWaves,
     required this.headerText,
+    required this.groupDisplay,
+    required this.groupRegistration,
     required this.sessionCard,
     required this.backButton,
     required this.blur,
@@ -50,6 +54,7 @@ abstract class _StorageHomeWidgetsCoordinatorBase
 
   initReactors() {
     disposers.add(backButtonReactor());
+    disposers.add(groupDisplayReactor());
   }
 
   @observable
@@ -68,6 +73,17 @@ abstract class _StorageHomeWidgetsCoordinatorBase
     sessionCard.dispose();
     dispose();
   }
+
+  groupDisplayReactor() => reaction((p0) => groupDisplay.tapCount, (p0) {
+        groupRegistration.setWidgetVisibility(true);
+      });
+
+  groupRegistrationReactor(Function onSubmit) =>
+      reaction((p0) => groupRegistration.submissionCount, (p0) async {
+        await onSubmit();
+        groupDisplay.setWidgetVisibility(true);
+        //
+      });
 
   backButtonReactor() => reaction((p0) => backButton.tapCount, (p0) {
         if (backButton.showWidget) {

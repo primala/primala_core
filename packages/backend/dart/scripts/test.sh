@@ -4,3 +4,4 @@ flutter test test/02_active_nokhte_sessions_pair_table_test.dart
 flutter test test/03_finished_nokhte_sessions_table_test.dart
 flutter test test/04_company_presets_table_test.dart
 flutter test test/05_company_presets_preferences_table_test.dart
+flutter test test/06_group_information_table_test.dart
