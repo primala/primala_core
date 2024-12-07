@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
 import 'package:nokhte_backend/tables/group_information.dart';
 
@@ -9,6 +10,10 @@ class GroupInformationModel extends GroupInformationEntity {
     required super.groupUID,
   });
 
+  static String formatTitleString(String unformattedString) {
+    return '${unformattedString.characters.first.toUpperCase()}${unformattedString.substring(1)}';
+  }
+
   static List<GroupInformationModel> fromSupabase(List res) {
     if (res.isEmpty) {
       return const [];
@@ -18,8 +23,10 @@ class GroupInformationModel extends GroupInformationEntity {
         groups.add(
           GroupInformationModel(
             groupMembers: group[GroupInformationQueries.GROUP_MEMBERS],
-            groupName: group[GroupInformationQueries.GROUP_NAME],
-            groupHandle: group[GroupInformationQueries.GROUP_HANDLE],
+            groupName:
+                formatTitleString(group[GroupInformationQueries.GROUP_NAME]),
+            groupHandle:
+                "@${formatTitleString(group[GroupInformationQueries.GROUP_HANDLE])}",
             groupUID: group[GroupInformationQueries.UID],
           ),
         );

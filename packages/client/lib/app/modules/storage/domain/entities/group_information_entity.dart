@@ -13,6 +13,13 @@ class GroupInformationEntity extends Equatable {
     required this.groupUID,
   });
 
+  factory GroupInformationEntity.empty() => const GroupInformationEntity(
+        groupMembers: [],
+        groupName: '',
+        groupHandle: '',
+        groupUID: '',
+      );
+
   @override
   List<Object> get props => [
         groupMembers,

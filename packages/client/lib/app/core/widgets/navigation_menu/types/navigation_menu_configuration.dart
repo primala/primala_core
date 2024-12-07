@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/home/home.dart';
 import 'package:nokhte/app/modules/session/session.dart';
@@ -163,15 +162,6 @@ class NavigationMenuConfiguration extends Equatable {
       gradients: gradients,
       labels: labels,
       routes: routes,
-    );
-  }
-
-  void _navigateQuickActions(String route) {
-    Modular.to.navigate(
-      HomeConstants.quickActionsRouter,
-      arguments: {
-        HomeConstants.QUICK_ACTIONS_ROUTE: route,
-      },
     );
   }
 

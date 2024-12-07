@@ -21,7 +21,13 @@ class GroupDisplay extends HookWidget {
     final screenSize = useFullScreenSize();
 
     useEffect(() {
-      store.constructor();
+      store.constructor(
+        context,
+        useAnimationController(
+          duration: Seconds.get(1),
+          reverseDuration: Seconds.get(1),
+        ),
+      );
       return null;
     }, []);
 
@@ -135,7 +141,7 @@ class GroupDisplay extends HookWidget {
     return GestureDetector(
       key: const ValueKey('add-button'),
       onTap: () {
-        store.onTap();
+        store.onAddButtonTap();
       },
       child: Container(
         width: 80,
@@ -159,7 +165,7 @@ class GroupDisplay extends HookWidget {
   }) {
     return Observer(builder: (context) {
       return GestureDetector(
-        onTap: () => _showGroupDetailsModal(group, context),
+        onTap: () => store.showGroupDetailsModal(group),
         child: Column(
           children: [
             Container(
@@ -175,7 +181,7 @@ class GroupDisplay extends HookWidget {
               ),
               child: Center(
                 child: Text(
-                  group.groupName.characters.first.toUpperCase(),
+                  group.groupName.characters.first,
                   style: GoogleFonts.jost(
                     fontSize: 25,
                     fontWeight: FontWeight.w400,
@@ -189,7 +195,7 @@ class GroupDisplay extends HookWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              '${group.groupName.characters.first.toUpperCase()}${group.groupName.substring(1)}',
+              group.groupName,
               style: GoogleFonts.jost(
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
@@ -202,130 +208,6 @@ class GroupDisplay extends HookWidget {
           ],
         ),
       );
-    });
-  }
-
-  Widget item(String path, String title) => Column(
-        children: [
-          Container(
-            height: 100,
-            width: 100,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.white,
-                width: 2,
-              ),
-              borderRadius: BorderRadius.circular(20),
-              // color: Colors.white,
-            ),
-            child: Image.asset(
-              path,
-              width: 60,
-              height: 60,
-            ),
-          ),
-          SizedBox(height: 10),
-          Chivo(
-            title,
-            fontSize: 16,
-            fontColor: Colors.white,
-          )
-        ],
-      );
-
-  void _showGroupDetailsModal(
-      GroupInformationEntity group, BuildContext context) {
-    if (store.showModal) return;
-    store.blur.init(end: Seconds.get(0, milli: 200));
-    showModalBottomSheet(
-      isDismissible: false,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(36),
-        ),
-      ),
-      isScrollControlled: true,
-      backgroundColor: Colors.black.withOpacity(.2),
-      context: context,
-      builder: (context) => DraggableScrollableSheet(
-        maxChildSize: .91,
-        initialChildSize: .9,
-        minChildSize: .7,
-        expand: false,
-        builder: (context, scrollController) => Stack(
-          children: [
-            SingleChildScrollView(
-              controller: scrollController,
-              child: Observer(
-                builder: (context) => SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 8.0, left: 16.0, bottom: 8.0),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  bottom: 8.0,
-                                  right: 16.0,
-                                ),
-                                child: Container(
-                                  height: 70,
-                                  width: 70,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(80),
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              Chivo(
-                                '${group.groupName.characters.first.toUpperCase()}${group.groupName.substring(1)}',
-                                // style: GoogleFonts.jost(
-                                fontSize: 30,
-                                // fontWeight: FontWeight.bold,
-                                // color: Colors.white,
-                                // ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        // const SizedBox(height: 10),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 18),
-                          child: Chivo(
-                            '@${group.groupName.characters.first.toUpperCase()}${group.groupName.substring(1)}',
-                            // style: GoogleFonts.jost(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            // color: Colors.white,
-                            // ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            item('assets/storage_icon.png', 'Storage'),
-                            item('assets/queue_icon.png', 'Queue'),
-                            item('assets/add_remove_icon.png', 'Add or Remove'),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ).whenComplete(() {
-      store.blur.reverse();
-      store.setShowModal(false);
     });
   }
 }
