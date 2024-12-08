@@ -61,5 +61,5 @@ class UserInformationQueries with UserInformationConstants {
            ''').eq(UID, userUID);
 
   Future<List> getCollaboratorRows() async =>
-      await supabase.from(TABLE).select();
+      await supabase.from(TABLE).select().neq(UID, userUID);
 }

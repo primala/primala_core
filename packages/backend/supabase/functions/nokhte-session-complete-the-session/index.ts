@@ -45,14 +45,14 @@ serve(async (req) => {
 
     const duplicateCheckRes = (
       await supabaseAdmin
-        .from("finished_nokhte_sessions")
+        .from("finished_sessions")
         .select()
         .contains("collaborator_uids", `{${userUID}}`)
         .eq("content", content)
     )?.data;
     if (isEmptyOrNull(duplicateCheckRes)) {
       const { error } = await supabaseAdmin
-        .from("finished_nokhte_sessions")
+        .from("finished_sessions")
         .insert({
           group_uid: groupUID,
           content: content,

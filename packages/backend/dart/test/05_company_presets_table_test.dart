@@ -26,7 +26,6 @@ void main() {
   const soloTags = [
     'hold_to_speak',
     'tap_to_speak',
-    'no_seating',
     'deactivated_notes',
     'multi_focal_notes'
   ];

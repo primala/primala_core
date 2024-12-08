@@ -1,5 +1,4 @@
 // ignore_for_file: file_names
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nokhte_backend/tables/finished_sessions/queries.dart';
 import 'package:nokhte_backend/tables/group_information.dart';
@@ -40,10 +39,11 @@ void main() {
   });
 
   tearDownAll(() async {
+    final res = (await groupQueries.select()).first['uid'];
     await tSetup.supabaseAdmin
-        .from("finished_nokhte_sessions")
+        .from("finished_sessions")
         .delete()
-        .eq("collaborator_uids", sortedArr);
+        .eq("group_uid", res);
   });
 
   test("initiateSession", () async {
@@ -153,7 +153,7 @@ void main() {
       emits(
         SessionMetadata(
           secondarySpotlightIsEmpty: true,
-          content: ["new purpose"],
+          content: ["test"],
           speakerUID: null,
           userCanSpeak: true,
           speakingTimerStart: DateTime.fromMillisecondsSinceEpoch(0),
@@ -170,13 +170,10 @@ void main() {
   test("completeSession", () async {
     final sessionTimestamp = (await user1STQueries.getCreatedAt()).mainType;
     await user1STQueries.completeTheSession();
-    final res = await user1FinishedQueries.select();
+    final groupId = (await groupQueries.select()).first['uid'];
+    final res = await user1FinishedQueries.select(groupId: groupId);
     expect(res.first["content"], ["test"]);
-    expect(
-      res.first["collaborator_uids"],
-      sortedArr..sort(),
-    );
+    expect(res.first["group_uid"], groupId);
     expect(res.first["session_timestamp"], sessionTimestamp);
-    expect(res.first["aliases"], ["", ""]);
   });
 }

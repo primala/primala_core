@@ -14,10 +14,11 @@ void main() {
   final testGroupHandle = '@testgroup';
   late List<String> testGroupMembers;
 
-  setUp(() async {
+  setUpAll(() async {
     await tSetup.setUp();
     groupQueries = GroupInformationQueries(supabase: tSetup.user1Supabase);
-
+    final res = (await groupQueries.select()).first['uid'];
+    await groupQueries.delete(uid: res);
     testGroupMembers = [tSetup.firstUserUID];
   });
 
@@ -55,13 +56,11 @@ void main() {
   });
 
   test("should be able to delete a group", () async {
-    final insertedGroup = await groupQueries.insert(
-      groupName: 'Group to Delete',
-      groupHandle: '@deletegroup',
-    );
+    final res = (await groupQueries.select());
+    await groupQueries.delete(uid: res.first['uid']);
 
-    await groupQueries.delete(uid: insertedGroup.first['uid']);
+    final res2 = (await groupQueries.select());
 
-    expect(true, isTrue);
+    expect(res2.isEmpty, true);
   });
 }
