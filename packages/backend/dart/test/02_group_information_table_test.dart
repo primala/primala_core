@@ -17,8 +17,6 @@ void main() {
   setUpAll(() async {
     await tSetup.setUp();
     groupQueries = GroupInformationQueries(supabase: tSetup.user1Supabase);
-    final res = (await groupQueries.select()).first['uid'];
-    await groupQueries.delete(uid: res);
     testGroupMembers = [tSetup.firstUserUID];
   });
 
