@@ -1,7 +1,7 @@
 // ignore_for_file: constant_identifier_names, non_constant_identifier_names
 
-mixin RTActiveNokhteSessionsConstants {
-  String TABLE = "rt_active_nokhte_sessions";
+mixin RealTimeActiveNokhteSessionsConstants {
+  String TABLE = "realtime_active_sessions";
   String SPEAKER_SPOTLIGHT = 'speaker_spotlight';
   String SPEAKING_TIMER_START = 'speaking_timer_start';
   String SECONDARY_SPEAKER_SPOTLIGHT = 'secondary_speaker_spotlight';

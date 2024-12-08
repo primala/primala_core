@@ -1,18 +1,20 @@
 // ignore_for_file: file_names
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nokhte_backend/tables/_real_time_disabled/finished_nokhte_sessions/queries.dart';
-import 'package:nokhte_backend/tables/rt_active_nokhte_sessions.dart';
-import 'package:nokhte_backend/tables/st_active_nokhte_sessions.dart';
+import 'package:nokhte_backend/tables/finished_nokhte_sessions/queries.dart';
+import 'package:nokhte_backend/tables/group_information.dart';
+import 'package:nokhte_backend/tables/realtime_active_sessions.dart';
+import 'package:nokhte_backend/tables/static_active_sessions.dart';
 import 'shared/shared.dart';
 
 void main() {
-  late RTActiveNokhteSessionQueries user1RTQueries;
-  late RTActiveNokhteSessionQueries user2RTQueries;
-  late RTActiveNokhteSessionsStream user1Stream;
-  late STActiveNokhteSessionQueries user1STQueries;
-  late STActiveNokhteSessionQueries user2STQueries;
-  late FinishedNokhteSessionQueries user1FinishedQueries;
+  late RealtimeActiveSessionQueries user1RTQueries;
+  late RealtimeActiveSessionQueries user2RTQueries;
+  late RealtimeActiveSessionStream user1Stream;
+  late GroupInformationQueries groupQueries;
+  late StaticActiveSessionQueries user1STQueries;
+  late StaticActiveSessionQueries user2STQueries;
+  late FinishedSessionQueries user1FinishedQueries;
   final tSetup = CommonCollaborativeTestFunctions();
   List sortedArr = [];
 
@@ -20,16 +22,15 @@ void main() {
     await tSetup.setUp();
     sortedArr = [tSetup.firstUserUID, tSetup.secondUserUID];
     user1RTQueries =
-        RTActiveNokhteSessionQueries(supabase: tSetup.user1Supabase);
+        RealtimeActiveSessionQueries(supabase: tSetup.user1Supabase);
+    groupQueries = GroupInformationQueries(supabase: tSetup.user1Supabase);
     user2RTQueries =
-        RTActiveNokhteSessionQueries(supabase: tSetup.user2Supabase);
-    user1STQueries =
-        STActiveNokhteSessionQueries(supabase: tSetup.user1Supabase);
-    user2STQueries =
-        STActiveNokhteSessionQueries(supabase: tSetup.user2Supabase);
+        RealtimeActiveSessionQueries(supabase: tSetup.user2Supabase);
+    user1STQueries = StaticActiveSessionQueries(supabase: tSetup.user1Supabase);
+    user2STQueries = StaticActiveSessionQueries(supabase: tSetup.user2Supabase);
     user1FinishedQueries =
-        FinishedNokhteSessionQueries(supabase: tSetup.user1Supabase);
-    user1Stream = RTActiveNokhteSessionsStream(supabase: tSetup.user1Supabase);
+        FinishedSessionQueries(supabase: tSetup.user1Supabase);
+    user1Stream = RealtimeActiveSessionStream(supabase: tSetup.user1Supabase);
     for (var userUID in sortedArr) {
       await tSetup.supabaseAdmin.from("user_metadata").update({
         "is_subscribed": false,
@@ -126,6 +127,14 @@ void main() {
     expect(res2.mainType, isNull);
   });
 
+  test("updateGroupUID", () async {
+    final res =
+        (await groupQueries.select()).first[GroupInformationQueries.UID];
+    await user1STQueries.updateGroupUID(res);
+    final res1 = await user1STQueries.getGroupUID();
+    expect(res1.mainType, isNotNull);
+  });
+
   test("updateCurrentPhases", () async {
     await user1RTQueries.updateCurrentPhases(1);
     final currentPhases = (await user1RTQueries.getCurrentPhases()).mainType;
@@ -142,7 +151,7 @@ void main() {
     expect(
       stream,
       emits(
-        NokhteSessionMetadata(
+        SessionMetadata(
           secondarySpotlightIsEmpty: true,
           content: ["new purpose"],
           speakerUID: null,

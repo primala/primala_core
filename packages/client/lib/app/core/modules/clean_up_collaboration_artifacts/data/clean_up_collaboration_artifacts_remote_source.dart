@@ -1,4 +1,4 @@
-import 'package:nokhte_backend/tables/rt_active_nokhte_sessions.dart';
+import 'package:nokhte_backend/tables/realtime_active_sessions.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class CleanUpCollaborationArtifactsRemoteSource {
@@ -8,11 +8,11 @@ abstract class CleanUpCollaborationArtifactsRemoteSource {
 class CleanUpCollaborationArtifactsRemoteSourceImpl
     implements CleanUpCollaborationArtifactsRemoteSource {
   final SupabaseClient supabase;
-  final RTActiveNokhteSessionQueries irlActiveNokhteSessionQueries;
+  final RealtimeActiveSessionQueries irlActiveNokhteSessionQueries;
   CleanUpCollaborationArtifactsRemoteSourceImpl({
     required this.supabase,
   }) : irlActiveNokhteSessionQueries =
-            RTActiveNokhteSessionQueries(supabase: supabase);
+            RealtimeActiveSessionQueries(supabase: supabase);
 
   @override
   deleteActiveNokhteSession() async =>

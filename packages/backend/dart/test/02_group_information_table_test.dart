@@ -21,10 +21,12 @@ void main() {
     testGroupMembers = [tSetup.firstUserUID];
   });
 
-  tearDownAll(() async => await tSetup.supabaseAdmin
-      .from(GroupInformationQueries.TABLE)
-      .delete()
-      .eq('group_handle', testGroupHandle));
+  tearDownAll(
+    () async => await groupQueries.insert(
+      groupName: testGroupName,
+      groupHandle: testGroupHandle,
+    ),
+  );
 
   test("should be able to insert & select a group", () async {
     await groupQueries.insert(

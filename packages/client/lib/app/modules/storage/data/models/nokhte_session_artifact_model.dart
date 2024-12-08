@@ -25,42 +25,40 @@ class NokhteSessionArtifactModel extends NokhteSessionArtifactEntity {
 
     for (var nokhteSession in nokhteSessionRes) {
       for (var collaboratorRow in collaboratorRowsRes) {
-        if ((nokhteSession[FinishedNokhteSessionQueries.COLLABORATOR_UIDS]
+        if ((nokhteSession[FinishedSessionQueries.COLLABORATOR_UIDS]
                     .contains(collaboratorRow["uid"]) ||
-                nokhteSession[FinishedNokhteSessionQueries.COLLABORATOR_UIDS]
+                nokhteSession[FinishedSessionQueries.COLLABORATOR_UIDS]
                     .contains(userUID)) &&
-            nokhteSession[FinishedNokhteSessionQueries.CONTENT].isNotEmpty) {
-          final content = nokhteSession[FinishedNokhteSessionQueries.CONTENT];
+            nokhteSession[FinishedSessionQueries.CONTENT].isNotEmpty) {
+          final content = nokhteSession[FinishedSessionQueries.CONTENT];
           final contentString = content.toString();
 
           if (uniqueContents.add(contentString)) {
             String title = '';
             final userIndex =
-                nokhteSession[FinishedNokhteSessionQueries.COLLABORATOR_UIDS]
+                nokhteSession[FinishedSessionQueries.COLLABORATOR_UIDS]
                     .indexOf(userUID);
-            if (nokhteSession[FinishedNokhteSessionQueries.ALIASES][userIndex]
+            if (nokhteSession[FinishedSessionQueries.ALIASES][userIndex]
                 .isEmpty) {
               title = 'Session with ${collaboratorRow["first_name"]}';
 
-              if (nokhteSession[FinishedNokhteSessionQueries.COLLABORATOR_UIDS]
+              if (nokhteSession[FinishedSessionQueries.COLLABORATOR_UIDS]
                       .toString() ==
                   [userUID].toString()) {
                 title = 'Solo Session';
               }
             } else {
-              title = nokhteSession[FinishedNokhteSessionQueries.ALIASES]
-                  [userIndex];
+              title = nokhteSession[FinishedSessionQueries.ALIASES][userIndex];
             }
             final date = DateTime.parse(
-              nokhteSession[FinishedNokhteSessionQueries.SESSION_TIMESTAMP],
+              nokhteSession[FinishedSessionQueries.SESSION_TIMESTAMP],
             );
 
             temp.add(NokhteSessionArtifactModel(
               date: formatDate(date),
               title: title,
               content: content,
-              sessionUID:
-                  nokhteSession[FinishedNokhteSessionQueries.SESSION_UID],
+              sessionUID: nokhteSession[FinishedSessionQueries.SESSION_UID],
             ));
           }
         }

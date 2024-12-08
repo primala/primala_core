@@ -1,8 +1,8 @@
 // ignore_for_file: constant_identifier_names
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class FinishedNokhteSessionQueries {
-  static const TABLE = 'finished_nokhte_sessions';
+class FinishedSessionQueries {
+  static const TABLE = 'finished_sessions';
   static const COLLABORATOR_UIDS = 'collaborator_uids';
   static const SESSION_TIMESTAMP = 'session_timestamp';
   static const CONTENT = 'content';
@@ -13,7 +13,7 @@ class FinishedNokhteSessionQueries {
   final SupabaseClient supabase;
   final String userUID;
 
-  FinishedNokhteSessionQueries({required this.supabase})
+  FinishedSessionQueries({required this.supabase})
       : userUID = supabase.auth.currentUser?.id ?? '';
 
   Future<List> select() async =>

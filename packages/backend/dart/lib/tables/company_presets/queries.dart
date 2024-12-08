@@ -1,6 +1,6 @@
 // ignore_for_file: constant_identifier_names
 
-import 'package:nokhte_backend/tables/_real_time_disabled/company_presets_preferences/queries.dart';
+import 'package:nokhte_backend/tables/company_presets_preferences/queries.dart';
 import 'package:nokhte_backend/tables/company_presets.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 export 'types/types.dart';

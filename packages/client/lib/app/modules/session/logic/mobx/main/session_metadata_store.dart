@@ -9,14 +9,14 @@ import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/presets/presets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte_backend/tables/company_presets.dart';
-import 'package:nokhte_backend/tables/rt_active_nokhte_sessions.dart';
+import 'package:nokhte_backend/tables/realtime_active_sessions.dart';
 part 'session_metadata_store.g.dart';
 
 class SessionMetadataStore = _SessionMetadataStoreBase
     with _$SessionMetadataStore;
 
 abstract class _SessionMetadataStoreBase
-    with Store, BaseMobxLogic<NoParams, Stream<NokhteSessionMetadata>> {
+    with Store, BaseMobxLogic<NoParams, Stream<SessionMetadata>> {
   final SessionPresenceContract contract;
   final PresetsLogicCoordinator presetsLogic;
   _SessionMetadataStoreBase({
@@ -85,7 +85,7 @@ abstract class _SessionMetadataStoreBase
   setAffirmativePhase(double value) => affirmativePhase = value;
 
   @observable
-  ObservableStream<NokhteSessionMetadata> sessionMetadata =
+  ObservableStream<SessionMetadata> sessionMetadata =
       ObservableStream(const Stream.empty());
 
   StreamSubscription streamSubscription =

@@ -1,7 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, constant_identifier_names
 
 import 'package:nokhte/app/modules/session/logic/domain/domain.dart';
-import 'package:nokhte_backend/tables/st_active_nokhte_sessions.dart';
+import 'package:nokhte_backend/tables/static_active_sessions.dart';
 import 'package:nokhte_backend/tables/user_metadata.dart';
 import 'package:nokhte_backend/types/types.dart';
 
@@ -29,13 +29,13 @@ class StaticSessionMetadataModel extends StaticSessionMetadataEntity {
     } else {
       final m = UserMetadataConstants();
       final UID = m.UID;
-      const LEADER_UID = STActiveNokhteSessionsConstants.S_LEADER_UID;
-      const CREATED_AT = STActiveNokhteSessionsConstants.S_CREATED_AT;
+      const LEADER_UID = StaticActiveSessionsConstants.S_LEADER_UID;
+      const CREATED_AT = StaticActiveSessionsConstants.S_CREATED_AT;
       const COLLABORATOR_UIDS =
-          STActiveNokhteSessionsConstants.S_COLLABORATOR_UIDS;
+          StaticActiveSessionsConstants.S_COLLABORATOR_UIDS;
       const COLLABORATOR_NAMES =
-          STActiveNokhteSessionsConstants.S_COLLABORATOR_NAMES;
-      const PRESET_UID = STActiveNokhteSessionsConstants.S_PRESET_UID;
+          StaticActiveSessionsConstants.S_COLLABORATOR_NAMES;
+      const PRESET_UID = StaticActiveSessionsConstants.S_PRESET_UID;
       final leaderUID = sessionRes.first[LEADER_UID];
       final createdAt = DateTime.parse(sessionRes.first[CREATED_AT]);
       final orderedCollaboratorUIDs = sessionRes.first[COLLABORATOR_UIDS];

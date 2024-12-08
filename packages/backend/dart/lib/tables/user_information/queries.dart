@@ -1,4 +1,4 @@
-import 'package:nokhte_backend/tables/_real_time_disabled/company_presets/queries.dart';
+import 'package:nokhte_backend/tables/company_presets/queries.dart';
 
 import 'constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

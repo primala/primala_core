@@ -1,6 +1,6 @@
 import 'package:nokhte_backend/tables/company_presets.dart';
-import 'package:nokhte_backend/tables/rt_active_nokhte_sessions.dart';
-import 'package:nokhte_backend/tables/st_active_nokhte_sessions.dart';
+import 'package:nokhte_backend/tables/realtime_active_sessions.dart';
+import 'package:nokhte_backend/tables/static_active_sessions.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class SessionStartersRemoteSource {
@@ -20,13 +20,13 @@ abstract class SessionStartersRemoteSource {
 class SessionStartersRemoteSourceImpl implements SessionStartersRemoteSource {
   final SupabaseClient supabase;
   final String currentUserUID;
-  final RTActiveNokhteSessionsStream stream;
-  final STActiveNokhteSessionQueries queries;
+  final RealtimeActiveSessionStream stream;
+  final StaticActiveSessionQueries queries;
 
   SessionStartersRemoteSourceImpl({
     required this.supabase,
-  })  : stream = RTActiveNokhteSessionsStream(supabase: supabase),
-        queries = STActiveNokhteSessionQueries(supabase: supabase),
+  })  : stream = RealtimeActiveSessionStream(supabase: supabase),
+        queries = StaticActiveSessionQueries(supabase: supabase),
         currentUserUID = supabase.auth.currentUser?.id ?? '';
 
   @override

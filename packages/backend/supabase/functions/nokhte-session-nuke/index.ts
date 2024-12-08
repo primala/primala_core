@@ -11,7 +11,7 @@ serve(async (req) => {
   };
   const sessionRes = (
     await supabaseAdmin
-      .from("st_active_nokhte_sessions")
+      .from("static_active_sessions")
       .select()
       .eq("leader_uid", userUID)
   )?.data;
@@ -21,11 +21,11 @@ serve(async (req) => {
     if (sessionShouldBeNuked) {
       const sessionUID = await getSessionUID(userUID);
       const { error } = await supabaseAdmin
-        .from("rt_active_nokhte_sessions")
+        .from("realtime_active_sessions")
         .delete()
         .eq("session_uid", sessionUID);
       await supabaseAdmin
-        .from("st_active_nokhte_sessions")
+        .from("static_active_sessions")
         .delete()
         .eq("leader_uid", userUID);
       if (error != null) {

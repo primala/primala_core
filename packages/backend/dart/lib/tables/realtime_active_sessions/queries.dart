@@ -4,9 +4,9 @@ import 'package:nokhte_backend/utils/utils.dart';
 import 'constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class RTActiveNokhteSessionQueries extends ActiveNokhteSessionEdgeFunctions
-    with RTActiveNokhteSessionsConstants, SessionUtils {
-  RTActiveNokhteSessionQueries({
+class RealtimeActiveSessionQueries extends ActiveSessionEdgeFunctions
+    with RealTimeActiveNokhteSessionsConstants, SessionUtils {
+  RealtimeActiveSessionQueries({
     required super.supabase,
   });
 

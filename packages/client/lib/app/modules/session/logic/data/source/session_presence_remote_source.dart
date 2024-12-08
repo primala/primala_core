@@ -1,7 +1,7 @@
 import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte_backend/tables/finished_nokhte_sessions.dart';
-import 'package:nokhte_backend/tables/rt_active_nokhte_sessions.dart';
-import 'package:nokhte_backend/tables/st_active_nokhte_sessions.dart';
+import 'package:nokhte_backend/tables/realtime_active_sessions.dart';
+import 'package:nokhte_backend/tables/static_active_sessions.dart';
 import 'package:nokhte_backend/tables/user_metadata.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -10,7 +10,7 @@ abstract class SessionPresenceRemoteSource {
   Future<List> setUserAsCurrentTalker();
   Future<List> clearTheCurrentTalker();
   Future<List> updateCurrentPhase(double params);
-  Stream<NokhteSessionMetadata> listenToSessionMetadata();
+  Stream<SessionMetadata> listenToSessionMetadata();
   Future<bool> cancelSessionMetadataStream();
   Future<List> addContent(AddContentParams content);
   Future<List> letEmCook();
@@ -27,16 +27,16 @@ abstract class SessionPresenceRemoteSource {
 
 class SessionPresenceRemoteSourceImpl implements SessionPresenceRemoteSource {
   final SupabaseClient supabase;
-  final RTActiveNokhteSessionQueries rtQueries;
-  final STActiveNokhteSessionQueries stQueries;
-  final RTActiveNokhteSessionsStream stream;
-  final FinishedNokhteSessionQueries finishedQueries;
+  final RealtimeActiveSessionQueries rtQueries;
+  final StaticActiveSessionQueries stQueries;
+  final RealtimeActiveSessionStream stream;
+  final FinishedSessionQueries finishedQueries;
   final UserMetadataQueries userMetadata;
   SessionPresenceRemoteSourceImpl({required this.supabase})
-      : rtQueries = RTActiveNokhteSessionQueries(supabase: supabase),
-        stQueries = STActiveNokhteSessionQueries(supabase: supabase),
-        finishedQueries = FinishedNokhteSessionQueries(supabase: supabase),
-        stream = RTActiveNokhteSessionsStream(supabase: supabase),
+      : rtQueries = RealtimeActiveSessionQueries(supabase: supabase),
+        stQueries = StaticActiveSessionQueries(supabase: supabase),
+        finishedQueries = FinishedSessionQueries(supabase: supabase),
+        stream = RealtimeActiveSessionStream(supabase: supabase),
         userMetadata = UserMetadataQueries(supabase: supabase);
 
   @override

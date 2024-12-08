@@ -1,6 +1,6 @@
 // ignore_for_file: file_names
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nokhte_backend/tables/_real_time_disabled/company_presets/queries.dart';
+import 'package:nokhte_backend/tables/company_presets/queries.dart';
 
 import 'shared/shared.dart';
 

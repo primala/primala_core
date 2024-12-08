@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:nokhte/app/core/error/failure.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte_backend/tables/rt_active_nokhte_sessions.dart';
+import 'package:nokhte_backend/tables/realtime_active_sessions.dart';
 
 abstract class SessionPresenceContract {
   Future<Either<Failure, bool>> addContent(AddContentParams params);
@@ -17,8 +17,8 @@ abstract class SessionPresenceContract {
   Future<Either<Failure, StaticSessionMetadataEntity>> getSTSessionMetadata(
     NoParams params,
   );
-  Future<Either<Failure, Stream<NokhteSessionMetadata>>>
-      listenToRTSessionMetadata(NoParams params);
+  Future<Either<Failure, Stream<SessionMetadata>>> listenToRTSessionMetadata(
+      NoParams params);
   Future<bool> cancelSessionMetadataStream(NoParams params);
 
   Future<Either<Failure, bool>> updateSpeakingTimerStart();

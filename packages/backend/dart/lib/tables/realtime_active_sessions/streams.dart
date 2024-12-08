@@ -4,13 +4,13 @@ import 'types/types.dart';
 import 'queries.dart';
 import 'package:nokhte_backend/tables/company_presets.dart';
 
-class RTActiveNokhteSessionsStream extends RTActiveNokhteSessionQueries
-    with RTActiveNokhteSessionsConstants {
+class RealtimeActiveSessionStream extends RealtimeActiveSessionQueries
+    with RealTimeActiveNokhteSessionsConstants {
   bool getActiveNokhteSessionCreationListingingStatus = false;
   bool sessionMetadataListeningStatus = false;
 
   final CompanyPresetsQueries presetsQueries;
-  RTActiveNokhteSessionsStream({required super.supabase})
+  RealtimeActiveSessionStream({required super.supabase})
       : presetsQueries = CompanyPresetsQueries(supabase: supabase);
 
   Future<bool> cancelSessionActivationStream() async {
@@ -42,16 +42,16 @@ class RTActiveNokhteSessionsStream extends RTActiveNokhteSessionQueries
     return sessionMetadataListeningStatus;
   }
 
-  Stream<NokhteSessionMetadata> listenToPresenceMetadata() async* {
+  Stream<SessionMetadata> listenToPresenceMetadata() async* {
     sessionMetadataListeningStatus = true;
     await for (var event in supabase
-        .from("rt_active_nokhte_sessions")
+        .from("realtime_active_sessions")
         .stream(primaryKey: ['id'])) {
       if (event.isNotEmpty) {
         if (!sessionMetadataListeningStatus) {
           break;
         }
-        yield NokhteSessionMetadata(
+        yield SessionMetadata(
           speakingTimerStart: event.first[SPEAKING_TIMER_START] == null
               ? DateTime.fromMillisecondsSinceEpoch(0)
               : DateTime.parse(event.first[SPEAKING_TIMER_START]),

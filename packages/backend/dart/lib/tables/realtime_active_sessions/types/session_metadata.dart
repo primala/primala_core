@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-class NokhteSessionMetadata extends Equatable {
+class SessionMetadata extends Equatable {
   final bool everyoneIsOnline;
   final List phases;
   final bool sessionHasBegun;
@@ -12,7 +12,7 @@ class NokhteSessionMetadata extends Equatable {
   final DateTime speakingTimerStart;
   final List content;
 
-  NokhteSessionMetadata({
+  SessionMetadata({
     required this.everyoneIsOnline,
     required this.phases,
     required this.userCanSpeak,

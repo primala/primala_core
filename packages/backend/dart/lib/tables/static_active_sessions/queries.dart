@@ -1,24 +1,24 @@
 // ignore_for_file: constant_identifier_names
 import 'package:nokhte_backend/edge_functions/active_nokhte_session.dart';
 import 'package:nokhte_backend/tables/company_presets.dart';
-import 'package:nokhte_backend/tables/rt_active_nokhte_sessions.dart';
+import 'package:nokhte_backend/tables/realtime_active_sessions.dart';
 import 'package:nokhte_backend/tables/user_information.dart';
 import 'package:nokhte_backend/types/types.dart';
 import 'package:nokhte_backend/utils/utils.dart';
 import 'constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class STActiveNokhteSessionQueries extends ActiveNokhteSessionEdgeFunctions
-    with STActiveNokhteSessionsConstants, SessionUtils {
+class StaticActiveSessionQueries extends ActiveSessionEdgeFunctions
+    with StaticActiveSessionsConstants, SessionUtils {
   final UserInformationQueries userInformationQueries;
-  final RTActiveNokhteSessionQueries realtimeQueries;
+  final RealtimeActiveSessionQueries realtimeQueries;
   final CompanyPresetsQueries companyPresetsQueries;
 
-  STActiveNokhteSessionQueries({
+  StaticActiveSessionQueries({
     required super.supabase,
   })  : userInformationQueries = UserInformationQueries(supabase: supabase),
         companyPresetsQueries = CompanyPresetsQueries(supabase: supabase),
-        realtimeQueries = RTActiveNokhteSessionQueries(supabase: supabase);
+        realtimeQueries = RealtimeActiveSessionQueries(supabase: supabase);
 
   Future<List> select() async => await supabase.from(TABLE).select();
 
@@ -37,6 +37,10 @@ class STActiveNokhteSessionQueries extends ActiveNokhteSessionEdgeFunctions
 
   Future<SessionResponse<String>> getSessionUID() async =>
       await _getProperty<String>(SESSION_UID);
+
+  Future<SessionResponse<String>> getGroupUID() async =>
+      await _getProperty<String>(GROUP_UID);
+
   Future<SessionResponse<String>> getLeaderUID<String>() async =>
       await _getProperty(LEADER_UID);
 
@@ -79,6 +83,27 @@ class STActiveNokhteSessionQueries extends ActiveNokhteSessionEdgeFunctions
     }, shouldRetry: (result) {
       return result.isEmpty;
     });
+  }
+
+  // TODO test this
+  Future<List> updateGroupUID(String newGroupId) async {
+    await computeCollaboratorInformation();
+    final res = await getCreatedAt();
+    final version = res.currentVersion;
+    return await retry<List>(
+      action: () async {
+        return await _onCurrentActiveNokhteSession(
+          supabase.from(TABLE).update({
+            GROUP_UID: newGroupId,
+            VERSION: version + 1,
+          }),
+          version: version,
+        );
+      },
+      shouldRetry: (result) {
+        return result.isEmpty;
+      },
+    );
   }
 
   Future<List> updateSessionType(String newPresetUID) async {
