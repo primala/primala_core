@@ -1,19 +1,18 @@
 import 'package:equatable/equatable.dart';
 
-class NokhteSessionArtifactEntity extends Equatable {
+class SessionArtifactEntity extends Equatable {
   final String title;
   final String date;
   final String sessionUID;
   final List content;
-  const NokhteSessionArtifactEntity({
+  const SessionArtifactEntity({
     required this.title,
     required this.content,
     required this.sessionUID,
     required this.date,
   });
 
-  factory NokhteSessionArtifactEntity.initial() =>
-      const NokhteSessionArtifactEntity(
+  factory SessionArtifactEntity.initial() => const SessionArtifactEntity(
         title: '',
         content: [],
         sessionUID: '',

@@ -1,14 +1,11 @@
 import 'package:nokhte/app/modules/storage/storage.dart';
-import 'package:nokhte_backend/tables/finished_nokhte_sessions.dart';
+import 'package:nokhte_backend/tables/finished_sessions.dart';
 import 'package:nokhte_backend/tables/user_information.dart';
 import 'package:nokhte_backend/tables/group_information.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class StorageRemoteSource {
-  Future<List> getNokhteSessionArtifacts();
-  Future<List> getCollaboratorRows();
-  Future<List> updateSessionAlias(UpdateSessionAliasParams params);
-  String getUserUID();
+  Future<List> getSessions(String groupUID);
   Future<List> createNewGroup(CreateNewGroupParams params);
   Future<List> getGroups();
   Future<List> deleteGroup(String params);
@@ -26,21 +23,9 @@ class StorageRemoteSourceImpl implements StorageRemoteSource {
         userNamesQueries = UserInformationQueries(supabase: supabase);
 
   @override
-  getNokhteSessionArtifacts() async =>
-      await finishedNokhteSessionQueries.select();
-
-  @override
-  getCollaboratorRows() async => await userNamesQueries.getCollaboratorRows();
-
-  @override
-  updateSessionAlias(UpdateSessionAliasParams params) async =>
-      await finishedNokhteSessionQueries.updateAlias(
-        newAlias: params.newAlias,
-        sessionUID: params.sessionUID,
+  getSessions(groupUID) async => await finishedNokhteSessionQueries.select(
+        groupId: groupUID,
       );
-
-  @override
-  getUserUID() => supabase.auth.currentUser?.id ?? '';
 
   @override
   createNewGroup(params) async => await groupInformationQueries.insert(

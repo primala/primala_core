@@ -11,7 +11,7 @@ export 'session_card.dart';
 
 class SessionCard extends HookWidget {
   final SessionCardStore store;
-  final List<NokhteSessionArtifactEntity> sessions;
+  final List<SessionArtifactEntity> sessions;
   const SessionCard({
     super.key,
     required this.sessions,

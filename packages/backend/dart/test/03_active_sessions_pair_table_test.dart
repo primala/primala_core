@@ -1,7 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nokhte_backend/tables/finished_nokhte_sessions/queries.dart';
+import 'package:nokhte_backend/tables/finished_sessions/queries.dart';
 import 'package:nokhte_backend/tables/group_information.dart';
 import 'package:nokhte_backend/tables/realtime_active_sessions.dart';
 import 'package:nokhte_backend/tables/static_active_sessions.dart';

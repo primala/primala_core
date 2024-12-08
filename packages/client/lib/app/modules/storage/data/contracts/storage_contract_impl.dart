@@ -14,28 +14,14 @@ class StorageContractImpl with ResponseToStatus implements StorageContract {
   });
 
   @override
-  getNokhteSessionArtifacts(params) async {
+  getSessions(params) async {
     if (await networkInfo.isConnected) {
-      final nokhteSessionRes = await remoteSource.getNokhteSessionArtifacts();
-      final collaboratorRowsRes = await remoteSource.getCollaboratorRows();
-      final userUID = remoteSource.getUserUID();
+      final nokhteSessionRes = await remoteSource.getSessions(params);
       return Right(
-        NokhteSessionArtifactModel.fromSupabase(
-          nokhteSessionRes: nokhteSessionRes,
-          collaboratorRowsRes: collaboratorRowsRes,
-          userUID: userUID,
+        SessionArtifactModel.fromSupabase(
+          nokhteSessionRes,
         ),
       );
-    } else {
-      return Left(FailureConstants.internetConnectionFailure);
-    }
-  }
-
-  @override
-  updateSessionAlias(params) async {
-    if (await networkInfo.isConnected) {
-      final res = await remoteSource.updateSessionAlias(params);
-      return fromSupabase(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }

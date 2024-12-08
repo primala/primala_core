@@ -1,7 +1,7 @@
 import 'package:nokhte/app/core/modules/hive/hive.dart';
 import 'package:nokhte/app/core/modules/hive/mixin/mixin.dart';
 import 'package:nokhte_backend/tables/company_presets.dart';
-import 'package:nokhte_backend/tables/finished_nokhte_sessions.dart';
+import 'package:nokhte_backend/tables/finished_sessions.dart';
 import 'package:nokhte_backend/tables/user_information.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

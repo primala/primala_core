@@ -75,11 +75,11 @@ abstract class _StorageHomeCoordinatorBase
 
   @action
   updateSessionAlias(UpdateSessionAliasParams params) async {
-    final res = await contract.updateSessionAlias(params);
-    res.fold(
-      (failure) => errorUpdater(failure),
-      (updateStatus) => aliasIsUpdated = updateStatus,
-    );
+    // final res = await contract.updateSessionAlias(params);
+    // res.fold(
+    // (failure) => errorUpdater(failure),
+    // (updateStatus) => aliasIsUpdated = updateStatus,
+    // );
   }
 
   initReactors() {

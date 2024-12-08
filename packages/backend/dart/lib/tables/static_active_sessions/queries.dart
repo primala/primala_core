@@ -85,7 +85,6 @@ class StaticActiveSessionQueries extends ActiveSessionEdgeFunctions
     });
   }
 
-  // TODO test this
   Future<List> updateGroupUID(String newGroupId) async {
     await computeCollaboratorInformation();
     final res = await getCreatedAt();

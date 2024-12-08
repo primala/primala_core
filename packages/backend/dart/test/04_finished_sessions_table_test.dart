@@ -1,7 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nokhte_backend/tables/finished_nokhte_sessions/queries.dart';
+import 'package:nokhte_backend/tables/finished_sessions/queries.dart';
 import 'package:nokhte_backend/tables/group_information.dart';
 
 import 'shared/shared.dart';
@@ -23,14 +23,12 @@ void main() {
   });
 
   tearDownAll(() async {
+    final res =
+        (await groupQueries.select()).first[GroupInformationQueries.UID];
     await tSetup.supabaseAdmin
-        .from('finished_nokhte_sessions')
+        .from('finished_sessions')
         .delete()
-        .eq(FinishedSessionQueries.COLLABORATOR_UIDS, sortedUIDs);
-    await tSetup.supabaseAdmin
-        .from('finished_nokhte_sessions')
-        .delete()
-        .eq(FinishedSessionQueries.COLLABORATOR_UIDS, sortedUIDs);
+        .eq(FinishedSessionQueries.GROUP_UID, res);
   });
 
   test("select", () async {
@@ -42,24 +40,16 @@ void main() {
       "content": tSessionContent,
       "session_timestamp": now,
     });
-    final res = await user1Queries.select();
-    expect(res, isNotEmpty);
-  });
+    await tSetup.supabaseAdmin.from("finished_sessions").insert({
+      "session_uid": tSetup.secondUserUID,
+      "group_uid": groupId,
+      "content": tSessionContent,
+      "session_timestamp": now,
+    });
 
-  test("selectByCollaborationId", () async {
-    final res =
-        await user1Queries.selectByCollaborationId(tSetup.secondUserUID);
-    expect(res.first[FinishedSessionQueries.COLLABORATOR_UIDS], sortedUIDs);
-  });
-
-  test("updateAlias", () async {
-    final id =
-        (await user1Queries.select()).first[FinishedSessionQueries.SESSION_UID];
-    final res =
-        await user1Queries.updateAlias(newAlias: 'test', sessionUID: id);
-    expect(
-      res.first[FinishedSessionQueries.ALIASES].contains('test'),
-      true,
-    );
+    final res = await user1Queries.select(groupId: groupId);
+    expect(res.length, 2);
+    final res2 = await user1Queries.select();
+    expect(res2.length, 2);
   });
 }

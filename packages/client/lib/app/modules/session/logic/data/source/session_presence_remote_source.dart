@@ -1,5 +1,5 @@
 import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte_backend/tables/finished_nokhte_sessions.dart';
+import 'package:nokhte_backend/tables/finished_sessions.dart';
 import 'package:nokhte_backend/tables/realtime_active_sessions.dart';
 import 'package:nokhte_backend/tables/static_active_sessions.dart';
 import 'package:nokhte_backend/tables/user_metadata.dart';
