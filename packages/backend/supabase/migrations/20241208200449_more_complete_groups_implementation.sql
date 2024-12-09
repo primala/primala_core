@@ -592,3 +592,71 @@ AS $function$BEGIN
 END;$function$
 ;
 
+create table "public"."session_queues" (
+    "uid" uuid not null default gen_random_uuid(),
+    "group_uid" uuid not null,
+    "content" text not null default '''{}''::text[]'::text
+);
+
+
+alter table "public"."session_queues" enable row level security;
+
+CREATE UNIQUE INDEX session_queues_pkey ON public.session_queues USING btree (uid);
+
+alter table "public"."session_queues" add constraint "session_queues_pkey" PRIMARY KEY using index "session_queues_pkey";
+
+alter table "public"."session_queues" add constraint "session_queues_group_uid_fkey" FOREIGN KEY (group_uid) REFERENCES group_information(uid) not valid;
+
+alter table "public"."session_queues" validate constraint "session_queues_group_uid_fkey";
+
+grant delete on table "public"."session_queues" to "anon";
+
+grant insert on table "public"."session_queues" to "anon";
+
+grant references on table "public"."session_queues" to "anon";
+
+grant select on table "public"."session_queues" to "anon";
+
+grant trigger on table "public"."session_queues" to "anon";
+
+grant truncate on table "public"."session_queues" to "anon";
+
+grant update on table "public"."session_queues" to "anon";
+
+grant delete on table "public"."session_queues" to "authenticated";
+
+grant insert on table "public"."session_queues" to "authenticated";
+
+grant references on table "public"."session_queues" to "authenticated";
+
+grant select on table "public"."session_queues" to "authenticated";
+
+grant trigger on table "public"."session_queues" to "authenticated";
+
+grant truncate on table "public"."session_queues" to "authenticated";
+
+grant update on table "public"."session_queues" to "authenticated";
+
+grant delete on table "public"."session_queues" to "service_role";
+
+grant insert on table "public"."session_queues" to "service_role";
+
+grant references on table "public"."session_queues" to "service_role";
+
+grant select on table "public"."session_queues" to "service_role";
+
+grant trigger on table "public"."session_queues" to "service_role";
+
+grant truncate on table "public"."session_queues" to "service_role";
+
+grant update on table "public"."session_queues" to "service_role";
+
+create policy "Broad Permissions if Is a Group Member"
+on "public"."session_queues"
+as permissive
+for all
+to authenticated
+using (is_group_member(auth.uid(), group_uid));
+
+alter
+  publication supabase_realtime add table public.session_queues;

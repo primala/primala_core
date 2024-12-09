@@ -23,8 +23,7 @@ class FinishedSessionsQueries {
           .select()
           .eq(GROUP_UID, groupId)
           .order(SESSION_TIMESTAMP);
-    } else {
-      return await supabase.from(TABLE).select().order('session_timestamp');
     }
+    return await supabase.from(TABLE).select().order('session_timestamp');
   }
 }

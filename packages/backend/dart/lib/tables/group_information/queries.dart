@@ -1,6 +1,6 @@
 // ignore_for_file: constant_identifier_names
 
-import 'package:nokhte_backend/tables/finished_sessions/queries.dart';
+import 'package:nokhte_backend/tables/finished_sessions.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class GroupInformationQueries {
