@@ -13,7 +13,7 @@ void main() {
   late GroupInformationQueries groupQueries;
   late StaticActiveSessionQueries user1STQueries;
   late StaticActiveSessionQueries user2STQueries;
-  late FinishedSessionQueries user1FinishedQueries;
+  late FinishedSessionsQueries user1FinishedQueries;
   final tSetup = CommonCollaborativeTestFunctions();
   List sortedArr = [];
 
@@ -28,7 +28,7 @@ void main() {
     user1STQueries = StaticActiveSessionQueries(supabase: tSetup.user1Supabase);
     user2STQueries = StaticActiveSessionQueries(supabase: tSetup.user2Supabase);
     user1FinishedQueries =
-        FinishedSessionQueries(supabase: tSetup.user1Supabase);
+        FinishedSessionsQueries(supabase: tSetup.user1Supabase);
     user1Stream = RealtimeActiveSessionStream(supabase: tSetup.user1Supabase);
     for (var userUID in sortedArr) {
       await tSetup.supabaseAdmin.from("user_metadata").update({

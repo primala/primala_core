@@ -13,12 +13,12 @@ abstract class StorageRemoteSource {
 
 class StorageRemoteSourceImpl implements StorageRemoteSource {
   final SupabaseClient supabase;
-  final FinishedSessionQueries finishedNokhteSessionQueries;
+  final FinishedSessionsQueries finishedNokhteSessionQueries;
   final UserInformationQueries userNamesQueries;
   final GroupInformationQueries groupInformationQueries;
   StorageRemoteSourceImpl({required this.supabase})
       : finishedNokhteSessionQueries =
-            FinishedSessionQueries(supabase: supabase),
+            FinishedSessionsQueries(supabase: supabase),
         groupInformationQueries = GroupInformationQueries(supabase: supabase),
         userNamesQueries = UserInformationQueries(supabase: supabase);
 

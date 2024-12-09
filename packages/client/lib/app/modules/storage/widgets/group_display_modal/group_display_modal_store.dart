@@ -8,25 +8,33 @@ class GroupDisplayModalStore = _GroupDisplayModalStoreBase
     with _$GroupDisplayModalStore;
 
 abstract class _GroupDisplayModalStoreBase extends BaseWidgetStore with Store {
+  final GroupDisplaySessionCardStore groupDisplaySessionCard;
+
+  _GroupDisplayModalStoreBase({
+    required this.groupDisplaySessionCard,
+  });
+
   @observable
   GroupInformationEntity currentlySelectedGroup =
       GroupInformationEntity.empty();
 
   @action
-  setCurrentlySelectedGroup(GroupInformationEntity group) =>
-      currentlySelectedGroup = group;
+  setCurrentlySelectedGroup(GroupInformationEntity group) {
+    groupDisplaySessionCard.setSessions(group.sessions);
+    currentlySelectedGroup = group;
+  }
 
   @observable
-  GroupDisplayModalSection currentlySelectedSection =
-      GroupDisplayModalSection.storage;
+  GroupDisplayModalSectionType currentlySelectedSection =
+      GroupDisplayModalSectionType.storage;
 
   @action
-  setCurrentlySelectedSection(GroupDisplayModalSection section) =>
+  setCurrentlySelectedSection(GroupDisplayModalSectionType section) =>
       currentlySelectedSection = section;
 
   @action
   resetValues() {
     currentlySelectedGroup = GroupInformationEntity.empty();
-    currentlySelectedSection = GroupDisplayModalSection.storage;
+    currentlySelectedSection = GroupDisplayModalSectionType.storage;
   }
 }

@@ -30,12 +30,12 @@ class SessionPresenceRemoteSourceImpl implements SessionPresenceRemoteSource {
   final RealtimeActiveSessionQueries rtQueries;
   final StaticActiveSessionQueries stQueries;
   final RealtimeActiveSessionStream stream;
-  final FinishedSessionQueries finishedQueries;
+  final FinishedSessionsQueries finishedQueries;
   final UserMetadataQueries userMetadata;
   SessionPresenceRemoteSourceImpl({required this.supabase})
       : rtQueries = RealtimeActiveSessionQueries(supabase: supabase),
         stQueries = StaticActiveSessionQueries(supabase: supabase),
-        finishedQueries = FinishedSessionQueries(supabase: supabase),
+        finishedQueries = FinishedSessionsQueries(supabase: supabase),
         stream = RealtimeActiveSessionStream(supabase: supabase),
         userMetadata = UserMetadataQueries(supabase: supabase);
 

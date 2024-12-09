@@ -1,7 +1,7 @@
 // ignore_for_file: constant_identifier_names
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class FinishedSessionQueries {
+class FinishedSessionsQueries {
   static const TABLE = 'finished_sessions';
   static const GROUP_UID = 'group_uid';
   static const SESSION_TIMESTAMP = 'session_timestamp';
@@ -11,7 +11,7 @@ class FinishedSessionQueries {
   final SupabaseClient supabase;
   final String userUID;
 
-  FinishedSessionQueries({required this.supabase})
+  FinishedSessionsQueries({required this.supabase})
       : userUID = supabase.auth.currentUser?.id ?? '';
 
   Future<List> select({

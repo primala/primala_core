@@ -7,7 +7,7 @@ import 'package:nokhte_backend/tables/group_information.dart';
 import 'shared/shared.dart';
 
 void main() {
-  late FinishedSessionQueries user1Queries;
+  late FinishedSessionsQueries user1Queries;
   late GroupInformationQueries groupQueries;
   final tSetup = CommonCollaborativeTestFunctions();
   final tSessionContent = ["test1", 'test2', 'test3'];
@@ -19,7 +19,7 @@ void main() {
     groupQueries = GroupInformationQueries(supabase: tSetup.user1Supabase);
     sortedUIDs = [tSetup.firstUserUID, tSetup.secondUserUID];
     sortedUIDs.sort();
-    user1Queries = FinishedSessionQueries(supabase: tSetup.user1Supabase);
+    user1Queries = FinishedSessionsQueries(supabase: tSetup.user1Supabase);
   });
 
   tearDownAll(() async {
@@ -28,7 +28,7 @@ void main() {
     await tSetup.supabaseAdmin
         .from('finished_sessions')
         .delete()
-        .eq(FinishedSessionQueries.GROUP_UID, res);
+        .eq(FinishedSessionsQueries.GROUP_UID, res);
   });
 
   test("select", () async {

@@ -18,7 +18,7 @@ class UserInformationRemoteSourceImpl
     implements UserInformationRemoteSource {
   final SupabaseClient supabase;
   final UserInformationQueries userInfoQueries;
-  final FinishedSessionQueries finishedNokhteSessionQueries;
+  final FinishedSessionsQueries finishedNokhteSessionQueries;
   final CompanyPresetsQueries companyPresetQueries;
   final userInfoBox = HiveBoxes.userInformation.toString();
 
@@ -26,7 +26,7 @@ class UserInformationRemoteSourceImpl
       : userInfoQueries = UserInformationQueries(supabase: supabase),
         companyPresetQueries = CompanyPresetsQueries(supabase: supabase),
         finishedNokhteSessionQueries =
-            FinishedSessionQueries(supabase: supabase);
+            FinishedSessionsQueries(supabase: supabase);
 
   @override
   getUserInfo() async => await userInfoQueries.getUserInfo();

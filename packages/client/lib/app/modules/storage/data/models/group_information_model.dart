@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
+import 'package:nokhte_backend/tables/finished_sessions.dart';
 import 'package:nokhte_backend/tables/group_information.dart';
 
 class GroupInformationModel extends GroupInformationEntity {
@@ -8,6 +9,7 @@ class GroupInformationModel extends GroupInformationEntity {
     required super.groupName,
     required super.groupHandle,
     required super.groupUID,
+    required super.sessions,
   });
 
   static String formatTitleString(String unformattedString) {
@@ -22,6 +24,9 @@ class GroupInformationModel extends GroupInformationEntity {
       for (var group in res) {
         groups.add(
           GroupInformationModel(
+            sessions: SessionArtifactModel.fromSupabase(
+              group[FinishedSessionsQueries.TABLE],
+            ),
             groupMembers: group[GroupInformationQueries.GROUP_MEMBERS],
             groupName:
                 formatTitleString(group[GroupInformationQueries.GROUP_NAME]),

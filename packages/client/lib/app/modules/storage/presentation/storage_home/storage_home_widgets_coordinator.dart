@@ -82,7 +82,6 @@ abstract class _StorageHomeWidgetsCoordinatorBase
       reaction((p0) => groupRegistration.submissionCount, (p0) async {
         await onSubmit();
         groupDisplay.setWidgetVisibility(true);
-        //
       });
 
   backButtonReactor() => reaction((p0) => backButton.tapCount, (p0) {

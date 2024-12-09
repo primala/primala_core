@@ -22,13 +22,13 @@ class SessionArtifactModel extends SessionArtifactEntity {
     Set<String> uniqueContents = {};
 
     for (var session in response) {
-      final content = session[FinishedSessionQueries.CONTENT];
+      final content = session[FinishedSessionsQueries.CONTENT];
       final contentString = content.toString();
 
       if (uniqueContents.add(contentString)) {
         String title = '';
         final date = DateTime.parse(
-          session[FinishedSessionQueries.SESSION_TIMESTAMP],
+          session[FinishedSessionsQueries.SESSION_TIMESTAMP],
         );
         title = 'Session on ${formatDate(date)}';
 
@@ -36,7 +36,7 @@ class SessionArtifactModel extends SessionArtifactEntity {
           date: formatDate(date),
           title: title,
           content: content,
-          sessionUID: session[FinishedSessionQueries.SESSION_UID],
+          sessionUID: session[FinishedSessionsQueries.SESSION_UID],
         ));
       }
     }

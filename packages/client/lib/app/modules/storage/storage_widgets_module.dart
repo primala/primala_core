@@ -14,7 +14,9 @@ class StorageWidgetsModule extends Module {
     i.add<StorageHomeWidgetsCoordinator>(
       () => StorageHomeWidgetsCoordinator(
         groupDisplay: GroupDisplayStore(
-          groupDisplayModal: GroupDisplayModalStore(),
+          groupDisplayModal: GroupDisplayModalStore(
+            groupDisplaySessionCard: GroupDisplaySessionCardStore(),
+          ),
           blur: NokhteBlurStore(),
         ),
         groupRegistration: GroupRegistrationStore(),

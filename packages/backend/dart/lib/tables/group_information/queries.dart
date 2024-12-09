@@ -1,5 +1,6 @@
 // ignore_for_file: constant_identifier_names
 
+import 'package:nokhte_backend/tables/finished_sessions/queries.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class GroupInformationQueries {
@@ -8,6 +9,7 @@ class GroupInformationQueries {
   static const GROUP_MEMBERS = 'group_members';
   static const GROUP_NAME = 'group_name';
   static const GROUP_HANDLE = 'group_handle';
+  static const WITH_SESSIONS = '*, ${FinishedSessionsQueries.TABLE}(*)';
 
   final SupabaseClient supabase;
   final String userUID;
@@ -26,7 +28,8 @@ class GroupInformationQueries {
         GROUP_MEMBERS: [userUID],
       }).select();
 
-  Future<List> select() async => await supabase.from(TABLE).select();
+  Future<List> select() async =>
+      await supabase.from(TABLE).select(WITH_SESSIONS);
 
   Future<List> delete({
     required String uid,
