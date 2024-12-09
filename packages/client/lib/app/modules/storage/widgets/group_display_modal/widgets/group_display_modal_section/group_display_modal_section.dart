@@ -26,7 +26,7 @@ class GroupDisplayModalSection extends HookWidget {
       },
       child: AnimatedOpacity(
         opacity: isSelected ? 1.0 : 0.5,
-        duration: Seconds.get(1),
+        duration: Seconds.get(0, milli: 500),
         child: Column(
           children: [
             Container(

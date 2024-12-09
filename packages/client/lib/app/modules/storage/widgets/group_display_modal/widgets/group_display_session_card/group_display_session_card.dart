@@ -32,7 +32,7 @@ class GroupDisplaySessionCard extends HookWidget {
         return Observer(builder: (context) {
           return AnimatedOpacity(
             opacity: useWidgetOpacity(showWidget),
-            duration: Seconds.get(1),
+            duration: Seconds.get(0, milli: 500),
             child: GestureDetector(
               onTap: () {
                 if (!showWidget) return;
