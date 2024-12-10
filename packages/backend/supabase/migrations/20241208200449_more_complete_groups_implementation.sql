@@ -660,3 +660,11 @@ using (is_group_member(auth.uid(), group_uid));
 
 alter
   publication supabase_realtime add table public.session_queues;
+
+alter table "public"."session_queues" add column "created_at" timestamp with time zone not null default now();
+
+alter table "public"."session_queues" add column "title" text not null default '"untitled queue"'::text;
+
+alter table "public"."session_queues" alter column "content" set default '{}'::text[];
+
+alter table "public"."session_queues" alter column "content" set data type text[] using "content"::text[];
