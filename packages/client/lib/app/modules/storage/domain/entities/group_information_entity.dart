@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
-
-import 'session_artifact_entity.dart';
+import 'package:nokhte/app/modules/storage/storage.dart';
 
 class GroupInformationEntity extends Equatable {
   final List groupMembers;
@@ -8,6 +7,7 @@ class GroupInformationEntity extends Equatable {
   final String groupHandle;
   final String groupUID;
   final List<SessionArtifactEntity> sessions;
+  final List<QueueEntity> queues;
 
   const GroupInformationEntity({
     required this.groupMembers,
@@ -15,6 +15,7 @@ class GroupInformationEntity extends Equatable {
     required this.groupHandle,
     required this.groupUID,
     required this.sessions,
+    required this.queues,
   });
 
   factory GroupInformationEntity.empty() => const GroupInformationEntity(
@@ -23,6 +24,7 @@ class GroupInformationEntity extends Equatable {
         groupHandle: '',
         groupUID: '',
         sessions: [],
+        queues: [],
       );
 
   @override
@@ -32,5 +34,6 @@ class GroupInformationEntity extends Equatable {
         groupHandle,
         groupUID,
         sessions,
+        queues,
       ];
 }

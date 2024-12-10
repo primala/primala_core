@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
 import 'package:nokhte_backend/tables/finished_sessions.dart';
 import 'package:nokhte_backend/tables/group_information.dart';
+import 'package:nokhte_backend/tables/session_queues.dart';
 
 class GroupInformationModel extends GroupInformationEntity {
   const GroupInformationModel({
@@ -10,6 +11,7 @@ class GroupInformationModel extends GroupInformationEntity {
     required super.groupHandle,
     required super.groupUID,
     required super.sessions,
+    required super.queues,
   });
 
   static String formatTitleString(String unformattedString) {
@@ -33,6 +35,7 @@ class GroupInformationModel extends GroupInformationEntity {
             groupHandle:
                 "@${formatTitleString(group[GroupInformationQueries.GROUP_HANDLE])}",
             groupUID: group[GroupInformationQueries.UID],
+            queues: QueueModel.fromSupabase(group[SessionQueuesQueries.TABLE]),
           ),
         );
       }

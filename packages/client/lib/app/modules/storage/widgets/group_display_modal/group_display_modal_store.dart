@@ -13,12 +13,14 @@ class GroupDisplayModalStore = _GroupDisplayModalStoreBase
 
 abstract class _GroupDisplayModalStoreBase extends BaseWidgetStore with Store {
   final GroupDisplaySessionCardStore groupDisplaySessionCard;
+  final GroupDisplayQueueCardStore groupDisplayQueueCard;
   final NokhteBlurStore blur;
   final QueueCreationModalStore queueCreationModal;
 
   _GroupDisplayModalStoreBase({
     required this.blur,
     required this.groupDisplaySessionCard,
+    required this.groupDisplayQueueCard,
     required this.queueCreationModal,
   });
 
@@ -56,6 +58,7 @@ abstract class _GroupDisplayModalStoreBase extends BaseWidgetStore with Store {
       GroupInformationEntity selectedGroup, BuildContext context) {
     if (showModal) return;
     setCurrentlySelectedGroup(selectedGroup);
+    groupDisplayQueueCard.setQueues(selectedGroup.queues);
 
     blur.init(end: Seconds.get(0, milli: 200));
     showModalBottomSheet(
@@ -85,6 +88,7 @@ abstract class _GroupDisplayModalStoreBase extends BaseWidgetStore with Store {
                         groupName: currentlySelectedGroup.groupName,
                         groupHandle: currentlySelectedGroup.groupHandle,
                         groupDisplaySessionCard: groupDisplaySessionCard,
+                        groupDisplayQueueCard: groupDisplayQueueCard,
                         currentlySelectedSection: currentlySelectedSection,
                         onSectionTap: setCurrentlySelectedSection,
                         createQueue: () {

@@ -27,6 +27,9 @@ abstract class _GroupDisplayStoreBase extends BaseWidgetStore with Store {
   @action
   onGroupsReceived(List<GroupInformationEntity> groups) {
     this.groups = ObservableList.of(groups);
+    groupDisplayModal.groupDisplayQueueCard.setQueues(
+      groups[currentlySelectedIndex].queues,
+    );
     setWidgetVisibility(true);
   }
 
@@ -43,7 +46,13 @@ abstract class _GroupDisplayStoreBase extends BaseWidgetStore with Store {
   int successfulDragsCount = 0;
 
   @observable
+  int currentlySelectedIndex = 0;
+
+  @observable
   String groupUIDToDelete = '';
+
+  @action
+  setCurrentlySelectedIndex(int value) => currentlySelectedIndex = value;
 
   @action
   setIsDragging(bool value) => isDragging = value;
@@ -64,6 +73,4 @@ abstract class _GroupDisplayStoreBase extends BaseWidgetStore with Store {
     incrementTapCount();
     setWidgetVisibility(false);
   }
-
-  // void showGroupDetailsModal(GroupInformationEntity selectedGroup) {
 }

@@ -81,7 +81,7 @@ abstract class _SessionPresetsWidgetsCoordinatorBase
 
   @action
   goBackToLobby() {
-    beachWaves.currentStore.initMovie(NoParams());
+    beachWaves.currentStore.initMovie(const NoParams());
     navigationMenu.setWidgetVisibility(false);
     presetCards.setWidgetVisibility(false);
     headerText.setWidgetVisibility(false);
@@ -112,8 +112,6 @@ abstract class _SessionPresetsWidgetsCoordinatorBase
 
   presetSelectionReactor(Function(String param) onSelected) =>
       reaction((p0) => presetCards.movieStatuses.toString(), (p0) async {
-        print(
-            'movie statuses ${presetCards.movieStatuses[presetCards.currentHeldIndex]}');
         if (presetCards.currentHeldIndex != -1) {
           hasNotSelectedPreset = false;
           final currentHeldIndex = presetCards.currentHeldIndex;
@@ -128,7 +126,6 @@ abstract class _SessionPresetsWidgetsCoordinatorBase
               await onSelected(presetCards.currentlySelectedSessionUID);
 
               presetCards.initSelectionMovie(currentHeldIndex);
-              print('first card is selected $firstCardIsSelected');
               if (firstCardIsSelected) {
                 goBackToLobby();
               }

@@ -36,53 +36,38 @@ class GroupDisplaySessionCard extends HookWidget {
             child: GestureDetector(
               onTap: () {
                 if (!showWidget) return;
-                store.toggleExpansion(index);
+                store.setCurrentlySelectedMessage(session.title);
               },
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: height * 0.04),
                 child: Container(
-                  // duration: Seconds.get(1),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 1.5,
-                      )
-                      // border: GradientBoxBorder(
-                      //   gradient: LinearGradient(
-                      //     colors: [Colors.blue, Colors.cyan],
-                      //   ),
-                      //   width: 2,
-                      // ),
-                      ),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Colors.white,
+                      width: 1.5,
+                    ),
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // Session Title and Date
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 15.0),
-                        child: Column(
-                          children: [
-                            Jost(
-                              session.title,
-                              // style: GoogleFonts.jost(
-                              //   color: Colors.white,
-                              fontSize: 20,
-                              //   fontWeight: FontWeight.w500,
-                              // ),
-                            ),
-                            // Text(
-                            //   session.date,
-                            //   style: GoogleFonts.jost(
-                            //     color: Colors.white70,
-                            //     fontSize: 16,
-                            //   ),
-                            // ),
-                          ],
+                      GestureDetector(
+                        onTap: () {
+                          if (!showWidget) return;
+                          store.toggleExpansion(index);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 15.0),
+                          child: Column(
+                            children: [
+                              Jost(
+                                session.title,
+                                fontSize: 20,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-
-                      // Expandable Content
                       if (store.expandedStates[index]) ...[
                         const Divider(
                           color: Colors.white24,
@@ -97,12 +82,20 @@ class GroupDisplaySessionCard extends HookWidget {
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: session.content.length,
                             itemBuilder: (context, contentIndex) {
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 5.0),
-                                child: Jost(
-                                  session.content[contentIndex],
-                                  fontSize: 18,
+                              return GestureDetector(
+                                onTap: () {
+                                  if (!showWidget) return;
+                                  store.setCurrentlySelectedMessage(
+                                    session.content[contentIndex],
+                                  );
+                                },
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5.0),
+                                  child: Jost(
+                                    session.content[contentIndex],
+                                    fontSize: 18,
+                                  ),
                                 ),
                               );
                             },

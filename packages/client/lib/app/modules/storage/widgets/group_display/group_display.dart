@@ -55,12 +55,13 @@ class GroupDisplay extends HookWidget {
                             data: group,
                             feedback: Material(
                               color: Colors.transparent,
-                              child: _buildGroupItem(group, isDragging: true),
+                              child: _buildGroupItem(index, group,
+                                  isDragging: true),
                             ),
                             childWhenDragging: Container(),
                             onDragStarted: () => store.setIsDragging(true),
                             onDragEnd: (_) => store.setIsDragging(false),
-                            child: _buildGroupItem(group),
+                            child: _buildGroupItem(index, group),
                           );
                         },
                       ),
@@ -154,13 +155,16 @@ class GroupDisplay extends HookWidget {
   }
 
   Widget _buildGroupItem(
+    int index,
     GroupInformationEntity group, {
     bool isDragging = false,
   }) {
     return Observer(builder: (context) {
       return GestureDetector(
-        onTap: () =>
-            store.groupDisplayModal.showGroupDetailsModal(group, context),
+        onTap: () {
+          store.setCurrentlySelectedIndex(index);
+          store.groupDisplayModal.showGroupDetailsModal(group, context);
+        },
         child: Column(
           children: [
             Container(

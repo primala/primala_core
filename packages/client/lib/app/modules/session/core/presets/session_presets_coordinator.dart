@@ -104,12 +104,9 @@ abstract class _SessionPresetsCoordinatorBase
   preferredPresetReactor() =>
       reaction((p0) => userInfo.preferredPreset, (p0) async {
         if (userInfo.state == StoreState.loaded) {
-          print("did this run pref prset");
           if (!userInfo.hasAccessedQrCode) {
             widgets.onNoPresetSelected();
-            //   // widgets.presetCards.enableAllTouchFeedback();
           } else {
-            // widgets.onCompanyPresetsReceived(presetsLogic.presetsEntity);
             widgets
                 .onPreferredPresetReceived(userInfo.preferredPreset.presetUID);
           }

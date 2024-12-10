@@ -89,6 +89,7 @@ abstract class _StorageHomeCoordinatorBase
     disposers.add(groupReactor());
     disposers.add(groupDisplayedDragReactor());
     disposers.add(widgets.groupRegistrationReactor(onGroupCreated));
+    disposers.add(queueCreationReactor());
   }
 
   @action
@@ -100,6 +101,7 @@ abstract class _StorageHomeCoordinatorBase
   groupReactor() => reaction(
         (p0) => groups,
         (p0) {
+          print('the groups is this: $p0');
           // if (p0.isNotEmpty) {
           widgets.groupDisplay.onGroupsReceived(p0);
           // }
@@ -129,6 +131,28 @@ abstract class _StorageHomeCoordinatorBase
         // });
         // }
       });
+
+  queueCreationReactor() => reaction(
+        (p0) => widgets.groupDisplay.groupDisplayModal.queueCreationModal
+            .queueSubmissionCount,
+        (p0) async {
+          if (widgets.groupDisplay.groupDisplayModal.queueCreationModal
+                  .queueItems.isEmpty ||
+              widgets.groupDisplay.groupDisplayModal.queueCreationModal
+                  .queueTitleController.text.isEmpty) return;
+          final params = CreateQueueParams(
+            groupId: widgets
+                .groupDisplay.groupDisplayModal.currentlySelectedGroup.groupUID,
+            content: widgets
+                .groupDisplay.groupDisplayModal.queueCreationModal.queueItems,
+            title: widgets.groupDisplay.groupDisplayModal.queueCreationModal
+                .queueTitleController.text,
+          );
+          await contract.createQueue(params);
+          widgets.groupDisplay.groupDisplayModal.queueCreationModal.dispose();
+          await getGroups();
+        },
+      );
 
   sessionCardEditReactor() => reaction(
         (p0) => widgets.sessionCard.lastEditedTitle,
