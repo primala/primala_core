@@ -56,4 +56,34 @@ class StorageContractImpl with ResponseToStatus implements StorageContract {
       return Left(FailureConstants.internetConnectionFailure);
     }
   }
+
+  @override
+  createQueue(params) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.createQueue(params);
+      return fromSupabase(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  @override
+  deleteQueue(params) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.deleteQueue(params);
+      return fromSupabase(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  @override
+  getQueues(params) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.getQueues(params);
+      return Right(QueueModel.fromSupabase(res));
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
 }

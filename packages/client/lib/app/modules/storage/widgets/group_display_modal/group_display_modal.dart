@@ -7,11 +7,21 @@ export 'group_display_modal_store.dart';
 export 'widgets/widgets.dart';
 
 class GroupDisplayModal extends HookWidget {
-  final GroupDisplayModalStore store;
+  final GroupDisplaySessionCardStore groupDisplaySessionCard;
+  final String groupName;
+  final String groupHandle;
+  final GroupDisplayModalSectionType currentlySelectedSection;
+  final Function(GroupDisplayModalSectionType) onSectionTap;
+  final Function createQueue;
 
   const GroupDisplayModal({
     super.key,
-    required this.store,
+    required this.groupName,
+    required this.groupDisplaySessionCard,
+    required this.groupHandle,
+    required this.currentlySelectedSection,
+    required this.onSectionTap,
+    required this.createQueue,
   });
 
   @override
@@ -38,7 +48,7 @@ class GroupDisplayModal extends HookWidget {
                   ),
                 ),
                 Chivo(
-                  store.currentlySelectedGroup.groupName,
+                  groupName,
                   fontSize: 30,
                 ),
               ],
@@ -47,7 +57,7 @@ class GroupDisplayModal extends HookWidget {
           Padding(
             padding: const EdgeInsets.only(left: 18),
             child: Chivo(
-              store.currentlySelectedGroup.groupHandle,
+              groupHandle,
               fontSize: 16,
               fontWeight: FontWeight.w400,
             ),
@@ -58,21 +68,28 @@ class GroupDisplayModal extends HookWidget {
             children: [
               GroupDisplayModalSection(
                 type: GroupDisplayModalSectionType.storage,
-                isSelected: store.currentlySelectedSection ==
+                isSelected: currentlySelectedSection ==
                     GroupDisplayModalSectionType.storage,
-                onTap: store.setCurrentlySelectedSection,
+                onTap: onSectionTap,
               ),
               GroupDisplayModalSection(
                 type: GroupDisplayModalSectionType.queue,
-                isSelected: store.currentlySelectedSection ==
+                isSelected: currentlySelectedSection ==
                     GroupDisplayModalSectionType.queue,
-                onTap: store.setCurrentlySelectedSection,
+                onTap: (_) {
+                  if (!(currentlySelectedSection ==
+                      GroupDisplayModalSectionType.queue)) {
+                    onSectionTap(_);
+                  } else {
+                    createQueue();
+                  }
+                },
               ),
               GroupDisplayModalSection(
                 type: GroupDisplayModalSectionType.addRemove,
-                isSelected: store.currentlySelectedSection ==
+                isSelected: currentlySelectedSection ==
                     GroupDisplayModalSectionType.addRemove,
-                onTap: store.setCurrentlySelectedSection,
+                onTap: onSectionTap,
               ),
             ],
           ),
@@ -81,8 +98,8 @@ class GroupDisplayModal extends HookWidget {
             child: MultiHitStack(
               children: [
                 GroupDisplaySessionCard(
-                  store: store.groupDisplaySessionCard,
-                  showWidget: store.currentlySelectedSection ==
+                  store: groupDisplaySessionCard,
+                  showWidget: currentlySelectedSection ==
                       GroupDisplayModalSectionType.storage,
                 ),
               ],

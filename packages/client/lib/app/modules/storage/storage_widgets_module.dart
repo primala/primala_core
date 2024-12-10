@@ -16,8 +16,11 @@ class StorageWidgetsModule extends Module {
         groupDisplay: GroupDisplayStore(
           groupDisplayModal: GroupDisplayModalStore(
             groupDisplaySessionCard: GroupDisplaySessionCardStore(),
+            blur: NokhteBlurStore(),
+            queueCreationModal: QueueCreationModalStore(
+              blur: NokhteBlurStore(),
+            ),
           ),
-          blur: NokhteBlurStore(),
         ),
         groupRegistration: GroupRegistrationStore(),
         blur: NokhteBlurStore(),

@@ -5,7 +5,20 @@ import 'package:nokhte/app/modules/storage/storage.dart';
 
 abstract class StorageContract {
   Future<Either<Failure, List<SessionArtifactEntity>>> getSessions(
-      String groupUID);
+    String groupUID,
+  );
+
+  Future<Either<Failure, List<QueueEntity>>> getQueues(
+    GetQueueParams params,
+  );
+
+  Future<Either<Failure, bool>> createQueue(
+    CreateQueueParams params,
+  );
+
+  Future<Either<Failure, bool>> deleteQueue(
+    String params,
+  );
 
   Future<Either<Failure, bool>> createNewGroup(
     CreateNewGroupParams params,

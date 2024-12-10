@@ -2,6 +2,7 @@ import 'package:nokhte/app/modules/storage/storage.dart';
 import 'package:nokhte_backend/tables/finished_sessions.dart';
 import 'package:nokhte_backend/tables/user_information.dart';
 import 'package:nokhte_backend/tables/group_information.dart';
+import 'package:nokhte_backend/tables/session_queues.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class StorageRemoteSource {
@@ -9,6 +10,9 @@ abstract class StorageRemoteSource {
   Future<List> createNewGroup(CreateNewGroupParams params);
   Future<List> getGroups();
   Future<List> deleteGroup(String params);
+  Future<List> getQueues(GetQueueParams params);
+  Future<List> createQueue(CreateQueueParams params);
+  Future<List> deleteQueue(String params);
 }
 
 class StorageRemoteSourceImpl implements StorageRemoteSource {
@@ -16,9 +20,11 @@ class StorageRemoteSourceImpl implements StorageRemoteSource {
   final FinishedSessionsQueries finishedNokhteSessionQueries;
   final UserInformationQueries userNamesQueries;
   final GroupInformationQueries groupInformationQueries;
+  final SessionQueuesQueries sessionQueuesQueries;
   StorageRemoteSourceImpl({required this.supabase})
       : finishedNokhteSessionQueries =
             FinishedSessionsQueries(supabase: supabase),
+        sessionQueuesQueries = SessionQueuesQueries(supabase: supabase),
         groupInformationQueries = GroupInformationQueries(supabase: supabase),
         userNamesQueries = UserInformationQueries(supabase: supabase);
 
@@ -39,4 +45,23 @@ class StorageRemoteSourceImpl implements StorageRemoteSource {
 
   @override
   getGroups() async => await groupInformationQueries.select();
+
+  @override
+  Future<List> createQueue(CreateQueueParams params) async =>
+      await sessionQueuesQueries.insert(
+        groupId: params.groupId,
+        queueContent: params.content,
+        queueTitle: params.title,
+      );
+
+  @override
+  Future<List> deleteQueue(String params) async =>
+      await sessionQueuesQueries.delete(uid: params);
+
+  @override
+  Future<List> getQueues(GetQueueParams params) async =>
+      await sessionQueuesQueries.select(
+        groupId: params.groupId,
+        uid: params.uid,
+      );
 }

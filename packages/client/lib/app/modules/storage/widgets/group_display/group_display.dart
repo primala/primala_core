@@ -21,13 +21,7 @@ class GroupDisplay extends HookWidget {
     final screenSize = useFullScreenSize();
 
     useEffect(() {
-      store.constructor(
-        context,
-        useAnimationController(
-          duration: Seconds.get(1),
-          reverseDuration: Seconds.get(1),
-        ),
-      );
+      store.constructor(context);
       return null;
     }, []);
 
@@ -112,7 +106,7 @@ class GroupDisplay extends HookWidget {
               ),
             ),
             NokhteBlur(
-              store: store.blur,
+              store: store.groupDisplayModal.blur,
             ),
           ],
         ),
@@ -165,7 +159,8 @@ class GroupDisplay extends HookWidget {
   }) {
     return Observer(builder: (context) {
       return GestureDetector(
-        onTap: () => store.showGroupDetailsModal(group),
+        onTap: () =>
+            store.groupDisplayModal.showGroupDetailsModal(group, context),
         child: Column(
           children: [
             Container(
