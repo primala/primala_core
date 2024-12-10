@@ -50,8 +50,10 @@ class StorageContractImpl with ResponseToStatus implements StorageContract {
   @override
   getGroups(params) async {
     if (await networkInfo.isConnected) {
-      final res = await remoteSource.getGroups();
-      return Right(GroupInformationModel.fromSupabase(res));
+      final groupResponse = await remoteSource.getGroups();
+      final collaborators = await _getCollaborators();
+      return Right(
+          GroupInformationModel.fromSupabase(groupResponse, collaborators));
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }
@@ -85,5 +87,20 @@ class StorageContractImpl with ResponseToStatus implements StorageContract {
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }
+  }
+
+  @override
+  updateGroupMembers(params) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.updateGroupMembers(params);
+      return fromSupabase(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  _getCollaborators() async {
+    final res = await remoteSource.getCollaborators();
+    return CollaboratorModel.fromSupabase(res);
   }
 }

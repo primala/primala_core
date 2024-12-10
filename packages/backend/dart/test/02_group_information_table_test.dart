@@ -53,6 +53,39 @@ void main() {
     }
   });
 
+  test("should be able to add a new group member", () async {
+    final testGroupId =
+        (await groupQueries.select()).first[GroupInformationQueries.UID];
+    final updateResult = await groupQueries.updateGroupMembers(
+      groupId: testGroupId,
+      members: [tSetup.secondUserUID],
+      isAdding: true,
+    );
+
+    expect(updateResult.first['group_members'],
+        containsAll([tSetup.firstUserUID, tSetup.secondUserUID]));
+  });
+
+  test("should be able to remove an existing group member", () async {
+    final testGroupId =
+        (await groupQueries.select()).first[GroupInformationQueries.UID];
+    // First, add the second user
+    await groupQueries.updateGroupMembers(
+      groupId: testGroupId,
+      members: [tSetup.secondUserUID],
+      isAdding: true,
+    );
+
+    // Then remove the second user
+    final updateResult = await groupQueries.updateGroupMembers(
+      groupId: testGroupId,
+      members: [tSetup.secondUserUID],
+      isAdding: false,
+    );
+
+    expect(updateResult.first['group_members'], equals([tSetup.firstUserUID]));
+  });
+
   test("should be able to delete a group", () async {
     final res = (await groupQueries.select());
     await groupQueries.delete(uid: res.first['uid']);

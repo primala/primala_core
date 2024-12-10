@@ -26,6 +26,7 @@ class GroupDisplay extends HookWidget {
     }, []);
 
     return Observer(builder: (context) {
+      // print('show widget ${store.showWidget}');
       return AnimatedOpacity(
         opacity: useWidgetOpacity(store.showWidget),
         duration: Seconds.get(1),

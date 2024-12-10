@@ -37,4 +37,31 @@ class GroupInformationQueries {
     required String uid,
   }) async =>
       await supabase.from(TABLE).delete().eq(UID, uid).select();
+
+  Future<List> updateGroupMembers({
+    required String groupId,
+    required List<String> members,
+    required bool isAdding,
+  }) async {
+    final currentGroup =
+        await supabase.from(TABLE).select().eq(UID, groupId).single();
+
+    List currentMembers = currentGroup[GROUP_MEMBERS] ?? [];
+
+    if (isAdding) {
+      for (var member in members) {
+        if (!currentMembers.contains(member)) {
+          currentMembers.add(member);
+        }
+      }
+    } else {
+      currentMembers.removeWhere((member) => members.contains(member));
+    }
+
+    return await supabase
+        .from(TABLE)
+        .update({GROUP_MEMBERS: currentMembers})
+        .eq(UID, groupId)
+        .select();
+  }
 }

@@ -9,6 +9,7 @@ export 'widgets/widgets.dart';
 class GroupDisplayModal extends HookWidget {
   final GroupDisplaySessionCardStore groupDisplaySessionCard;
   final GroupDisplayQueueCardStore groupDisplayQueueCard;
+  final GroupDisplayCollaboratorCardStore groupDisplayCollaboratorCard;
   final String groupName;
   final String groupHandle;
   final GroupDisplayModalSectionType currentlySelectedSection;
@@ -18,6 +19,7 @@ class GroupDisplayModal extends HookWidget {
   const GroupDisplayModal({
     super.key,
     required this.groupName,
+    required this.groupDisplayCollaboratorCard,
     required this.groupDisplaySessionCard,
     required this.groupHandle,
     required this.currentlySelectedSection,
@@ -109,6 +111,11 @@ class GroupDisplayModal extends HookWidget {
                   showWidget: currentlySelectedSection ==
                       GroupDisplayModalSectionType.queue,
                 ),
+                GroupDisplayCollaboratorCard(
+                  showWidget: currentlySelectedSection ==
+                      GroupDisplayModalSectionType.addRemove,
+                  store: groupDisplayCollaboratorCard,
+                )
               ],
             ),
           ),

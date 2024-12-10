@@ -5,3 +5,5 @@ export 'update_session_alias_params.dart';
 export 'get_queue_params.dart';
 export 'queue_entity.dart';
 export 'create_queue_params.dart';
+export 'collaborator_entity.dart';
+export 'update_group_member_params.dart';

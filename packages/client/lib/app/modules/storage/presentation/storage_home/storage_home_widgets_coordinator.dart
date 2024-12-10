@@ -89,6 +89,7 @@ abstract class _StorageHomeWidgetsCoordinatorBase
           sessionCard.setWidgetVisibility(false);
           backButton.setWidgetVisibility(false);
           headerText.setWidgetVisibility(false);
+          groupDisplay.setWidgetVisibility(false);
           Timer(Seconds.get(1), () {
             beachWaves.setMovieMode(BeachWaveMovieModes.anyToOnShore);
             beachWaves.currentStore.initMovie(

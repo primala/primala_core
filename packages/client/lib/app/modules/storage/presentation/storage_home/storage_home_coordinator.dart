@@ -1,4 +1,5 @@
-// ignore_for_file: must_be_immutable, library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
@@ -74,22 +75,16 @@ abstract class _StorageHomeCoordinatorBase
   }
 
   @action
-  updateSessionAlias(UpdateSessionAliasParams params) async {
-    // final res = await contract.updateSessionAlias(params);
-    // res.fold(
-    // (failure) => errorUpdater(failure),
-    // (updateStatus) => aliasIsUpdated = updateStatus,
-    // );
-  }
+  updateSessionAlias(UpdateSessionAliasParams params) async {}
 
   initReactors() {
     disposers.add(beachWavesMovieStatusReactor());
-    // disposers.add(sessionCardEditReactor());
-    // disposers.add(sessionCardTapReactor());
     disposers.add(groupReactor());
     disposers.add(groupDisplayedDragReactor());
     disposers.add(widgets.groupRegistrationReactor(onGroupCreated));
     disposers.add(queueCreationReactor());
+    disposers.add(membershipAdditionReactor());
+    disposers.add(membershipRemovalReactor());
   }
 
   @action
@@ -102,9 +97,7 @@ abstract class _StorageHomeCoordinatorBase
         (p0) => groups,
         (p0) {
           print('the groups is this: $p0');
-          // if (p0.isNotEmpty) {
           widgets.groupDisplay.onGroupsReceived(p0);
-          // }
         },
       );
 
@@ -122,14 +115,6 @@ abstract class _StorageHomeCoordinatorBase
           widgets.dispose();
           Modular.to.navigate(HomeConstants.home);
         }
-        // else if (p0 == MovieStatus.finished &&
-        //   widgets.beachWaves.movieMode == BeachWaveMovieModes.skyToDrySand) {
-        // widgets.dispose();
-        // Modular.to.navigate(StorageConstants.content, arguments: {
-        //   "content":
-        //       nokhteSessionArtifacts[widgets.sessionCard.lastTappedIndex],
-        // });
-        // }
       });
 
   queueCreationReactor() => reaction(
@@ -153,6 +138,46 @@ abstract class _StorageHomeCoordinatorBase
           await getGroups();
         },
       );
+
+  membershipAdditionReactor() => reaction(
+          (p0) => widgets.groupDisplay.groupDisplayModal
+              .groupDisplayCollaboratorCard.membersToAdd, (p0) async {
+        print('are we showing the modal yet? $p0');
+        final peopleToAdd = widgets.groupDisplay.groupDisplayModal
+            .groupDisplayCollaboratorCard.membersToAdd;
+
+        if (peopleToAdd.isNotEmpty) {
+          await contract.updateGroupMembers(
+            UpdateGroupMemberParams(
+              groupId: widgets.groupDisplay.groupDisplayModal
+                  .currentlySelectedGroup.groupUID,
+              members: peopleToAdd,
+              isAdding: true,
+            ),
+          );
+          await getGroups();
+        }
+      });
+  membershipRemovalReactor() => reaction(
+          (p0) => widgets.groupDisplay.groupDisplayModal
+              .groupDisplayCollaboratorCard.membersToRemove, (p0) async {
+        print('are we showing the modal yet? $p0');
+
+        final peopleToRemove = widgets.groupDisplay.groupDisplayModal
+            .groupDisplayCollaboratorCard.membersToRemove;
+
+        if (peopleToRemove.isNotEmpty) {
+          await contract.updateGroupMembers(
+            UpdateGroupMemberParams(
+              groupId: widgets.groupDisplay.groupDisplayModal
+                  .currentlySelectedGroup.groupUID,
+              members: peopleToRemove,
+              isAdding: false,
+            ),
+          );
+        }
+        await getGroups();
+      });
 
   sessionCardEditReactor() => reaction(
         (p0) => widgets.sessionCard.lastEditedTitle,

@@ -12,6 +12,10 @@ abstract class StorageContract {
     GetQueueParams params,
   );
 
+  Future<Either<Failure, bool>> updateGroupMembers(
+    UpdateGroupMemberParams params,
+  );
+
   Future<Either<Failure, bool>> createQueue(
     CreateQueueParams params,
   );

@@ -12,23 +12,39 @@ class GroupInformationModel extends GroupInformationEntity {
     required super.groupUID,
     required super.sessions,
     required super.queues,
+    required super.collaborators,
   });
 
   static String formatTitleString(String unformattedString) {
     return '${unformattedString.characters.first.toUpperCase()}${unformattedString.substring(1)}';
   }
 
-  static List<GroupInformationModel> fromSupabase(List res) {
-    if (res.isEmpty) {
+  static List<GroupInformationModel> fromSupabase(
+    List sessionsResponse,
+    List<CollaboratorModel> collaborators,
+  ) {
+    if (sessionsResponse.isEmpty) {
       return const [];
     } else {
       final List<GroupInformationModel> groups = <GroupInformationModel>[];
-      for (var group in res) {
+      for (var group in sessionsResponse) {
+        final List<CollaboratorModel> temp = [];
+        for (var collaborator in collaborators) {
+          final isAMember = group[GroupInformationQueries.GROUP_MEMBERS]
+              .contains(collaborator.uid);
+          temp.add(
+            CollaboratorModel.fromGroupInformation(
+              collaborator,
+              isAMember,
+            ),
+          );
+        }
         groups.add(
           GroupInformationModel(
             sessions: SessionArtifactModel.fromSupabase(
               group[FinishedSessionsQueries.TABLE],
             ),
+            collaborators: temp,
             groupMembers: group[GroupInformationQueries.GROUP_MEMBERS],
             groupName:
                 formatTitleString(group[GroupInformationQueries.GROUP_NAME]),

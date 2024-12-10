@@ -14,6 +14,7 @@ class GroupDisplayModalStore = _GroupDisplayModalStoreBase
 abstract class _GroupDisplayModalStoreBase extends BaseWidgetStore with Store {
   final GroupDisplaySessionCardStore groupDisplaySessionCard;
   final GroupDisplayQueueCardStore groupDisplayQueueCard;
+  final GroupDisplayCollaboratorCardStore groupDisplayCollaboratorCard;
   final NokhteBlurStore blur;
   final QueueCreationModalStore queueCreationModal;
 
@@ -22,6 +23,7 @@ abstract class _GroupDisplayModalStoreBase extends BaseWidgetStore with Store {
     required this.groupDisplaySessionCard,
     required this.groupDisplayQueueCard,
     required this.queueCreationModal,
+    required this.groupDisplayCollaboratorCard,
   });
 
   @observable
@@ -59,6 +61,7 @@ abstract class _GroupDisplayModalStoreBase extends BaseWidgetStore with Store {
     if (showModal) return;
     setCurrentlySelectedGroup(selectedGroup);
     groupDisplayQueueCard.setQueues(selectedGroup.queues);
+    groupDisplayCollaboratorCard.setCollaborators(selectedGroup.collaborators);
 
     blur.init(end: Seconds.get(0, milli: 200));
     showModalBottomSheet(
@@ -85,18 +88,18 @@ abstract class _GroupDisplayModalStoreBase extends BaseWidgetStore with Store {
                   width: MediaQuery.of(context).size.width,
                   child: SingleChildScrollView(
                     child: GroupDisplayModal(
-                        groupName: currentlySelectedGroup.groupName,
-                        groupHandle: currentlySelectedGroup.groupHandle,
-                        groupDisplaySessionCard: groupDisplaySessionCard,
-                        groupDisplayQueueCard: groupDisplayQueueCard,
-                        currentlySelectedSection: currentlySelectedSection,
-                        onSectionTap: setCurrentlySelectedSection,
-                        createQueue: () {
-                          queueCreationModal.showGroupDetailsModal(context);
-                        }
-
-                        // store: ,
-                        ),
+                      groupName: currentlySelectedGroup.groupName,
+                      groupHandle: currentlySelectedGroup.groupHandle,
+                      groupDisplaySessionCard: groupDisplaySessionCard,
+                      groupDisplayCollaboratorCard:
+                          groupDisplayCollaboratorCard,
+                      groupDisplayQueueCard: groupDisplayQueueCard,
+                      currentlySelectedSection: currentlySelectedSection,
+                      onSectionTap: setCurrentlySelectedSection,
+                      createQueue: () {
+                        queueCreationModal.showGroupDetailsModal(context);
+                      },
+                    ),
                   ),
                 ),
               ),

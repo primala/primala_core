@@ -5,3 +5,5 @@ flutter test test/03_active_sessions_pair_table_test.dart
 flutter test test/04_finished_sessions_table_test.dart
 flutter test test/05_company_presets_table_test.dart
 flutter test test/06_company_presets_preferences_table_test.dart
+flutter test test/06_company_presets_preferences_table_test.dart
+flutter test test/07_session_queues_table_test.dart
