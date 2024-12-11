@@ -34,10 +34,11 @@ class GroupDisplayCollaboratorCard extends HookWidget {
             opacity: useWidgetOpacity(showWidget),
             duration: Seconds.get(0, milli: 500),
             child: GestureDetector(
-              onTap: () {
-                if (!showWidget) return;
-                store.toggleMembershipStatus(index);
-              },
+              onTap: !showWidget
+                  ? null
+                  : () {
+                      store.toggleMembershipStatus(index);
+                    },
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: height * 0.04),
                 child: AnimatedOpacity(

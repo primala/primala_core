@@ -34,10 +34,11 @@ class GroupDisplaySessionCard extends HookWidget {
             opacity: useWidgetOpacity(showWidget),
             duration: Seconds.get(0, milli: 500),
             child: GestureDetector(
-              onTap: () {
-                if (!showWidget) return;
-                store.setCurrentlySelectedMessage(session.title);
-              },
+              onTap: !showWidget
+                  ? null
+                  : () {
+                      store.setCurrentlySelectedMessage(session.title);
+                    },
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: height * 0.04),
                 child: Container(
@@ -52,10 +53,11 @@ class GroupDisplaySessionCard extends HookWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       GestureDetector(
-                        onTap: () {
-                          if (!showWidget) return;
-                          store.toggleExpansion(index);
-                        },
+                        onTap: !showWidget
+                            ? null
+                            : () {
+                                store.toggleExpansion(index);
+                              },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 15.0),
                           child: Column(
