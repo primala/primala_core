@@ -14,11 +14,13 @@ abstract class _SessionPlaylistsCoordinatorBase with Store, BaseCoordinator {
   final TapDetector tap;
   @override
   final CaptureScreen captureScreen;
+  final SessionPresenceCoordinator presence;
 
   _SessionPlaylistsCoordinatorBase({
     required this.widgets,
     required this.tap,
     required this.captureScreen,
+    required this.presence,
   }) {
     initBaseCoordinatorActions();
   }

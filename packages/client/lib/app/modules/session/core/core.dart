@@ -59,6 +59,7 @@ class SessionCoreModule extends Module {
 
     i.add<SessionPlaylistsCoordinator>(
       () => SessionPlaylistsCoordinator(
+        presence: Modular.get<SessionPresenceCoordinator>(),
         captureScreen: Modular.get<CaptureScreen>(),
         tap: TapDetector(),
         widgets: Modular.get<SessionPlaylistsWidgetsCoordinator>(),

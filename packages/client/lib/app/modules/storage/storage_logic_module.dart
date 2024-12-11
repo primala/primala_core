@@ -18,10 +18,17 @@ class StorageLogicModule extends Module {
         supabase: Modular.get<SupabaseClient>(),
       ),
     );
+
     i.add<StorageContractImpl>(
       () => StorageContractImpl(
         networkInfo: Modular.get<NetworkInfoImpl>(),
         remoteSource: Modular.get<StorageRemoteSourceImpl>(),
+      ),
+    );
+
+    i.add<StorageLogicCoordinator>(
+      () => StorageLogicCoordinator(
+        contract: Modular.get<StorageContractImpl>(),
       ),
     );
   }

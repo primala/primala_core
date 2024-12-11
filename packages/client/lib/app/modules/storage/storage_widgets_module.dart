@@ -30,7 +30,6 @@ class StorageWidgetsModule extends Module {
           groupRegistration: GroupRegistrationStore(),
           blur: NokhteBlurStore(),
           backButton: BackButtonStore(),
-          sessionCard: SessionCardStore(),
           headerText: SmartTextStore(),
           beachWaves: BeachWavesStore(),
           wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
