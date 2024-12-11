@@ -62,9 +62,6 @@ abstract class _GroupDisplayModalStoreBase extends BaseWidgetStore with Store {
       GroupInformationEntity selectedGroup, BuildContext context) {
     if (showModal) return;
     setCurrentlySelectedGroup(selectedGroup);
-    // groupDisplayQueueCard.setQueues(selectedGroup.queues);
-    // groupDisplayCollaboratorCard.setCollaborators(selectedGroup.collaborators);
-
     blur.init(end: Seconds.get(0, milli: 200));
     showModalBottomSheet(
       isDismissible: false,
