@@ -1,4 +1,4 @@
-import 'package:nokhte_backend/tables/_real_time_disabled/user_metadata/queries.dart';
+import 'package:nokhte_backend/tables/user_metadata/queries.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AddUserMetadata extends UserMetadataQueries {

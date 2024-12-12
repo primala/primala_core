@@ -1,7 +1,7 @@
 import 'package:nokhte/app/core/modules/hive/hive.dart';
 import 'package:nokhte/app/core/modules/hive/mixin/mixin.dart';
 import 'package:nokhte_backend/tables/company_presets.dart';
-import 'package:nokhte_backend/tables/finished_nokhte_sessions.dart';
+import 'package:nokhte_backend/tables/finished_sessions.dart';
 import 'package:nokhte_backend/tables/user_information.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -18,7 +18,7 @@ class UserInformationRemoteSourceImpl
     implements UserInformationRemoteSource {
   final SupabaseClient supabase;
   final UserInformationQueries userInfoQueries;
-  final FinishedNokhteSessionQueries finishedNokhteSessionQueries;
+  final FinishedSessionsQueries finishedNokhteSessionQueries;
   final CompanyPresetsQueries companyPresetQueries;
   final userInfoBox = HiveBoxes.userInformation.toString();
 
@@ -26,7 +26,7 @@ class UserInformationRemoteSourceImpl
       : userInfoQueries = UserInformationQueries(supabase: supabase),
         companyPresetQueries = CompanyPresetsQueries(supabase: supabase),
         finishedNokhteSessionQueries =
-            FinishedNokhteSessionQueries(supabase: supabase);
+            FinishedSessionsQueries(supabase: supabase);
 
   @override
   getUserInfo() async => await userInfoQueries.getUserInfo();

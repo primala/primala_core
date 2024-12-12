@@ -6,7 +6,6 @@ import 'package:nokhte/app/core/modules/hive/types/boxes.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/core/modules/user_metadata/user_metadata.dart';
 import 'package:nokhte/app/modules/login/login.dart';
-import 'package:nokhte_backend/tables/finished_nokhte_sessions.dart';
 import 'package:nokhte_backend/tables/user_information.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -23,7 +22,6 @@ abstract class LoginRemoteSource {
   Future<List> addName({String theName = ""});
   Future<FunctionResponse> addMetadata();
   Future<List> getUserInfo();
-  Future<List> getFinishedNokhteSessions();
   Future<bool> versionIsUpToDate();
 }
 
@@ -118,12 +116,6 @@ class LoginRemoteSourceImpl with HiveBoxUtils implements LoginRemoteSource {
   getUserInfo() async {
     final queries = UserInformationQueries(supabase: supabase);
     return await queries.getUserInfo();
-  }
-
-  @override
-  getFinishedNokhteSessions() async {
-    final queries = FinishedNokhteSessionQueries(supabase: supabase);
-    return await queries.select();
   }
 
   @override

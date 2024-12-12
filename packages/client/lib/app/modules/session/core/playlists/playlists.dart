@@ -1,5 +1,6 @@
 export 'session_playlists_coordinator.dart';
 export 'session_playlists_widgets_coordinator.dart';
+export 'queue_selector/queue_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
@@ -18,7 +19,7 @@ class SessionPlaylistsScreen extends HookWidget {
   Widget build(BuildContext context) {
     useEffect(() {
       coordinator.constructor();
-      return null;
+      return () => coordinator.dispose();
     }, []);
 
     return Scaffold(
@@ -37,6 +38,9 @@ class SessionPlaylistsScreen extends HookWidget {
                     bottomPadding: .6,
                     bottomBump: .004,
                     fontWeight: FontWeight.w300,
+                  ),
+                  QueueSelector(
+                    store: coordinator.widgets.queueSelector,
                   ),
                 ],
               ),

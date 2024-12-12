@@ -21,17 +21,12 @@ class GroupDisplay extends HookWidget {
     final screenSize = useFullScreenSize();
 
     useEffect(() {
-      store.constructor(
-        context,
-        useAnimationController(
-          duration: Seconds.get(1),
-          reverseDuration: Seconds.get(1),
-        ),
-      );
+      store.constructor(context);
       return null;
     }, []);
 
     return Observer(builder: (context) {
+      // print('show widget ${store.showWidget}');
       return AnimatedOpacity(
         opacity: useWidgetOpacity(store.showWidget),
         duration: Seconds.get(1),
@@ -61,12 +56,13 @@ class GroupDisplay extends HookWidget {
                             data: group,
                             feedback: Material(
                               color: Colors.transparent,
-                              child: _buildGroupItem(group, isDragging: true),
+                              child: _buildGroupItem(index, group,
+                                  isDragging: true),
                             ),
                             childWhenDragging: Container(),
                             onDragStarted: () => store.setIsDragging(true),
                             onDragEnd: (_) => store.setIsDragging(false),
-                            child: _buildGroupItem(group),
+                            child: _buildGroupItem(index, group),
                           );
                         },
                       ),
@@ -112,7 +108,7 @@ class GroupDisplay extends HookWidget {
               ),
             ),
             NokhteBlur(
-              store: store.blur,
+              store: store.groupDisplayModal.blur,
             ),
           ],
         ),
@@ -160,12 +156,16 @@ class GroupDisplay extends HookWidget {
   }
 
   Widget _buildGroupItem(
+    int index,
     GroupInformationEntity group, {
     bool isDragging = false,
   }) {
     return Observer(builder: (context) {
       return GestureDetector(
-        onTap: () => store.showGroupDetailsModal(group),
+        onTap: () {
+          store.setCurrentlySelectedIndex(index);
+          store.groupDisplayModal.showGroupDetailsModal(group, context);
+        },
         child: Column(
           children: [
             Container(

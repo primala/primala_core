@@ -7,6 +7,7 @@ import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/presets/presets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte/app/modules/session_starters/session_starters.dart';
+import 'package:nokhte/app/modules/storage/storage.dart';
 export 'duo_greeter/duo_greeter.dart';
 export 'exit/exit.dart';
 export 'information/information.dart';
@@ -28,6 +29,7 @@ class SessionCoreModule extends Module {
         PosthogModule(),
         SessionLogicModule(),
         UserMetadataModule(),
+        StorageLogicModule(),
         UserInformationModule(),
         SessionStartersLogicModule(),
         PresetsModule(),
@@ -59,6 +61,8 @@ class SessionCoreModule extends Module {
 
     i.add<SessionPlaylistsCoordinator>(
       () => SessionPlaylistsCoordinator(
+        storageLogic: Modular.get<StorageLogicCoordinator>(),
+        presence: Modular.get<SessionPresenceCoordinator>(),
         captureScreen: Modular.get<CaptureScreen>(),
         tap: TapDetector(),
         widgets: Modular.get<SessionPlaylistsWidgetsCoordinator>(),

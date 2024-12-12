@@ -1,13 +1,9 @@
-// ignore_for_file: must_be_immutable, library_private_types_in_public_api
-import 'package:flutter_modular/flutter_modular.dart';
+// ignore_for_file: library_private_types_in_public_api
 import 'package:mobx/mobx.dart';
-import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mixins/mixin.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
-import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
-import 'package:nokhte/app/modules/home/home.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
 part 'storage_home_coordinator.g.dart';
 
@@ -23,17 +19,17 @@ abstract class _StorageHomeCoordinatorBase
         BaseMobxLogic,
         Reactions {
   final StorageHomeWidgetsCoordinator widgets;
-  final StorageContract contract;
   @override
   final CaptureScreen captureScreen;
   final TapDetector tap;
+  final StorageLogicCoordinator storageLogic;
 
   final SwipeDetector swipe;
   _StorageHomeCoordinatorBase({
     required this.captureScreen,
-    required this.contract,
     required this.widgets,
     required this.swipe,
+    required this.storageLogic,
     required this.tap,
   }) {
     initEnRouteActions();
@@ -41,114 +37,121 @@ abstract class _StorageHomeCoordinatorBase
     initBaseLogicActions();
   }
 
-  @observable
-  ObservableList<GroupInformationEntity> groups = ObservableList.of([]);
-
-  @observable
-  bool aliasIsUpdated = false;
-
-  @observable
-  bool crossShouldUseObserver = true;
-
-  @action
-  setCrossShouldUseObserver(bool value) => crossShouldUseObserver = value;
-
   @action
   constructor() async {
     widgets.constructor();
     initReactors();
-    await getGroups();
+    await storageLogic.getGroups();
     await captureScreen(StorageConstants.home);
   }
 
-  @action
-  getGroups() async {
-    final res = await contract.getGroups(const NoParams());
-    res.fold(
-      (failure) => errorUpdater(failure),
-      (artifacts) {
-        print('artifacts: $artifacts');
-        groups = ObservableList.of(artifacts);
-      },
-    );
-  }
-
-  @action
-  updateSessionAlias(UpdateSessionAliasParams params) async {
-    final res = await contract.updateSessionAlias(params);
-    res.fold(
-      (failure) => errorUpdater(failure),
-      (updateStatus) => aliasIsUpdated = updateStatus,
-    );
-  }
-
   initReactors() {
-    disposers.add(beachWavesMovieStatusReactor());
-    // disposers.add(sessionCardEditReactor());
-    // disposers.add(sessionCardTapReactor());
     disposers.add(groupReactor());
-    disposers.add(groupDisplayedDragReactor());
+    disposers.add(widgets.groupDisplayDragReactor(onGroupsDeleted));
     disposers.add(widgets.groupRegistrationReactor(onGroupCreated));
+    disposers.add(widgets.queueCreationReactor(onQueueCreated));
+    disposers.add(widgets.membershipAdditionReactor(onGroupMembershipUpdated));
+    disposers.add(widgets.membershipRemovalReactor(onGroupMembershipUpdated));
   }
 
   @action
   onGroupCreated() async {
-    await contract.createNewGroup(widgets.groupRegistration.params);
-    await getGroups();
+    await storageLogic.createNewGroup(widgets.groupRegistration.params);
+    await storageLogic.getGroups();
+  }
+
+  @action
+  onQueueCreated(CreateQueueParams params) async {
+    await storageLogic.createQueue(params);
+    await storageLogic.getGroups();
+  }
+
+  @action
+  onGroupMembershipUpdated(UpdateGroupMemberParams params) async {
+    await storageLogic.updateGroupMembers(params);
+    await storageLogic.getGroups();
+  }
+
+  @action
+  onGroupsDeleted(String params) async {
+    await storageLogic.deleteGroup(params);
+    await storageLogic.getGroups();
   }
 
   groupReactor() => reaction(
-        (p0) => groups,
+        (p0) => storageLogic.groups,
         (p0) {
-          // if (p0.isNotEmpty) {
-          widgets.groupDisplay.onGroupsReceived(p0);
-          // }
+          widgets.onGroupsReceived(p0);
         },
       );
 
-  groupDisplayedDragReactor() =>
-      reaction((p0) => widgets.groupDisplay.successfulDragsCount, (p0) async {
-        widgets.groupDisplay.setWidgetVisibility(false);
-        await contract.deleteGroup(widgets.groupDisplay.groupUIDToDelete);
-        await getGroups();
-      });
+  // groupDisplayedDragReactor() =>
+  //     reaction((p0) => widgets.groupDisplay.successfulDragsCount, (p0) async {
+  //       widgets.groupDisplay.setWidgetVisibility(false);
+  //       await storageLogic.deleteGroup(widgets.groupDisplay.groupUIDToDelete);
+  //       await storageLogic.getGroups();
+  //     });
 
-  beachWavesMovieStatusReactor() =>
-      reaction((p0) => widgets.beachWaves.movieStatus, (p0) {
-        if (p0 == MovieStatus.finished &&
-            widgets.beachWaves.movieMode == BeachWaveMovieModes.anyToOnShore) {
-          widgets.dispose();
-          Modular.to.navigate(HomeConstants.home);
-        }
-        // else if (p0 == MovieStatus.finished &&
-        //   widgets.beachWaves.movieMode == BeachWaveMovieModes.skyToDrySand) {
-        // widgets.dispose();
-        // Modular.to.navigate(StorageConstants.content, arguments: {
-        //   "content":
-        //       nokhteSessionArtifacts[widgets.sessionCard.lastTappedIndex],
-        // });
-        // }
-      });
+  // queueCreationReactor() => reaction(
+  //       (p0) => widgets.groupDisplay.groupDisplayModal.queueCreationModal
+  //           .queueSubmissionCount,
+  //       (p0) async {
+  //         if (widgets.groupDisplay.groupDisplayModal.queueCreationModal
+  //                 .queueItems.isEmpty ||
+  //             widgets.groupDisplay.groupDisplayModal.queueCreationModal
+  //                 .queueTitleController.text.isEmpty) return;
+  //         final params = CreateQueueParams(
+  //           groupId: widgets
+  //               .groupDisplay.groupDisplayModal.currentlySelectedGroup.groupUID,
+  //           content: widgets
+  //               .groupDisplay.groupDisplayModal.queueCreationModal.queueItems,
+  //           title: widgets.groupDisplay.groupDisplayModal.queueCreationModal
+  //               .queueTitleController.text,
+  //         );
+  //         await storageLogic.createQueue(params);
+  //         widgets.groupDisplay.groupDisplayModal.queueCreationModal.dispose();
+  //         await storageLogic.getGroups();
+  //       },
+  //     );
 
-  sessionCardEditReactor() => reaction(
-        (p0) => widgets.sessionCard.lastEditedTitle,
-        (p0) async {
-          await updateSessionAlias(
-            UpdateSessionAliasParams(
-              sessionUID: widgets.sessionCard.lastEditedId,
-              newAlias: p0,
-            ),
-          );
-        },
-      );
+  // membershipAdditionReactor() => reaction(
+  //         (p0) => widgets.groupDisplay.groupDisplayModal
+  //             .groupDisplayCollaboratorCard.membersToAdd, (p0) async {
+  //       print('are we showing the modal yet? $p0');
+  //       final peopleToAdd = widgets.groupDisplay.groupDisplayModal
+  //           .groupDisplayCollaboratorCard.membersToAdd;
 
-  sessionCardTapReactor() =>
-      reaction((p0) => widgets.sessionCard.lastTappedIndex, (p0) {
-        ifTouchIsNotDisabled(() {
-          widgets.onSessionCardTapped();
-          setDisableAllTouchFeedback(true);
-        });
-      });
+  //       if (peopleToAdd.isNotEmpty) {
+  //         await storageLogic.updateGroupMembers(
+  //           UpdateGroupMemberParams(
+  //             groupId: widgets.groupDisplay.groupDisplayModal
+  //                 .currentlySelectedGroup.groupUID,
+  //             members: peopleToAdd,
+  //             isAdding: true,
+  //           ),
+  //         );
+  //         await storageLogic.getGroups();
+  //       }
+  //     });
+
+  // membershipRemovalReactor() => reaction(
+  //         (p0) => widgets.groupDisplay.groupDisplayModal
+  //             .groupDisplayCollaboratorCard.membersToRemove, (p0) async {
+  //       final peopleToRemove = widgets.groupDisplay.groupDisplayModal
+  //           .groupDisplayCollaboratorCard.membersToRemove;
+
+  //       if (peopleToRemove.isNotEmpty) {
+  //         await storageLogic.updateGroupMembers(
+  //           UpdateGroupMemberParams(
+  //             groupId: widgets.groupDisplay.groupDisplayModal
+  //                 .currentlySelectedGroup.groupUID,
+  //             members: peopleToRemove,
+  //             isAdding: false,
+  //           ),
+  //         );
+  //       }
+  //       await storageLogic.getGroups();
+  //     });
 
   deconstructor() {
     dispose();

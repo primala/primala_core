@@ -14,28 +14,14 @@ class StorageContractImpl with ResponseToStatus implements StorageContract {
   });
 
   @override
-  getNokhteSessionArtifacts(params) async {
+  getSessions(params) async {
     if (await networkInfo.isConnected) {
-      final nokhteSessionRes = await remoteSource.getNokhteSessionArtifacts();
-      final collaboratorRowsRes = await remoteSource.getCollaboratorRows();
-      final userUID = remoteSource.getUserUID();
+      final nokhteSessionRes = await remoteSource.getSessions(params);
       return Right(
-        NokhteSessionArtifactModel.fromSupabase(
-          nokhteSessionRes: nokhteSessionRes,
-          collaboratorRowsRes: collaboratorRowsRes,
-          userUID: userUID,
+        SessionArtifactModel.fromSupabase(
+          nokhteSessionRes,
         ),
       );
-    } else {
-      return Left(FailureConstants.internetConnectionFailure);
-    }
-  }
-
-  @override
-  updateSessionAlias(params) async {
-    if (await networkInfo.isConnected) {
-      final res = await remoteSource.updateSessionAlias(params);
-      return fromSupabase(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }
@@ -64,10 +50,57 @@ class StorageContractImpl with ResponseToStatus implements StorageContract {
   @override
   getGroups(params) async {
     if (await networkInfo.isConnected) {
-      final res = await remoteSource.getGroups();
-      return Right(GroupInformationModel.fromSupabase(res));
+      final groupResponse = await remoteSource.getGroups();
+      final collaborators = await _getCollaborators();
+      return Right(
+          GroupInformationModel.fromSupabase(groupResponse, collaborators));
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }
+  }
+
+  @override
+  createQueue(params) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.createQueue(params);
+      return fromSupabase(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  @override
+  deleteQueue(params) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.deleteQueue(params);
+      return fromSupabase(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  @override
+  getQueues(params) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.getQueues(params);
+      return Right(QueueModel.fromSupabase(res));
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  @override
+  updateGroupMembers(params) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.updateGroupMembers(params);
+      return fromSupabase(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  _getCollaborators() async {
+    final res = await remoteSource.getCollaborators();
+    return CollaboratorModel.fromSupabase(res);
   }
 }

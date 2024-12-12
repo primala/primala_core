@@ -12,22 +12,22 @@ serve(async (req) => {
   const { userUID } = await req.json();
 
   const stSessionRes = await supabaseAdmin
-    .from("st_active_nokhte_sessions")
+    .from("static_active_sessions")
     .select()
     .contains("collaborator_uids", `{${userUID}}`);
 
   const rtSessionRes = await supabaseAdmin
-    .from("rt_active_nokhte_sessions")
+    .from("realtime_active_sessions")
     .select()
     .eq("session_uid", stSessionRes?.data?.[0]["session_uid"]);
 
   await supabaseAdmin
-    .from("rt_active_nokhte_sessions")
+    .from("realtime_active_sessions")
     .delete()
     .eq("session_uid", stSessionRes?.data?.[0]["session_uid"]);
 
   await supabaseAdmin
-    .from("st_active_nokhte_sessions")
+    .from("static_active_sessions")
     .delete()
     .contains("collaborator_uids", `{${userUID}}`);
 
@@ -40,24 +40,23 @@ serve(async (req) => {
     const content = rtSessionRes?.data?.[0]["content"];
     const sessionTimestamp = stSessionRes?.data?.[0]["created_at"];
     const sessionUID = stSessionRes?.data?.[0]["session_uid"];
-    let collaboratorUIDsArr = stSessionRes?.data?.[0]["collaborator_uids"];
-    collaboratorUIDsArr = collaboratorUIDsArr.sort();
+    const groupUID = stSessionRes?.data?.[0]["group_uid"];
+    const collaboratorUIDsArr = stSessionRes?.data?.[0]["collaborator_uids"];
 
     const duplicateCheckRes = (
       await supabaseAdmin
-        .from("finished_nokhte_sessions")
+        .from("finished_sessions")
         .select()
         .contains("collaborator_uids", `{${userUID}}`)
         .eq("content", content)
     )?.data;
     if (isEmptyOrNull(duplicateCheckRes)) {
       const { error } = await supabaseAdmin
-        .from("finished_nokhte_sessions")
+        .from("finished_sessions")
         .insert({
-          collaborator_uids: collaboratorUIDsArr,
+          group_uid: groupUID,
           content: content,
           session_timestamp: sessionTimestamp,
-          aliases: Array(collaboratorUIDsArr.length).fill(""),
           session_uid: sessionUID,
         })
         .select();

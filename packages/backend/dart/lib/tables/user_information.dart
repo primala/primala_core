@@ -1,2 +1,2 @@
-export '_real_time_disabled/user_information/queries.dart';
-export "_real_time_disabled/user_information/constants.dart";
+export 'user_information/queries.dart';
+export "user_information/constants.dart";

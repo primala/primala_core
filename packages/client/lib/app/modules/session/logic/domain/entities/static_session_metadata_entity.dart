@@ -16,6 +16,8 @@ class NameAndUID extends Equatable {
 class StaticSessionMetadataEntity extends Equatable {
   final int userIndex;
   final DateTime createdAt;
+  final String groupUID;
+  final String queueUID;
 
   final String leaderUID;
   final List<NameAndUID> namesAndUIDs;
@@ -27,6 +29,8 @@ class StaticSessionMetadataEntity extends Equatable {
     required this.leaderUID,
     required this.namesAndUIDs,
     required this.presetUID,
+    required this.groupUID,
+    required this.queueUID,
   });
 
   @override
@@ -35,5 +39,8 @@ class StaticSessionMetadataEntity extends Equatable {
         userIndex,
         leaderUID,
         presetUID,
+        createdAt,
+        groupUID,
+        queueUID,
       ];
 }

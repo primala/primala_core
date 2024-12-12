@@ -12,19 +12,29 @@ class StorageWidgetsModule extends Module {
   @override
   exportedBinds(i) {
     i.add<StorageHomeWidgetsCoordinator>(
-      () => StorageHomeWidgetsCoordinator(
-        groupDisplay: GroupDisplayStore(
-          groupDisplayModal: GroupDisplayModalStore(),
+      () {
+        final groupDisplaySessionCard = GroupDisplaySessionCardStore();
+        return StorageHomeWidgetsCoordinator(
+          groupDisplay: GroupDisplayStore(
+            groupDisplayModal: GroupDisplayModalStore(
+              groupDisplayQueueCard: GroupDisplayQueueCardStore(),
+              groupDisplayCollaboratorCard: GroupDisplayCollaboratorCardStore(),
+              groupDisplaySessionCard: groupDisplaySessionCard,
+              blur: NokhteBlurStore(),
+              queueCreationModal: QueueCreationModalStore(
+                groupDisplaySessionCard: groupDisplaySessionCard,
+                blur: NokhteBlurStore(),
+              ),
+            ),
+          ),
+          groupRegistration: GroupRegistrationStore(),
           blur: NokhteBlurStore(),
-        ),
-        groupRegistration: GroupRegistrationStore(),
-        blur: NokhteBlurStore(),
-        backButton: BackButtonStore(),
-        sessionCard: SessionCardStore(),
-        headerText: SmartTextStore(),
-        beachWaves: BeachWavesStore(),
-        wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
-      ),
+          backButton: BackButtonStore(),
+          headerText: SmartTextStore(),
+          beachWaves: BeachWavesStore(),
+          wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
+        );
+      },
     );
     i.add<StorageContentWidgetsCoordinator>(
       () => StorageContentWidgetsCoordinator(

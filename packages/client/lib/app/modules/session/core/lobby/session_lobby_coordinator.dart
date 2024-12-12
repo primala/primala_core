@@ -166,10 +166,11 @@ abstract class _SessionLobbyCoordinatorBase
       onOpen: onOpen,
       onClose: onClose,
     );
+    widgets.contextHeader.setHeader(
+      sessionMetadata.currentGroup,
+      sessionMetadata.currentQueue,
+    );
     widgets.onQrCodeReady(sessionMetadata.leaderUID);
-    // if (!hasReceivedRoutingArgs) {
-    //   widgets.qrCode.setWidgetVisibility(false);
-    // }
   }
 
   tapReactor() => reaction(
