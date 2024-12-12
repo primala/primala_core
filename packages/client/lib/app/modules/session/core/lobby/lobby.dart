@@ -1,4 +1,5 @@
 export 'session_lobby_coordinator.dart';
+export 'context_header/context_header.dart';
 export 'session_lobby_widgets_coordinator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -43,6 +44,10 @@ class SessionLobbyScreen extends HookWidget {
                     topPadding: .25,
                     topBump: 0.0015,
                     opacityDuration: Seconds.get(1),
+                  ),
+                  ContextHeader(
+                    store: coordinator.widgets.contextHeader,
+                    scrollPercentage: .3,
                   ),
                   Padding(
                     padding: EdgeInsets.only(

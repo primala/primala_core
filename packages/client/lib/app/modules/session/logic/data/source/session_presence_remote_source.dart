@@ -1,7 +1,7 @@
 import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte_backend/tables/finished_nokhte_sessions.dart';
-import 'package:nokhte_backend/tables/rt_active_nokhte_sessions.dart';
-import 'package:nokhte_backend/tables/st_active_nokhte_sessions.dart';
+import 'package:nokhte_backend/tables/finished_sessions.dart';
+import 'package:nokhte_backend/tables/realtime_active_sessions.dart';
+import 'package:nokhte_backend/tables/static_active_sessions.dart';
 import 'package:nokhte_backend/tables/user_metadata.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -10,7 +10,7 @@ abstract class SessionPresenceRemoteSource {
   Future<List> setUserAsCurrentTalker();
   Future<List> clearTheCurrentTalker();
   Future<List> updateCurrentPhase(double params);
-  Stream<NokhteSessionMetadata> listenToSessionMetadata();
+  Stream<SessionMetadata> listenToSessionMetadata();
   Future<bool> cancelSessionMetadataStream();
   Future<List> addContent(AddContentParams content);
   Future<List> letEmCook();
@@ -23,20 +23,24 @@ abstract class SessionPresenceRemoteSource {
   Future<List> startTheSession();
   Future<List> getUserMetadata();
   Future<List> updateSpeakingTimerStart();
+  Future<List> updateGroupUID(String params);
+  Future<List> updateQueueUID(String params);
+  Future<List> setContent(List params);
+  Future<List> moveQueueToTheTop(MoveQueueToTopParams params);
 }
 
 class SessionPresenceRemoteSourceImpl implements SessionPresenceRemoteSource {
   final SupabaseClient supabase;
-  final RTActiveNokhteSessionQueries rtQueries;
-  final STActiveNokhteSessionQueries stQueries;
-  final RTActiveNokhteSessionsStream stream;
-  final FinishedNokhteSessionQueries finishedQueries;
+  final RealtimeActiveSessionQueries rtQueries;
+  final StaticActiveSessionQueries stQueries;
+  final RealtimeActiveSessionStream stream;
+  final FinishedSessionsQueries finishedQueries;
   final UserMetadataQueries userMetadata;
   SessionPresenceRemoteSourceImpl({required this.supabase})
-      : rtQueries = RTActiveNokhteSessionQueries(supabase: supabase),
-        stQueries = STActiveNokhteSessionQueries(supabase: supabase),
-        finishedQueries = FinishedNokhteSessionQueries(supabase: supabase),
-        stream = RTActiveNokhteSessionsStream(supabase: supabase),
+      : rtQueries = RealtimeActiveSessionQueries(supabase: supabase),
+        stQueries = StaticActiveSessionQueries(supabase: supabase),
+        finishedQueries = FinishedSessionsQueries(supabase: supabase),
+        stream = RealtimeActiveSessionStream(supabase: supabase),
         userMetadata = UserMetadataQueries(supabase: supabase);
 
   @override
@@ -99,4 +103,17 @@ class SessionPresenceRemoteSourceImpl implements SessionPresenceRemoteSource {
   @override
   updateSpeakingTimerStart() async =>
       await rtQueries.updateSpeakingTimerStart();
+
+  @override
+  updateGroupUID(params) async => await stQueries.updateGroupUID(params);
+
+  @override
+  setContent(params) async => await rtQueries.setContent(params);
+
+  @override
+  updateQueueUID(params) async => await stQueries.updateQueueUID(params);
+
+  @override
+  moveQueueToTheTop(params) async => await rtQueries.moveQueueToTheTop(
+      index: params.queueIndex, content: params.content);
 }

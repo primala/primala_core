@@ -8,20 +8,23 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/presets/presets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
+import 'package:nokhte/app/modules/storage/storage.dart';
 import 'package:nokhte_backend/tables/company_presets.dart';
-import 'package:nokhte_backend/tables/rt_active_nokhte_sessions.dart';
+import 'package:nokhte_backend/tables/realtime_active_sessions.dart';
 part 'session_metadata_store.g.dart';
 
 class SessionMetadataStore = _SessionMetadataStoreBase
     with _$SessionMetadataStore;
 
 abstract class _SessionMetadataStoreBase
-    with Store, BaseMobxLogic<NoParams, Stream<NokhteSessionMetadata>> {
+    with Store, BaseMobxLogic<NoParams, Stream<SessionMetadata>> {
   final SessionPresenceContract contract;
   final PresetsLogicCoordinator presetsLogic;
+  final StorageLogicCoordinator storageLogic;
   _SessionMetadataStoreBase({
     required this.contract,
     required this.presetsLogic,
+    required this.storageLogic,
   }) {
     initBaseLogicActions();
   }
@@ -40,6 +43,12 @@ abstract class _SessionMetadataStoreBase
 
   @observable
   String? currentSpeakerUID = '';
+
+  @observable
+  String groupUID = '';
+
+  @observable
+  String queueUID = '';
 
   @observable
   bool userIsInSecondarySpeakingSpotlight = false;
@@ -85,7 +94,7 @@ abstract class _SessionMetadataStoreBase
   setAffirmativePhase(double value) => affirmativePhase = value;
 
   @observable
-  ObservableStream<NokhteSessionMetadata> sessionMetadata =
+  ObservableStream<SessionMetadata> sessionMetadata =
       ObservableStream(const Stream.empty());
 
   StreamSubscription streamSubscription =
@@ -112,9 +121,17 @@ abstract class _SessionMetadataStoreBase
         userIndex = entity.userIndex;
         namesAndUIDs = ObservableList.of(entity.namesAndUIDs);
         presetUID = entity.presetUID;
+        groupUID = entity.groupUID;
+        queueUID = entity.queueUID;
         sessionStartTime = entity.createdAt;
         leaderUID = entity.leaderUID;
         await presetsLogic.getCompanyPresets(Right(entity.presetUID));
+        if (groupUID.isNotEmpty) {
+          // get group information
+        }
+        if (queueUID.isNotEmpty) {
+          // get queue information
+        }
       }
     });
   }
@@ -202,6 +219,14 @@ abstract class _SessionMetadataStoreBase
   @computed
   String get currentPurpose =>
       content.isEmpty ? 'No purpose yet' : content.last;
+
+  @computed
+  String get currentGroup =>
+      groupUID.isEmpty ? 'No group selected' : 'Group: $groupUID';
+
+  @computed
+  String get currentQueue =>
+      queueUID.isEmpty ? 'No queue selected' : 'Queue: $queueUID';
 
   @computed
   DateTime get now => time.value ?? DateTime.now();

@@ -9,6 +9,7 @@ import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/presets/presets.dart';
+import 'package:nokhte/app/modules/session/session.dart';
 part 'session_lobby_widgets_coordinator.g.dart';
 
 class SessionLobbyWidgetsCoordinator = _SessionLobbyWidgetsCoordinatorBase
@@ -22,6 +23,7 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
   final TouchRippleStore touchRipple;
   final PresetArticleStore presetArticle;
   final NavigationMenuStore navigationMenu;
+  final ContextHeaderStore contextHeader;
   @override
   final WifiDisconnectOverlayStore wifiDisconnectOverlay;
 
@@ -32,6 +34,7 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
     required this.navigationMenu,
     required this.qrCode,
     required this.touchRipple,
+    required this.contextHeader,
   }) : beachWaves = navigationMenu.beachWaves {
     initBaseWidgetsCoordinatorActions();
   }
@@ -46,6 +49,7 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
     beachWaves.setMovieMode(
       BeachWaveMovieModes.deepSeaToSky,
     );
+    contextHeader.setWidgetVisibility(false);
     primarySmartText.setMessagesData(SessionLists.lobby);
     // primarySmartText.setWidgetVisibility(false);
     qrCode.setWidgetVisibility(false);
@@ -135,6 +139,13 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
   }
 
   @action
+  onModalOpened() {
+    navigationMenu.setWidgetVisibility(false);
+    qrCode.setWidgetVisibility(false);
+    primarySmartText.setWidgetVisibility(false);
+  }
+
+  @action
   onCollaboratorLeft() {
     primarySmartText.setWidgetVisibility(false);
     presetArticle.setShowPreview(false);
@@ -159,6 +170,7 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
     presetArticle.setShowPreview(false);
     presetArticle.setWidgetVisibility(true);
     qrCode.setWidgetVisibility(false);
+    contextHeader.setWidgetVisibility(false);
     primarySmartText.setWidgetVisibility(false);
   }
 

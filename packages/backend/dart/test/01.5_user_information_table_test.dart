@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nokhte_backend/tables/_real_time_disabled/company_presets/queries.dart';
-import 'package:nokhte_backend/tables/_real_time_disabled/user_information/queries.dart';
+import 'package:nokhte_backend/tables/company_presets/queries.dart';
+import 'package:nokhte_backend/tables/user_information/queries.dart';
 
 import 'shared/shared.dart';
 

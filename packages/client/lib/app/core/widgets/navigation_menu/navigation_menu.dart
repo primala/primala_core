@@ -72,70 +72,80 @@ class NavigationMenu extends HookWidget with ArticleBodyUtils {
                     NokhteBlur(
                       store: store.blur,
                     ),
-                    Observer(builder: (context) {
-                      return AnimatedOpacity(
-                        opacity: useWidgetOpacity(store.showWidget),
-                        duration: Seconds.get(1),
-                        child: MultiHitStack(
-                          children: [
-                            NavigationBanner(
-                              swipeDownBannerVisibility:
-                                  store.swipeDownBannerVisibility,
-                              swipeUpBannerVisibility:
-                                  store.swipeUpBannerVisibility,
-                            ),
-                            AnimatedOpacity(
+                    !store.showWidget
+                        ? Container()
+                        : Observer(builder: (context) {
+                            return AnimatedOpacity(
+                              opacity: useWidgetOpacity(store.showWidget),
                               duration: Seconds.get(1),
-                              opacity: useWidgetOpacity(
-                                  store.swipeUpBannerVisibility),
-                              child: Stack(
+                              child: MultiHitStack(
                                 children: [
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.only(bottom: 100.0),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                  NavigationBanner(
+                                    swipeDownBannerVisibility:
+                                        store.swipeDownBannerVisibility,
+                                    swipeUpBannerVisibility:
+                                        store.swipeUpBannerVisibility,
+                                  ),
+                                  AnimatedOpacity(
+                                    duration: Seconds.get(1),
+                                    opacity: useWidgetOpacity(
+                                        store.swipeUpBannerVisibility),
+                                    child: Stack(
                                       children: [
-                                        ...store.configuration.sliderInfo.map(
-                                          (sliderConfig) =>
-                                              GeneralizedActionSlider(
-                                            showWidget:
-                                                store.swipeUpBannerVisibility,
-                                            assetPath: sliderConfig.assetPath,
-                                            sliderText: sliderConfig.sliderText,
-                                            onSlideComplete: () {
-                                              store.setCurrentlySelectedSlider(
-                                                sliderConfig.actionSliderOption,
-                                              );
-                                              // sliderConfig.callback();
-                                            },
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 100.0),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              ...store.configuration.sliderInfo
+                                                  .map(
+                                                (sliderConfig) =>
+                                                    GeneralizedActionSlider(
+                                                  showWidget: store
+                                                      .swipeUpBannerVisibility,
+                                                  assetPath:
+                                                      sliderConfig.assetPath,
+                                                  sliderText:
+                                                      sliderConfig.sliderText,
+                                                  onSlideComplete: () {
+                                                    store
+                                                        .setCurrentlySelectedSlider(
+                                                      sliderConfig
+                                                          .actionSliderOption,
+                                                    );
+                                                    // sliderConfig.callback();
+                                                  },
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
+                                        useJustTheSlideAction
+                                            ? Container()
+                                            : NavigationCarousel(
+                                                carouselItems: store
+                                                    .configuration
+                                                    .carouselInfo
+                                                    .labels,
+                                                initialPosition: store
+                                                    .configuration.startIndex,
+                                                onScrolled:
+                                                    store.setCarouselPosition,
+                                                isScrollEnabled: store
+                                                        .swipeUpBannerVisibility &&
+                                                    store.showWidget,
+                                                currentPosition:
+                                                    store.carouselPosition,
+                                              ),
                                       ],
                                     ),
                                   ),
-                                  useJustTheSlideAction
-                                      ? Container()
-                                      : NavigationCarousel(
-                                          carouselItems: store.configuration
-                                              .carouselInfo.labels,
-                                          initialPosition:
-                                              store.configuration.startIndex,
-                                          onScrolled: store.setCarouselPosition,
-                                          isScrollEnabled:
-                                              store.swipeUpBannerVisibility &&
-                                                  store.showWidget,
-                                          currentPosition:
-                                              store.carouselPosition,
-                                        ),
                                 ],
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }),
+                            );
+                          }),
                   ],
                 ),
               );

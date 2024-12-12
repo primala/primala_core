@@ -50,14 +50,27 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
   @observable
   int currentPurposeIndex = -1;
 
+  @observable
+  int currentQueueIndex = -1;
+
   Function(AddContentParams params) addContent = (params) {};
+  Function(MoveQueueToTopParams params) moveQueueToTheTop = (params) {};
 
   @action
   setAddContent(Function(AddContentParams params) value) => addContent = value;
 
   @action
+  setMoveQueueToTheTop(Function(MoveQueueToTopParams params) value) =>
+      moveQueueToTheTop = value;
+
+  @action
   setCurrentPurposeIndex(int index) {
     currentPurposeIndex = index;
+  }
+
+  @action
+  setCurrentQueueIndex(int index) {
+    currentQueueIndex = index;
   }
 
   @action
@@ -71,6 +84,19 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
   @observable
   String purpose = '';
 
+  bool hasSubstringAtAnyIndex(List<String> list, String substring) {
+    // Iterate through each string in the list
+    for (String item in list) {
+      // Check if the substring is present in the current string
+      if (item.contains(substring)) {
+        return true;
+      }
+    }
+
+    // Return false if no match is found
+    return false;
+  }
+
   @action
   setPurpose(ObservableList<String> content) {
     nokhteBlur.setControl(Control.stop);
@@ -83,8 +109,11 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
       setWidgetVisibility(false);
     }
     Timer(Seconds.get(0, milli: 500), () {
-      if (content.isEmpty) {
+      if (content.isEmpty || !hasSubstringAtAnyIndex(content, "P: ")) {
         purpose = 'No purpose yet';
+        if (hasSubstringAtAnyIndex(content, "Q: ")) {
+          sessionContent = content;
+        }
       } else {
         sessionContent = content;
         // if (content.last.contains("P: ")) {
@@ -168,9 +197,19 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
                     width: MediaQuery.of(context).size.width,
                     child: PurposeConclusionBody(
                       sessionContent: sessionContent,
-                      onTap: (int index) {
+                      onPurposeTap: (int index) {
                         toggleTextInput(true);
                         setCurrentPurposeIndex(index);
+                      },
+                      onQueueTap: (int index) async {
+                        // toggleTextInput(true);
+                        setCurrentQueueIndex(index);
+                        await moveQueueToTheTop(
+                          MoveQueueToTopParams(
+                            content: 'P: ${sessionContent[index].substring(3)}',
+                            queueIndex: index,
+                          ),
+                        );
                       },
                     ),
                   ),

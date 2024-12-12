@@ -15,7 +15,7 @@ class StorageLists {
 
   static List<RotatingTextData> get homeHeader => [
         RotatingTextData(
-          text: "Sessions:",
+          text: "Groups:",
           pauseHere: true,
           mainFontSize: 40.0,
         ),

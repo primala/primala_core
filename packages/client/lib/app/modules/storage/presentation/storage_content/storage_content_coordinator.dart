@@ -21,8 +21,8 @@ abstract class _StorageContentCoordinatorBase with Store, BaseCoordinator {
   }
 
   @observable
-  NokhteSessionArtifactEntity nokhteSessionArtifacts =
-      NokhteSessionArtifactEntity.initial();
+  SessionArtifactEntity nokhteSessionArtifacts =
+      SessionArtifactEntity.initial();
 
   @observable
   bool aliasIsUpdated = false;

@@ -51,6 +51,7 @@ abstract class _SessionSoloHybridCoordinatorBase
       widgets.onCollaboratorLeft();
     }
     widgets.purposeBanner.setAddContent(presence.addContent);
+    widgets.purposeBanner.setMoveQueueToTheTop(presence.moveQueueToTheTop);
     initReactors();
     await presence.updateCurrentPhase(2.0);
     await onResumed();
