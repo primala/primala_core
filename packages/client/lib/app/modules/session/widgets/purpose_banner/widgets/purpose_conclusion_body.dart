@@ -80,7 +80,6 @@ class PurposeConclusionBody extends StatelessWidget {
 
     if (currentGroup.isNotEmpty) parsed.add(currentGroup);
 
-    print('Parsed data: $parsed');
     return parsed;
   }
 }

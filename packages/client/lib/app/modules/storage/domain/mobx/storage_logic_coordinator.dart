@@ -40,7 +40,6 @@ abstract class _StorageLogicCoordinatorBase with Store, BaseMobxLogic {
     res.fold(
       (failure) => errorUpdater(failure),
       (artifacts) {
-        print('artifacts: $artifacts');
         groups = ObservableList.of(artifacts);
         setState(StoreState.loaded);
       },
