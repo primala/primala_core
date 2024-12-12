@@ -44,8 +44,11 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
 
   @action
   constructor() {
-    navigationMenu
-        .setNavigationMenuType(NavigationMenuType.sessionLobbyNoOneJoined);
+    navigationMenu.setNavigationMenuType(
+      NavigationMenuType.sessionLobbyNoOneJoined,
+      shouldInitReactors: false,
+    );
+
     beachWaves.setMovieMode(
       BeachWaveMovieModes.deepSeaToSky,
     );
@@ -56,6 +59,7 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
     presetArticle.setRenderPreview(true);
 
     disposers.add(smartTextIndexReactor());
+    disposers.add(navigationMenu.swipeReactor());
 
     Timer(Seconds.get(1), () {
       primarySmartText.startRotatingText();
