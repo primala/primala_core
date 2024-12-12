@@ -128,6 +128,36 @@ class RealtimeActiveSessionQueries extends ActiveSessionEdgeFunctions
     );
   }
 
+  Future<List> moveQueueToTheTop({
+    required int index,
+    required String content,
+  }) async {
+    print('index: $index content: $content');
+    await computeCollaboratorInformation();
+    final contentRes = await getContent();
+    final currentVersion = contentRes.currentVersion;
+    final currentContent = contentRes.mainType;
+
+    currentContent.removeAt(index);
+    // final String formattedContent = 'P: ${content.substring(2)}';
+    currentContent.add(content);
+
+    return await retry<List>(
+      action: () async {
+        return await _onCurrentActiveNokhteSession(
+          supabase.from(TABLE).update({
+            CONTENT: currentContent,
+            VERSION: currentVersion + 1,
+          }),
+          version: currentVersion,
+        );
+      },
+      shouldRetry: (result) {
+        return result.isEmpty;
+      },
+    );
+  }
+
   Future<List> beginSession() async {
     await computeCollaboratorInformation();
     final res = await getWhoIsOnline();

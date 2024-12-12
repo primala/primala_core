@@ -6,6 +6,7 @@ import 'package:nokhte_backend/tables/realtime_active_sessions.dart';
 
 abstract class SessionPresenceContract {
   Future<Either<Failure, bool>> addContent(AddContentParams params);
+  Future<Either<Failure, bool>> moveQueueToTheTop(MoveQueueToTopParams params);
   Future<Either<Failure, bool>> completeTheSession(NoParams params);
   Future<Either<Failure, bool>> startTheSession(NoParams params);
   Future<Either<Failure, bool>> updateOnlineStatus(bool params);

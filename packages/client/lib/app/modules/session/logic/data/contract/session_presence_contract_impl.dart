@@ -152,4 +152,14 @@ class SessionPresenceContractImpl
       return Left(FailureConstants.internetConnectionFailure);
     }
   }
+
+  @override
+  moveQueueToTheTop(params) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.moveQueueToTheTop(params);
+      return fromSupabase(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
 }

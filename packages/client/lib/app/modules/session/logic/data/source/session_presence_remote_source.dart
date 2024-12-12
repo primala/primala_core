@@ -26,6 +26,7 @@ abstract class SessionPresenceRemoteSource {
   Future<List> updateGroupUID(String params);
   Future<List> updateQueueUID(String params);
   Future<List> setContent(List params);
+  Future<List> moveQueueToTheTop(MoveQueueToTopParams params);
 }
 
 class SessionPresenceRemoteSourceImpl implements SessionPresenceRemoteSource {
@@ -111,4 +112,8 @@ class SessionPresenceRemoteSourceImpl implements SessionPresenceRemoteSource {
 
   @override
   updateQueueUID(params) async => await stQueries.updateQueueUID(params);
+
+  @override
+  moveQueueToTheTop(params) async => await rtQueries.moveQueueToTheTop(
+      index: params.queueIndex, content: params.content);
 }
