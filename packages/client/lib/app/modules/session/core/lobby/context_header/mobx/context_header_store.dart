@@ -19,6 +19,7 @@ abstract class _ContextHeaderStoreBase extends BaseWidgetStore with Store {
   ) {
     this.groupName = groupName;
     this.queueName = queueName;
+    setWidgetVisibility(true);
   }
 
   @action

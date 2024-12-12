@@ -49,6 +49,7 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
     beachWaves.setMovieMode(
       BeachWaveMovieModes.deepSeaToSky,
     );
+    contextHeader.setWidgetVisibility(false);
     primarySmartText.setMessagesData(SessionLists.lobby);
     // primarySmartText.setWidgetVisibility(false);
     qrCode.setWidgetVisibility(false);
@@ -169,6 +170,7 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
     presetArticle.setShowPreview(false);
     presetArticle.setWidgetVisibility(true);
     qrCode.setWidgetVisibility(false);
+    contextHeader.setWidgetVisibility(false);
     primarySmartText.setWidgetVisibility(false);
   }
 
