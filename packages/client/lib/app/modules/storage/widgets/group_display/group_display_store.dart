@@ -26,10 +26,13 @@ abstract class _GroupDisplayStoreBase extends BaseWidgetStore with Store {
 
   @action
   onGroupsReceived(List<GroupInformationEntity> groups) {
-    this.groups = ObservableList.of(groups);
-    groupDisplayModal.groupDisplayQueueCard.setQueues(
-      groups[currentlySelectedIndex].queues,
-    );
+    print('where you going here');
+    if (groups.isNotEmpty) {
+      this.groups = ObservableList.of(groups);
+      groupDisplayModal.groupDisplayQueueCard.setQueues(
+        groups[currentlySelectedIndex].queues,
+      );
+    }
     setWidgetVisibility(true);
   }
 

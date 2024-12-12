@@ -19,8 +19,9 @@ class GroupRegistration extends HookWidget {
   Widget build(BuildContext context) {
     useEffect(() {
       store.setWidgetVisibility(false);
-      return null;
+      return () => store.dispose();
     }, []);
+
     final bottomPadding = MediaQuery.of(context).viewInsets.bottom;
 
     return Observer(builder: (context) {
@@ -34,14 +35,16 @@ class GroupRegistration extends HookWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               _buildTextField(
+                controller: store.groupNameController,
                 placeholder: 'group name',
-                onChanged: store.setGroupName,
+                // onChanged: store.setGroupName,
                 onSubmitted: store.onSubmit,
               ),
               const SizedBox(height: 20),
               _buildTextField(
+                controller: store.groupHandleController,
                 placeholder: 'handle',
-                onChanged: store.setGroupHandle,
+                // onChanged: store.setGroupHandle,
                 onSubmitted: store.onSubmit,
               ),
             ],
@@ -52,12 +55,14 @@ class GroupRegistration extends HookWidget {
   }
 
   Widget _buildTextField({
+    required TextEditingController controller,
     required String placeholder,
-    required Function(String) onChanged,
+    // required Function(String) onChanged,
     required Function onSubmitted,
   }) {
     return TextField(
-      onChanged: onChanged,
+      controller: controller,
+      // onChanged: onChanged,
       onSubmitted: (_) {
         if (placeholder == 'handle') {
           onSubmitted();
