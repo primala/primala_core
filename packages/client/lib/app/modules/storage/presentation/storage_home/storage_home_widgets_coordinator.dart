@@ -78,6 +78,9 @@ abstract class _StorageHomeWidgetsCoordinatorBase
       reaction((p0) => groupRegistration.submissionCount, (p0) async {
         await onSubmit();
         groupDisplay.setWidgetVisibility(true);
+        Timer(Seconds.get(1), () {
+          groupRegistration.reset();
+        });
       });
 
   beachWavesMovieStatusReactor() =>

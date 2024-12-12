@@ -8,13 +8,14 @@ part 'storage_logic_coordinator.g.dart';
 class StorageLogicCoordinator = _StorageLogicCoordinatorBase
     with _$StorageLogicCoordinator;
 
-abstract class _StorageLogicCoordinatorBase extends BaseWidgetStore
-    with Store, BaseMobxLogic {
+abstract class _StorageLogicCoordinatorBase with Store, BaseMobxLogic {
   final StorageContract contract;
 
   _StorageLogicCoordinatorBase({
     required this.contract,
-  });
+  }) {
+    initBaseLogicActions();
+  }
   //
 
   @observable
@@ -34,12 +35,14 @@ abstract class _StorageLogicCoordinatorBase extends BaseWidgetStore
 
   @action
   getGroups() async {
+    setState(StoreState.loading);
     final res = await contract.getGroups(const NoParams());
     res.fold(
       (failure) => errorUpdater(failure),
       (artifacts) {
         print('artifacts: $artifacts');
         groups = ObservableList.of(artifacts);
+        setState(StoreState.loaded);
       },
     );
   }

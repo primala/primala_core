@@ -79,9 +79,10 @@ abstract class _StorageHomeCoordinatorBase
   }
 
   groupReactor() => reaction(
-        (p0) => storageLogic.groups,
+        (p0) => storageLogic.state,
         (p0) {
-          widgets.onGroupsReceived(p0);
+          if (storageLogic.state == StoreState.loading) return;
+          widgets.onGroupsReceived(storageLogic.groups);
         },
       );
 

@@ -51,19 +51,22 @@ class GroupDisplay extends HookWidget {
                         ),
                         itemCount: store.groups.length,
                         itemBuilder: (context, index) {
-                          final group = store.groups[index];
-                          return LongPressDraggable<GroupInformationEntity>(
-                            data: group,
-                            feedback: Material(
-                              color: Colors.transparent,
-                              child: _buildGroupItem(index, group,
-                                  isDragging: true),
-                            ),
-                            childWhenDragging: Container(),
-                            onDragStarted: () => store.setIsDragging(true),
-                            onDragEnd: (_) => store.setIsDragging(false),
-                            child: _buildGroupItem(index, group),
-                          );
+                          return Observer(builder: (context) {
+                            print('index $index');
+                            final group = store.groups[index];
+                            return LongPressDraggable<GroupInformationEntity>(
+                              data: group,
+                              feedback: Material(
+                                color: Colors.transparent,
+                                child: _buildGroupItem(index, group,
+                                    isDragging: true),
+                              ),
+                              childWhenDragging: Container(),
+                              onDragStarted: () => store.setIsDragging(true),
+                              onDragEnd: (_) => store.setIsDragging(false),
+                              child: _buildGroupItem(index, group),
+                            );
+                          });
                         },
                       ),
                     )
