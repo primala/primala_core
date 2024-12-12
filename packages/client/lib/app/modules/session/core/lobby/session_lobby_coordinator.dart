@@ -91,6 +91,10 @@ abstract class _SessionLobbyCoordinatorBase
         widgets.onCollaboratorLeft();
       },
     ));
+    disposers.add(
+        widgets.navigationMenu.actionSliderReactor(onActionSliderSelected: () {
+      sessionMetadata.resetValues();
+    }));
     disposers.add(sessionStartReactor());
     disposers.add(widgets.beachWavesMovieStatusReactor(enterGreeter));
     disposers.add(presetArticleTapReactor());
@@ -223,7 +227,6 @@ abstract class _SessionLobbyCoordinatorBase
 
   deconstructor() async {
     // if (!sessionMetadata.sessionHasBegun) {
-    // sessionMetadata.resetValues();
     // await starterLogic.nuke();
     // await presence.dispose();
     // Modular.dispose<SessionLogicModule>();

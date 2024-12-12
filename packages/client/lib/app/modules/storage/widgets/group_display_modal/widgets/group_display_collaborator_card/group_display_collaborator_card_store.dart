@@ -31,8 +31,6 @@ abstract class _GroupDisplayCollaboratorCardStoreBase extends BaseWidgetStore
     if (index >= 0 && index < membershipList.length) {
       membershipList[index] = !membershipList[index];
     }
-    print('members to add ${membersToAdd}');
-    print('members to remove ${membersToRemove}');
   }
 
   @computed

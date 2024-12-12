@@ -24,7 +24,6 @@ class QueueModel extends QueueEntity {
       final date = DateTime.parse(
         queue[SessionQueuesQueries.CREATED_AT],
       );
-
       temp.add(QueueModel(
         createdAt: formatDate(date),
         title: queue[SessionQueuesQueries.TITLE],

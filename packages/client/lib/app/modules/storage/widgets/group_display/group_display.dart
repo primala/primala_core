@@ -52,7 +52,6 @@ class GroupDisplay extends HookWidget {
                         itemCount: store.groups.length,
                         itemBuilder: (context, index) {
                           return Observer(builder: (context) {
-                            print('index $index');
                             final group = store.groups[index];
                             return LongPressDraggable<GroupInformationEntity>(
                               data: group,

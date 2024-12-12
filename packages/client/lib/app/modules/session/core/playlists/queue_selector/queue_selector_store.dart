@@ -53,9 +53,5 @@ abstract class _QueueSelectorStoreBase extends BaseWidgetStore with Store {
     } else {
       selectedQueue = queue;
     }
-    // selectedGroup = queue
-    // note the second one doesn't select for some reason
-    // this is really odd behavior
-    ;
   }
 }

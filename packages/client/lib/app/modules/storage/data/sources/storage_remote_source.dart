@@ -72,7 +72,6 @@ class StorageRemoteSourceImpl implements StorageRemoteSource {
 
   @override
   updateGroupMembers(params) async {
-    print('params : $params');
     return await groupInformationQueries.updateGroupMembers(
       groupId: params.groupId,
       members: params.members,

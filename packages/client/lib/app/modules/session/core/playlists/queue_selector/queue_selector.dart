@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -68,7 +70,7 @@ class QueueSelector extends HookWidget {
                                   : () {
                                       store.toggleGroupExpansion(group);
                                     },
-                              child: Container(
+                              child: SizedBox(
                                 width: double.infinity,
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -101,12 +103,13 @@ class QueueSelector extends HookWidget {
                                   itemBuilder: (context, queueIndex) {
                                     return Observer(builder: (context) {
                                       final queue = group.queues[queueIndex];
-                                      print('queue: $queue');
                                       return GestureDetector(
                                         onTap: () {
                                           if (!store.showWidget) return;
                                           store.selectQueue(queue);
-                                          store.selectGroup(group);
+                                          Timer(Seconds.get(1), () {
+                                            store.selectGroup(group);
+                                          });
                                           // onQueueSelected?.call(group, queue);
                                         },
                                         child: Container(
@@ -146,9 +149,9 @@ class QueueSelector extends HookWidget {
                                 indent: 20,
                                 endIndent: 20,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: Center(
+                              const Padding(
+                                padding: EdgeInsets.all(15.0),
+                                child: const Center(
                                   child: Jost(
                                     'No queues created',
                                     fontSize: 16,
