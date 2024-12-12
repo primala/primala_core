@@ -33,7 +33,7 @@ class NavigationMenuConfiguration extends Equatable {
       case NavigationMenuType.sessionPresets:
         _configureSessionLobbyNoOneJoined(startIndex: 0);
       case NavigationMenuType.sessionPlaylists:
-        _configureSessionLobbyNoOneJoined(startIndex: 2);
+        _configureSessionLobbyNoOneJoined(startIndex: 2, excludeSliders: true);
       case NavigationMenuType.settings:
         _configureHomescreen(startIndex: 0);
       case NavigationMenuType.storage:
@@ -75,8 +75,13 @@ class NavigationMenuConfiguration extends Equatable {
 
   void _configureSessionLobbyNoOneJoined({
     int startIndex = 1,
+    bool excludeSliders = false,
   }) {
-    sliderInfo = [];
+    sliderInfo = excludeSliders
+        ? []
+        : [
+            _createSliderItem(ActionSliderOptions.homeScreen),
+          ];
 
     carouselInfo = _createCarouselInfo([
       startIndex == 0
