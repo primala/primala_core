@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -106,7 +108,9 @@ class QueueSelector extends HookWidget {
                                         onTap: () {
                                           if (!store.showWidget) return;
                                           store.selectQueue(queue);
-                                          store.selectGroup(group);
+                                          Timer(Seconds.get(0, milli: 500), () {
+                                            store.selectGroup(group);
+                                          });
                                           // onQueueSelected?.call(group, queue);
                                         },
                                         child: Container(
