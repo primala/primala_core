@@ -131,4 +131,25 @@ class SessionPresenceContractImpl
       return Left(FailureConstants.internetConnectionFailure);
     }
   }
+
+  @override
+  updateGroupUID(params) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.updateGroupUID(params);
+      return fromSupabase(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  @override
+  updateQueueUID(params) async {
+    if (await networkInfo.isConnected) {
+      final queueRes = await remoteSource.updateQueueUID(params.queueUID);
+      await remoteSource.setContent(params.content);
+      return fromSupabase(queueRes);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
 }

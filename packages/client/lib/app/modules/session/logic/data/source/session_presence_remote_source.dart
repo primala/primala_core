@@ -23,6 +23,9 @@ abstract class SessionPresenceRemoteSource {
   Future<List> startTheSession();
   Future<List> getUserMetadata();
   Future<List> updateSpeakingTimerStart();
+  Future<List> updateGroupUID(String params);
+  Future<List> updateQueueUID(String params);
+  Future<List> setContent(List params);
 }
 
 class SessionPresenceRemoteSourceImpl implements SessionPresenceRemoteSource {
@@ -99,4 +102,13 @@ class SessionPresenceRemoteSourceImpl implements SessionPresenceRemoteSource {
   @override
   updateSpeakingTimerStart() async =>
       await rtQueries.updateSpeakingTimerStart();
+
+  @override
+  updateGroupUID(params) async => await stQueries.updateGroupUID(params);
+
+  @override
+  setContent(params) async => await rtQueries.setContent(params);
+
+  @override
+  updateQueueUID(params) async => await stQueries.updateQueueUID(params);
 }

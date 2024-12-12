@@ -54,6 +54,7 @@ class SessionWidgetsModule extends Module {
 
     i.add<SessionLobbyWidgetsCoordinator>(
       () => SessionLobbyWidgetsCoordinator(
+        contextHeader: ContextHeaderStore(),
         navigationMenu: Modular.get<NavigationMenuStore>(),
         presetArticle: PresetArticleStore(
           nokhteBlur: NokhteBlurStore(),
@@ -79,6 +80,7 @@ class SessionWidgetsModule extends Module {
 
     i.add<SessionPlaylistsWidgetsCoordinator>(
       () => SessionPlaylistsWidgetsCoordinator(
+        queueSelector: QueueSelectorStore(),
         navigationMenu: Modular.get<NavigationMenuStore>(),
         headerText: SmartTextStore(),
         wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),

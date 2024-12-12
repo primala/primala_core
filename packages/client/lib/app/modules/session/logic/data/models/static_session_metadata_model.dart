@@ -12,6 +12,8 @@ class StaticSessionMetadataModel extends StaticSessionMetadataEntity {
     required super.createdAt,
     required super.presetUID,
     required super.leaderUID,
+    required super.groupUID,
+    required super.queueUID,
   });
 
   factory StaticSessionMetadataModel.fromSupabase(
@@ -25,12 +27,16 @@ class StaticSessionMetadataModel extends StaticSessionMetadataEntity {
         createdAt: ConstDateTime.fromMillisecondsSinceEpoch(0),
         presetUID: '',
         leaderUID: '',
+        groupUID: '',
+        queueUID: '',
       );
     } else {
       final m = UserMetadataConstants();
       final UID = m.UID;
       const LEADER_UID = StaticActiveSessionsConstants.S_LEADER_UID;
       const CREATED_AT = StaticActiveSessionsConstants.S_CREATED_AT;
+      const GROUP_UID = StaticActiveSessionsConstants.S_GROUP_UID;
+      const QUEUE_UID = StaticActiveSessionsConstants.S_QUEUE_UID;
       const COLLABORATOR_UIDS =
           StaticActiveSessionsConstants.S_COLLABORATOR_UIDS;
       const COLLABORATOR_NAMES =
@@ -39,6 +45,8 @@ class StaticSessionMetadataModel extends StaticSessionMetadataEntity {
       final leaderUID = sessionRes.first[LEADER_UID];
       final createdAt = DateTime.parse(sessionRes.first[CREATED_AT]);
       final orderedCollaboratorUIDs = sessionRes.first[COLLABORATOR_UIDS];
+      final groupUID = sessionRes.first[GROUP_UID] ?? '';
+      final queueUID = sessionRes.first[QUEUE_UID] ?? '';
       final userIndex = orderedCollaboratorUIDs.indexOf(metadataRes.first[UID]);
       final presetUID = sessionRes.first[PRESET_UID];
       final names = sessionRes.first[COLLABORATOR_NAMES];
@@ -58,6 +66,8 @@ class StaticSessionMetadataModel extends StaticSessionMetadataEntity {
         presetUID: presetUID,
         createdAt: createdAt,
         userIndex: userIndex,
+        groupUID: groupUID,
+        queueUID: queueUID,
       );
     }
   }

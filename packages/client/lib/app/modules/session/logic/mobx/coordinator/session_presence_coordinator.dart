@@ -28,6 +28,12 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
   bool contentIsUpdated = false;
 
   @observable
+  bool queueUIDIsUpdated = false;
+
+  @observable
+  bool groupUIDIsUpdated = false;
+
+  @observable
   bool purposeIsUpdated = false;
 
   @observable
@@ -161,6 +167,28 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
     res.fold(
       (failure) => errorUpdater(failure),
       (status) => powerUpIsUsed = status,
+    );
+    setState(StoreState.loaded);
+  }
+
+  @action
+  updateQueueUID(UpdateQueueUIDParams params) async {
+    setState(StoreState.loading);
+    final res = await contract.updateQueueUID(params);
+    res.fold(
+      (failure) => errorUpdater(failure),
+      (status) => queueUIDIsUpdated = status,
+    );
+    setState(StoreState.loaded);
+  }
+
+  @action
+  updateGroupUID(String params) async {
+    setState(StoreState.loading);
+    final res = await contract.updateGroupUID(params);
+    res.fold(
+      (failure) => errorUpdater(failure),
+      (status) => groupUIDIsUpdated = status,
     );
     setState(StoreState.loaded);
   }

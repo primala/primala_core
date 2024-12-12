@@ -9,6 +9,8 @@ abstract class SessionPresenceContract {
   Future<Either<Failure, bool>> completeTheSession(NoParams params);
   Future<Either<Failure, bool>> startTheSession(NoParams params);
   Future<Either<Failure, bool>> updateOnlineStatus(bool params);
+  Future<Either<Failure, bool>> updateGroupUID(String params);
+  Future<Either<Failure, bool>> updateQueueUID(UpdateQueueUIDParams params);
   Future<Either<Failure, bool>> usePowerUp(
       Either<LetEmCookParams, RallyParams> params);
   Future<Either<Failure, bool>> updateWhoIsTalking(

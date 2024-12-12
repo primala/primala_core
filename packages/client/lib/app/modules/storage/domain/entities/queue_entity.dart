@@ -12,7 +12,7 @@ class QueueEntity extends Equatable {
     required this.createdAt,
   });
 
-  factory QueueEntity.initial() => const QueueEntity(
+  factory QueueEntity.empty() => const QueueEntity(
         title: '',
         content: [],
         uid: '',

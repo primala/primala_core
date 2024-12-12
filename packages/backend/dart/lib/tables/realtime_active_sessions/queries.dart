@@ -82,18 +82,41 @@ class RealtimeActiveSessionQueries extends ActiveSessionEdgeFunctions
     final contentRes = await getContent();
     final currentContent = contentRes.mainType;
     final currentVersion = contentRes.currentVersion;
-
     if (insertionIndex == -1) {
       currentContent.add(content);
     } else {
       currentContent.insert(insertionIndex, content);
+    }
+    return await retry<List>(
+      action: () async {
+        return await _onCurrentActiveNokhteSession(
+          supabase.from(TABLE).update({
+            CONTENT: currentContent,
+            VERSION: currentVersion + 1,
+          }),
+          version: currentVersion,
+        );
+      },
+      shouldRetry: (result) {
+        return result.isEmpty;
+      },
+    );
+  }
+
+  Future<List> setContent(List contents) async {
+    await computeCollaboratorInformation();
+    final contentRes = await getContent();
+    final currentVersion = contentRes.currentVersion;
+    final formatted = [];
+    for (var content in contents) {
+      formatted.add('Q: $content');
     }
 
     return await retry<List>(
       action: () async {
         return await _onCurrentActiveNokhteSession(
           supabase.from(TABLE).update({
-            CONTENT: currentContent,
+            CONTENT: formatted,
             VERSION: currentVersion + 1,
           }),
           version: currentVersion,

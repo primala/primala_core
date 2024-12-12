@@ -105,6 +105,26 @@ class StaticActiveSessionQueries extends ActiveSessionEdgeFunctions
     );
   }
 
+  Future<List> updateQueueUID(String newQueueId) async {
+    await computeCollaboratorInformation();
+    final res = await getCreatedAt();
+    final version = res.currentVersion;
+    return await retry<List>(
+      action: () async {
+        return await _onCurrentActiveNokhteSession(
+          supabase.from(TABLE).update({
+            QUEUE_UID: newQueueId,
+            VERSION: version + 1,
+          }),
+          version: version,
+        );
+      },
+      shouldRetry: (result) {
+        return result.isEmpty;
+      },
+    );
+  }
+
   Future<List> updateSessionType(String newPresetUID) async {
     await computeCollaboratorInformation();
     final res = await getCreatedAt();

@@ -76,11 +76,7 @@ class NavigationMenuConfiguration extends Equatable {
   void _configureSessionLobbyNoOneJoined({
     int startIndex = 1,
   }) {
-    sliderInfo = [
-      _createSliderItem(
-        ActionSliderOptions.homeScreen,
-      ),
-    ];
+    sliderInfo = [];
 
     carouselInfo = _createCarouselInfo([
       startIndex == 0

@@ -8,6 +8,7 @@ mixin StaticActiveSessionsConstants {
   final String LEADER_UID = S_LEADER_UID;
   final String PRESET_UID = S_PRESET_UID;
   final String GROUP_UID = S_GROUP_UID;
+  final String QUEUE_UID = S_QUEUE_UID;
 
   final String VERSION = S_VERSION;
   final String COLLABORATOR_NAMES = S_COLLABORATOR_NAMES;
@@ -19,6 +20,7 @@ mixin StaticActiveSessionsConstants {
   static const String S_LEADER_UID = 'leader_uid';
   static const String S_PRESET_UID = 'preset_uid';
   static const String S_GROUP_UID = 'group_uid';
+  static const String S_QUEUE_UID = 'queue_uid';
 
   static const String S_VERSION = 'version';
   static const String S_COLLABORATOR_NAMES = 'collaborator_names';
