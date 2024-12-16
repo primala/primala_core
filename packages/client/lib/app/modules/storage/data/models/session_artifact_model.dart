@@ -23,24 +23,27 @@ class SessionArtifactModel extends SessionArtifactEntity {
 
     for (var session in response) {
       final content = session[FinishedSessionsQueries.CONTENT];
-      final contentString = content.toString();
+      if (content.isNotEmpty) {
+        final contentString = content.toString();
 
-      if (uniqueContents.add(contentString)) {
-        String title = '';
-        final date = DateTime.parse(
-          session[FinishedSessionsQueries.SESSION_TIMESTAMP],
-        );
-        title = 'Session on ${formatDate(date)}';
+        if (uniqueContents.add(contentString)) {
+          String title = '';
+          final date = DateTime.parse(
+            session[FinishedSessionsQueries.SESSION_TIMESTAMP],
+          );
+          title = 'Session on ${formatDate(date)}';
 
-        temp.add(SessionArtifactModel(
-          date: formatDate(date),
-          title: title,
-          content: content,
-          sessionUID: session[FinishedSessionsQueries.SESSION_UID],
-        ));
+          temp.add(SessionArtifactModel(
+            date: formatDate(date),
+            title: title,
+            content: content,
+            sessionUID: session[FinishedSessionsQueries.SESSION_UID],
+          ));
+        }
+        ;
       }
     }
 
-    return temp;
+    return temp.reversed.toList();
   }
 }

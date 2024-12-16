@@ -119,6 +119,14 @@ abstract class _StorageHomeWidgetsCoordinatorBase
         }
       });
 
+  queueDeletionReactor(Function(String params) onSubmit) => reaction(
+          (p0) =>
+              groupDisplayModal.groupDisplayQueueCard.currentlySelectedIndex,
+          (p0) async {
+        final params = groupDisplayModal.groupDisplayQueueCard.queueUIDToDelete;
+        await onSubmit(params);
+      });
+
   membershipRemovalReactor(Function(UpdateGroupMemberParams params) onSubmit) =>
       reaction((p0) => groupDisplayCollaboratorCard.membersToRemove,
           (p0) async {

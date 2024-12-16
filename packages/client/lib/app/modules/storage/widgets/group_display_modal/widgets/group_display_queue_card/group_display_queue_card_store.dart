@@ -19,6 +19,12 @@ abstract class _GroupDisplayQueueCardStoreBase extends BaseWidgetStore
   @observable
   String currentlySelectedMessage = '';
 
+  @observable
+  int currentlySelectedIndex = -1;
+
+  @action
+  setCurrentlySelectedIndex(int index) => currentlySelectedIndex = index;
+
   @action
   setQueues(List<QueueEntity> queues) {
     this.queues = ObservableList.of(queues);
@@ -36,4 +42,9 @@ abstract class _GroupDisplayQueueCardStoreBase extends BaseWidgetStore
   setCurrentlySelectedMessage(String message) {
     currentlySelectedMessage = message;
   }
+
+  @computed
+  String get queueUIDToDelete => currentlySelectedIndex == -1 || queues.isEmpty
+      ? ''
+      : queues[currentlySelectedIndex].uid;
 }

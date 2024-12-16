@@ -52,6 +52,7 @@ abstract class _StorageHomeCoordinatorBase
     disposers.add(widgets.queueCreationReactor(onQueueCreated));
     disposers.add(widgets.membershipAdditionReactor(onGroupMembershipUpdated));
     disposers.add(widgets.membershipRemovalReactor(onGroupMembershipUpdated));
+    disposers.add(widgets.queueDeletionReactor(onQueueDeleted));
   }
 
   @action
@@ -75,6 +76,12 @@ abstract class _StorageHomeCoordinatorBase
   @action
   onGroupsDeleted(String params) async {
     await storageLogic.deleteGroup(params);
+    await storageLogic.getGroups();
+  }
+
+  @action
+  onQueueDeleted(String params) async {
+    await storageLogic.deleteQueue(params);
     await storageLogic.getGroups();
   }
 

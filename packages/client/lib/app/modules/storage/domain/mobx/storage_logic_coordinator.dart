@@ -28,6 +28,9 @@ abstract class _StorageLogicCoordinatorBase with Store, BaseMobxLogic {
   bool queueIsCreated = false;
 
   @observable
+  bool queueIsDeleted = false;
+
+  @observable
   bool groupMembersAreUpdated = false;
 
   @observable
@@ -78,6 +81,18 @@ abstract class _StorageLogicCoordinatorBase with Store, BaseMobxLogic {
       (failure) => errorUpdater(failure),
       (creationStatus) {
         queueIsCreated = creationStatus;
+      },
+    );
+  }
+
+  @action
+  deleteQueue(String params) async {
+    queueIsDeleted = false;
+    final res = await contract.deleteQueue(params);
+    res.fold(
+      (failure) => errorUpdater(failure),
+      (deletionStatus) {
+        queueIsDeleted = deletionStatus;
       },
     );
   }

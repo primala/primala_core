@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
@@ -20,6 +21,7 @@ class GroupDisplayQueueCard extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final height = useFullScreenSize().height;
+    final width = useFullScreenSize().width;
 
     return Observer(builder: (context) {
       return ListView.separated(
@@ -34,14 +36,23 @@ class GroupDisplayQueueCard extends HookWidget {
             return AnimatedOpacity(
               opacity: useWidgetOpacity(showWidget),
               duration: Seconds.get(0, milli: 500),
-              child: GestureDetector(
-                onTap: !showWidget
-                    ? null
-                    : () {
-                        store.toggleExpansion(index);
-                      },
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: height * 0.04),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: height * 0.04),
+                child: Slidable(
+                  endActionPane: ActionPane(
+                    motion: const DrawerMotion(),
+                    children: [
+                      SlidableAction(
+                        spacing: 0,
+                        padding: EdgeInsets.zero,
+                        onPressed: (_) =>
+                            store.setCurrentlySelectedIndex(index),
+                        backgroundColor: Colors.transparent,
+                        foregroundColor: Colors.white,
+                        icon: Icons.delete_forever,
+                      ),
+                    ],
+                  ),
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
@@ -50,6 +61,7 @@ class GroupDisplayQueueCard extends HookWidget {
                         width: 1.5,
                       ),
                     ),
+                    width: width * .8,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
