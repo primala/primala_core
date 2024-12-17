@@ -137,8 +137,11 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   @action
   openPurposeModal() {
     if (navigationMenu.hasSwipedDown) return;
-    purposeBanner.onTap();
-    sessionNavigation.setWidgetVisibility(false);
+    purposeBanner.openModal(onOpen: () {
+      navigationMenu.setWidgetVisibility(false);
+    }, onClose: () {
+      navigationMenu.setWidgetVisibility(true);
+    });
   }
 
   @action
@@ -272,6 +275,7 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   @action
   initReactors() {
     disposers.add(borderGlowReactor());
+    disposers.add(purposeBannerTapReactor());
     disposers.add(
       gestureCrossTapReactor(
         onInit: () {
@@ -292,6 +296,10 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   borderGlowReactor() => reaction((p0) => borderGlow.currentWidth, (p0) {
         if (isASecondarySpeaker) return;
         borderGlowBody(p0);
+      });
+
+  purposeBannerTapReactor() => reaction((p0) => purposeBanner.tapCount, (p0) {
+        openPurposeModal();
       });
 
   gestureCrossTapReactor({

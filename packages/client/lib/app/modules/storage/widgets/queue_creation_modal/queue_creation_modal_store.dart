@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
@@ -22,6 +23,10 @@ abstract class _QueueCreationModalStoreBase extends BaseWidgetStore
   // Text controllers
   TextEditingController queueTitleController = TextEditingController();
   TextEditingController itemController = TextEditingController();
+
+  // Focus nodes
+  FocusNode queueTitleFocusNode = FocusNode();
+  FocusNode itemFocusNode = FocusNode();
 
   @observable
   bool isManualSelected = true;
@@ -56,13 +61,25 @@ abstract class _QueueCreationModalStoreBase extends BaseWidgetStore
     }
   }
 
+  @action
+  deleteItem(int index) => queueItems.removeAt(index);
+
+  @action
+  editItem(int index) {
+    itemController.text = queueItems[index];
+    queueItems.removeAt(index);
+    itemFocusNode.requestFocus();
+  }
+
   initReactors() {
     disposers.add(pastSessionMessageReactor());
   }
 
   pastSessionMessageReactor() =>
       reaction((p0) => groupDisplaySessionCard.currentlySelectedMessage, (p0) {
-        queueItems.add(p0.trim());
+        if (queueItems.contains(p0.substring(2).trim())) return;
+        queueItems.add(p0.substring(2).trim());
+        // groupDisplaySessionCard.toggleSelection(groupDisplaySessionCard.)
       });
 
   @action
@@ -124,6 +141,7 @@ abstract class _QueueCreationModalStoreBase extends BaseWidgetStore
                             cursorColor: Colors.white,
                             textInputAction: TextInputAction.go,
                             textAlign: TextAlign.center,
+                            focusNode: queueTitleFocusNode,
                             decoration: InputDecoration(
                               hintText: 'QUEUE TITLE',
                               hintStyle: GoogleFonts.chivo(
@@ -204,6 +222,7 @@ abstract class _QueueCreationModalStoreBase extends BaseWidgetStore
                                       textInputAction: TextInputAction.go,
                                       textAlign: TextAlign.center,
                                       onSubmitted: (_) => addQueueItem(),
+                                      focusNode: itemFocusNode,
                                       decoration: InputDecoration(
                                         hintText: 'ITEM',
                                         hintStyle: GoogleFonts.chivo(
@@ -240,15 +259,7 @@ abstract class _QueueCreationModalStoreBase extends BaseWidgetStore
                                     showWidget: true,
                                     store: groupDisplaySessionCard,
                                   ),
-                                // Text(
-                                //   'Past Session Go Here',
-                                //   style: GoogleFonts.chivo(
-                                //     color: Colors.white.withOpacity(0.7),
-                                //     fontSize: 20,
-                                //   ),
-                                // ),
 
-                                // Divider
                                 const Divider(
                                   color: Colors.white,
                                   thickness: 1,
@@ -264,15 +275,47 @@ abstract class _QueueCreationModalStoreBase extends BaseWidgetStore
                                         const NeverScrollableScrollPhysics(),
                                     itemCount: queueItems.length,
                                     itemBuilder: (context, index) {
-                                      return ListTile(
-                                        key: ValueKey(queueItems[index]),
-                                        title: Text(
-                                          queueItems[index],
-                                          style: GoogleFonts.chivo(
-                                            color: Colors.white,
-                                            fontSize: 20,
+                                      return Slidable(
+                                        key: ValueKey(index),
+                                        startActionPane: ActionPane(
+                                          motion: const DrawerMotion(),
+                                          children: [
+                                            SlidableAction(
+                                              spacing: 0,
+                                              padding: EdgeInsets.zero,
+                                              onPressed: (_) => editItem(index),
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              foregroundColor: Colors.white,
+                                              icon: Icons.edit_outlined,
+                                            ),
+                                          ],
+                                        ),
+                                        endActionPane: ActionPane(
+                                          motion: const DrawerMotion(),
+                                          children: [
+                                            SlidableAction(
+                                              spacing: 0,
+                                              padding: EdgeInsets.zero,
+                                              onPressed: (_) =>
+                                                  deleteItem(index),
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              foregroundColor: Colors.white,
+                                              icon: Icons.delete_outlined,
+                                            ),
+                                          ],
+                                        ),
+                                        child: ListTile(
+                                          key: ValueKey(index),
+                                          title: Text(
+                                            queueItems[index],
+                                            style: GoogleFonts.chivo(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                            ),
+                                            textAlign: TextAlign.center,
                                           ),
-                                          textAlign: TextAlign.center,
                                         ),
                                       );
                                     },
