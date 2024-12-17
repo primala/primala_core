@@ -103,4 +103,14 @@ class StorageContractImpl with ResponseToStatus implements StorageContract {
     final res = await remoteSource.getCollaborators();
     return CollaboratorModel.fromSupabase(res);
   }
+
+  @override
+  deleteSession(String params) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.deleteSession(params);
+      return fromSupabase(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
 }

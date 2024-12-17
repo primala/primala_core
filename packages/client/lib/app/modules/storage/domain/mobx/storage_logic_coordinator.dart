@@ -31,6 +31,9 @@ abstract class _StorageLogicCoordinatorBase with Store, BaseMobxLogic {
   bool queueIsDeleted = false;
 
   @observable
+  bool sessionIsDeleted = false;
+
+  @observable
   bool groupMembersAreUpdated = false;
 
   @observable
@@ -93,6 +96,18 @@ abstract class _StorageLogicCoordinatorBase with Store, BaseMobxLogic {
       (failure) => errorUpdater(failure),
       (deletionStatus) {
         queueIsDeleted = deletionStatus;
+      },
+    );
+  }
+
+  @action
+  deleteSession(String params) async {
+    sessionIsDeleted = false;
+    final res = await contract.deleteSession(params);
+    res.fold(
+      (failure) => errorUpdater(failure),
+      (deletionStatus) {
+        sessionIsDeleted = deletionStatus;
       },
     );
   }

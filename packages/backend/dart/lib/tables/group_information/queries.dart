@@ -31,7 +31,10 @@ class GroupInformationQueries {
       }).select();
 
   Future<List> select() async =>
-      await supabase.from(TABLE).select(WITH_SESSIONS);
+      await supabase.from(TABLE).select(WITH_SESSIONS).order(
+            'session_timestamp',
+            referencedTable: FinishedSessionsQueries.TABLE,
+          );
 
   Future<List> delete({
     required String uid,

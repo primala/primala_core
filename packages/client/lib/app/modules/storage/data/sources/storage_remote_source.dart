@@ -12,6 +12,7 @@ abstract class StorageRemoteSource {
   Future<List> deleteGroup(String params);
   Future<List> getQueues(GetQueueParams params);
   Future<List> createQueue(CreateQueueParams params);
+  Future<List> deleteSession(String params);
   Future<List> deleteQueue(String params);
   Future<List> getCollaborators();
   Future<List> updateGroupMembers(UpdateGroupMemberParams params);
@@ -71,11 +72,14 @@ class StorageRemoteSourceImpl implements StorageRemoteSource {
   getCollaborators() async => await userNamesQueries.getCollaboratorRows();
 
   @override
-  updateGroupMembers(params) async {
-    return await groupInformationQueries.updateGroupMembers(
-      groupId: params.groupId,
-      members: params.members,
-      isAdding: params.isAdding,
-    );
-  }
+  updateGroupMembers(params) async =>
+      await groupInformationQueries.updateGroupMembers(
+        groupId: params.groupId,
+        members: params.members,
+        isAdding: params.isAdding,
+      );
+
+  @override
+  deleteSession(String params) async =>
+      await finishedNokhteSessionQueries.delete(params);
 }

@@ -26,4 +26,7 @@ class FinishedSessionsQueries {
     }
     return await supabase.from(TABLE).select().order('session_timestamp');
   }
+
+  Future<List> delete(String sessionUID) async =>
+      await supabase.from(TABLE).delete().eq(SESSION_UID, sessionUID).select();
 }

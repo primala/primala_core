@@ -20,8 +20,17 @@ abstract class _GroupDisplaySessionCardStoreBase extends BaseWidgetStore
   @observable
   String currentlySelectedMessage = '';
 
+  @observable
+  int currentlySelectedIndex = -1;
+
+  @action
+  setCurrentlySelectedIndex(int index) {
+    currentlySelectedIndex = index;
+  }
+
   @action
   setSessions(List<SessionArtifactEntity> sessions) {
+    print('what are the sessions ${sessions}');
     this.sessions = ObservableList.of(sessions);
     expandedStates = ObservableList.of(List.filled(sessions.length, false));
   }
@@ -37,4 +46,10 @@ abstract class _GroupDisplaySessionCardStoreBase extends BaseWidgetStore
   setCurrentlySelectedMessage(String message) {
     currentlySelectedMessage = message;
   }
+
+  @computed
+  String get sessionUIDToDelete =>
+      currentlySelectedIndex == -1 || sessions.isEmpty
+          ? ''
+          : sessions[currentlySelectedIndex].sessionUID;
 }

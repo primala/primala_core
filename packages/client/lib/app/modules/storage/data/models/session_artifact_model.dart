@@ -40,10 +40,9 @@ class SessionArtifactModel extends SessionArtifactEntity {
             sessionUID: session[FinishedSessionsQueries.SESSION_UID],
           ));
         }
-        ;
       }
     }
 
-    return temp.reversed.toList();
+    return temp;
   }
 }
