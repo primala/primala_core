@@ -30,7 +30,7 @@ class GroupDisplayQueueCard extends HookWidget {
         itemCount: store.queues.length,
         separatorBuilder: (context, index) => SizedBox(height: height * 0.02),
         itemBuilder: (context, index) {
-          final session = store.queues[index];
+          final queues = store.queues[index];
 
           return Observer(builder: (context) {
             return AnimatedOpacity(
@@ -38,94 +38,101 @@ class GroupDisplayQueueCard extends HookWidget {
               duration: Seconds.get(0, milli: 500),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: height * 0.04),
-                child: Slidable(
-                  endActionPane: ActionPane(
-                    motion: const DrawerMotion(),
-                    children: [
-                      SlidableAction(
-                        spacing: 0,
-                        padding: EdgeInsets.zero,
-                        onPressed: (_) =>
-                            store.setCurrentlySelectedIndex(index),
-                        backgroundColor: Colors.transparent,
-                        foregroundColor: Colors.white,
-                        icon: Icons.delete_forever,
-                      ),
-                    ],
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 1.5,
-                      ),
-                    ),
-                    width: width * .8,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: !showWidget
-                              ? null
-                              : () {
-                                  store.toggleExpansion(index);
-                                },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 15.0),
-                            child: Column(
-                              children: [
-                                Jost(
-                                  session.title,
-                                  fontSize: 20,
-                                ),
-                              ],
+                child: showWidget
+                    ? Slidable(
+                        endActionPane: ActionPane(
+                          motion: const DrawerMotion(),
+                          children: [
+                            SlidableAction(
+                              spacing: 0,
+                              padding: EdgeInsets.zero,
+                              onPressed: (_) =>
+                                  store.setCurrentlySelectedIndex(index),
+                              backgroundColor: Colors.transparent,
+                              foregroundColor: Colors.white,
+                              icon: Icons.delete_forever,
                             ),
-                          ),
+                          ],
                         ),
-                        if (store.expandedStates[index]) ...[
-                          const Divider(
-                            color: Colors.white24,
-                            thickness: 1,
-                            indent: 20,
-                            endIndent: 20,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: session.content.length,
-                              itemBuilder: (context, contentIndex) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    if (!showWidget) return;
-                                    store.setCurrentlySelectedMessage(
-                                      session.content[contentIndex],
-                                    );
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 5.0),
-                                    child: Jost(
-                                      session.content[contentIndex],
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                ),
+                        child:
+                            _buildQueueContainer(queues, index, width, height),
+                      )
+                    : _buildQueueContainer(queues, index, width, height),
               ),
             );
           });
         },
       );
     });
+  }
+
+  Widget _buildQueueContainer(
+      dynamic queues, int index, double width, double height) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.white,
+          width: 1.5,
+        ),
+      ),
+      width: width * .8,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          GestureDetector(
+            onTap: !showWidget
+                ? null
+                : () {
+                    store.toggleExpansion(index);
+                  },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
+              child: Column(
+                children: [
+                  Jost(
+                    queues.title,
+                    fontSize: 20,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (store.expandedStates[index]) ...[
+            const Divider(
+              color: Colors.white24,
+              thickness: 1,
+              indent: 20,
+              endIndent: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: queues.content.length,
+                itemBuilder: (context, contentIndex) {
+                  return GestureDetector(
+                    onTap: () {
+                      if (!showWidget) return;
+                      store.setCurrentlySelectedMessage(
+                        queues.content[contentIndex],
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: Jost(
+                        queues.content[contentIndex],
+                        fontSize: 18,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
   }
 }

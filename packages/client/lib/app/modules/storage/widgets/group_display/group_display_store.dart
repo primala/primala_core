@@ -31,6 +31,11 @@ abstract class _GroupDisplayStoreBase extends BaseWidgetStore with Store {
       groupDisplayModal.groupDisplayQueueCard.setQueues(
         groups[currentlySelectedIndex].queues,
       );
+      groupDisplayModal.groupDisplaySessionCard
+          .setSessions(groups[currentlySelectedIndex].sessions);
+      groupDisplayModal.groupDisplayCollaboratorCard.setCollaborators(
+        groups[currentlySelectedIndex].collaborators,
+      );
     }
     setWidgetVisibility(true);
   }

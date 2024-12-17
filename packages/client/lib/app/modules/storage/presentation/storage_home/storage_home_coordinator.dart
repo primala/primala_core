@@ -53,6 +53,7 @@ abstract class _StorageHomeCoordinatorBase
     disposers.add(widgets.membershipAdditionReactor(onGroupMembershipUpdated));
     disposers.add(widgets.membershipRemovalReactor(onGroupMembershipUpdated));
     disposers.add(widgets.queueDeletionReactor(onQueueDeleted));
+    disposers.add(widgets.sessionDeletionReactor(onSessionDeleted));
   }
 
   @action
@@ -80,6 +81,12 @@ abstract class _StorageHomeCoordinatorBase
   }
 
   @action
+  onSessionDeleted(String params) async {
+    await storageLogic.deleteSession(params);
+    await storageLogic.getGroups();
+  }
+
+  @action
   onQueueDeleted(String params) async {
     await storageLogic.deleteQueue(params);
     await storageLogic.getGroups();
@@ -92,74 +99,6 @@ abstract class _StorageHomeCoordinatorBase
           widgets.onGroupsReceived(storageLogic.groups);
         },
       );
-
-  // groupDisplayedDragReactor() =>
-  //     reaction((p0) => widgets.groupDisplay.successfulDragsCount, (p0) async {
-  //       widgets.groupDisplay.setWidgetVisibility(false);
-  //       await storageLogic.deleteGroup(widgets.groupDisplay.groupUIDToDelete);
-  //       await storageLogic.getGroups();
-  //     });
-
-  // queueCreationReactor() => reaction(
-  //       (p0) => widgets.groupDisplay.groupDisplayModal.queueCreationModal
-  //           .queueSubmissionCount,
-  //       (p0) async {
-  //         if (widgets.groupDisplay.groupDisplayModal.queueCreationModal
-  //                 .queueItems.isEmpty ||
-  //             widgets.groupDisplay.groupDisplayModal.queueCreationModal
-  //                 .queueTitleController.text.isEmpty) return;
-  //         final params = CreateQueueParams(
-  //           groupId: widgets
-  //               .groupDisplay.groupDisplayModal.currentlySelectedGroup.groupUID,
-  //           content: widgets
-  //               .groupDisplay.groupDisplayModal.queueCreationModal.queueItems,
-  //           title: widgets.groupDisplay.groupDisplayModal.queueCreationModal
-  //               .queueTitleController.text,
-  //         );
-  //         await storageLogic.createQueue(params);
-  //         widgets.groupDisplay.groupDisplayModal.queueCreationModal.dispose();
-  //         await storageLogic.getGroups();
-  //       },
-  //     );
-
-  // membershipAdditionReactor() => reaction(
-  //         (p0) => widgets.groupDisplay.groupDisplayModal
-  //             .groupDisplayCollaboratorCard.membersToAdd, (p0) async {
-  //       print('are we showing the modal yet? $p0');
-  //       final peopleToAdd = widgets.groupDisplay.groupDisplayModal
-  //           .groupDisplayCollaboratorCard.membersToAdd;
-
-  //       if (peopleToAdd.isNotEmpty) {
-  //         await storageLogic.updateGroupMembers(
-  //           UpdateGroupMemberParams(
-  //             groupId: widgets.groupDisplay.groupDisplayModal
-  //                 .currentlySelectedGroup.groupUID,
-  //             members: peopleToAdd,
-  //             isAdding: true,
-  //           ),
-  //         );
-  //         await storageLogic.getGroups();
-  //       }
-  //     });
-
-  // membershipRemovalReactor() => reaction(
-  //         (p0) => widgets.groupDisplay.groupDisplayModal
-  //             .groupDisplayCollaboratorCard.membersToRemove, (p0) async {
-  //       final peopleToRemove = widgets.groupDisplay.groupDisplayModal
-  //           .groupDisplayCollaboratorCard.membersToRemove;
-
-  //       if (peopleToRemove.isNotEmpty) {
-  //         await storageLogic.updateGroupMembers(
-  //           UpdateGroupMemberParams(
-  //             groupId: widgets.groupDisplay.groupDisplayModal
-  //                 .currentlySelectedGroup.groupUID,
-  //             members: peopleToRemove,
-  //             isAdding: false,
-  //           ),
-  //         );
-  //       }
-  //       await storageLogic.getGroups();
-  //     });
 
   deconstructor() {
     dispose();

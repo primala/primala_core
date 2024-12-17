@@ -24,6 +24,10 @@ abstract class StorageContract {
     String params,
   );
 
+  Future<Either<Failure, bool>> deleteSession(
+    String params,
+  );
+
   Future<Either<Failure, bool>> createNewGroup(
     CreateNewGroupParams params,
   );

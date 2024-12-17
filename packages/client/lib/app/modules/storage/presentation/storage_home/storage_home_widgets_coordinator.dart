@@ -127,6 +127,16 @@ abstract class _StorageHomeWidgetsCoordinatorBase
         await onSubmit(params);
       });
 
+  sessionDeletionReactor(Function(String params) onSubmit) => reaction(
+          (p0) =>
+              groupDisplayModal.groupDisplaySessionCard.currentlySelectedIndex,
+          (p0) async {
+        final params =
+            groupDisplayModal.groupDisplaySessionCard.sessionUIDToDelete;
+        await onSubmit(params);
+        // print('what are the parameters: $params');
+      });
+
   membershipRemovalReactor(Function(UpdateGroupMemberParams params) onSubmit) =>
       reaction((p0) => groupDisplayCollaboratorCard.membersToRemove,
           (p0) async {
