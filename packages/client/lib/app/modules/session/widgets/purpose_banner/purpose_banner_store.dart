@@ -165,10 +165,15 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
   }
 
   @action
-  onTap(
-      // Function(AddContentParams params) addContent,
-      ) {
+  onTap() => tapCount++;
+
+  @action
+  openModal({
+    required Function onOpen,
+    required Function onClose,
+  }) {
     if (showWidget && !showModal) {
+      onOpen();
       setShowModal(true);
       nokhteBlur.init(
         end: Seconds.get(0, milli: 200),
@@ -282,6 +287,7 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
           ),
         ),
       ).whenComplete(() {
+        onClose();
         nokhteBlur.reverse();
         setShowModal(false);
       });
