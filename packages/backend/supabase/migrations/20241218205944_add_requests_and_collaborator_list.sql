@@ -214,3 +214,55 @@ as permissive
 for select
 to authenticated
 using (((uid = auth.uid()) OR are_collaborators(auth.uid(), uid)));
+
+drop policy "READ: Their Own Row" on "public"."user_metadata";
+
+revoke delete on table "public"."user_metadata" from "anon";
+
+revoke insert on table "public"."user_metadata" from "anon";
+
+revoke references on table "public"."user_metadata" from "anon";
+
+revoke select on table "public"."user_metadata" from "anon";
+
+revoke trigger on table "public"."user_metadata" from "anon";
+
+revoke truncate on table "public"."user_metadata" from "anon";
+
+revoke update on table "public"."user_metadata" from "anon";
+
+revoke delete on table "public"."user_metadata" from "authenticated";
+
+revoke insert on table "public"."user_metadata" from "authenticated";
+
+revoke references on table "public"."user_metadata" from "authenticated";
+
+revoke select on table "public"."user_metadata" from "authenticated";
+
+revoke trigger on table "public"."user_metadata" from "authenticated";
+
+revoke truncate on table "public"."user_metadata" from "authenticated";
+
+revoke update on table "public"."user_metadata" from "authenticated";
+
+revoke delete on table "public"."user_metadata" from "service_role";
+
+revoke insert on table "public"."user_metadata" from "service_role";
+
+revoke references on table "public"."user_metadata" from "service_role";
+
+revoke select on table "public"."user_metadata" from "service_role";
+
+revoke trigger on table "public"."user_metadata" from "service_role";
+
+revoke truncate on table "public"."user_metadata" from "service_role";
+
+revoke update on table "public"."user_metadata" from "service_role";
+
+alter table "public"."user_metadata" drop constraint "user_metadata_pkey";
+
+drop index if exists "public"."user_metadata_pkey";
+
+drop table "public"."user_metadata";
+
+alter table "public"."collaborator_requests" add column "sender_name" text not null;

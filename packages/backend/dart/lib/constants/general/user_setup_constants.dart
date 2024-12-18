@@ -53,11 +53,7 @@ class UserSetupConstants {
           "last_name": UserDataConstants.usersData[i]['lastName'],
         },
       );
-      await supabase.functions.invoke('add-user-metadata', body: {
-        'userUID': userUIDs[i],
-        'subscriberId':
-            "${UserDataConstants.usersData[i]['firstName']} ${UserDataConstants.usersData[i]['lastName']}",
-      });
+    
     }
   }
 }
