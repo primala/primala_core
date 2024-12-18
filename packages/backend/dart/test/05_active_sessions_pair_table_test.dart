@@ -30,12 +30,6 @@ void main() {
     user1FinishedQueries =
         FinishedSessionsQueries(supabase: tSetup.user1Supabase);
     user1Stream = RealtimeActiveSessionStream(supabase: tSetup.user1Supabase);
-    for (var userUID in sortedArr) {
-      await tSetup.supabaseAdmin.from("user_metadata").update({
-        "is_subscribed": false,
-        "has_used_trial": false,
-      }).eq("uid", userUID);
-    }
   });
 
   tearDownAll(() async {
