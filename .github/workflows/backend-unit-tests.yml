@@ -37,4 +37,5 @@ jobs:
       - run: supabase functions serve &
       - run: SERVER_PID=$!
       - run: cd dart && flutter pub get
-      - run: cd dart && scripts/test.sh
+      # - run: cd dart && scripts/test.sh
+      - run: cd dart && flutter test
