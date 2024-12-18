@@ -21,6 +21,8 @@ class CollaboratorRelationshipsQueries {
         COLLABORATOR_TWO_UID: collaboratorTwoUid,
       }).select();
 
+  Future<List> select() async => await supabase.from(TABLE).select();
+
   Future<List> delete({
     required int id,
   }) async =>
