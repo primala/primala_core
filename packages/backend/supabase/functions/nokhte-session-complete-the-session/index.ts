@@ -41,7 +41,6 @@ serve(async (req) => {
     const sessionTimestamp = stSessionRes?.data?.[0]["created_at"];
     const sessionUID = stSessionRes?.data?.[0]["session_uid"];
     const groupUID = stSessionRes?.data?.[0]["group_uid"];
-    const collaboratorUIDsArr = stSessionRes?.data?.[0]["collaborator_uids"];
 
     const duplicateCheckRes = (
       await supabaseAdmin
@@ -60,28 +59,6 @@ serve(async (req) => {
           session_uid: sessionUID,
         })
         .select();
-
-      for (let i = 0; i < collaboratorUIDsArr.length; i++) {
-        const userAuthorizedViewersRes = (
-          await supabaseAdmin
-            .from("user_information")
-            .select()
-            .eq("uid", collaboratorUIDsArr[i])
-        )?.data?.[0]?.["authorized_viewers"];
-        const userAuthorizedViewers =
-          userAuthorizedViewersRes.concat(collaboratorUIDsArr);
-        const viewersMinusUserUID = userAuthorizedViewers.filter(
-          (x: string) => x !== collaboratorUIDsArr[i]
-        );
-        const uniqueViewers = viewersMinusUserUID.filter(onlyUnique);
-        uniqueViewers.sort();
-        await supabaseAdmin
-          .from("user_information")
-          .update({
-            authorized_viewers: uniqueViewers,
-          })
-          .eq("uid", collaboratorUIDsArr[i]);
-      }
 
       if (error != null) {
         returnRes = {

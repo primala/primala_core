@@ -2,7 +2,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nokhte_backend/tables/session_queues/queries.dart';
-import 'package:nokhte_backend/tables/group_information/queries.dart';
+import 'package:nokhte_backend/tables/group_information/group_information.dart';
 
 import 'shared/shared.dart';
 
