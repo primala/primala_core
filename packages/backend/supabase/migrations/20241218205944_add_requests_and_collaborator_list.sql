@@ -268,3 +268,28 @@ drop table "public"."user_metadata";
 alter table "public"."collaborator_requests" add column "sender_name" text not null;
 
 alter publication supabase_realtime add table public.collaborator_relationships;
+
+alter table "public"."collaborator_relationships" drop constraint "collaborator_relationships_pkey";
+
+alter table "public"."collaborator_requests" drop constraint "collaborator_requests_pkey";
+
+drop index if exists "public"."collaborator_relationships_pkey";
+
+drop index if exists "public"."collaborator_requests_pkey";
+
+alter table "public"."collaborator_relationships" drop column "id";
+
+alter table "public"."collaborator_relationships" add column "uid" uuid not null;
+
+alter table "public"."collaborator_requests" drop column "id";
+
+alter table "public"."collaborator_requests" add column "uid" uuid not null default gen_random_uuid();
+
+CREATE UNIQUE INDEX collaborator_relationships_pkey ON public.collaborator_relationships USING btree (uid);
+
+CREATE UNIQUE INDEX collaborator_requests_pkey ON public.collaborator_requests USING btree (uid);
+
+alter table "public"."collaborator_relationships" add constraint "collaborator_relationships_pkey" PRIMARY KEY using index "collaborator_relationships_pkey";
+
+alter table "public"."collaborator_requests" add constraint "collaborator_requests_pkey" PRIMARY KEY using index "collaborator_requests_pkey";
+

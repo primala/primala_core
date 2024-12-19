@@ -45,7 +45,7 @@ void main() {
 
     test('updateStatus - accepts a collaboration request', () async {
       final res = await user2Queries.updateStatus(
-        uid: createdRequests.first['id'],
+        uid: createdRequests.first['uid'],
         isAccepted: true,
       );
 
@@ -62,7 +62,7 @@ void main() {
       createdRequests.add(newRequest.first);
 
       final res = await user2Queries.updateStatus(
-        uid: newRequest.first['id'],
+        uid: newRequest.first['uid'],
         isAccepted: false,
       );
 
