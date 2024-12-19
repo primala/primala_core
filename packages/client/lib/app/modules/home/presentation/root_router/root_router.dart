@@ -31,6 +31,9 @@ class HomeScreenRootRouterScreen extends HookWidget {
                       child: BeachWaves(
                     store: coordinator.widgets.beachWaves,
                   )),
+                  NavigationCarousels(
+                    store: coordinator.widgets.navigationCarousels,
+                  ),
                   WifiDisconnectOverlay(
                     store: coordinator.widgets.wifiDisconnectOverlay,
                   ),

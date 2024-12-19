@@ -266,3 +266,5 @@ drop index if exists "public"."user_metadata_pkey";
 drop table "public"."user_metadata";
 
 alter table "public"."collaborator_requests" add column "sender_name" text not null;
+
+alter publication supabase_realtime add table public.collaborator_relationships;

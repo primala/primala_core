@@ -24,17 +24,17 @@ abstract class _HomeWidgetsCoordinatorBase
         EnRouteWidgetsRouter,
         BaseWidgetsCoordinator {
   SwipeGuideStore swipeGuides;
-  final NavigationMenuStore navigationMenu;
+  final NavigationCarouselsStore navigationCarousels;
   @override
   final BeachWavesStore beachWaves;
   @override
   final WifiDisconnectOverlayStore wifiDisconnectOverlay;
 
   _HomeWidgetsCoordinatorBase({
-    required this.navigationMenu,
+    required this.navigationCarousels,
     required this.wifiDisconnectOverlay,
     required this.swipeGuides,
-  }) : beachWaves = navigationMenu.beachWaves {
+  }) : beachWaves = navigationCarousels.beachWaves {
     initEnRouteActions();
     initSwipeNavigationUtils();
 
@@ -43,7 +43,8 @@ abstract class _HomeWidgetsCoordinatorBase
 
   @action
   constructor() {
-    navigationMenu.setNavigationMenuType(NavigationMenuType.homescreen);
+    navigationCarousels
+        .setNavigationCarouselsType(NavigationCarouselsType.homescreen);
     beachWaves.setMovieMode(BeachWaveMovieModes.onShore);
     consumeRoutingArgs();
     swipeGuides.setWidgetVisibility(false);
@@ -55,7 +56,7 @@ abstract class _HomeWidgetsCoordinatorBase
   initSoloSession() async {
     if (hasSwiped()) return;
     setSwipeDirection(GestureDirections.up);
-    navigationMenu.setWidgetVisibility(false);
+    navigationCarousels.setWidgetVisibility(false);
     beachWaves.setMovieMode(BeachWaveMovieModes.anyToOnShore);
     beachWaves.currentStore.reverseMovie(
       AnyToOnShoreParams(

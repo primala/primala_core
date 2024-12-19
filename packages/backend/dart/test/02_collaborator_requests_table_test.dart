@@ -23,14 +23,14 @@ void main() {
       await tSetup.supabaseAdmin
           .from('collaborator_requests')
           .delete()
-          .eq('id', request['id']);
+          .eq('uid', request['uid']);
     }
   });
 
   group('Queries Tests', () {
     test('insert - creates a new collaboration request', () async {
       final res = await user1Queries.insert(
-        recipientUid: tSetup.secondUserUID,
+        recipientUID: tSetup.secondUserUID,
         senderName: 'Test User 1',
       );
 
@@ -45,7 +45,7 @@ void main() {
 
     test('updateStatus - accepts a collaboration request', () async {
       final res = await user2Queries.updateStatus(
-        id: createdRequests.first['id'],
+        uid: createdRequests.first['id'],
         isAccepted: true,
       );
 
@@ -56,13 +56,13 @@ void main() {
     test('updateStatus - rejects a collaboration request', () async {
       // Create a new request to reject
       final newRequest = await user1Queries.insert(
-        recipientUid: tSetup.secondUserUID,
+        recipientUID: tSetup.secondUserUID,
         senderName: 'Test User 1',
       );
       createdRequests.add(newRequest.first);
 
       final res = await user2Queries.updateStatus(
-        id: newRequest.first['id'],
+        uid: newRequest.first['id'],
         isAccepted: false,
       );
 
@@ -73,14 +73,14 @@ void main() {
     test('delete - removes a collaboration request', () async {
       // Create a new request to delete
       final newRequest = await user1Queries.insert(
-        recipientUid: tSetup.secondUserUID,
+        recipientUID: tSetup.secondUserUID,
         senderName: 'Test User 1',
       );
 
-      final res = await user1Queries.delete(id: newRequest.first['id']);
+      final res = await user1Queries.delete(uid: newRequest.first['uid']);
 
       expect(res, isNotEmpty);
-      expect(res.first['id'], newRequest.first['id']);
+      expect(res.first['uid'], newRequest.first['uid']);
     });
   });
 
@@ -91,7 +91,7 @@ void main() {
 
       // Create a new request that should be picked up by the stream
       final newRequest = await user2Queries.insert(
-        recipientUid: tSetup.firstUserUID,
+        recipientUID: tSetup.firstUserUID,
         senderName: 'Test User 2',
       );
       createdRequests.add(newRequest.first);

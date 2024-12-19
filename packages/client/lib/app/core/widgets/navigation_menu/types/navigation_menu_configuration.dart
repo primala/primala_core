@@ -61,9 +61,9 @@ class NavigationMenuConfiguration extends Equatable {
           ? GradientConfig.empty()
           : ColorAndStop.toGradientConfig(WaterColorsAndStops.sky),
     ], [
-      'settings',
-      'home',
-      'storage'
+      'sessions',
+      'collaborators',
+      'groups'
     ], [
       SettingsConstants.settings,
       HomeConstants.entry,

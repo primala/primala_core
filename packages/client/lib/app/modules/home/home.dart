@@ -8,13 +8,9 @@ import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
 import 'home.dart';
 export 'constants/constants.dart';
-export './needs_update/needs_update.dart';
-export 'home/home.dart';
-export 'root_router/root_router.dart';
-export './quick_actions_router/quick_actions_router.dart';
-export './home_entry/home_entry.dart';
-export 'shared/mobx/mobx.dart';
-export 'shared/shared.dart';
+export 'presentation/presentation.dart';
+export 'domain/domain.dart';
+export 'data/data.dart';
 import 'home_widgets_module.dart';
 
 class HomeModule extends Module {

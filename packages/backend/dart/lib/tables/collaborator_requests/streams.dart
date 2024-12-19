@@ -20,7 +20,10 @@ class CollaboratorRequestsStream with CollaboratorRequestsConstants {
   }
 
   Stream<List<CollaboratorRequests>> listenToCollaboratorRequests() async* {
-    await for (var event in supabase.from(TABLE).stream(primaryKey: ['id'])) {
+    await for (var event in supabase.from(TABLE).stream(primaryKey: ['id']).neq(
+      SENDER_UID,
+      supabase.auth.currentUser?.id ?? '',
+    )) {
       yield event
           .map((e) => CollaboratorRequests(
                 senderName: e[SENDER_NAME],

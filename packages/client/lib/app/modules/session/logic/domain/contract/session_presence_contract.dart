@@ -13,7 +13,8 @@ abstract class SessionPresenceContract {
   Future<Either<Failure, bool>> updateGroupUID(String params);
   Future<Either<Failure, bool>> updateQueueUID(UpdateQueueUIDParams params);
   Future<Either<Failure, bool>> usePowerUp(
-      Either<LetEmCookParams, RallyParams> params);
+    Either<LetEmCookParams, RallyParams> params,
+  );
   Future<Either<Failure, bool>> updateWhoIsTalking(
       UpdateWhoIsTalkingParams params);
   Future<Either<Failure, bool>> updateCurrentPhase(double params);
@@ -21,7 +22,8 @@ abstract class SessionPresenceContract {
     NoParams params,
   );
   Future<Either<Failure, Stream<SessionMetadata>>> listenToRTSessionMetadata(
-      NoParams params);
+    NoParams params,
+  );
   Future<bool> cancelSessionMetadataStream(NoParams params);
 
   Future<Either<Failure, bool>> updateSpeakingTimerStart();

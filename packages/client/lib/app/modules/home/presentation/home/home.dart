@@ -25,8 +25,8 @@ class HomeScreen extends HookWidget {
         store: coordinator.tap,
         child: MultiHitStack(
           children: [
-            NavigationMenu(
-              store: coordinator.widgets.navigationMenu,
+            NavigationCarousels(
+              store: coordinator.widgets.navigationCarousels,
             ),
             WifiDisconnectOverlay(
               store: coordinator.widgets.wifiDisconnectOverlay,

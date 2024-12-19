@@ -13,13 +13,14 @@ class HomeScreenRootRouterWidgetsCoordinator = _HomeScreenRootRouterWidgetsCoord
 abstract class _HomeScreenRootRouterWidgetsCoordinatorBase
     with Store, BaseWidgetsCoordinator, Reactions, EnRoute, EnRouteRouter {
   final BeachWavesStore beachWaves;
+  final NavigationCarouselsStore navigationCarousels;
   @override
   final WifiDisconnectOverlayStore wifiDisconnectOverlay;
 
   _HomeScreenRootRouterWidgetsCoordinatorBase({
-    required this.beachWaves,
     required this.wifiDisconnectOverlay,
-  }) {
+    required this.navigationCarousels,
+  }) : beachWaves = navigationCarousels.beachWaves {
     initBaseWidgetsCoordinatorActions();
   }
 
@@ -29,6 +30,8 @@ abstract class _HomeScreenRootRouterWidgetsCoordinatorBase
   @action
   constructor() {
     initEnRouteActions();
+    navigationCarousels.setCanScroll(false);
+    navigationCarousels.initFadeIn();
     beachWaves.setMovieMode(BeachWaveMovieModes.onShore);
     beachWaves.currentStore.setControl(Control.mirror);
   }

@@ -10,24 +10,24 @@ class CollaboratorRequestsQueries with CollaboratorRequestsConstants {
   });
 
   Future<List> insert({
-    required String recipientUid,
+    required String recipientUID,
     required String senderName,
     String status = 'pending',
   }) async =>
       await supabase.from(TABLE).insert({
         SENDER_UID: supabase.auth.currentUser?.id ?? '',
-        RECIPIENT_UID: recipientUid,
+        RECIPIENT_UID: recipientUID,
         STATUS: status,
         SENDER_NAME: senderName,
       }).select();
 
   Future<List> delete({
-    required int id,
+    required String uid,
   }) async =>
-      await supabase.from(TABLE).delete().eq(ID, id).select();
+      await supabase.from(TABLE).delete().eq(UID, uid).select();
 
   Future<List> updateStatus({
-    required int id,
+    required String uid,
     required bool isAccepted,
   }) async =>
       await supabase
@@ -35,6 +35,6 @@ class CollaboratorRequestsQueries with CollaboratorRequestsConstants {
           .update({
             STATUS: isAccepted ? 'accepted' : 'rejected',
           })
-          .eq(ID, id)
+          .eq(UID, uid)
           .select();
 }

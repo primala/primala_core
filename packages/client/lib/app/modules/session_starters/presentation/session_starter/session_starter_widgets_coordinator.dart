@@ -8,7 +8,7 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
-import 'package:nokhte/app/modules/home/shared/mobx/mobx.dart';
+import 'package:nokhte/app/modules/home/presentation/shared/mobx/mobx.dart';
 import 'package:nokhte/app/modules/presets/presets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte/app/modules/session_starters/session_starters.dart';
