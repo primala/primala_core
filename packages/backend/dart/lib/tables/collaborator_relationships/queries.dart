@@ -20,7 +20,7 @@ class CollaboratorRelationshipsQueries with CollaboratorRelationshipsConstants {
   Future<List> select() async => await supabase.from(TABLE).select();
 
   Future<List> delete({
-    required int uid,
+    required String uid,
   }) async =>
       await supabase.from(TABLE).delete().eq(UID, uid).select();
 }
