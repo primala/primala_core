@@ -37,11 +37,6 @@ class CollaboratorRequestsQueries with CollaboratorRequestsConstants {
     }
   }
 
-  Future<List> delete({
-    required String uid,
-  }) async =>
-      await supabase.from(TABLE).delete().eq(UID, uid).select();
-
   Future<List> updateStatus({
     required String requestUID,
     required String senderUID,
@@ -52,14 +47,6 @@ class CollaboratorRequestsQueries with CollaboratorRequestsConstants {
       return relationshipsQueries.insert(collaboratorTwoUid: senderUID);
     } else {
       return await supabase.from(TABLE).delete().eq(UID, requestUID).select();
-      // delete request
     }
-    // return await supabase
-    //       .from(TABLE)
-    //       .update({
-    //         STATUS: isAccepted ? 'accepted' : 'rejected',
-    //       })
-    //       .eq(UID, uid)
-    //       .select();
   }
 }
