@@ -25,9 +25,21 @@ class HomeWidgetsModule extends Module {
         beachWaves: BeachWavesStore(),
       ),
     );
+    i.add<SessionStarterWidgetsCoordinator>(
+      () => SessionStarterWidgetsCoordinator(
+        navigationCarousels: NavigationCarouselsStore(
+          beachWaves: BeachWavesStore(),
+        ),
+        sessionStarterDropdown: SessionStarterDropdownStore(),
+        wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
+      ),
+    );
     i.add<HomeWidgetsCoordinator>(
       () => HomeWidgetsCoordinator(
-        swipeGuides: SwipeGuideStore(),
+        collaboratorCard: CollaboratorCardStore(),
+        smartText: SmartTextStore(),
+        qrScanner: QrScannerStore(),
+        qrCode: NokhteQrCodeStore(),
         wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
         navigationCarousels: NavigationCarouselsStore(
           beachWaves: BeachWavesStore(),

@@ -14,7 +14,7 @@ class ScannerOverlay extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final center = Offset(
       size.width / 2,
-      (size.height / 2) - (size.height * 0.1),
+      (size.height / 2) - (size.height * 0.03),
     );
     final backgroundPath = Path()..addRect(Rect.largest);
 

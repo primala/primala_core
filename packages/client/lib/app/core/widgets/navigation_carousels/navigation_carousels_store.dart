@@ -24,6 +24,12 @@ abstract class _NavigationCarouselsStoreBase extends BaseWidgetStore
   @observable
   bool canScroll = true;
 
+  @observable
+  bool showSections = false;
+
+  @action
+  setShowSections(bool value) => showSections = value;
+
   @action
   setCanScroll(bool value) => canScroll = value;
 

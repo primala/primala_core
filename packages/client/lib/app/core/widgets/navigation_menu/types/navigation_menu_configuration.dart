@@ -46,7 +46,7 @@ class NavigationMenuConfiguration extends Equatable {
   }) {
     sliderInfo = [
       _createSliderItem(ActionSliderOptions.startSession),
-      _createSliderItem(ActionSliderOptions.joinSession),
+      // _createSliderItem(ActionSliderOptions.joinSession),
     ];
 
     carouselInfo = _createCarouselInfo([

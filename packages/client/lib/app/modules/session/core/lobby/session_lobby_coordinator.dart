@@ -1,10 +1,8 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
-import 'package:dartz/dartz.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/extensions/extensions.dart';
-import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mixins/mixin.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
@@ -54,16 +52,19 @@ abstract class _SessionLobbyCoordinatorBase
     widgets.constructor();
     disposers.add(sessionInitializationReactor());
     if (hasReceivedRoutingArgs) {
-      if (sessionMetadata.presetType == PresetTypes.none) {
-        await starterLogic.initialize(const Left(NoParams()));
-      } else {
-        await sessionMetadata.refetchStaticMetadata();
-      }
+      await presence.listen();
+      await presence.updateCurrentPhase(0.5);
+
+      // if (sessionMetadata.presetType == PresetTypes.none) {
+      //   await starterLogic.initialize(const Left(NoParams()));
+      // } else {
+      await sessionMetadata.refetchStaticMetadata();
+      // }
     } else {
       widgets.navigationMenu.setWidgetVisibility(false);
       await presence.listen();
     }
-    if (sessionMetadata.numberOfCollaborators.isGreaterThan(1)) {
+    if (sessionMetadata.canStillLeave) {
       widgets.navigationMenu.setWidgetVisibility(false);
     }
     initReactors();
@@ -105,7 +106,7 @@ abstract class _SessionLobbyCoordinatorBase
 
   @action
   onOpen() async {
-    await presence.updateCurrentPhase(0.0);
+    await presence.updateCurrentPhase(0.5);
     widgets.onModalOpened();
   }
 

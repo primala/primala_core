@@ -35,7 +35,7 @@ class NavigationCarouselsConfiguration extends Equatable {
         _configureSessionLobbyNoOneJoined(startIndex: 0);
       case NavigationCarouselsType.sessionPlaylists:
         _configureSessionLobbyNoOneJoined(startIndex: 2, excludeSliders: true);
-      case NavigationCarouselsType.settings:
+      case NavigationCarouselsType.sessionStarter:
         _configureHomescreen(startIndex: 0);
       case NavigationCarouselsType.storage:
         _configureHomescreen(startIndex: 2);
@@ -47,21 +47,14 @@ class NavigationCarouselsConfiguration extends Equatable {
   }) {
     _createCarouselInfo(
       [
-        startIndex == 0
-            ? GradientConfig.empty()
-            : ColorAndStop.toGradientConfig(
-                WaterColorsAndStops.invertedDeeperBlue),
-        startIndex == 1
-            ? GradientConfig.empty()
-            : ColorAndStop.toGradientConfig(WaterColorsAndStops.onShoreWater),
-        startIndex == 2
-            ? GradientConfig.empty()
-            : ColorAndStop.toGradientConfig(WaterColorsAndStops.sky),
+        ColorAndStop.toGradientConfig(WaterColorsAndStops.invertedDeeperBlue),
+        GradientConfig.empty(),
+        ColorAndStop.toGradientConfig(WaterColorsAndStops.sky),
       ],
       ['sessions', 'collaborators', 'groups'],
       [
-        SettingsConstants.settings,
-        HomeConstants.entry,
+        HomeConstants.sessionStarter,
+        HomeConstants.home,
         StorageConstants.home,
       ],
       startIndex == 1

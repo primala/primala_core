@@ -3,7 +3,6 @@ import 'package:nokhte/app/core/modules/clean_up_collaboration_artifacts/clean_u
 import 'package:nokhte/app/core/modules/legacy_connectivity/legacy_connectivity.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
-import 'package:nokhte/app/core/modules/user_metadata/user_metadata.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
 import 'home.dart';
@@ -11,7 +10,9 @@ export 'constants/constants.dart';
 export 'presentation/presentation.dart';
 export 'domain/domain.dart';
 export 'data/data.dart';
+export 'widgets/widgets.dart';
 import 'home_widgets_module.dart';
+import 'home_logic_module.dart';
 
 class HomeModule extends Module {
   @override
@@ -22,7 +23,7 @@ class HomeModule extends Module {
         LegacyConnectivityModule(),
         PosthogModule(),
         StorageLogicModule(),
-        UserMetadataModule()
+        HomeLogicModule(),
       ];
   @override
   binds(i) {
@@ -44,11 +45,20 @@ class HomeModule extends Module {
       ),
     );
 
+    i.add<SessionStarterCoordinator>(
+      () => SessionStarterCoordinator(
+        homeLogic: Modular.get<HomeLogicCoordinator>(),
+        storageLogic: Modular.get<StorageLogicCoordinator>(),
+        widgets: Modular.get<SessionStarterWidgetsCoordinator>(),
+      ),
+    );
+
     i.add<HomeCoordinator>(
       () => HomeCoordinator(
         tap: TapDetector(),
         captureScreen: Modular.get<CaptureScreen>(),
         widgets: Modular.get<HomeWidgetsCoordinator>(),
+        logic: Modular.get<HomeLogicCoordinator>(),
       ),
     );
     i.add<NeedsUpdateCoordinator>(
@@ -75,6 +85,15 @@ class HomeModule extends Module {
         coordinator: Modular.get<HomeScreenRootRouterCoordinator>(),
       ),
     );
+
+    r.child(
+      HomeConstants.relativeSessionStarter,
+      transition: TransitionType.noTransition,
+      child: (context) => SessionStarterScreen(
+        coordinator: Modular.get<SessionStarterCoordinator>(),
+      ),
+    );
+
     r.child(
       HomeConstants.relativeQuickActionsRouter,
       transition: TransitionType.noTransition,

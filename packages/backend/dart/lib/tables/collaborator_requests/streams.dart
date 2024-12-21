@@ -26,6 +26,7 @@ class CollaboratorRequestsStream with CollaboratorRequestsConstants {
     )) {
       yield event
           .map((e) => CollaboratorRequests(
+                requestUID: e[UID],
                 senderName: e[SENDER_NAME],
                 senderUID: e[SENDER_UID],
               ))

@@ -21,10 +21,20 @@ void main() {
   });
 
   tearDownAll(
-    () async => await groupQueries.insert(
-      groupName: testGroupName,
-      groupHandle: testGroupHandle,
-    ),
+    () async {
+      await groupQueries.insert(
+        groupName: testGroupName,
+        groupHandle: testGroupHandle,
+      );
+      final testGroupId =
+          (await groupQueries.select()).first[GroupInformationQueries.UID];
+
+      await groupQueries.updateGroupMembers(
+        groupId: testGroupId,
+        members: [tSetup.secondUserUID],
+        isAdding: true,
+      );
+    },
   );
 
   test("should be able to insert & select a group", () async {

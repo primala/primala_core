@@ -151,7 +151,7 @@ class QueueSelector extends HookWidget {
                               ),
                               const Padding(
                                 padding: EdgeInsets.all(15.0),
-                                child: const Center(
+                                child: Center(
                                   child: Jost(
                                     'No queues created',
                                     fontSize: 16,

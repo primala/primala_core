@@ -37,8 +37,14 @@ class SessionLobbyScreen extends HookWidget {
           children: [
             NavigationMenu(
               store: coordinator.widgets.navigationMenu,
+              useJustTheSlideAction: true,
               inBetweenWidgets: Stack(
                 children: [
+                  FullScreen(
+                    child: BeachWaves(
+                      store: coordinator.widgets.navigationMenu.beachWaves,
+                    ),
+                  ),
                   SmartText(
                     store: coordinator.widgets.primarySmartText,
                     topPadding: .25,

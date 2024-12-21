@@ -2,6 +2,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nokhte_backend/tables/collaborator_relationships.dart';
+import 'package:nokhte_backend/types/types.dart';
 import 'shared/shared.dart';
 
 void main() {
@@ -43,7 +44,7 @@ void main() {
     expect(
       stream,
       emits(
-        isA<List<CollaboratorRelationshipEntity>>()
+        isA<List<UserInformationEntity>>()
             .having(
               (collaborators) =>
                   collaborators.any((c) => c.uid == tSetup.secondUserUID) &&

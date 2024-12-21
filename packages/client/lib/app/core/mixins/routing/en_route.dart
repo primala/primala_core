@@ -83,8 +83,8 @@ mixin EnRouteConsumer on EnRoute, Reactions {
     }
     if (hasReceivedRoutingArgs) {
       setParams(Modular.args.data[HomeConstants.RESUME_ON_SHORE_PARAMS]);
+      beachWaves.setMovieMode(BeachWaveMovieModes.resumeOnShore);
+      beachWaves.currentStore.initMovie(params);
     }
-    beachWaves.setMovieMode(BeachWaveMovieModes.resumeOnShore);
-    beachWaves.currentStore.initMovie(params);
   }
 }

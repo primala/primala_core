@@ -8,7 +8,6 @@ import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/home/home.dart';
 import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte/app/modules/session_joiner/session_joiner.dart';
 import 'package:nokhte/app/modules/session_starters/session_starters.dart';
 part 'navigation_menu_store.g.dart';
 
@@ -170,8 +169,8 @@ abstract class _NavigationMenuStoreBase extends BaseWidgetStore
     switch (currentlySelectedSlider) {
       case ActionSliderOptions.startSession:
         return SessionStarterConstants.sessionStarter;
-      case ActionSliderOptions.joinSession:
-        return SessionJoinerConstants.sessionJoiner;
+      // case ActionSliderOptions.joinSession:
+      //   return SessionJoinerConstants.sessionJoiner;
       case ActionSliderOptions.homeScreen:
         return HomeConstants.home;
       case ActionSliderOptions.sessionInformation:

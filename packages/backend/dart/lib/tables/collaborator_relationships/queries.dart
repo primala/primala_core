@@ -19,6 +19,13 @@ class CollaboratorRelationshipsQueries with CollaboratorRelationshipsConstants {
 
   Future<List> select() async => await supabase.from(TABLE).select();
 
+  Future<bool> hasRelationship(
+    String otherUserUID,
+  ) async =>
+      (await supabase.from(TABLE).select().or(
+              '$COLLABORATOR_ONE_UID.eq.$otherUserUID, $COLLABORATOR_TWO_UID.eq.$otherUserUID'))
+          .isNotEmpty;
+
   Future<List> delete({
     required String uid,
   }) async =>

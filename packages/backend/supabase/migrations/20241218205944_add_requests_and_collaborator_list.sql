@@ -294,3 +294,6 @@ alter table "public"."collaborator_relationships" add constraint "collaborator_r
 alter table "public"."collaborator_requests" add constraint "collaborator_requests_pkey" PRIMARY KEY using index "collaborator_requests_pkey";
 
 alter table "public"."collaborator_relationships" alter column "uid" set default gen_random_uuid();
+
+alter table public.collaborator_requests
+add constraint unique_sender_recipient unique (sender_uid, recipient_uid);

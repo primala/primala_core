@@ -9,10 +9,9 @@ import 'shared/shared.dart';
 void main() {
   late RealtimeActiveSessionQueries user1RTQueries;
   late RealtimeActiveSessionQueries user2RTQueries;
-  late RealtimeActiveSessionStream user1Stream;
+  late RealtimeActiveSessionStreams user1Stream;
   late GroupInformationQueries groupQueries;
   late StaticActiveSessionQueries user1STQueries;
-  late StaticActiveSessionQueries user2STQueries;
   late FinishedSessionsQueries user1FinishedQueries;
   final tSetup = CommonCollaborativeTestFunctions();
   List sortedArr = [];
@@ -26,10 +25,9 @@ void main() {
     user2RTQueries =
         RealtimeActiveSessionQueries(supabase: tSetup.user2Supabase);
     user1STQueries = StaticActiveSessionQueries(supabase: tSetup.user1Supabase);
-    user2STQueries = StaticActiveSessionQueries(supabase: tSetup.user2Supabase);
     user1FinishedQueries =
         FinishedSessionsQueries(supabase: tSetup.user1Supabase);
-    user1Stream = RealtimeActiveSessionStream(supabase: tSetup.user1Supabase);
+    user1Stream = RealtimeActiveSessionStreams(supabase: tSetup.user1Supabase);
   });
 
   tearDownAll(() async {
@@ -41,7 +39,9 @@ void main() {
   });
 
   test("initiateSession", () async {
-    final realTimeRes = await user1STQueries.initializeSession();
+    final res =
+        (await groupQueries.select()).first[GroupInformationQueries.UID];
+    final realTimeRes = await user1STQueries.initializeSession(groupUID: res);
     final staticRes = await user1STQueries.select();
     expect(staticRes[0]["session_uid"], realTimeRes[0]["session_uid"]);
     expect(staticRes[0]["leader_uid"], tSetup.firstUserUID);
@@ -53,13 +53,6 @@ void main() {
     final res = await user1STQueries.select();
     expect(res, isEmpty);
     await user1STQueries.initializeSession();
-  });
-
-  test("joinSession", () async {
-    await user2STQueries.joinSession(tSetup.firstUserUID);
-    final res = await user2STQueries.select();
-    expect(res[0]["collaborator_uids"], sortedArr);
-    expect(res[0]["leader_uid"], tSetup.firstUserUID);
   });
 
   test("select", () async {

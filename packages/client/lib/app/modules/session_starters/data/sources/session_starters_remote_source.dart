@@ -20,23 +20,24 @@ abstract class SessionStartersRemoteSource {
 class SessionStartersRemoteSourceImpl implements SessionStartersRemoteSource {
   final SupabaseClient supabase;
   final String currentUserUID;
-  final RealtimeActiveSessionStream stream;
+  final RealtimeActiveSessionStreams stream;
   final StaticActiveSessionQueries queries;
 
   SessionStartersRemoteSourceImpl({
     required this.supabase,
-  })  : stream = RealtimeActiveSessionStream(supabase: supabase),
+  })  : stream = RealtimeActiveSessionStreams(supabase: supabase),
         queries = StaticActiveSessionQueries(supabase: supabase),
         currentUserUID = supabase.auth.currentUser?.id ?? '';
 
   @override
   cancelSessionActivationStream() async {
-    return await stream.cancelSessionActivationStream();
+    // return await stream.cancelSessionActivationStream();
+    return true;
   }
 
   @override
-  Stream<bool> listenToSessionActivationStatus() =>
-      stream.listenToSessionActivationStatus();
+  Stream<bool> listenToSessionActivationStatus() => const Stream.empty();
+  // stream.listenToSessionActivationStatus();
 
   @override
   initializeSession(param) async => await queries.initializeSession(
@@ -44,7 +45,7 @@ class SessionStartersRemoteSourceImpl implements SessionStartersRemoteSource {
       );
 
   @override
-  joinSession(String leaderUID) async => await queries.joinSession(leaderUID);
+  joinSession(String leaderUID) async => FunctionResponse(status: 444);
 
   @override
   nukeSession() async => await queries.nukeSession();

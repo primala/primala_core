@@ -8,8 +8,6 @@ import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/home/home.dart';
 import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte/app/modules/session_joiner/session_joiner.dart';
-import 'package:nokhte/app/modules/session_starters/constants/constants.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
 import 'package:simple_animations/simple_animations.dart';
 part 'quick_actions_router_widgets_coordinator.g.dart';
@@ -46,7 +44,7 @@ abstract class _QuickActionsRouterWidgetsCoordinatorBase
   constructor() {
     if (hasReceivedRoutingArgs) {
       final args = Modular.args.data[HomeConstants.QUICK_ACTIONS_ROUTE];
-      if (args == SessionStarterConstants.sessionStarter) {
+      if (args == SessionConstants.lobby) {
         beachWaves.setMovieMode(BeachWaveMovieModes.deepSeaToSky);
         Timer(Seconds.get(1), () {
           Modular.to.navigate(
@@ -55,12 +53,6 @@ abstract class _QuickActionsRouterWidgetsCoordinatorBase
               SessionConstants.isTheHost: true,
             },
           );
-        });
-      } else if (args == SessionJoinerConstants.sessionJoiner) {
-        shouldRotate = true;
-        beachWaves.setMovieMode(BeachWaveMovieModes.emptyTheOcean);
-        Timer(Seconds.get(1), () {
-          Modular.to.navigate(SessionJoinerConstants.sessionJoiner);
         });
       } else if (args == StorageConstants.home) {
         beachWaves.setMovieMode(BeachWaveMovieModes.skyToHalfAndHalf);

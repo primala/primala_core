@@ -4,7 +4,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:nokhte/app/core/modules/hive/mixin/mixin.dart';
 import 'package:nokhte/app/core/modules/hive/types/boxes.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
-import 'package:nokhte/app/core/modules/user_metadata/user_metadata.dart';
 import 'package:nokhte/app/modules/login/login.dart';
 import 'package:nokhte_backend/tables/user_information.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -20,7 +19,6 @@ abstract class LoginRemoteSource {
   Future<AuthProviderModel> signInWithApple();
   Stream<bool> getAuthState();
   Future<List> addName({String theName = ""});
-  Future<FunctionResponse> addMetadata();
   Future<List> getUserInfo();
   Future<bool> versionIsUpToDate();
 }
@@ -28,7 +26,6 @@ abstract class LoginRemoteSource {
 class LoginRemoteSourceImpl with HiveBoxUtils implements LoginRemoteSource {
   final SupabaseClient supabase;
   late UserInformationRemoteSourceImpl userInfoRemoteSource;
-  late UserMetadataRemoteSourceImpl userMetadataRemoteSourceImpl;
 
   LoginRemoteSourceImpl({required this.supabase});
 
@@ -116,14 +113,6 @@ class LoginRemoteSourceImpl with HiveBoxUtils implements LoginRemoteSource {
   getUserInfo() async {
     final queries = UserInformationQueries(supabase: supabase);
     return await queries.getUserInfo();
-  }
-
-  @override
-  addMetadata() async {
-    userMetadataRemoteSourceImpl = UserMetadataRemoteSourceImpl(
-      supabase: supabase,
-    );
-    return await userMetadataRemoteSourceImpl.addUserMetadata();
   }
 
   @override

@@ -5,7 +5,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
-import 'package:nokhte/app/modules/session_joiner/widgets/qr_scanner/movies/movies.dart';
+import 'package:nokhte/app/modules/home/widgets/qr_scanner/movies/movies.dart';
 import 'package:simple_animations/simple_animations.dart';
 part 'qr_scanner_store.g.dart';
 
@@ -29,11 +29,11 @@ abstract class _QrScannerStoreBase extends BaseWidgetStore
   @action
   constructor() async {
     setWidgetVisibility(false);
+    controller = MobileScannerController(autoStart: false);
     subscription = controller.barcodes.listen(handleBarcode);
     smartText.setMessagesData(SessionStartersList.qrScanner);
     smartText.startRotatingText();
-    await controller.start();
-    fadeIn();
+    // fadeIn();
     disposers.add(smartTextIndexReactor());
   }
 
@@ -42,7 +42,16 @@ abstract class _QrScannerStoreBase extends BaseWidgetStore
     mostRecentScannedUID = '';
   }
 
+  start() async {
+    await controller.start();
+  }
+
+  stop() async {
+    await controller.stop();
+  }
+
   fadeIn() {
+    // controller
     Timer(Seconds.get(1), () {
       setWidgetVisibility(true);
       Timer(Seconds.get(1), () {

@@ -1,7 +1,9 @@
 // ignore_for_file: constant_identifier_names
 import 'package:nokhte_backend/edge_functions/active_nokhte_session.dart';
 import 'package:nokhte_backend/tables/company_presets.dart';
+import 'package:nokhte_backend/tables/group_information.dart';
 import 'package:nokhte_backend/tables/realtime_active_sessions.dart';
+import 'package:nokhte_backend/tables/session_queues.dart';
 import 'package:nokhte_backend/tables/user_information.dart';
 import 'package:nokhte_backend/types/types.dart';
 import 'package:nokhte_backend/utils/utils.dart';
@@ -13,11 +15,15 @@ class StaticActiveSessionQueries extends ActiveSessionEdgeFunctions
   final UserInformationQueries userInformationQueries;
   final RealtimeActiveSessionQueries realtimeQueries;
   final CompanyPresetsQueries companyPresetsQueries;
+  final GroupInformationQueries groupInformationQueries;
+  final SessionQueuesQueries sessionQueuesQueries;
 
   StaticActiveSessionQueries({
     required super.supabase,
   })  : userInformationQueries = UserInformationQueries(supabase: supabase),
         companyPresetsQueries = CompanyPresetsQueries(supabase: supabase),
+        groupInformationQueries = GroupInformationQueries(supabase: supabase),
+        sessionQueuesQueries = SessionQueuesQueries(supabase: supabase),
         realtimeQueries = RealtimeActiveSessionQueries(supabase: supabase);
 
   Future<List> select() async => await supabase.from(TABLE).select();
@@ -46,9 +52,11 @@ class StaticActiveSessionQueries extends ActiveSessionEdgeFunctions
 
   Future<List> initializeSession({
     PresetTypes presetType = PresetTypes.none,
+    String groupUID = '',
+    String queueUID = '',
   }) async {
     return await retry<List>(action: () async {
-      final fullName = await userInformationQueries.getFullName();
+      // final fullName = await userInformationQueries.getFullName();
       String preferredPreset = '';
       if (presetType == PresetTypes.none) {
         preferredPreset =
@@ -64,13 +72,35 @@ class StaticActiveSessionQueries extends ActiveSessionEdgeFunctions
         ))
             .first[CompanyPresetsQueries.UID];
       }
+      final uids = [];
+      final names = [];
+      List content = [];
+      if (groupUID.isNotEmpty) {
+        final groupMembers = await groupInformationQueries.getGroupMembers(
+          groupUID,
+        );
+        for (UserInformationEntity member in groupMembers) {
+          uids.add(member.uid);
+          names.add(member.fullName);
+        }
 
-      if (fullName.isEmpty || preferredPreset.isEmpty) return [];
+        if (queueUID.isNotEmpty) {
+          final res = await sessionQueuesQueries.select(uid: queueUID);
+          final unformattedContent = res.first[SessionQueuesQueries.CONTENT];
+          for (var message in unformattedContent) {
+            content.add('Q: $message');
+          }
+        }
+      }
+
+      if (preferredPreset.isEmpty) return [];
 
       final staticRes = await supabase.from(TABLE).insert({
-        COLLABORATOR_UIDS: [userUID],
-        COLLABORATOR_NAMES: [fullName],
+        COLLABORATOR_UIDS: uids,
+        COLLABORATOR_NAMES: names,
         PRESET_UID: preferredPreset,
+        GROUP_UID: groupUID,
+        QUEUE_UID: queueUID.isNotEmpty ? queueUID : null,
       }).select();
 
       if (staticRes.isEmpty) return [];
@@ -79,6 +109,9 @@ class StaticActiveSessionQueries extends ActiveSessionEdgeFunctions
 
       return await supabase.from(realtimeQueries.TABLE).insert({
         realtimeQueries.SESSION_UID: sessionUID,
+        realtimeQueries.CURRENT_PHASES: List.filled(uids.length, 0.0),
+        realtimeQueries.IS_ONLINE: List.filled(uids.length, true),
+        realtimeQueries.CONTENT: content,
       }).select();
     }, shouldRetry: (result) {
       return result.isEmpty;
@@ -122,6 +155,19 @@ class StaticActiveSessionQueries extends ActiveSessionEdgeFunctions
       shouldRetry: (result) {
         return result.isEmpty;
       },
+    );
+  }
+
+  Future<SessionRequests> getRequestInfo(String sessionUID) async {
+    final res = await supabase.from(TABLE).select().eq(SESSION_UID, sessionUID);
+    final leaderUID = res.first[LEADER_UID];
+    final leaderIndex = res.first[COLLABORATOR_UIDS].indexOf(leaderUID);
+    final userIndex = res.first[COLLABORATOR_UIDS].indexOf(userUID);
+    final fName = res.first[COLLABORATOR_NAMES][leaderIndex].split(' ').first;
+    return SessionRequests(
+      userIndex: userIndex,
+      sessionLeaderFirstName: fName,
+      sessionUID: sessionUID,
     );
   }
 

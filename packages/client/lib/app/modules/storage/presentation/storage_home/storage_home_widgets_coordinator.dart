@@ -1,4 +1,5 @@
-// ignore_for_file: must_be_immutable, library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api
+
 import 'dart:async';
 
 import 'package:flutter_modular/flutter_modular.dart';
@@ -9,6 +10,7 @@ import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/home/home.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
+import 'package:simple_animations/simple_animations.dart';
 part 'storage_home_widgets_coordinator.g.dart';
 
 class StorageHomeWidgetsCoordinator = _StorageHomeWidgetsCoordinatorBase
@@ -17,8 +19,7 @@ class StorageHomeWidgetsCoordinator = _StorageHomeWidgetsCoordinatorBase
 abstract class _StorageHomeWidgetsCoordinatorBase
     with Store, BaseWidgetsCoordinator, Reactions {
   final BeachWavesStore beachWaves;
-  final SmartTextStore headerText;
-  final BackButtonStore backButton;
+  final NavigationCarouselsStore navigationCarousels;
   final NokhteBlurStore blur;
   final GroupDisplayStore groupDisplay;
   final GroupRegistrationStore groupRegistration;
@@ -29,14 +30,13 @@ abstract class _StorageHomeWidgetsCoordinatorBase
   @override
   final WifiDisconnectOverlayStore wifiDisconnectOverlay;
   _StorageHomeWidgetsCoordinatorBase({
+    required this.navigationCarousels,
     required this.wifiDisconnectOverlay,
-    required this.beachWaves,
-    required this.headerText,
     required this.groupDisplay,
     required this.groupRegistration,
-    required this.backButton,
     required this.blur,
-  })  : groupDisplayModal = groupDisplay.groupDisplayModal,
+  })  : beachWaves = navigationCarousels.beachWaves,
+        groupDisplayModal = groupDisplay.groupDisplayModal,
         groupDisplayCollaboratorCard =
             groupDisplay.groupDisplayModal.groupDisplayCollaboratorCard,
         queueCreationModal = groupDisplay.groupDisplayModal.queueCreationModal {
@@ -45,14 +45,10 @@ abstract class _StorageHomeWidgetsCoordinatorBase
 
   @action
   constructor() {
-    backButton.setWidgetVisibility(false);
-    Timer(Seconds.get(0, milli: 1), () {
-      backButton.setWidgetVisibility(true);
-    });
-
-    headerText.setMessagesData(StorageLists.homeHeader);
-    headerText.startRotatingText();
-    beachWaves.setMovieMode(BeachWaveMovieModes.skyToHalfAndHalf);
+    beachWaves.currentStore.setControl(Control.stop);
+    navigationCarousels.setNavigationCarouselsType(
+      NavigationCarouselsType.storage,
+    );
     initReactors();
   }
 
@@ -62,7 +58,6 @@ abstract class _StorageHomeWidgetsCoordinatorBase
   }
 
   initReactors() {
-    disposers.add(backButtonReactor());
     disposers.add(beachWavesMovieStatusReactor());
     disposers.add(groupDisplayReactor());
   }
@@ -134,7 +129,6 @@ abstract class _StorageHomeWidgetsCoordinatorBase
         final params =
             groupDisplayModal.groupDisplaySessionCard.sessionUIDToDelete;
         await onSubmit(params);
-        // print('what are the parameters: $params');
       });
 
   membershipRemovalReactor(Function(UpdateGroupMemberParams params) onSubmit) =>
@@ -156,21 +150,5 @@ abstract class _StorageHomeWidgetsCoordinatorBase
         groupDisplay.setWidgetVisibility(false);
         final idToDelete = groupDisplay.groupUIDToDelete;
         await onSubmit(idToDelete);
-      });
-
-  backButtonReactor() => reaction((p0) => backButton.tapCount, (p0) {
-        if (backButton.showWidget) {
-          backButton.setWidgetVisibility(false);
-          headerText.setWidgetVisibility(false);
-          groupDisplay.setWidgetVisibility(false);
-          Timer(Seconds.get(1), () {
-            beachWaves.setMovieMode(BeachWaveMovieModes.anyToOnShore);
-            beachWaves.currentStore.initMovie(
-              const AnyToOnShoreParams(
-                startingColors: WaterColorsAndStops.sky,
-              ),
-            );
-          });
-        }
       });
 }

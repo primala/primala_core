@@ -11,7 +11,5 @@ abstract class LoginContract {
 
   Stream<bool> getAuthState(NoParams params);
 
-  Future<Either<Failure, bool>> addMetadata(NoParams params);
-
   Future<Either<Failure, bool>> versionIsUpToDate();
 }

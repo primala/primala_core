@@ -4,23 +4,21 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
-import 'package:simple_animations/simple_animations.dart';
 export 'navigation_carousels_store.dart';
 export 'types/types.dart';
 export 'widgets/widgets.dart';
-// export 'widgets/navigation_beach_waves/stepwise_beach_waves_painter.dart';
 
 class NavigationCarousels extends HookWidget with ArticleBodyUtils {
   final NavigationCarouselsStore store;
   final BeachWavesStore beachWaves;
   final Widget? inBetweenWidgets;
-  final bool useJustTheSlideAction;
+  final bool showAtEnd;
 
   NavigationCarousels({
     super.key,
     required this.store,
     this.inBetweenWidgets,
-    this.useJustTheSlideAction = false,
+    this.showAtEnd = false,
   }) : beachWaves = store.beachWaves;
 
   @override
@@ -34,9 +32,7 @@ class NavigationCarousels extends HookWidget with ArticleBodyUtils {
     return Observer(
       builder: (context) {
         return NokhteCustomAnimationBuilder(
-            control: useJustTheSlideAction
-                ? Control.stop
-                : beachWaves.currentControl,
+            control: beachWaves.currentControl,
             duration: beachWaves.currentMovie.duration,
             tween: beachWaves.currentMovie,
             onCompleted: () => beachWaves.onCompleted(),
@@ -44,40 +40,44 @@ class NavigationCarousels extends HookWidget with ArticleBodyUtils {
               return MultiHitStack(
                 children: [
                   Observer(builder: (context) {
-                    return useJustTheSlideAction
-                        ? Container()
-                        : NavigationBeachWaves(
-                            gradients: store.configuration.gradients,
-                            currentPosition: store.carouselPosition,
-                            movie: value,
-                          );
-                  }),
-                  Observer(builder: (context) {
-                    return Opacity(
-                      opacity: interpolate(
-                        currentValue: store.carouselPosition,
-                        targetValue: store.configuration.startIndex.toDouble(),
-                        minOutput: 0,
-                        maxOutput: 1.0,
-                      ),
-                      child: inBetweenWidgets ?? Container(),
+                    return NavigationBeachWaves(
+                      gradients: store.configuration.gradients,
+                      currentPosition: store.carouselPosition,
+                      movie: value,
                     );
                   }),
+                  if (!showAtEnd)
+                    Observer(builder: (context) {
+                      return Opacity(
+                        opacity: interpolate(
+                          currentValue: store.carouselPosition,
+                          targetValue:
+                              store.configuration.startIndex.toDouble(),
+                          minOutput: 0,
+                          maxOutput: 1.0,
+                        ),
+                        child: inBetweenWidgets ?? Container(),
+                      );
+                    }),
                   Observer(builder: (context) {
-                    return AnimatedOpacity(
-                      opacity: useWidgetOpacity(store.showWidget),
-                      duration: Seconds.get(0, milli: 500),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TopNavigationCarousel(
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        AnimatedOpacity(
+                          opacity: useWidgetOpacity(store.showWidget),
+                          duration: Seconds.get(0, milli: 500),
+                          child: TopNavigationCarousel(
                             carouselItems: store.configuration.labels,
                             initialPosition: store.configuration.startIndex,
                             onScrolled: store.setCarouselPosition,
                             isScrollEnabled: store.canScroll,
                             currentPosition: store.carouselPosition,
                           ),
-                          Padding(
+                        ),
+                        AnimatedOpacity(
+                          opacity: useWidgetOpacity(store.showWidget),
+                          duration: Seconds.get(0, milli: 500),
+                          child: Padding(
                             padding: const EdgeInsets.only(
                               bottom: 0.0,
                               top: 10,
@@ -88,7 +88,11 @@ class NavigationCarousels extends HookWidget with ArticleBodyUtils {
                               containerSize: containerSize,
                             ),
                           ),
-                          Opacity(
+                        ),
+                        AnimatedOpacity(
+                          opacity: useWidgetOpacity(store.showSections),
+                          duration: Seconds.get(0, milli: 500),
+                          child: Opacity(
                             opacity: interpolate(
                               currentValue: store.carouselPosition,
                               targetValue:
@@ -127,11 +131,24 @@ class NavigationCarousels extends HookWidget with ArticleBodyUtils {
                                 }).toList(),
                               ),
                             ),
-                          )
-                        ],
-                      ),
+                          ),
+                        )
+                      ],
                     );
                   }),
+                  if (showAtEnd)
+                    Observer(builder: (context) {
+                      return Opacity(
+                        opacity: interpolate(
+                          currentValue: store.carouselPosition,
+                          targetValue:
+                              store.configuration.startIndex.toDouble(),
+                          minOutput: 0,
+                          maxOutput: 1.0,
+                        ),
+                        child: inBetweenWidgets ?? Container(),
+                      );
+                    }),
                 ],
               );
             });

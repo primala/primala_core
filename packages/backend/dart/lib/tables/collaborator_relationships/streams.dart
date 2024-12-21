@@ -1,5 +1,6 @@
 import 'package:nokhte_backend/tables/collaborator_relationships.dart';
 import 'package:nokhte_backend/tables/user_information.dart';
+import 'package:nokhte_backend/types/types.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CollaboratorRelationshipsStream with CollaboratorRelationshipsConstants {
@@ -21,10 +22,10 @@ class CollaboratorRelationshipsStream with CollaboratorRelationshipsConstants {
     return collaboratorRelationshipsListeningStatus;
   }
 
-  Stream<List<CollaboratorRelationshipEntity>>
+  Stream<List<UserInformationEntity>>
       listenToCollaboratorRelationships() async* {
     final currentUserId = supabase.auth.currentUser?.id;
-    List<CollaboratorRelationshipEntity> collaborators = [];
+    List<UserInformationEntity> collaborators = [];
 
     // Initial fetch of all collaborator information
     final relationships = await supabase.from(TABLE).select().or(
@@ -40,13 +41,9 @@ class CollaboratorRelationshipsStream with CollaboratorRelationshipsConstants {
         final userInfo = await supabase
             .from('user_information')
             .select()
-            .eq('uid', otherUserId)
-            .single();
+            .eq('uid', otherUserId);
 
-        collaborators.add(CollaboratorRelationshipEntity(
-          uid: otherUserId,
-          fullName: '${userInfo['first_name']} ${userInfo['last_name']}'.trim(),
-        ));
+        collaborators.add(UserInformationModel.fromSupabase(userInfo));
       }
     }
 
@@ -67,7 +64,7 @@ class CollaboratorRelationshipsStream with CollaboratorRelationshipsConstants {
               .single();
 
           collaborators.add(
-            CollaboratorRelationshipEntity(
+            UserInformationEntity(
               uid: otherUserId,
               fullName:
                   '${userInfo['first_name']} ${userInfo['last_name']}'.trim(),

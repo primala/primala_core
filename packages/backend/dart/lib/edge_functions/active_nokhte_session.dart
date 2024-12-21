@@ -22,15 +22,6 @@ class ActiveSessionEdgeFunctions with StaticActiveSessionsConstants {
     }
   }
 
-  Future<FunctionResponse> joinSession(String leaderUID) async =>
-      await supabase.functions.invoke(
-        'nokhte-session-join',
-        body: {
-          "userUID": userUID,
-          "leaderUID": leaderUID,
-        },
-      );
-
   Future<FunctionResponse> nukeSession() async =>
       await supabase.functions.invoke(
         'nokhte-session-nuke',

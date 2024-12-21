@@ -58,12 +58,13 @@ class QrScanner extends HookWidget {
                 },
               ),
               Center(
-                  child: SmartText(
-                topPadding: .22,
-                topBump: .004,
-                store: store.smartText,
-                opacityDuration: Seconds.get(1),
-              ))
+                child: SmartText(
+                  topPadding: .38,
+                  topBump: .004,
+                  store: store.smartText,
+                  opacityDuration: Seconds.get(1),
+                ),
+              ),
             ],
           ),
         ),

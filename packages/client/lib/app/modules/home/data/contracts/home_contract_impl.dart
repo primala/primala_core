@@ -3,6 +3,7 @@ import 'package:nokhte/app/core/constants/constants.dart';
 import 'package:nokhte/app/core/mixins/mixin.dart';
 import 'package:nokhte/app/core/network/network_info.dart';
 import 'package:nokhte/app/modules/home/home.dart';
+import 'package:nokhte_backend/types/types.dart';
 
 class HomeContractImpl with ResponseToStatus implements HomeContract {
   final HomeRemoteSource remoteSource;
@@ -18,9 +19,6 @@ class HomeContractImpl with ResponseToStatus implements HomeContract {
   @override
   cancelCollaboratorRequestsStream(params) async =>
       await remoteSource.cancelCollaboratorRequestsStream();
-
-  @override
-  String getUserUID(params) => remoteSource.getUserUID();
 
   @override
   listenToCollaboratorRelationships(params) async {
@@ -57,6 +55,46 @@ class HomeContractImpl with ResponseToStatus implements HomeContract {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.updateRequestStatus(params);
       return fromSupabase(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  @override
+  getUserInformation(params) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.getUserInformation();
+      return Right(UserInformationModel.fromSupabase(res));
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  @override
+  initializeSession(params) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.initializeSession(params);
+      return fromSupabase(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  @override
+  joinSession(params) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.joinSession(params);
+      return fromSupabase(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  @override
+  listenToSessionRequests(params) async {
+    if (await networkInfo.isConnected) {
+      final res = remoteSource.listenToSessionRequests();
+      return Right(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }

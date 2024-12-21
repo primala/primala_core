@@ -25,7 +25,7 @@ class TopNavigationCarousel extends HookWidget with ArticleBodyUtils {
     final containerSize = useFullScreenSize().height * 0.2;
 
     return Padding(
-      padding: EdgeInsets.only(top: containerSize * .8),
+      padding: EdgeInsets.only(top: containerSize * .4),
       child: CarouselSlider(
         options: CarouselOptions(
           // pageSnapping: false,

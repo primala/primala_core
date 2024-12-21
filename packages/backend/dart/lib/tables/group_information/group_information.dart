@@ -2,6 +2,8 @@
 
 import 'package:nokhte_backend/tables/finished_sessions.dart';
 import 'package:nokhte_backend/tables/session_queues.dart';
+import 'package:nokhte_backend/tables/user_information.dart';
+import 'package:nokhte_backend/types/types.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class GroupInformationQueries {
@@ -15,10 +17,12 @@ class GroupInformationQueries {
 
   final SupabaseClient supabase;
   final String userUID;
+  final UserInformationQueries userInfoQueries;
 
   GroupInformationQueries({
     required this.supabase,
-  }) : userUID = supabase.auth.currentUser?.id ?? '';
+  })  : userUID = supabase.auth.currentUser?.id ?? '',
+        userInfoQueries = UserInformationQueries(supabase: supabase);
 
   Future<List> insert({
     required String groupName,
@@ -30,11 +34,29 @@ class GroupInformationQueries {
         GROUP_MEMBERS: [userUID],
       }).select();
 
-  Future<List> select() async =>
-      await supabase.from(TABLE).select(WITH_SESSIONS).order(
-            'session_timestamp',
-            referencedTable: FinishedSessionsQueries.TABLE,
-          );
+  Future<List> select({
+    String groupUID = '',
+  }) async =>
+      groupUID.isNotEmpty
+          ? await supabase.from(TABLE).select().eq(UID, groupUID)
+          : await supabase.from(TABLE).select(WITH_SESSIONS).order(
+                'session_timestamp',
+                referencedTable: FinishedSessionsQueries.TABLE,
+              );
+
+  Future<List<UserInformationEntity>> getGroupMembers(
+    String groupUID,
+  ) async {
+    final groupRes = await select(groupUID: groupUID);
+    if (groupRes.isEmpty) return [];
+    final members = groupRes.first[GROUP_MEMBERS];
+    final temp = <UserInformationEntity>[];
+    for (var member in members) {
+      final res = await userInfoQueries.getUserInfo(queryUID: member);
+      temp.add(UserInformationModel.fromSupabase(res));
+    }
+    return temp;
+  }
 
   Future<List> delete({
     required String uid,

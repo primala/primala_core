@@ -1,6 +1,6 @@
 enum NavigationCarouselsType {
   homescreen,
-  settings,
+  sessionStarter,
   storage,
   sessionPresets,
   sessionPlaylists,
