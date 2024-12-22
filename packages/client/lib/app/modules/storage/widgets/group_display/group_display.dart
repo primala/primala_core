@@ -37,7 +37,7 @@ class GroupDisplay extends HookWidget {
               child: store.groups.isNotEmpty
                   ? Padding(
                       padding: EdgeInsets.only(
-                        top: screenSize.height * 0.15,
+                        top: screenSize.height * 0.2,
                       ),
                       child: GridView.builder(
                         shrinkWrap: true,

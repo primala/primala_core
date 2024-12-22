@@ -10,6 +10,7 @@ import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/home/home.dart';
 import 'package:nokhte/app/modules/login/login.dart';
+import 'package:simple_animations/simple_animations.dart';
 part 'settings_widgets_coordinator.g.dart';
 
 class SettingsWidgetsCoordinator = _SettingsWidgetsCoordinatorBase
@@ -20,18 +21,21 @@ abstract class _SettingsWidgetsCoordinatorBase
   final BeachWavesStore beachWaves;
   final SmartTextStore primarySmartText;
   final SmartTextStore secondarySmartText;
+  final NavigationCarouselsStore navigationCarousels;
   @override
   final WifiDisconnectOverlayStore wifiDisconnectOverlay;
   _SettingsWidgetsCoordinatorBase({
-    required this.beachWaves,
     required this.primarySmartText,
     required this.secondarySmartText,
     required this.wifiDisconnectOverlay,
-  });
+    required this.navigationCarousels,
+  }) : beachWaves = navigationCarousels.beachWaves;
 
   @action
   constructor() {
-    beachWaves.setMovieMode(BeachWaveMovieModes.invertedDeeperBlueToDeepSea);
+    // navigationCaratThisonCarouselsType(NavigationCarouselsType.settings);
+
+    beachWaves.currentStore.setControl(Control.stop);
     primarySmartText.setMessagesData(SettingsLists.header);
     secondarySmartText.setMessagesData(SettingsLists.question);
     primarySmartText.startRotatingText();

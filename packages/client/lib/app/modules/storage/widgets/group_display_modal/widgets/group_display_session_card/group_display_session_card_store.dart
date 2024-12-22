@@ -30,7 +30,6 @@ abstract class _GroupDisplaySessionCardStoreBase extends BaseWidgetStore
 
   @action
   setSessions(List<SessionArtifactEntity> sessions) {
-    print('what are the sessions ${sessions}');
     this.sessions = ObservableList.of(sessions);
     expandedStates = ObservableList.of(List.filled(sessions.length, false));
   }

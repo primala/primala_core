@@ -33,7 +33,9 @@ class SettingsModule extends Module {
     );
     i.add<SettingsWidgetsCoordinator>(
       () => SettingsWidgetsCoordinator(
-        beachWaves: BeachWavesStore(),
+        navigationCarousels: NavigationCarouselsStore(
+          beachWaves: BeachWavesStore(),
+        ),
         primarySmartText: SmartTextStore(),
         secondarySmartText: SmartTextStore(),
         wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),

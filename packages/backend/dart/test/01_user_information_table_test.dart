@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nokhte_backend/tables/company_presets.dart';
 import 'package:nokhte_backend/tables/user_information.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:nokhte_backend/constants/constants.dart';
@@ -14,6 +15,7 @@ void main() {
   late String? firstUserUID;
   late UserInformationQueries user1UserInfoQueries;
   late UserInformationQueries adminUserInfoQueries;
+  late CompanyPresetsQueries companyPresetsQueries;
 
   setUpAll(() async {
     supabase = SupabaseClientConfigConstants.supabase;
@@ -25,6 +27,7 @@ void main() {
     user1UserInfoQueries = UserInformationQueries(supabase: supabase);
     adminUserInfoQueries = UserInformationQueries(supabase: supabaseAdmin);
     adminUserInfoQueries.userUID = firstUserUID ?? '';
+    companyPresetsQueries = CompanyPresetsQueries(supabase: supabase);
   });
 
   tearDownAll(() async {
@@ -44,6 +47,16 @@ void main() {
     expect(userNamesRes.first['first_name'], UserDataConstants.user1FirstName);
     expect(userNamesRes.first["last_name"], UserDataConstants.user1LastName);
     expect(userNamesRes.first["uid"], firstUserUID);
+  });
+
+  test("should be able to update their preferred preset uid", () async {
+    final companyPresetsRes =
+        await companyPresetsQueries.select(type: PresetTypes.collaborative);
+    final presetUID = companyPresetsRes.first[CompanyPresetsQueries.UID];
+    print("presetUID: $presetUID");
+    final res = await user1UserInfoQueries.updatePreferredPreset(presetUID);
+    expect(res.first[user1UserInfoQueries.PREFERRED_PRESET], presetUID);
+    //
   });
 
   test("❌ shouldn't be able to insert another row if they already have one",

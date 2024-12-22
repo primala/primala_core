@@ -24,7 +24,6 @@ class GroupDisplaySessionCard extends HookWidget {
     final width = useFullScreenSize().width;
 
     return Observer(builder: (context) {
-      print("store sessions ${store.sessions}");
       return ListView.separated(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),

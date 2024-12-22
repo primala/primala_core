@@ -17,9 +17,9 @@ class ActionSliderInformation extends Equatable {
       case ActionSliderOptions.startSession:
         assetPath = 'assets/qr_code_icon.png';
         sliderText = 'Start Session';
-      case ActionSliderOptions.joinSession:
-        assetPath = 'assets/camera_icon.png';
-        sliderText = 'Join Session';
+      // case ActionSliderOptions.joinSession:
+      //   assetPath = 'assets/camera_icon.png';
+      //   sliderText = 'Join Session';
       case ActionSliderOptions.homeScreen:
         assetPath = 'assets/home_beach_icon.png';
         sliderText = 'Home Screen';
