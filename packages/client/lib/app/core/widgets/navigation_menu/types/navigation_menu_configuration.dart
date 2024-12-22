@@ -46,7 +46,7 @@ class NavigationMenuConfiguration extends Equatable {
   }) {
     sliderInfo = [
       _createSliderItem(ActionSliderOptions.startSession),
-      _createSliderItem(ActionSliderOptions.joinSession),
+      // _createSliderItem(ActionSliderOptions.joinSession),
     ];
 
     carouselInfo = _createCarouselInfo([
@@ -61,9 +61,9 @@ class NavigationMenuConfiguration extends Equatable {
           ? GradientConfig.empty()
           : ColorAndStop.toGradientConfig(WaterColorsAndStops.sky),
     ], [
-      'settings',
-      'home',
-      'storage'
+      'sessions',
+      'collaborators',
+      'groups'
     ], [
       SettingsConstants.settings,
       HomeConstants.entry,

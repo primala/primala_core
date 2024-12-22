@@ -5,7 +5,7 @@ import 'constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class RealtimeActiveSessionQueries extends ActiveSessionEdgeFunctions
-    with RealTimeActiveNokhteSessionsConstants, SessionUtils {
+    with RealTimeActiveSessionsConstants, SessionUtils {
   RealtimeActiveSessionQueries({
     required super.supabase,
   });
@@ -313,6 +313,18 @@ class RealtimeActiveSessionQueries extends ActiveSessionEdgeFunctions
         return result.isEmpty;
       },
     );
+  }
+
+  Future<List> joinSession({
+    required int userIndex,
+    required String sessionUID,
+  }) async {
+    await supabase.rpc('update_nokhte_session_phase', params: {
+      'incoming_session_uid': sessionUID,
+      'index_to_edit': userIndex,
+      'new_value': .5,
+    });
+    return [];
   }
 
   Future<List> _onCurrentActiveNokhteSession(

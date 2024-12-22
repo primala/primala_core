@@ -29,9 +29,9 @@ class StorageWidgetsModule extends Module {
           ),
           groupRegistration: GroupRegistrationStore(),
           blur: NokhteBlurStore(),
-          backButton: BackButtonStore(),
-          headerText: SmartTextStore(),
-          beachWaves: BeachWavesStore(),
+          navigationCarousels: NavigationCarouselsStore(
+            beachWaves: BeachWavesStore(),
+          ),
           wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
         );
       },

@@ -2,7 +2,6 @@ import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte_backend/tables/finished_sessions.dart';
 import 'package:nokhte_backend/tables/realtime_active_sessions.dart';
 import 'package:nokhte_backend/tables/static_active_sessions.dart';
-import 'package:nokhte_backend/tables/user_metadata.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class SessionPresenceRemoteSource {
@@ -21,7 +20,6 @@ abstract class SessionPresenceRemoteSource {
   Future<List> getStaticSessionMetadata();
   Future<FunctionResponse> completeTheSession();
   Future<List> startTheSession();
-  Future<List> getUserMetadata();
   Future<List> updateSpeakingTimerStart();
   Future<List> updateGroupUID(String params);
   Future<List> updateQueueUID(String params);
@@ -33,15 +31,13 @@ class SessionPresenceRemoteSourceImpl implements SessionPresenceRemoteSource {
   final SupabaseClient supabase;
   final RealtimeActiveSessionQueries rtQueries;
   final StaticActiveSessionQueries stQueries;
-  final RealtimeActiveSessionStream stream;
+  final RealtimeActiveSessionStreams stream;
   final FinishedSessionsQueries finishedQueries;
-  final UserMetadataQueries userMetadata;
   SessionPresenceRemoteSourceImpl({required this.supabase})
       : rtQueries = RealtimeActiveSessionQueries(supabase: supabase),
         stQueries = StaticActiveSessionQueries(supabase: supabase),
         finishedQueries = FinishedSessionsQueries(supabase: supabase),
-        stream = RealtimeActiveSessionStream(supabase: supabase),
-        userMetadata = UserMetadataQueries(supabase: supabase);
+        stream = RealtimeActiveSessionStreams(supabase: supabase);
 
   @override
   cancelSessionMetadataStream() => stream.cancelGetSessionMetadataStream();
@@ -85,9 +81,6 @@ class SessionPresenceRemoteSourceImpl implements SessionPresenceRemoteSource {
 
   @override
   getStaticSessionMetadata() async => await stQueries.select();
-
-  @override
-  getUserMetadata() async => await userMetadata.getUserMetadata();
 
   @override
   letEmCook() async => await rtQueries.refreshSpeakingTimerStart();

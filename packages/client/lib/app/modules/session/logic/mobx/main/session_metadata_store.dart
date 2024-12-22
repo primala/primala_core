@@ -286,6 +286,17 @@ abstract class _SessionMetadataStoreBase
   int get numberOfCollaborators => currentPhases.length;
 
   @computed
+  bool get canStillLeave {
+    int count = 0;
+    for (double phase in currentPhases) {
+      if (phase > 0.5) {
+        count++;
+      }
+    }
+    return count > 1;
+  }
+
+  @computed
   bool get someoneIsTakingANote =>
       currentPhases.any((element) => element == 2.5);
 

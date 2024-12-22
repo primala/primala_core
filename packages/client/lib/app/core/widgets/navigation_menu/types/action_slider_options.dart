@@ -1,6 +1,6 @@
 enum ActionSliderOptions {
   startSession,
-  joinSession,
+  // joinSession,
   homeScreen,
   sessionInformation,
   endSession,

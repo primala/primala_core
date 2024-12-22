@@ -17,11 +17,13 @@ mixin HomeConstants {
   static const relativeHome = "/home_screen";
   static const relativeQuickActionsRouter = "/quick_actions_router";
   static const relativeNeedsToUpdate = "/needs_to_update";
+  static const relativeSessionStarter = "/session_starter";
   static const relativeEntry = "/entry";
 
   static const router = "$module$relativeRouter";
   static const quickActionsRouter = "$module$relativeQuickActionsRouter";
   static const entry = "$module$relativeEntry";
+  static const sessionStarter = "$module$relativeSessionStarter";
   static const home = "$module$relativeHome";
   static const needsToUpdate = "$module$relativeNeedsToUpdate";
 

@@ -1,7 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, constant_identifier_names
 
 mixin UserInformationConstants {
-  final String TABLE = 'user_information';
+  final String TABLE = S_TABLE;
   final String FIRST_NAME = S_FIRST_NAME;
   final String AUTHORIZED_VIEWERS = S_AUTHORIZED_VIEWERS;
   final String LAST_NAME = S_LAST_NAME;
@@ -11,6 +11,7 @@ mixin UserInformationConstants {
   final String HAS_ENTERED_STORAGE = S_HAS_ENTERED_STORAGE;
   final String HAS_ACESSED_QR_CODE_SCANNER = S_HAS_ACCESSED_QR_CODE_SCANNER;
 
+  static const S_TABLE = 'user_information';
   static const S_FIRST_NAME = 'first_name';
   static const S_AUTHORIZED_VIEWERS = 'authorized_viewers';
   static const S_LAST_NAME = 'last_name';

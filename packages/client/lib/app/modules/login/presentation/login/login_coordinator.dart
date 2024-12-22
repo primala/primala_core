@@ -109,7 +109,6 @@ abstract class _LoginCoordinatorBase
         if (p0) {
           widgets.loggedInOnResumed();
           await contract.addName(const NoParams());
-          await contract.addMetadata(const NoParams());
           await identifyUser(const NoParams());
           await authStateStream.close();
         }

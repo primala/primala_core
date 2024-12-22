@@ -99,9 +99,12 @@ class SessionPresenceContractImpl
   getSTSessionMetadata(params) async {
     if (await networkInfo.isConnected) {
       final sessionRes = await remoteSource.getStaticSessionMetadata();
-      final metadataRes = await remoteSource.getUserMetadata();
       return Right(
-          StaticSessionMetadataModel.fromSupabase(sessionRes, metadataRes));
+        StaticSessionMetadataModel.fromSupabase(
+          sessionRes,
+          remoteSource.getUserUID(),
+        ),
+      );
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }

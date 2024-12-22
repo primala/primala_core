@@ -21,8 +21,13 @@ class UserInformationQueries with UserInformationConstants {
         LAST_NAME: lastName,
       }).select();
 
-  Future<List> getUserInfo() async =>
-      await supabase.from(TABLE).select().eq(UID, userUID);
+  Future<List> getUserInfo({
+    String queryUID = '',
+  }) async =>
+      await supabase.from(TABLE).select().eq(
+            UID,
+            queryUID.isEmpty ? userUID : queryUID,
+          );
 
   Future<String> getFullName() async {
     final res = await getUserInfo();
