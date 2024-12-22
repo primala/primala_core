@@ -75,6 +75,7 @@ class StaticActiveSessionQueries extends ActiveSessionEdgeFunctions
       final uids = [];
       final names = [];
       List content = [];
+      List phases = [];
       if (groupUID.isNotEmpty) {
         final groupMembers = await groupInformationQueries.getGroupMembers(
           groupUID,
@@ -83,6 +84,9 @@ class StaticActiveSessionQueries extends ActiveSessionEdgeFunctions
           uids.add(member.uid);
           names.add(member.fullName);
         }
+        phases = List.filled(uids.length, 0.0);
+        final userIndex = uids.indexOf(userUID);
+        phases[userIndex] = 0.5;
 
         if (queueUID.isNotEmpty) {
           final res = await sessionQueuesQueries.select(uid: queueUID);
@@ -109,7 +113,7 @@ class StaticActiveSessionQueries extends ActiveSessionEdgeFunctions
 
       return await supabase.from(realtimeQueries.TABLE).insert({
         realtimeQueries.SESSION_UID: sessionUID,
-        realtimeQueries.CURRENT_PHASES: List.filled(uids.length, 0.0),
+        realtimeQueries.CURRENT_PHASES: phases,
         realtimeQueries.IS_ONLINE: List.filled(uids.length, true),
         realtimeQueries.CONTENT: content,
       }).select();

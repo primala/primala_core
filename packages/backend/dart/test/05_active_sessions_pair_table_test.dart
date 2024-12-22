@@ -39,8 +39,12 @@ void main() {
   });
 
   test("initiateSession", () async {
-    final res =
-        (await groupQueries.select()).first[GroupInformationQueries.UID];
+    final res = (await groupQueries.insert(
+      groupName: 'Test Group',
+      groupHandle: '@testgroup',
+    ))
+        .first[GroupInformationQueries.UID];
+
     final realTimeRes = await user1STQueries.initializeSession(groupUID: res);
     final staticRes = await user1STQueries.select();
     expect(staticRes[0]["session_uid"], realTimeRes[0]["session_uid"]);
@@ -52,7 +56,11 @@ void main() {
     await user1RTQueries.nukeSession();
     final res = await user1STQueries.select();
     expect(res, isEmpty);
-    await user1STQueries.initializeSession();
+    final groupId =
+        (await groupQueries.select()).first[GroupInformationQueries.UID];
+    await user1STQueries.initializeSession(
+      groupUID: groupId,
+    );
   });
 
   test("select", () async {

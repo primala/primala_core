@@ -53,13 +53,7 @@ abstract class _SessionLobbyCoordinatorBase
     disposers.add(sessionInitializationReactor());
     if (hasReceivedRoutingArgs) {
       await presence.listen();
-      await presence.updateCurrentPhase(0.5);
-
-      // if (sessionMetadata.presetType == PresetTypes.none) {
-      //   await starterLogic.initialize(const Left(NoParams()));
-      // } else {
       await sessionMetadata.refetchStaticMetadata();
-      // }
     } else {
       widgets.navigationMenu.setWidgetVisibility(false);
       await presence.listen();

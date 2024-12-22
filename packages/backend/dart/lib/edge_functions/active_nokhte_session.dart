@@ -1,3 +1,4 @@
+import 'package:nokhte_backend/tables/realtime_active_sessions.dart';
 import 'package:nokhte_backend/tables/static_active_sessions.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -9,15 +10,34 @@ class ActiveSessionEdgeFunctions with StaticActiveSessionsConstants {
   String sessionUID = '';
   int userIndex = -1;
 
-  computeCollaboratorInformation() async {
+  Future<void> computeCollaboratorInformation() async {
     if (sessionUID.isEmpty) {
       final sessionRes = await supabase
           .from("static_active_sessions")
           .select()
           .contains('collaborator_uids', '{$userUID}');
-      if (sessionRes.isNotEmpty) {
-        sessionUID = sessionRes.first[SESSION_UID];
-        userIndex = sessionRes.first[COLLABORATOR_UIDS].indexOf(userUID);
+
+      for (var session in sessionRes) {
+        final rtSessionRes = await supabase
+            .from("realtime_active_sessions")
+            .select()
+            .eq('session_uid', session[SESSION_UID])
+            .single();
+        final collaboratorUIDs = session[COLLABORATOR_UIDS];
+        if (collaboratorUIDs != null && collaboratorUIDs is List) {
+          final index = collaboratorUIDs.indexOf(userUID);
+          if (index != -1) {
+            final currentPhases =
+                rtSessionRes[RealTimeActiveSessionsConstants.S_CURRENT_PHASES];
+            print("currentPhases: $currentPhases");
+            if (currentPhases[index] > 0) {
+              sessionUID = session[SESSION_UID];
+              userIndex = index;
+              print("hasJoined: true");
+              return;
+            }
+          }
+        }
       }
     }
   }
