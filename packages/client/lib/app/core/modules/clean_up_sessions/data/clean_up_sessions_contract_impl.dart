@@ -2,16 +2,16 @@ import 'package:dartz/dartz.dart';
 import 'package:nokhte/app/core/constants/failure_constants.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mixins/mixin.dart';
-import 'package:nokhte/app/core/modules/clean_up_collaboration_artifacts/clean_up_collaboration_artifacts.dart';
+import 'package:nokhte/app/core/modules/clean_up_sessions/clean_up_sessions.dart';
 import 'package:nokhte/app/core/network/network_info.dart';
 
-class CleanUpCollaborationArtifactsContractImpl
+class CleanUpSessionsContractImpl
     with ResponseToStatus
-    implements CleanUpCollaborationArtifactsContract {
-  final CleanUpCollaborationArtifactsRemoteSource remoteSource;
+    implements CleanUpSessionsContract {
+  final CleanUpSessionsRemoteSource remoteSource;
   final NetworkInfo networkInfo;
 
-  CleanUpCollaborationArtifactsContractImpl(
+  CleanUpSessionsContractImpl(
       {required this.remoteSource, required this.networkInfo});
 
   @override

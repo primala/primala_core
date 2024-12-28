@@ -2,17 +2,17 @@
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
-import 'package:nokhte/app/core/modules/clean_up_collaboration_artifacts/clean_up_collaboration_artifacts.dart';
-part 'clean_up_collaboration_artifacts_coordinator.g.dart';
+import 'package:nokhte/app/core/modules/clean_up_sessions/clean_up_sessions.dart';
+part 'clean_up_sessions_coordinator.g.dart';
 
-class CleanUpCollaborationArtifactsCoordinator = _CleanUpCollaborationArtifactsCoordinatorBase
-    with _$CleanUpCollaborationArtifactsCoordinator;
+class CleanUpSessionsCoordinator = _CleanUpSessionsCoordinatorBase
+    with _$CleanUpSessionsCoordinator;
 
-abstract class _CleanUpCollaborationArtifactsCoordinatorBase
+abstract class _CleanUpSessionsCoordinatorBase
     with Store, BaseMobxLogic<NoParams, bool> {
-  final CleanUpCollaborationArtifactsContract contract;
+  final CleanUpSessionsContract contract;
 
-  _CleanUpCollaborationArtifactsCoordinatorBase({
+  _CleanUpSessionsCoordinatorBase({
     required this.contract,
   }) {
     initBaseLogicActions();

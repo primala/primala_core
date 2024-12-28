@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mixins/mixin.dart';
-import 'package:nokhte/app/core/modules/clean_up_collaboration_artifacts/clean_up_collaboration_artifacts.dart';
+import 'package:nokhte/app/core/modules/clean_up_sessions/clean_up_sessions.dart';
 import 'package:nokhte/app/core/modules/quick_actions/quick_actions.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
@@ -15,7 +15,7 @@ class HomeScreenRootRouterCoordinator = _HomeScreenRootRouterCoordinatorBase
 
 abstract class _HomeScreenRootRouterCoordinatorBase
     with Store, EnRoute, EnRouteRouter, HomeScreenRouter {
-  final CleanUpCollaborationArtifactsCoordinator cleanUpCollaborationArtifacts;
+  final CleanUpSessionsCoordinator cleanUpSessions;
   final HomeScreenRootRouterWidgetsCoordinator widgets;
   @override
   final UserInformationCoordinator userInfo;
@@ -27,7 +27,7 @@ abstract class _HomeScreenRootRouterCoordinatorBase
   setIsConnected(bool newVal) => isConnected = newVal;
 
   _HomeScreenRootRouterCoordinatorBase({
-    required this.cleanUpCollaborationArtifacts,
+    required this.cleanUpSessions,
     required this.userInfo,
     required this.widgets,
   }) {
@@ -41,7 +41,7 @@ abstract class _HomeScreenRootRouterCoordinatorBase
   constructor() async {
     widgets.constructor();
     initReactors();
-    await cleanUpCollaborationArtifacts(const NoParams());
+    await cleanUpSessions(const NoParams());
     if (isConnected && !isRouting) {
       await decideAndRoute(setRoutingParams);
     }

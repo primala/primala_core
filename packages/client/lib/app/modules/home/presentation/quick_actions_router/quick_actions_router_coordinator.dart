@@ -4,8 +4,8 @@ import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mixins/mixin.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
-import 'package:nokhte/app/core/modules/clean_up_collaboration_artifacts/clean_up_collaboration_artifacts.dart';
-import 'package:nokhte/app/core/modules/clean_up_collaboration_artifacts/mobx/mobx.dart';
+import 'package:nokhte/app/core/modules/clean_up_sessions/clean_up_sessions.dart';
+import 'package:nokhte/app/core/modules/clean_up_sessions/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/modules/home/home.dart';
@@ -21,10 +21,10 @@ abstract class _QuickActionsRouterCoordinatorBase
   @override
   final CaptureScreen captureScreen;
   final UserInformationCoordinator userInfo;
-  final CleanUpCollaborationArtifactsCoordinator cleanUpCollaborationArtifacts;
+  final CleanUpSessionsCoordinator cleanUpSessions;
 
   _QuickActionsRouterCoordinatorBase({
-    required this.cleanUpCollaborationArtifacts,
+    required this.cleanUpSessions,
     required this.widgets,
     required this.userInfo,
     required this.captureScreen,
@@ -38,7 +38,7 @@ abstract class _QuickActionsRouterCoordinatorBase
     widgets.preconstructor();
     final args = Modular.args.data[HomeConstants.QUICK_ACTIONS_ROUTE];
     if (args != SessionConstants.lobby) {
-      await cleanUpCollaborationArtifacts(const NoParams());
+      await cleanUpSessions(const NoParams());
     }
     await userInfo.checkIfVersionIsUpToDate();
 
