@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class SessionContentStreams with SessionContentConstants {
   bool contentListeningStatus = false;
   final SupabaseClient supabase;
+  final Map<String, SessionContentEntity> _contentCache = {};
 
   SessionContentStreams({
     required this.supabase,
@@ -14,13 +15,15 @@ class SessionContentStreams with SessionContentConstants {
     if (res.isNotEmpty) {
       await res.first.unsubscribe();
     }
+    _contentCache.clear();
     contentListeningStatus = false;
     return contentListeningStatus;
   }
 
-  Stream<List<ContentBlock>> listenToContent(String sessionUID) async* {
-    print('what is the session uid $sessionUID');
+  Stream<SessionContentList> listenToContent(String sessionUID) async* {
+    print('listening to content for session: $sessionUID');
     contentListeningStatus = true;
+    SessionContentList previousYield = [];
 
     final events = supabase
         .from(TABLE)
@@ -40,7 +43,40 @@ class SessionContentStreams with SessionContentConstants {
       if (!contentListeningStatus || sessionUID.isEmpty) {
         break;
       }
-      yield ContentBlock.fromSupabase(event);
+
+      final temp = <SessionContentEntity>[];
+      if (event.isNotEmpty) {
+        for (var item in event) {
+          final contentUid = item['uid'];
+
+          final existingContent = _contentCache[contentUid];
+          if (existingContent == null ||
+              existingContent.content != item['content'] ||
+              existingContent.blockType !=
+                  SessionContentUtils.mapStringToContentBlockType(
+                      item['type'])) {
+            final contentEntity =
+                SessionContentEntity.fromSupabase(item, _contentCache);
+            _contentCache[contentUid] = contentEntity;
+          }
+
+          temp.add(_contentCache[contentUid]!);
+        }
+
+        _contentCache.removeWhere(
+            (key, value) => !event.any((item) => item['uid'] == key));
+
+        if (!SessionContentUtils.areContentListsEqual(temp, previousYield)) {
+          previousYield = List.from(temp);
+          yield temp;
+        }
+      } else {
+        if (previousYield.isNotEmpty) {
+          previousYield = [];
+          _contentCache.clear();
+          yield [];
+        }
+      }
     }
   }
 }

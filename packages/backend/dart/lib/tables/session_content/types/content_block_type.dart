@@ -1,9 +1,8 @@
 enum ContentBlockType {
+  quotation,
   question,
   idea,
   purpose,
   conclusion,
-  quotation,
-  queue,
   none,
 }
