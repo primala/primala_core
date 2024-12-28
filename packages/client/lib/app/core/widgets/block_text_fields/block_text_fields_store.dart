@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:nokhte_backend/tables/session_content.dart';
 import 'package:simple_animations/simple_animations.dart';
 part 'block_text_fields_store.g.dart';
 
@@ -22,15 +23,16 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   bool isExpanded = false;
 
   @observable
-  BlockTypes blockType = BlockTypes.purpose;
+  ContentBlockType blockType = ContentBlockType.purpose;
 
   @observable
-  ObservableList<BlockTypes> blockIcons = ObservableList<BlockTypes>.of([
-    BlockTypes.quotation,
-    BlockTypes.question,
-    BlockTypes.idea,
-    BlockTypes.conclusion,
-    BlockTypes.purpose,
+  ObservableList<ContentBlockType> blockIcons =
+      ObservableList<ContentBlockType>.of([
+    ContentBlockType.quotation,
+    ContentBlockType.question,
+    ContentBlockType.idea,
+    ContentBlockType.conclusion,
+    ContentBlockType.purpose,
   ]);
 
   @observable
@@ -52,7 +54,7 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   setIconControl(Control value) => iconControl = value;
 
   @action
-  toggleExpanded() => isExpanded = !isExpanded;
+  setIsExpanded(bool value) => isExpanded = value;
 
   @action
   setisFocused(bool value) => isFocused = value;
@@ -60,10 +62,10 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   constructor(TextEditingController controller, FocusNode focusNode) {
     setControl(Control.stop);
     setMovie(getTextFieldTransition(
-      BlockTypes.purpose,
-      BlockTypes.purpose,
+      ContentBlockType.purpose,
+      ContentBlockType.purpose,
     ));
-    setBlockType(BlockTypes.purpose);
+    setBlockType(ContentBlockType.purpose);
     setIconMovie(getExpandingIcons(blockIcons));
 
     this.controller = controller;
@@ -82,21 +84,19 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   }
 
   @action
-  setBlockType(BlockTypes typeToMove) {
+  setBlockType(ContentBlockType typeToMove) {
     blockType = typeToMove;
     blockIcons.remove(typeToMove);
     blockIcons.add(typeToMove);
   }
 
-  onTap(BlockTypes newType) {
+  onTap(ContentBlockType newType) {
     if (blockType == newType) {
       if (isExpanded) {
-        if (iconControl != Control.stop) {
-          setIconControl(Control.playReverse);
-        }
-        toggleExpanded();
+        setIconControl(Control.playReverse);
+        setIsExpanded(false);
       } else {
-        toggleExpanded();
+        setIsExpanded(true);
         setIconMovie(getExpandingIcons(blockIcons));
         setIconControl(Control.playFromStart);
       }
@@ -105,12 +105,12 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
       if (isExpanded) {
         changeBlockType(newType);
         setIconControl(Control.playReverse);
-        toggleExpanded();
+        setIsExpanded(false);
       }
     }
   }
 
-  changeBlockType(BlockTypes newType) {
+  changeBlockType(ContentBlockType newType) {
     setMovie(getTextFieldTransition(
       blockType,
       newType,
@@ -119,13 +119,7 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
     setBlockType(newType);
   }
 
-  String getAssetPath(BlockTypes type) {
+  String getAssetPath(ContentBlockType type) {
     return 'assets/blocks/${type.name}_icon.png';
   }
-
-  @computed
-  String get iconPath => 'assets/blocks/${blockType.name}_icon.png';
-
-  @computed
-  String get buttonPath => 'assets/blocks/${blockType.name}_send_icon.png';
 }

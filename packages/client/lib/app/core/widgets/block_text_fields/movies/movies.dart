@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:nokhte_backend/tables/session_content.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 mixin BlockTextFieldMovies {
   MovieTween getTextFieldTransition(
-    BlockTypes startingBlockType,
-    BlockTypes endingBlockType,
+    ContentBlockType startingBlockType,
+    ContentBlockType endingBlockType,
   ) {
     final grad1 = getGradient(startingBlockType);
     final grad2 = getGradient(endingBlockType);
@@ -64,7 +65,7 @@ mixin BlockTextFieldMovies {
   }
 
   MovieTween getRestingIcons(
-    List<BlockTypes> currentList,
+    List<ContentBlockType> currentList,
   ) {
     final blocks = currentList.toList();
     final movie = MovieTween();
@@ -105,7 +106,7 @@ mixin BlockTextFieldMovies {
   }
 
   MovieTween getExpandingIcons(
-    List<BlockTypes> currentList,
+    List<ContentBlockType> currentList,
   ) {
     final movie = MovieTween();
     final startingPositions = getRestingPositions(currentList);
@@ -134,7 +135,7 @@ mixin BlockTextFieldMovies {
   }
 
   static List<double> getRestingPositions(
-    List<BlockTypes> currentList,
+    List<ContentBlockType> currentList,
   ) {
     final blocks = currentList.toList();
     final positions = <double>[];
@@ -149,11 +150,11 @@ mixin BlockTextFieldMovies {
   }
 
   static List<ColorAndStop> getGradient(
-    BlockTypes blockType, {
+    ContentBlockType blockType, {
     bool isIcon = false,
   }) {
     switch (blockType) {
-      case BlockTypes.quotation:
+      case ContentBlockType.quotation:
         return isIcon
             ? const [
                 ColorAndStop(Color(0xFF000000), 1),
@@ -163,27 +164,29 @@ mixin BlockTextFieldMovies {
                 const ColorAndStop(Color(0xFFFFFFFF), 0),
                 const ColorAndStop(Color(0xFF000000), 1),
               ];
-      case BlockTypes.question:
+      case ContentBlockType.question:
         return [
           const ColorAndStop(Color(0xFFFF68E1), 0),
           const ColorAndStop(Color(0xFFFFBB68), 1),
         ];
 
-      case BlockTypes.idea:
+      case ContentBlockType.idea:
         return [
           const ColorAndStop(Color(0xFF4AC0FF), 0),
           const ColorAndStop(Color(0xFF56F3A7), 1),
         ];
-      case BlockTypes.purpose:
+      case ContentBlockType.purpose:
         return [
           const ColorAndStop(Color(0xFF5A8BFF), 0),
           const ColorAndStop(Color(0xFFAD87FF), 1),
         ];
-      case BlockTypes.conclusion:
+      case ContentBlockType.conclusion:
         return [
           const ColorAndStop(Color(0xFFFF5A5D), 0),
           const ColorAndStop(Color(0xFFFF87C7), 1),
         ];
+      case ContentBlockType.none:
+        return [];
     }
   }
 }
