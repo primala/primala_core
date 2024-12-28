@@ -8,7 +8,6 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
-import 'package:nokhte/app/modules/presets/presets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 part 'session_lobby_widgets_coordinator.g.dart';
 
@@ -21,7 +20,6 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
   final SmartTextStore primarySmartText;
   final NokhteQrCodeStore qrCode;
   final TouchRippleStore touchRipple;
-  final PresetArticleStore presetArticle;
   final NavigationMenuStore navigationMenu;
   final ContextHeaderStore contextHeader;
   @override
@@ -29,7 +27,6 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
 
   _SessionLobbyWidgetsCoordinatorBase({
     required this.primarySmartText,
-    required this.presetArticle,
     required this.wifiDisconnectOverlay,
     required this.navigationMenu,
     required this.qrCode,
@@ -56,7 +53,6 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
     primarySmartText.setMessagesData(SessionLists.lobby);
     // primarySmartText.setWidgetVisibility(false);
     qrCode.setWidgetVisibility(false);
-    presetArticle.setRenderPreview(true);
 
     disposers.add(smartTextIndexReactor());
     disposers.add(navigationMenu.swipeReactor());
@@ -94,24 +90,6 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
   onQrCodeReady(String data) {
     qrCode.setQrCodeData(data);
     qrCode.setWidgetVisibility(true);
-  }
-
-  @action
-  onPresetTypeReceived(
-    CompanyPresetsEntity entity, {
-    required Function onOpen,
-    required Function onClose,
-  }) {
-    presetArticle.setShowPreview(true);
-    if (!hasReceivedRoutingArgs) {
-      presetArticle.showBottomSheet(
-        entity,
-        onOpen: onOpen,
-        onClose: onClose,
-      );
-    } else {
-      presetArticle.setPreset(entity);
-    }
   }
 
   @observable
@@ -152,7 +130,6 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
   @action
   onCollaboratorLeft() {
     primarySmartText.setWidgetVisibility(false);
-    presetArticle.setShowPreview(false);
     if (qrCode.qrCodeData.isNotEmpty) {
       qrCode.setWidgetVisibility(false);
     }
@@ -161,7 +138,6 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
   @action
   onCollaboratorJoined() {
     primarySmartText.setWidgetVisibility(primarySmartText.pastShowWidget);
-    presetArticle.setShowPreview(true);
     if (qrCode.qrCodeData.isNotEmpty) {
       qrCode.setWidgetVisibility(qrCode.pastShowWidget);
     }
@@ -171,8 +147,6 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
   enterSession() {
     beachWaves.setMovieMode(BeachWaveMovieModes.deepSeaToSky);
     beachWaves.currentStore.initMovie(const NoParams());
-    presetArticle.setShowPreview(false);
-    presetArticle.setWidgetVisibility(true);
     qrCode.setWidgetVisibility(false);
     contextHeader.setWidgetVisibility(false);
     primarySmartText.setWidgetVisibility(false);

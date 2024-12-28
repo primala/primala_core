@@ -7,7 +7,6 @@ import 'package:nokhte/app/core/mixins/mixin.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
-import 'package:nokhte/app/modules/presets/presets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte_backend/tables/session_information.dart';
 part 'session_lobby_coordinator.g.dart';
@@ -76,14 +75,9 @@ abstract class _SessionLobbyCoordinatorBase
         widgets.onCollaboratorLeft();
       },
     ));
-    disposers.add(
-        widgets.navigationMenu.actionSliderReactor(onActionSliderSelected: () {
-      // sessionMetadata.resetValues();
-    }));
+    disposers.add(widgets.navigationMenu.actionSliderReactor());
     disposers.add(sessionStartReactor());
     disposers.add(widgets.beachWavesMovieStatusReactor(enterGreeter));
-    disposers.add(presetArticleTapReactor());
-    // disposers.add(sessionPresetReactor());
     disposers.add(numberOfCollaboratorsReactor());
   }
 
@@ -137,23 +131,8 @@ abstract class _SessionLobbyCoordinatorBase
   //       }
   //     });
 
-  presetArticleTapReactor() =>
-      reaction((p0) => widgets.presetArticle.tapCount, (p0) {
-        if (widgets.navigationMenu.swipeUpBannerVisibility) return;
-        widgets.presetArticle.showBottomSheet(
-          CompanyPresetsEntity.initial(),
-          onOpen: onOpen,
-          onClose: onClose,
-        );
-      });
-
   @action
   showPresetInfo() {
-    widgets.onPresetTypeReceived(
-      CompanyPresetsEntity.initial(),
-      onOpen: onOpen,
-      onClose: onClose,
-    );
     widgets.contextHeader.setHeader(
       sessionMetadata.currentGroup,
       sessionMetadata.currentQueue,

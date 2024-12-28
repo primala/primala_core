@@ -8,6 +8,7 @@ import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
+import 'package:nokhte_backend/tables/session_information.dart';
 part 'session_solo_hybrid_coordinator.g.dart';
 
 class SessionSoloHybridCoordinator = _SessionSoloHybridCoordinatorBase
@@ -41,19 +42,17 @@ abstract class _SessionSoloHybridCoordinatorBase
     widgets.constructor(
       userCanSpeak: sessionMetadata.userCanSpeak,
       everyoneIsOnline: sessionMetadata.everyoneIsOnline,
-      content: sessionMetadata.content,
     );
     widgets.rally.setValues(
       fullNames: sessionMetadata.fullNames,
-      canRally: sessionMetadata.canRallyArray,
     );
     if (!sessionMetadata.everyoneIsOnline) {
       widgets.onCollaboratorLeft();
     }
-    widgets.purposeBanner.setAddContent(presence.addContent);
-    widgets.purposeBanner.setMoveQueueToTheTop(presence.moveQueueToTheTop);
+    // widgets.purposeBanner.setAddContent(presence.addContent);
+    // widgets.purposeBanner.setMoveQueueToTheTop(presence.moveQueueToTheTop);
     initReactors();
-    await presence.updateCurrentPhase(2.0);
+    // await presence.updateUserStatus(SessionUserStatus.online);
     await onResumed();
     await captureScreen(SessionConstants.soloHybrid);
   }
@@ -113,7 +112,7 @@ abstract class _SessionSoloHybridCoordinatorBase
     );
     disposers.add(userIsSpeakingReactor());
     disposers.add(userCanSpeakReactor());
-    disposers.add(othersAreTakingNotesReactor());
+    // disposers.add(othersAreTakingNotesReactor());
     disposers.add(rallyReactor());
     disposers.add(glowColorReactor());
     disposers.add(secondarySpotlightReactor());
@@ -166,7 +165,7 @@ abstract class _SessionSoloHybridCoordinatorBase
           setUserIsSpeaking(true);
           widgets.onHold(tap.currentTapPlacement);
           setDisableAllTouchFeedback(true);
-          await presence.updateCurrentPhase(2);
+          await presence.updateUserStatus(SessionUserStatus.online);
         }
       });
 
@@ -205,13 +204,6 @@ abstract class _SessionSoloHybridCoordinatorBase
         },
       );
 
-  othersAreTakingNotesReactor() =>
-      reaction((p0) => sessionMetadata.canRallyArray, (p0) {
-        widgets.rally.setCanRally(
-          sessionMetadata.canRallyArray,
-        );
-      });
-
   userCanSpeakReactor() => reaction((p0) => sessionMetadata.userCanSpeak, (p0) {
         if (p0 &&
             userIsSpeaking &&
@@ -235,9 +227,7 @@ abstract class _SessionSoloHybridCoordinatorBase
             tapPosition: tap.currentTapPosition,
             tapPlacement: tap.currentTapPlacement,
             asyncTalkingTapCall: onTalkingTap,
-            asyncNotesTapCall: () async {
-              await presence.updateCurrentPhase(2.5);
-            },
+            asyncNotesTapCall: () async {},
           );
         },
       );

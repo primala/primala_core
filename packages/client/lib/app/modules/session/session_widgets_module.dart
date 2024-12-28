@@ -2,7 +2,6 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
 import 'package:nokhte/app/core/widgets/widget_modules/mirrored_text_module.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
-import 'monetize/monetize.dart';
 import 'session.dart';
 
 class SessionWidgetsModule extends Module {
@@ -19,17 +18,12 @@ class SessionWidgetsModule extends Module {
   void exportedBinds(Injector i) {
     injectCore(i);
     injectHybrid(i);
-    injectPolymorphic(i);
     injectNotes(i);
-    injectMonetization(i);
   }
 
   injectCore(i) {
     i.add<SessionInformationWidgetsCoordinator>(
       () => SessionInformationWidgetsCoordinator(
-        presetArticle: PresetArticleStore(
-          nokhteBlur: NokhteBlurStore(),
-        ),
         tint: TintStore(),
         wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
         beachWaves: BeachWavesStore(),
@@ -56,24 +50,9 @@ class SessionWidgetsModule extends Module {
       () => SessionLobbyWidgetsCoordinator(
         contextHeader: ContextHeaderStore(),
         navigationMenu: Modular.get<NavigationMenuStore>(),
-        presetArticle: PresetArticleStore(
-          nokhteBlur: NokhteBlurStore(),
-        ),
         touchRipple: TouchRippleStore(),
         primarySmartText: SmartTextStore(),
         qrCode: NokhteQrCodeStore(),
-        wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
-      ),
-    );
-
-    i.add<SessionPresetsWidgetsCoordinator>(
-      () => SessionPresetsWidgetsCoordinator(
-        navigationMenu: Modular.get<NavigationMenuStore>(),
-        presetArticle: PresetArticleStore(
-          nokhteBlur: NokhteBlurStore(),
-        ),
-        headerText: SmartTextStore(),
-        presetCards: PresetCardsStore(),
         wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
       ),
     );
@@ -87,15 +66,6 @@ class SessionWidgetsModule extends Module {
       ),
     );
 
-    i.add<SessionDuoGreeterWidgetsCoordinator>(
-      () => SessionDuoGreeterWidgetsCoordinator(
-        touchRipple: TouchRippleStore(),
-        primarySmartText: SmartTextStore(),
-        secondarySmartText: SmartTextStore(),
-        wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
-        beachWaves: BeachWavesStore(),
-      ),
-    );
     i.add<SessionCollaborationGreeterWidgetsCoordinator>(
       () => SessionCollaborationGreeterWidgetsCoordinator(
         touchRipple: TouchRippleStore(),
@@ -105,33 +75,7 @@ class SessionWidgetsModule extends Module {
         beachWaves: BeachWavesStore(),
       ),
     );
-    i.add<SessionTrialGreeterWidgetsCoordinator>(
-      () => SessionTrialGreeterWidgetsCoordinator(
-        touchRipple: TouchRippleStore(),
-        primarySmartText: SmartTextStore(),
-        secondarySmartText: SmartTextStore(),
-        wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
-        beachWaves: BeachWavesStore(),
-      ),
-    );
-    i.add<SessionGroupGreeterWidgetsCoordinator>(
-      () => SessionGroupGreeterWidgetsCoordinator(
-        touchRipple: TouchRippleStore(),
-        primarySmartText: SmartTextStore(),
-        secondarySmartText: SmartTextStore(),
-        wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
-        beachWaves: BeachWavesStore(),
-      ),
-    );
-    i.add<SocraticSpeakingExitWidgetsCoordinator>(
-      () => SocraticSpeakingExitWidgetsCoordinator(
-        exitStatusIndicator: ExitStatusIndicatorStore(),
-        primarySmartText: SmartTextStore(),
-        secondarySmartText: SmartTextStore(),
-        beachWaves: BeachWavesStore(),
-        wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
-      ),
-    );
+
     i.add<SessionExitWidgetsCoordinator>(
       () => SessionExitWidgetsCoordinator(
         borderGlow: BorderGlowStore(),
@@ -141,25 +85,6 @@ class SessionWidgetsModule extends Module {
         secondarySmartText: SmartTextStore(),
         beachWaves: BeachWavesStore(),
         wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
-      ),
-    );
-  }
-
-  injectPolymorphic(i) {
-    i.add<PolymorphicSoloWidgetsCoordinator>(
-      () => PolymorphicSoloWidgetsCoordinator(
-        refreshBanner: RefreshBannerStore(),
-        backButton: BackButtonStore(),
-        primarySmartText: SmartTextStore(),
-        secondarySmartText: SmartTextStore(),
-        sessionNavigation: Modular.get<SessionNavigationStore>(),
-        tint: TintStore(),
-        speakLessSmileMore: SpeakLessSmileMoreStore(),
-        touchRipple: TouchRippleStore(),
-        mirroredText: Modular.get<MirroredTextStore>(),
-        wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
-        beachWaves: BeachWavesStore(),
-        borderGlow: BorderGlowStore(),
       ),
     );
   }
@@ -215,21 +140,6 @@ class SessionWidgetsModule extends Module {
         textEditor: TextEditorStore(),
         wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
         beachWaves: BeachWavesStore(),
-      ),
-    );
-  }
-
-  injectMonetization(i) {
-    i.add<SessionPaywallWidgetsCoordinator>(
-      () => SessionPaywallWidgetsCoordinator(
-        multiplyingNokhte: MultiplyingNokhteStore(),
-        gestureCross: Modular.get<GestureCrossStore>(),
-        beachWaves: BeachWavesStore(),
-        wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
-        touchRipple: TouchRippleStore(),
-        primarySmartText: SmartTextStore(),
-        secondarySmartText: SmartTextStore(),
-        tertiarySmartText: SmartTextStore(),
       ),
     );
   }

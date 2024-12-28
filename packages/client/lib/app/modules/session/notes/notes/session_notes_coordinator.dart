@@ -5,7 +5,6 @@ import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/types/directions.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte_backend/tables/company_presets.dart';
 part 'session_notes_coordinator.g.dart';
 
 class SessionNotesCoordinator = _SessionNotesCoordinatorBase
@@ -35,28 +34,26 @@ abstract class _SessionNotesCoordinatorBase
 
   @action
   constructor() async {
-    widgets.setPresetType(sessionMetadata.presetType);
+    // widgets.setPresetType();
     widgets.constructor(onEarlyReturn: () async {
-      await presence.updateCurrentPhase(2.0);
+      // await presence.updateCurrentPhase(2.0);
     });
     initReactors();
-    await presence.updateCurrentPhase(2.5);
+    // await presence.updateCurrentPhase(2.5);
     await captureScreen(SessionConstants.notes);
   }
 
   initReactors() {
-    if (sessionMetadata.presetType != PresetTypes.solo) {
-      disposers.add(presence.initReactors(
-        onCollaboratorJoined: () {
-          setDisableAllTouchFeedback(false);
-          widgets.onCollaboratorJoined();
-        },
-        onCollaboratorLeft: () {
-          setDisableAllTouchFeedback(true);
-          widgets.onCollaboratorLeft();
-        },
-      ));
-    }
+    disposers.add(presence.initReactors(
+      onCollaboratorJoined: () {
+        setDisableAllTouchFeedback(false);
+        widgets.onCollaboratorJoined();
+      },
+      onCollaboratorLeft: () {
+        setDisableAllTouchFeedback(true);
+        widgets.onCollaboratorLeft();
+      },
+    ));
     disposers.add(presence.initReactors(
       onCollaboratorJoined: () {
         setDisableAllTouchFeedback(false);
@@ -95,10 +92,10 @@ abstract class _SessionNotesCoordinatorBase
 
   @action
   onSwipeUp(String param) async {
-    await presence.addContent(AddContentParams(
-      content: 'P: $param',
-    ));
-    await presence.updateCurrentPhase(3.0);
+    // await presence.addContent(AddContentParams(
+    //   content: 'P: $param',
+    // ));
+    // // await presence.updateCurrentPhase(3.0);
   }
 
   deconstructor() {

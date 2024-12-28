@@ -68,12 +68,10 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   constructor({
     required bool userCanSpeak,
     required bool everyoneIsOnline,
-    required ObservableList<String> content,
   }) {
     navigationMenu.setNavigationMenuType(NavigationMenuType.inSession,
         shouldInitReactors: false);
     tapStopwatch.start();
-    purposeBanner.setPurpose(content);
     beachWaves.setMovieMode(BeachWaveMovieModes.halfAndHalfToDrySand);
     primarySmartText.setMessagesData(SessionLists.tapToTalk);
     secondarySmartText.setMessagesData(SessionLists.tapToTakeANote);
