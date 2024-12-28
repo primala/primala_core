@@ -15,16 +15,6 @@ class SessionPresenceContractImpl
   });
 
   @override
-  addContent(params) async {
-    if (await networkInfo.isConnected) {
-      final res = await remoteSource.addContent(params);
-      return fromSupabase(res);
-    } else {
-      return Left(FailureConstants.internetConnectionFailure);
-    }
-  }
-
-  @override
   completeTheSession() async {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.completeTheSession();
@@ -108,18 +98,4 @@ class SessionPresenceContractImpl
       return Left(FailureConstants.internetConnectionFailure);
     }
   }
-
-  @override
-  listenToSessionContent(params) async {
-    if (await networkInfo.isConnected) {
-      final res = remoteSource.listenToSessionContent(params);
-      return Right(res);
-    } else {
-      return Left(FailureConstants.internetConnectionFailure);
-    }
-  }
-
-  @override
-  cancelSessionContentStream() async =>
-      await remoteSource.cancelSessionContentStream();
 }

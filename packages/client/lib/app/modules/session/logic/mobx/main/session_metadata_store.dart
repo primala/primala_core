@@ -93,22 +93,13 @@ abstract class _SessionMetadataStoreBase
   ObservableStream<SessionMetadata> sessionMetadata =
       ObservableStream(const Stream.empty());
 
-  @observable
-  ObservableStream<List<ContentBlock>> sessionContent =
-      ObservableStream(const Stream.empty());
-
   StreamSubscription metadataStreamSubscription =
-      const Stream.empty().listen((event) {});
-
-  StreamSubscription contentStreamSubscription =
       const Stream.empty().listen((event) {});
 
   @action
   dispose() {
     metadataStreamSubscription = const Stream.empty().listen((event) {});
-    contentStreamSubscription = const Stream.empty().listen((event) {});
     sessionMetadata = ObservableStream(const Stream.empty());
-    sessionContent = ObservableStream(const Stream.empty());
   }
 
   @action
@@ -122,39 +113,20 @@ abstract class _SessionMetadataStoreBase
       (stream) {
         sessionMetadata = ObservableStream(stream);
         metadataStreamSubscription = sessionMetadata.listen((value) async {
-          // this is computed
           everyoneIsOnline = value.collaboratorInformation.every(
             (element) => element.sessionUserStatus != SessionUserStatus.offline,
           );
           collaboratorInformation =
               ObservableList.of(value.collaboratorInformation);
-          // collaboratorStatuses = value.collaboratorInformation
           speakingTimerStart = value.speakingTimerStart;
           secondarySpeakerSpotlightIsEmpty = value.secondarySpotlightIsEmpty;
           userIsInSecondarySpeakingSpotlight =
               value.userIsInSecondarySpeakingSpotlight;
           currentSpeakerUID = value.speakerUID;
           sessionHasBegun = value.sessionStatus == SessionStatus.started;
-          // final strContent = value.content.map((e) => e.toString());
-          // content = ObservableList.of(strContent);
-          // currentPhases = ObservableList.of(phases);
-          // sessionHasBegun = value.sessionHasBegun;
           userIsSpeaking = value.userIsSpeaking;
           userCanSpeak = value.userCanSpeak;
           sessionUID = value.sessionUID;
-          final res = await contract.listenToSessionContent(sessionUID);
-          res.fold(
-            (failure) {
-              setErrorMessage(mapFailureToMessage(failure));
-              setState(StoreState.initial);
-            },
-            (stream) {
-              sessionContent = ObservableStream(stream);
-              contentStreamSubscription = stream.listen((value) {
-                content = ObservableList.of(value);
-              });
-            },
-          );
 
           setState(StoreState.loaded);
         });

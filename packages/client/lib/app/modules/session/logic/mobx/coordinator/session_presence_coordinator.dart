@@ -4,7 +4,6 @@ import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte_backend/tables/session_content.dart';
 import 'package:nokhte_backend/tables/session_information.dart';
 part 'session_presence_coordinator.g.dart';
 
@@ -24,9 +23,6 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
         ) {
     initBaseLogicActions();
   }
-
-  @observable
-  bool contentIsUpdated = false;
 
   @observable
   bool sessionIsFinished = false;
@@ -64,7 +60,6 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
   dispose() async {
     setState(StoreState.loading);
     final res = await contract.cancelSessionMetadataStream();
-    await contract.cancelSessionContentStream();
     await sessionMetadataStore.dispose();
     isListening = res;
     setState(StoreState.loaded);
@@ -74,16 +69,6 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
   listen() {
     setState(StoreState.loading);
     sessionMetadataStore.get();
-    setState(StoreState.loaded);
-  }
-
-  @action
-  addContent(AddContentParams params) async {
-    final res = await contract.addContent(params);
-    res.fold(
-      (failure) => errorUpdater(failure),
-      (contentUpdateStatus) => contentIsUpdated = contentUpdateStatus,
-    );
     setState(StoreState.loaded);
   }
 
