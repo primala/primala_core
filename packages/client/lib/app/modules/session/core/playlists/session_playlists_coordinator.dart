@@ -49,7 +49,7 @@ abstract class _SessionPlaylistsCoordinatorBase
         (p0) => widgets.queueSelector.selectedGroup,
         (p0) {
           if (p0 != GroupInformationEntity.empty()) {
-            presence.updateGroupUID(p0.groupUID);
+            // presence.updateGroupUID(p0.groupUID);
           }
         },
       );
@@ -58,12 +58,12 @@ abstract class _SessionPlaylistsCoordinatorBase
         (p0) => widgets.queueSelector.selectedQueue,
         (p0) {
           if (p0 != QueueEntity.empty()) {
-            presence.updateQueueUID(
-              UpdateQueueUIDParams(
-                queueUID: p0.uid,
-                content: p0.content,
-              ),
-            );
+            // presence.updateQueueUID(
+            //   UpdateQueueUIDParams(
+            //     queueUID: p0.uid,
+            //     content: p0.content,
+            //   ),
+            // );
           }
         },
       );

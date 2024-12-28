@@ -5,7 +5,6 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte_backend/tables/company_presets.dart';
 part 'session_information_coordinator.g.dart';
 
 class SessionInformationCoordinator = _SessionInformationCoordinatorBase
@@ -37,14 +36,9 @@ abstract class _SessionInformationCoordinatorBase
 
   @action
   constructor() async {
-    widgets.constructor(sessionMetadata.presetEntity);
+    widgets.constructor();
     initReactors();
     await captureScreen(SessionConstants.information);
-    widgets.setRoute(
-      sessionMetadata.presetType == PresetTypes.collaborative
-          ? SessionConstants.soloHybrid
-          : SessionConstants.groupHybrid,
-    );
   }
 
   @action
