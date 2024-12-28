@@ -1,14 +1,51 @@
-import 'package:nokhte_backend/edge_functions/active_nokhte_session.dart';
+import 'package:nokhte_backend/tables/session_information.dart';
+import 'package:nokhte_backend/tables/user_information.dart';
 import 'package:nokhte_backend/types/types.dart';
 import 'package:nokhte_backend/utils/utils.dart';
-import 'constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class RealtimeActiveSessionQueries extends ActiveSessionEdgeFunctions
-    with RealTimeActiveSessionsConstants, SessionUtils {
-  RealtimeActiveSessionQueries({
-    required super.supabase,
-  });
+import 'utilities/utilities.dart';
+
+class SessionInformationQueries with SessionInformationConstants, SessionUtils {
+  final SupabaseClient supabase;
+  final String userUID;
+  String sessionUID = '';
+  String userFullName = '';
+  int userIndex = -1;
+  final UserInformationQueries userInformationQueries;
+  SessionInformationQueries({
+    required this.supabase,
+  })  : userUID = supabase.auth.currentUser?.id ?? '',
+        userInformationQueries = UserInformationQueries(supabase: supabase);
+
+  getUserInformation() async {
+    if (userFullName.isEmpty) {
+      userFullName = await userInformationQueries.getFullName();
+    }
+  }
+
+  computeCollaboratorInformation() async {
+    await getUserInformation();
+    if (userIndex == -1 || sessionUID.isEmpty) {
+      final res = await supabase.from(TABLE).select().eq(
+            STATUS,
+            SessionInformationUtils.mapSessionStatusToString(
+              SessionStatus.recruiting,
+            ),
+          );
+      for (var row in res) {
+        if (row[COLLABORATOR_UIDS].contains(userUID)) {
+          sessionUID = row[UID];
+          userIndex = row[COLLABORATOR_UIDS].indexOf(userUID);
+        }
+      }
+    }
+  }
+
+  resetValues() {
+    sessionUID = '';
+    userFullName = '';
+  }
 
   select() async => await supabase.from(TABLE).select();
 
@@ -22,150 +59,43 @@ class RealtimeActiveSessionQueries extends ActiveSessionEdgeFunctions
     );
   }
 
-  Future<SessionResponse<List>> getWhoIsOnline() async =>
-      await _getProperty(IS_ONLINE);
-
-  Future<SessionResponse<List>> getContent() async =>
-      await _getProperty<List>(CONTENT);
+  Future<SessionResponse<List>> getCollaboratorStatuses() async =>
+      await _getProperty(COLLABORATOR_STATUSES);
 
   Future<SessionResponse<String?>> getSpeakerSpotlight() async =>
       await _getProperty(SPEAKER_SPOTLIGHT);
 
-  Future<SessionResponse<List>> getCurrentPhases() async =>
-      await _getProperty(CURRENT_PHASES);
-
   Future<SessionResponse<String>> getSessionUID() async =>
-      await _getProperty(SESSION_UID);
+      await _getProperty(UID);
 
-  Future<SessionResponse<bool>> getHasBegun() async =>
-      await _getProperty(HAS_BEGUN);
+  Future<SessionResponse<String>> getSessionTitle() async =>
+      await _getProperty(TITLE);
 
-  Future<List> updateOnlineStatus(bool isOnlineParam) async {
+  Future<SessionResponse<String>> getSessionStatus() async =>
+      await _getProperty(STATUS);
+
+  Future<List> updateUserStatus(SessionUserStatus params) async {
     await computeCollaboratorInformation();
-    final res = await getWhoIsOnline();
-    final currentOnlineStatus = res.mainType;
-    currentOnlineStatus[userIndex] = isOnlineParam;
-    return await retry<List>(
-      action: () async {
-        return await _onCurrentActiveNokhteSession(
-          supabase.from(TABLE).update(
-            {
-              IS_ONLINE: currentOnlineStatus,
-              VERSION: res.currentVersion + 1,
-            },
-          ),
-          version: res.currentVersion,
-        );
-      },
-      shouldRetry: (result) {
-        return result.isEmpty;
-      },
-      maxRetries: 9,
-    );
-  }
-
-  Future<List> updateCurrentPhases(double newPhase) async {
-    await computeCollaboratorInformation();
-    await supabase.rpc('update_nokhte_session_phase', params: {
+    final newstatus =
+        SessionInformationUtils.mapSessionUserStatusToString(params);
+    await supabase.rpc('update_collaborator_status', params: {
       'incoming_session_uid': sessionUID,
       'index_to_edit': userIndex,
-      'new_value': newPhase,
+      'new_status': newstatus,
     });
     return [];
   }
 
-  Future<List> addContent(
-    String content, {
-    int insertionIndex = -1,
-  }) async {
-    await computeCollaboratorInformation();
-    final contentRes = await getContent();
-    final currentContent = contentRes.mainType;
-    final currentVersion = contentRes.currentVersion;
-    if (insertionIndex == -1) {
-      currentContent.add(content);
-    } else {
-      currentContent.insert(insertionIndex, content);
-    }
-    return await retry<List>(
-      action: () async {
-        return await _onCurrentActiveNokhteSession(
-          supabase.from(TABLE).update({
-            CONTENT: currentContent,
-            VERSION: currentVersion + 1,
-          }),
-          version: currentVersion,
-        );
-      },
-      shouldRetry: (result) {
-        return result.isEmpty;
-      },
-    );
-  }
-
-  Future<List> setContent(List contents) async {
-    await computeCollaboratorInformation();
-    final contentRes = await getContent();
-    final currentVersion = contentRes.currentVersion;
-    final formatted = [];
-    for (var content in contents) {
-      formatted.add('Q: $content');
-    }
-
-    return await retry<List>(
-      action: () async {
-        return await _onCurrentActiveNokhteSession(
-          supabase.from(TABLE).update({
-            CONTENT: formatted,
-            VERSION: currentVersion + 1,
-          }),
-          version: currentVersion,
-        );
-      },
-      shouldRetry: (result) {
-        return result.isEmpty;
-      },
-    );
-  }
-
-  Future<List> moveQueueToTheTop({
-    required int index,
-    required String content,
-  }) async {
-    print('index: $index content: $content');
-    await computeCollaboratorInformation();
-    final contentRes = await getContent();
-    final currentVersion = contentRes.currentVersion;
-    final currentContent = contentRes.mainType;
-
-    currentContent.removeAt(index);
-    // final String formattedContent = 'P: ${content.substring(2)}';
-    currentContent.add(content);
-
-    return await retry<List>(
-      action: () async {
-        return await _onCurrentActiveNokhteSession(
-          supabase.from(TABLE).update({
-            CONTENT: currentContent,
-            VERSION: currentVersion + 1,
-          }),
-          version: currentVersion,
-        );
-      },
-      shouldRetry: (result) {
-        return result.isEmpty;
-      },
-    );
-  }
-
   Future<List> beginSession() async {
     await computeCollaboratorInformation();
-    final res = await getWhoIsOnline();
+    final res = await getSessionStatus();
     return await retry<List>(
       action: () async {
+        final newStatus = SessionInformationUtils.mapSessionStatusToString(
+            SessionStatus.started);
         return await _onCurrentActiveNokhteSession(
           supabase.from(TABLE).update({
-            HAS_BEGUN: true,
+            STATUS: newStatus,
             VERSION: res.currentVersion + 1,
           }),
           version: res.currentVersion,
@@ -315,16 +245,76 @@ class RealtimeActiveSessionQueries extends ActiveSessionEdgeFunctions
     );
   }
 
-  Future<List> joinSession({
-    required int userIndex,
-    required String sessionUID,
-  }) async {
-    await supabase.rpc('update_nokhte_session_phase', params: {
-      'incoming_session_uid': sessionUID,
-      'index_to_edit': userIndex,
-      'new_value': .5,
+  Future<List> joinSession(String sessionUID) async {
+    await supabase.rpc('join_session', params: {
+      '_session_uid': sessionUID,
+      '_user_uid': userUID,
     });
     return [];
+  }
+
+  Future<List> cleanUpSessions() async {
+    return await supabase
+        .from(TABLE)
+        .update({
+          STATUS: SessionInformationUtils.mapSessionStatusToString(
+            SessionStatus.finished,
+          )
+        })
+        .neq(
+            STATUS,
+            SessionInformationUtils.mapSessionStatusToString(
+              SessionStatus.dormant,
+            ))
+        .select();
+  }
+
+  Future<List> initializeDormantSession(
+    InitializeDormantSessionParams params,
+  ) async {
+    return await supabase.from(TABLE).insert({
+      COLLABORATOR_UIDS: [],
+      COLLABORATOR_NAMES: [],
+      STATUS: SessionInformationUtils.mapSessionStatusToString(
+        SessionStatus.dormant,
+      ),
+      TITLE: params.title,
+      GROUP_UID: params.groupUID,
+    }).select();
+  }
+
+  Future<List> initializeSession(InitializeSessionParams params) async {
+    await getUserInformation();
+    if (params.sessionUID.isEmpty) {
+      return await supabase.from(TABLE).insert({
+        COLLABORATOR_UIDS: [userUID],
+        COLLABORATOR_NAMES: [userFullName],
+        COLLABORATOR_STATUSES: [
+          SessionInformationUtils.mapSessionUserStatusToString(
+            SessionUserStatus.hasJoined,
+          ),
+        ],
+        GROUP_UID: params.groupUID,
+      }).select();
+    } else {
+      return await supabase
+          .from(TABLE)
+          .update({
+            COLLABORATOR_UIDS: [userUID],
+            COLLABORATOR_NAMES: [userFullName],
+            STATUS: SessionInformationUtils.mapSessionStatusToString(
+              SessionStatus.recruiting,
+            ),
+          })
+          .eq(UID, sessionUID)
+          .eq(
+            STATUS,
+            SessionInformationUtils.mapSessionStatusToString(
+              SessionStatus.dormant,
+            ),
+          )
+          .select();
+    }
   }
 
   Future<List> _onCurrentActiveNokhteSession(
@@ -333,10 +323,7 @@ class RealtimeActiveSessionQueries extends ActiveSessionEdgeFunctions
   }) async {
     await computeCollaboratorInformation();
     if (sessionUID.isNotEmpty) {
-      return await query
-          .eq(VERSION, version)
-          .eq(SESSION_UID, sessionUID)
-          .select();
+      return await query.eq(VERSION, version).eq(UID, sessionUID).select();
     } else {
       return [];
     }

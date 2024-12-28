@@ -1,27 +1,22 @@
 // ignore_for_file: constant_identifier_names
-import 'package:nokhte_backend/tables/static_active_sessions.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:nokhte_backend/tables/group_information.dart';
+import 'package:nokhte_backend/tables/session_information/queries.dart';
 import 'constants.dart';
 import 'types/types.dart';
-import 'package:nokhte_backend/tables/company_presets.dart';
+import 'utilities/utilities.dart';
 
-class RealtimeActiveSessionStreams with RealTimeActiveSessionsConstants {
+class SessionInformationStreams extends SessionInformationQueries
+    with SessionInformationConstants {
   bool requestsListeningStatus = false;
   bool metadataListeningStatus = false;
   final Map<String, SessionRequests> _requestsCache = {};
-
-  final CompanyPresetsQueries presetsQueries;
-  final StaticActiveSessionQueries staticActiveSessionQueries;
-  final SupabaseClient supabase;
-  final String userUID;
-  RealtimeActiveSessionStreams({
-    required this.supabase,
-  })  : userUID = supabase.auth.currentUser?.id ?? '',
-        staticActiveSessionQueries =
-            StaticActiveSessionQueries(supabase: supabase),
-        presetsQueries = CompanyPresetsQueries(supabase: supabase);
+  final GroupInformationQueries groupInformationQueries;
+  SessionInformationStreams({
+    required super.supabase,
+  }) : groupInformationQueries = GroupInformationQueries(supabase: supabase);
 
   Future<bool> cancelSessionRequestsStream() async {
+    resetValues();
     final res = supabase.realtime.getChannels();
     if (res.isNotEmpty) {
       await res.first.unsubscribe();
@@ -46,30 +41,40 @@ class RealtimeActiveSessionStreams with RealTimeActiveSessionsConstants {
     requestsListeningStatus = true;
     List<SessionRequests> previousYield = [];
 
-    await for (var events in supabase.from(TABLE).stream(primaryKey: ['id'])) {
+    final events = supabase.from(TABLE).stream(primaryKey: ['id']).eq(
+      STATUS,
+      SessionInformationUtils.mapSessionStatusToString(
+        SessionStatus.recruiting,
+      ),
+    );
+
+    await for (var event in events) {
       if (!requestsListeningStatus) {
         break;
       }
 
       final temp = <SessionRequests>[];
-      if (events.isNotEmpty) {
-        for (var event in events) {
-          final sessionUid = event[SESSION_UID];
+      if (event.isNotEmpty) {
+        for (var event in event) {
+          final sessionUid = event[UID];
           if (!_requestsCache.containsKey(sessionUid)) {
-            final res =
-                await staticActiveSessionQueries.getRequestInfo(sessionUid);
+            final groupName = await groupInformationQueries.getGroupName(
+              event[GROUP_UID],
+            );
+            final res = SessionRequests(
+              sessionUID: event[UID],
+              groupName: groupName,
+            );
             _requestsCache[sessionUid] = res;
           }
           temp.add(_requestsCache[sessionUid]!);
         }
 
-        // Only yield if temp is not empty and different from previous yield
         if (temp.isNotEmpty && !_areListsEqual(temp, previousYield)) {
           previousYield = List.from(temp); // Create a copy of temp
           yield temp;
         }
       } else {
-        // Only yield empty list if previous yield was non-empty
         if (previousYield.isNotEmpty) {
           previousYield = [];
           _requestsCache.clear();
@@ -80,6 +85,7 @@ class RealtimeActiveSessionStreams with RealTimeActiveSessionsConstants {
   }
 
   Future<bool> cancelGetSessionMetadataStream() async {
+    resetValues();
     await supabase.realtime.removeAllChannels();
     metadataListeningStatus = false;
     return metadataListeningStatus;
@@ -87,25 +93,49 @@ class RealtimeActiveSessionStreams with RealTimeActiveSessionsConstants {
 
   Stream<SessionMetadata> listenToPresenceMetadata() async* {
     metadataListeningStatus = true;
-    await for (var event in supabase
-        .from("realtime_active_sessions")
-        .stream(primaryKey: ['id'])) {
+    resetValues();
+    await computeCollaboratorInformation();
+
+    final events = supabase.from(TABLE).stream(primaryKey: ['id']).eq(
+      UID,
+      sessionUID,
+    );
+    await for (var event in events) {
       if (event.isNotEmpty) {
         if (!metadataListeningStatus) {
           break;
         }
 
-        final eventIndex = 0;
-        event.indexWhere((row) {
-          final List unformatted = row[CURRENT_PHASES];
-          final List phases = unformatted
-            ..map((e) => double.parse(e.toString()));
-          return phases.every((phase) => phase > 0.5);
-        });
+        final selectedEvent = event.first;
 
-        if (eventIndex == -1) continue;
+        print(
+            "collaborator statuses ${selectedEvent[COLLABORATOR_STATUSES].runtimeType}");
 
-        final selectedEvent = event[eventIndex];
+        final List<SessionUserStatus> collaboratorStatuses = [];
+        final List<String> collaboratorNames = [];
+        final List<String> collaboratorUIDs = [];
+        final List<SessionUserInfoEntity> collaboratorInformation = [];
+
+        for (var status in selectedEvent[COLLABORATOR_STATUSES]) {
+          collaboratorStatuses.add(
+              SessionInformationUtils.mapStringToSessionUserStatus(status));
+        }
+        for (var name in selectedEvent[COLLABORATOR_NAMES]) {
+          collaboratorNames.add(name.toString());
+        }
+        for (var uid in selectedEvent[COLLABORATOR_UIDS]) {
+          collaboratorUIDs.add(uid.toString());
+        }
+
+        for (int i = 0; i < collaboratorNames.length; i++) {
+          collaboratorInformation.add(SessionUserInfoEntity(
+            fullName: collaboratorNames[i],
+            uid: collaboratorUIDs[i],
+            sessionUserStatus: collaboratorStatuses[i],
+          ));
+        }
+        final sessionStatus = SessionInformationUtils.mapStringToSessionStatus(
+            selectedEvent[STATUS].toString());
 
         final speakingTimerStart = selectedEvent[SPEAKING_TIMER_START] == null
             ? DateTime.fromMillisecondsSinceEpoch(0)
@@ -116,30 +146,25 @@ class RealtimeActiveSessionStreams with RealTimeActiveSessionsConstants {
 
         final speakerUID = selectedEvent[SPEAKER_SPOTLIGHT];
 
+        final sessionUID = selectedEvent[UID];
+
         final userIsInSecondarySpeakingSpotlight =
             selectedEvent[SECONDARY_SPEAKER_SPOTLIGHT] == userUID;
 
-        final phases = selectedEvent[CURRENT_PHASES];
-        final content = selectedEvent[CONTENT];
         final userCanSpeak = selectedEvent[SPEAKER_SPOTLIGHT] == null;
         final userIsSpeaking = selectedEvent[SPEAKER_SPOTLIGHT] == userUID;
-        final sessionHasBegun = selectedEvent[HAS_BEGUN];
-
-        final everyoneIsOnline =
-            selectedEvent[IS_ONLINE].every((e) => e == true);
 
         yield SessionMetadata(
+          sessionUID: sessionUID,
           speakingTimerStart: speakingTimerStart,
           secondarySpotlightIsEmpty: secondarySpotlightIsEmpty,
           speakerUID: speakerUID,
           userIsInSecondarySpeakingSpotlight:
               userIsInSecondarySpeakingSpotlight,
-          phases: phases,
-          content: content,
           userCanSpeak: userCanSpeak,
           userIsSpeaking: userIsSpeaking,
-          sessionHasBegun: sessionHasBegun,
-          everyoneIsOnline: everyoneIsOnline,
+          collaboratorInformation: collaboratorInformation,
+          sessionStatus: sessionStatus,
         );
       }
     }

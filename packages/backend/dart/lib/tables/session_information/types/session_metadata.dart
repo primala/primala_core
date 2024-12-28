@@ -1,36 +1,32 @@
 import 'package:equatable/equatable.dart';
+import 'package:nokhte_backend/tables/session_information.dart';
+import 'package:nokhte_backend/types/types.dart';
 
 class SessionMetadata extends Equatable {
-  final bool everyoneIsOnline;
-  final List phases;
-  final bool sessionHasBegun;
   final bool userCanSpeak;
+  final String sessionUID;
+  final List<SessionUserInfoEntity> collaboratorInformation;
+  final SessionStatus sessionStatus;
   final bool userIsSpeaking;
   final bool secondarySpotlightIsEmpty;
   final bool userIsInSecondarySpeakingSpotlight;
   final String? speakerUID;
   final DateTime speakingTimerStart;
-  final List content;
 
   SessionMetadata({
-    required this.everyoneIsOnline,
-    required this.phases,
+    required this.sessionUID,
+    required this.collaboratorInformation,
+    required this.sessionStatus,
     required this.userCanSpeak,
     required this.userIsSpeaking,
     required this.secondarySpotlightIsEmpty,
     required this.speakerUID,
-    required this.sessionHasBegun,
     required this.speakingTimerStart,
-    required this.content,
     required this.userIsInSecondarySpeakingSpotlight,
   });
 
   @override
   List<Object> get props => [
-        everyoneIsOnline,
-        phases,
-        content,
-        sessionHasBegun,
         userCanSpeak,
         userIsSpeaking,
         secondarySpotlightIsEmpty,

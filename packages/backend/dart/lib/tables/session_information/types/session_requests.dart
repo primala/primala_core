@@ -2,19 +2,16 @@ import 'package:equatable/equatable.dart';
 
 class SessionRequests extends Equatable {
   final String sessionUID;
-  final String sessionLeaderFirstName;
-  final int userIndex;
+  final String groupName;
 
   SessionRequests({
     required this.sessionUID,
-    required this.sessionLeaderFirstName,
-    required this.userIndex,
+    required this.groupName,
   });
 
   @override
   List<Object> get props => [
         sessionUID,
-        sessionLeaderFirstName,
-        userIndex,
+        groupName,
       ];
 }
