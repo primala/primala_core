@@ -56,7 +56,7 @@ class SessionStarterDropdown extends StatelessWidget {
               items: store.availableQueues.map((queue) {
                 return DropdownMenuItem(
                   value: queue,
-                  child: Text(queue.toString()),
+                  child: Text(queue.title),
                 );
               }).toList(),
               onChanged:

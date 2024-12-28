@@ -1,8 +1,7 @@
 import 'package:nokhte/app/modules/home/home.dart';
 import 'package:nokhte_backend/tables/collaborator_relationships.dart';
 import 'package:nokhte_backend/tables/collaborator_requests.dart';
-import 'package:nokhte_backend/tables/realtime_active_sessions.dart';
-import 'package:nokhte_backend/tables/static_active_sessions.dart';
+import 'package:nokhte_backend/tables/session_information.dart';
 import 'package:nokhte_backend/tables/user_information.dart';
 import 'package:nokhte_backend/types/types.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -17,7 +16,7 @@ abstract class HomeRemoteSource {
   Future<List> getUserInformation();
   Future<List> initializeSession(InitializeSessionParams params);
   Stream<List<SessionRequests>> listenToSessionRequests();
-  Future<List> joinSession(JoinSessionParams params);
+  Future<List> joinSession(String params);
 }
 
 class HomeRemoteSourceImpl implements HomeRemoteSource {
@@ -27,9 +26,8 @@ class HomeRemoteSourceImpl implements HomeRemoteSource {
   final CollaboratorRelationshipsQueries collaboratorRelationshipsQueries;
   final CollaboratorRelationshipsStream collaboratorRelationshipsStream;
   final UserInformationQueries userInfoQueries;
-  final StaticActiveSessionQueries staticActiveSessionQueries;
-  final RealtimeActiveSessionQueries realTimeActiveSessionQueries;
-  final RealtimeActiveSessionStreams realTimeActiveSessionStreams;
+  final SessionInformationStreams sessionInformationStreams;
+  final SessionInformationQueries sessionInformationQueries;
 
   HomeRemoteSourceImpl({required this.supabase})
       : collaboratorRequestsStream =
@@ -38,13 +36,11 @@ class HomeRemoteSourceImpl implements HomeRemoteSource {
             CollaboratorRequestsQueries(supabase: supabase),
         collaboratorRelationshipsQueries =
             CollaboratorRelationshipsQueries(supabase: supabase),
-        realTimeActiveSessionQueries =
-            RealtimeActiveSessionQueries(supabase: supabase),
-        realTimeActiveSessionStreams =
-            RealtimeActiveSessionStreams(supabase: supabase),
+        sessionInformationStreams =
+            SessionInformationStreams(supabase: supabase),
+        sessionInformationQueries =
+            SessionInformationQueries(supabase: supabase),
         userInfoQueries = UserInformationQueries(supabase: supabase),
-        staticActiveSessionQueries =
-            StaticActiveSessionQueries(supabase: supabase),
         collaboratorRelationshipsStream =
             CollaboratorRelationshipsStream(supabase: supabase);
 
@@ -84,18 +80,12 @@ class HomeRemoteSourceImpl implements HomeRemoteSource {
 
   @override
   Future<List> initializeSession(InitializeSessionParams params) async =>
-      await staticActiveSessionQueries.initializeSession(
-        groupUID: params.groupUID,
-        queueUID: params.queueUID,
-      );
-
+      await sessionInformationQueries.initializeSession(params);
   @override
-  joinSession(params) async => await realTimeActiveSessionQueries.joinSession(
-        sessionUID: params.sessionUID,
-        userIndex: params.userIndex,
-      );
+  joinSession(params) async =>
+      await sessionInformationQueries.joinSession(params);
 
   @override
   listenToSessionRequests() =>
-      realTimeActiveSessionStreams.listenToSessionRequests().distinct();
+      sessionInformationStreams.listenToSessionRequests().distinct();
 }

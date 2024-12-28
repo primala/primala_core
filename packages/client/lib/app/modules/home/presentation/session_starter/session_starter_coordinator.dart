@@ -5,6 +5,7 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/modules/home/home.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
+import 'package:nokhte_backend/tables/session_information.dart';
 part 'session_starter_coordinator.g.dart';
 
 class SessionStarterCoordinator = _SessionStarterCoordinatorBase
@@ -41,10 +42,11 @@ abstract class _SessionStarterCoordinatorBase with Store, Reactions {
         (p0) => widgets.sessionStarterDropdown.tapCount,
         (p0) async {
           if (p0 == 1) {
-            await homeLogic.initializeSession(InitializeSessionParams(
-              groupUID: widgets.sessionStarterDropdown.groupUID,
-              queueUID: widgets.sessionStarterDropdown.queueUID,
-            ));
+            await homeLogic.initializeSession(
+              InitializeSessionParams(
+                groupUID: widgets.sessionStarterDropdown.groupUID,
+              ),
+            );
             Modular.to.navigate(
               HomeConstants.quickActionsRouter,
               arguments: {
