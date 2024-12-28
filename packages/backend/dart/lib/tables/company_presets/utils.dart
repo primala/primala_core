@@ -1,4 +1,4 @@
-import 'package:nokhte_backend/tables/company_presets.dart';
+import 'package:nokhte_backend/tables/company_presets/types/types.dart';
 
 mixin CompanyPresetsUtils {
   static List<SessionTags> mapTagsToEnum(List tags) =>
