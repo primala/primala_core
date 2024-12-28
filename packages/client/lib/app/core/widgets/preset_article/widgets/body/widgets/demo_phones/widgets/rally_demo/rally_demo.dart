@@ -101,7 +101,7 @@ class RallyDemo extends HookWidget with RallyConstants {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Image.asset(
-                          'assets/rally_button_blue.png',
+                          'assets/power_up/rally_button_blue.png',
                           width: iconWidth,
                           height: iconWidth,
                         ),
@@ -154,7 +154,7 @@ class RallyDemo extends HookWidget with RallyConstants {
                         child: Column(
                           children: [
                             Image.asset(
-                              'assets/rally_button_blue.png',
+                              'assets/power_up/rally_button_blue.png',
                               width: iconWidth,
                               height: iconWidth,
                             ),
@@ -175,7 +175,7 @@ class RallyDemo extends HookWidget with RallyConstants {
                         child: Column(
                           children: [
                             Image.asset(
-                              'assets/rally_button_red.png',
+                              'assets/power_up/rally_button_red.png',
                               width: iconWidth,
                               height: iconWidth,
                             ),
@@ -206,7 +206,7 @@ class RallyDemo extends HookWidget with RallyConstants {
                         child: Column(
                           children: [
                             Image.asset(
-                              'assets/rally_button_blue.png',
+                              'assets/power_up/rally_button_blue.png',
                               width: iconWidth,
                               height: iconWidth,
                             ),

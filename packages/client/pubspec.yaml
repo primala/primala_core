@@ -60,26 +60,41 @@ flutter:
   uses-material-design: true
   assets:
     - .env
-    - assets/app_logo.png
-    - assets/flexible_seating.png
-    - assets/strict_seating.png
-    - assets/apple_icon.png
-    - assets/google_icon.png
-    - assets/cook_button.png
-    - assets/rounded_triangle.png
-    - assets/rally_button_blue.png
-    - assets/rally_button_red.png
-    - assets/rally_button_white.png
-    - assets/camera_icon.png
-    - assets/qr_code_icon.png
-    - assets/home_beach_icon.png
-    - assets/end_session_icon.png
-    - assets/session_information_icon.png
-    - assets/pause_icon.png
-    - assets/storage_icon.png
-    - assets/queue_icon.png
-    - assets/add_remove_icon.png
+    - assets/article/flexible_seating.png
+    - assets/article/strict_seating.png
+
+    - assets/groups/storage_icon.png
+    - assets/groups/queue_icon.png
+    - assets/groups/add_remove_icon.png
+
+    - assets/blocks/conclusion_icon.png
+    - assets/blocks/conclusion_send_icon.png
+    - assets/blocks/idea_icon.png
+    - assets/blocks/idea_send_icon.png
+    - assets/blocks/purpose_icon.png
+    - assets/blocks/purpose_send_icon.png
+    - assets/blocks/question_icon.png
+    - assets/blocks/question_send_icon.png
+    - assets/blocks/quotation_icon.png
+    - assets/blocks/quotation_send_icon.png
+
+    - assets/home/camera_icon.png
+    - assets/home/qr_code_icon.png
+
+    - assets/login/apple_icon.png
+    - assets/login/google_icon.png
+
+    - assets/power_up/cook_button.png
+    - assets/power_up/rally_button_blue.png
+    - assets/power_up/rally_button_red.png
+    - assets/power_up/rally_button_white.png
+
+    - assets/session/rounded_triangle.png
+    - assets/session/home_beach_icon.png
+    - assets/session/end_session_icon.png
+    - assets/session/session_information_icon.png
+    - assets/session/pause_icon.png
+
 flutter_icons:
-  image_path: "assets/app_logo.png"
   android: true
   ios: true

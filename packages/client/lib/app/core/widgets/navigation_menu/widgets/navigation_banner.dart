@@ -39,7 +39,7 @@ class NavigationBanner extends HookWidget {
               Padding(
                 padding: EdgeInsets.only(top: size * .06),
                 child: Image.asset(
-                  'assets/rounded_triangle.png',
+                  'assets/session/rounded_triangle.png',
                   width: size * .4,
                   height: size * .4,
                 ),
@@ -66,7 +66,7 @@ class NavigationBanner extends HookWidget {
                 child: Padding(
                   padding: EdgeInsets.only(top: size * .06),
                   child: Image.asset(
-                    'assets/rounded_triangle.png',
+                    'assets/session/rounded_triangle.png',
                     width: size * .4,
                     height: size * .4,
                   ),

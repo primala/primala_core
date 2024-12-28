@@ -66,7 +66,7 @@ class LetEmCookDemo extends HookWidget {
                             height: iconWidth,
                             width: iconWidth,
                             child: Image.asset(
-                              'assets/cook_button.png',
+                              'assets/power_up/cook_button.png',
                               width: iconWidth,
                               height: iconWidth,
                             ),
