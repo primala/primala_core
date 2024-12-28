@@ -1,16 +1,12 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
-import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
-import 'package:nokhte/app/core/extensions/extensions.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/types/types.dart';
-import 'package:nokhte/app/modules/presets/presets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte/app/modules/storage/storage.dart';
-import 'package:nokhte_backend/tables/company_presets.dart';
-import 'package:nokhte_backend/tables/realtime_active_sessions.dart';
+import 'package:nokhte_backend/tables/session_content.dart';
+import 'package:nokhte_backend/tables/session_information.dart';
 part 'session_metadata_store.g.dart';
 
 class SessionMetadataStore = _SessionMetadataStoreBase
@@ -19,12 +15,8 @@ class SessionMetadataStore = _SessionMetadataStoreBase
 abstract class _SessionMetadataStoreBase
     with Store, BaseMobxLogic<NoParams, Stream<SessionMetadata>> {
   final SessionPresenceContract contract;
-  final PresetsLogicCoordinator presetsLogic;
-  final StorageLogicCoordinator storageLogic;
   _SessionMetadataStoreBase({
     required this.contract,
-    required this.presetsLogic,
-    required this.storageLogic,
   }) {
     initBaseLogicActions();
   }
@@ -39,7 +31,17 @@ abstract class _SessionMetadataStoreBase
   bool userIsSpeaking = false;
 
   @observable
-  ObservableList<NameAndUID> namesAndUIDs = ObservableList.of([]);
+  String userUID = '';
+
+  @observable
+  String sessionUID = '';
+
+  @observable
+  ObservableList<SessionUserInfoEntity> collaboratorInformation =
+      ObservableList.of([]);
+
+  @observable
+  ObservableList<ContentBlock> content = ObservableList.of([]);
 
   @observable
   String? currentSpeakerUID = '';
@@ -59,12 +61,6 @@ abstract class _SessionMetadataStoreBase
 
   @observable
   bool userCanSpeak = false;
-
-  @observable
-  ObservableList<double> currentPhases = ObservableList.of([]);
-
-  @observable
-  ObservableList<String> content = ObservableList.of([]);
 
   @observable
   bool secondarySpeakerSpotlightIsEmpty = false;
@@ -97,55 +93,27 @@ abstract class _SessionMetadataStoreBase
   ObservableStream<SessionMetadata> sessionMetadata =
       ObservableStream(const Stream.empty());
 
-  StreamSubscription streamSubscription =
+  @observable
+  ObservableStream<List<ContentBlock>> sessionContent =
+      ObservableStream(const Stream.empty());
+
+  StreamSubscription metadataStreamSubscription =
+      const Stream.empty().listen((event) {});
+
+  StreamSubscription contentStreamSubscription =
       const Stream.empty().listen((event) {});
 
   @action
-  resetValues() {
-    setState(StoreState.initial);
-    presetsLogic.reset();
-    currentPhases = ObservableList.of([]);
-  }
-
-  @action
   dispose() {
-    streamSubscription = const Stream.empty().listen((event) {});
+    metadataStreamSubscription = const Stream.empty().listen((event) {});
+    contentStreamSubscription = const Stream.empty().listen((event) {});
     sessionMetadata = ObservableStream(const Stream.empty());
+    sessionContent = ObservableStream(const Stream.empty());
   }
 
   @action
-  _getStaticMetadata() async {
-    final res = await contract.getSTSessionMetadata(const NoParams());
-    res.fold((failure) => mapFailureToMessage(failure), (entity) async {
-      if (presetsLogic.presetsEntity.uids.isEmpty) {
-        userIndex = entity.userIndex;
-        namesAndUIDs = ObservableList.of(entity.namesAndUIDs);
-        presetUID = entity.presetUID;
-        groupUID = entity.groupUID;
-        queueUID = entity.queueUID;
-        sessionStartTime = entity.createdAt;
-        leaderUID = entity.leaderUID;
-        await presetsLogic.getCompanyPresets(Right(entity.presetUID));
-        if (groupUID.isNotEmpty) {
-          // get group information
-        }
-        if (queueUID.isNotEmpty) {
-          // get queue information
-        }
-      }
-    });
-  }
-
-  @action
-  refetchStaticMetadata() async {
-    presetsLogic.reset();
-    await _getStaticMetadata();
-  }
-
-  @action
-  Future<void> get(params) async {
-    resetValues();
-    final result = await contract.listenToRTSessionMetadata(params);
+  Future<void> get() async {
+    final result = await contract.listenToSessionMetadata();
     result.fold(
       (failure) {
         setErrorMessage(mapFailureToMessage(failure));
@@ -153,23 +121,40 @@ abstract class _SessionMetadataStoreBase
       },
       (stream) {
         sessionMetadata = ObservableStream(stream);
-        streamSubscription = sessionMetadata.listen((value) async {
-          if (value.phases.length != currentPhases.length) {
-            await _getStaticMetadata();
-          }
-          everyoneIsOnline = value.everyoneIsOnline;
-          final phases = value.phases.map((e) => double.parse(e.toString()));
+        metadataStreamSubscription = sessionMetadata.listen((value) async {
+          // this is computed
+          everyoneIsOnline = value.collaboratorInformation.every(
+            (element) => element.sessionUserStatus != SessionUserStatus.offline,
+          );
+          collaboratorInformation =
+              ObservableList.of(value.collaboratorInformation);
+          // collaboratorStatuses = value.collaboratorInformation
           speakingTimerStart = value.speakingTimerStart;
           secondarySpeakerSpotlightIsEmpty = value.secondarySpotlightIsEmpty;
           userIsInSecondarySpeakingSpotlight =
               value.userIsInSecondarySpeakingSpotlight;
           currentSpeakerUID = value.speakerUID;
-          final strContent = value.content.map((e) => e.toString());
-          content = ObservableList.of(strContent);
-          currentPhases = ObservableList.of(phases);
-          sessionHasBegun = value.sessionHasBegun;
+          sessionHasBegun = value.sessionStatus == SessionStatus.started;
+          // final strContent = value.content.map((e) => e.toString());
+          // content = ObservableList.of(strContent);
+          // currentPhases = ObservableList.of(phases);
+          // sessionHasBegun = value.sessionHasBegun;
           userIsSpeaking = value.userIsSpeaking;
           userCanSpeak = value.userCanSpeak;
+          sessionUID = value.sessionUID;
+          final res = await contract.listenToSessionContent(sessionUID);
+          res.fold(
+            (failure) {
+              setErrorMessage(mapFailureToMessage(failure));
+              setState(StoreState.initial);
+            },
+            (stream) {
+              sessionContent = ObservableStream(stream);
+              contentStreamSubscription = stream.listen((value) {
+                content = ObservableList.of(value);
+              });
+            },
+          );
 
           setState(StoreState.loaded);
         });
@@ -178,47 +163,31 @@ abstract class _SessionMetadataStoreBase
   }
 
   getUIDFromName(String name) {
-    for (var nameAndUID in namesAndUIDs) {
-      if (nameAndUID.name == name) {
-        return nameAndUID.uid;
+    for (var collaborator in collaboratorInformation) {
+      if (collaborator.fullName == name) {
+        return collaborator.uid;
       }
     }
   }
 
   @computed
-  bool get canStartTheSession =>
-      (currentPhases.every((e) => e >= 1.0) &&
-          currentPhases.length.isGreaterThan(1)) ||
-      presetType == PresetTypes.solo;
+  bool get canStartTheSession => collaboratorStatuses
+      .every((element) => element == SessionUserStatus.readyToStart);
 
   @computed
-  bool get canStartUsingSession =>
-      currentPhases.every((e) => e.isGreaterThanOrEqualTo(2));
+  bool get canStartUsingSession => collaboratorStatuses
+      .every((element) => element == SessionUserStatus.online);
 
   @computed
-  bool get canExitTheSession => currentPhases.every((e) => e == 3);
-
-  @computed
-  bool get canReturnHome =>
-      currentPhases.every((e) => e.isGreaterThanOrEqualTo(5));
-
-  @computed
-  double get userPhase => currentPhases[userIndex];
-
-  @computed
-  int get numberOfAffirmative {
-    int count = 0;
-    for (double value in currentPhases) {
-      if (value == affirmativePhase) {
-        count++;
-      }
-    }
-    return count;
-  }
+  bool get canExitTheSession => collaboratorStatuses
+      .every((element) => element == SessionUserStatus.readyToLeave);
 
   @computed
   String get currentPurpose =>
-      content.isEmpty ? 'No purpose yet' : content.last;
+      content.isEmpty ? 'No purpose yet' : content.last.content;
+
+  @computed
+  bool get canStillAbort => numberOfCollaborators == 1;
 
   @computed
   String get currentGroup =>
@@ -258,9 +227,9 @@ abstract class _SessionMetadataStoreBase
   String get currentSpeakerFirstName {
     if (currentSpeakerUID != null) {
       String name = '';
-      for (var nameAndUID in namesAndUIDs) {
-        if (nameAndUID.uid == currentSpeakerUID) {
-          name = nameAndUID.name.split(' ').first;
+      for (var collaborator in collaboratorInformation) {
+        if (collaborator.uid == currentSpeakerUID) {
+          name = collaborator.fullName.split(' ').first;
         }
       }
       return name;
@@ -283,72 +252,41 @@ abstract class _SessionMetadataStoreBase
       glowColor != GlowColor.green;
 
   @computed
-  int get numberOfCollaborators => currentPhases.length;
+  int get numberOfCollaborators => collaboratorInformation.length;
 
   @computed
-  bool get canStillLeave {
-    int count = 0;
-    for (double phase in currentPhases) {
-      if (phase > 0.5) {
-        count++;
-      }
-    }
-    return count > 1;
-  }
-
-  @computed
-  bool get someoneIsTakingANote =>
-      currentPhases.any((element) => element == 2.5);
+  bool get canStillLeave => collaboratorInformation.length < 2;
 
   @computed
   List<String> get fullNames {
     final names = <String>[];
-    for (int i = 0; i < namesAndUIDs.length; i++) {
+    for (int i = 0; i < collaboratorInformation.length; i++) {
       if (i != userIndex) {
-        names.add(namesAndUIDs[i].name);
+        names.add(collaboratorInformation[i].fullName);
       }
     }
-
     return names;
   }
 
   @computed
-  CompanyPresetsEntity get presetEntity => presetsLogic.presetsEntity;
-
-  @computed
-  SessionScreenTypes get screenType => presetEntity.articles.isEmpty
-      ? SessionScreenTypes.none
-      : presetEntity.screenTypes.first;
-
-  @computed
-  PresetTypes get presetType => presetEntity.articles.isEmpty
-      ? PresetTypes.none
-      : presetEntity.presets.first;
-
-  @computed
-  List<SessionTags> get tags {
-    if (presetEntity.tags.isEmpty) {
-      return [];
-    } else {
-      final list = <SessionTags>[];
-      for (var section in presetEntity.articles.first.articleSections) {
-        list.add(section.tag);
+  List<String> get collaboratorUIDs {
+    final uids = <String>[];
+    for (int i = 0; i < collaboratorInformation.length; i++) {
+      if (i != userIndex) {
+        uids.add(collaboratorInformation[i].uid);
       }
-      return list;
     }
+    return uids;
   }
 
   @computed
-  PresetArticleEntity get article => presetEntity.articles.first;
-
-  @computed
-  List<bool> get canRallyArray {
-    final list = <bool>[];
-    for (int i = 0; i < currentPhases.length; i++) {
+  List<SessionUserStatus> get collaboratorStatuses {
+    final statuses = <SessionUserStatus>[];
+    for (int i = 0; i < collaboratorInformation.length; i++) {
       if (i != userIndex) {
-        list.add(currentPhases[i] == 2.0);
+        statuses.add(collaboratorInformation[i].sessionUserStatus);
       }
     }
-    return list;
+    return statuses;
   }
 }

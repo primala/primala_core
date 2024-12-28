@@ -1,112 +1,97 @@
 import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte_backend/tables/finished_sessions.dart';
-import 'package:nokhte_backend/tables/realtime_active_sessions.dart';
-import 'package:nokhte_backend/tables/static_active_sessions.dart';
+import 'package:nokhte_backend/tables/session_information.dart';
+import 'package:nokhte_backend/tables/session_content.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class SessionPresenceRemoteSource {
-  Future<List> updateOnlineStatus(bool params);
   Future<List> setUserAsCurrentTalker();
   Future<List> clearTheCurrentTalker();
-  Future<List> updateCurrentPhase(double params);
   Stream<SessionMetadata> listenToSessionMetadata();
   Future<bool> cancelSessionMetadataStream();
+  Future<bool> cancelSessionContentStream();
+  Future<List> updateUserStatus(SessionUserStatus params);
   Future<List> addContent(AddContentParams content);
   Future<List> letEmCook();
   Future<List> rally(
     RallyParams params,
   );
   String getUserUID();
-  Future<List> getStaticSessionMetadata();
-  Future<FunctionResponse> completeTheSession();
+  Future<List> completeTheSession();
   Future<List> startTheSession();
   Future<List> updateSpeakingTimerStart();
-  Future<List> updateGroupUID(String params);
-  Future<List> updateQueueUID(String params);
-  Future<List> setContent(List params);
-  Future<List> moveQueueToTheTop(MoveQueueToTopParams params);
+  Stream<List<ContentBlock>> listenToSessionContent(String params);
 }
 
 class SessionPresenceRemoteSourceImpl implements SessionPresenceRemoteSource {
   final SupabaseClient supabase;
-  final RealtimeActiveSessionQueries rtQueries;
-  final StaticActiveSessionQueries stQueries;
-  final RealtimeActiveSessionStreams stream;
-  final FinishedSessionsQueries finishedQueries;
+  final SessionInformationQueries sessionInformationQueries;
+  final SessionInformationStreams sessionInformationStreams;
+  final SessionContentQueries sessionContentQueries;
+  final SessionContentStreams sessionContentStreams;
   SessionPresenceRemoteSourceImpl({required this.supabase})
-      : rtQueries = RealtimeActiveSessionQueries(supabase: supabase),
-        stQueries = StaticActiveSessionQueries(supabase: supabase),
-        finishedQueries = FinishedSessionsQueries(supabase: supabase),
-        stream = RealtimeActiveSessionStreams(supabase: supabase);
+      : sessionInformationQueries =
+            SessionInformationQueries(supabase: supabase),
+        sessionContentQueries = SessionContentQueries(supabase: supabase),
+        sessionContentStreams = SessionContentStreams(supabase: supabase),
+        sessionInformationStreams =
+            SessionInformationStreams(supabase: supabase);
 
   @override
-  cancelSessionMetadataStream() => stream.cancelGetSessionMetadataStream();
+  cancelSessionMetadataStream() =>
+      sessionInformationStreams.cancelGetSessionMetadataStream();
 
   @override
-  clearTheCurrentTalker() async =>
-      await rtQueries.updateSpeakerSpotlight(addUserToSpotlight: false);
+  clearTheCurrentTalker() async => await sessionInformationQueries
+      .updateSpeakerSpotlight(addUserToSpotlight: false);
 
   @override
-  listenToSessionMetadata() => stream.listenToPresenceMetadata();
+  listenToSessionMetadata() =>
+      sessionInformationStreams.listenToPresenceMetadata();
 
   @override
-  setUserAsCurrentTalker() async => await rtQueries.updateSpeakerSpotlight(
+  setUserAsCurrentTalker() async =>
+      await sessionInformationQueries.updateSpeakerSpotlight(
         addUserToSpotlight: true,
         time: DateTime.now(),
       );
 
   @override
-  updateCurrentPhase(params) async =>
-      await rtQueries.updateCurrentPhases(params);
+  completeTheSession() async =>
+      await sessionInformationQueries.cleanUpSessions();
 
   @override
-  updateOnlineStatus(params) async => await rtQueries.updateOnlineStatus(
-        params,
-      );
+  addContent(param) async => await sessionContentQueries.addContent(param);
 
   @override
-  completeTheSession() async => await rtQueries.completeTheSession();
-
-  @override
-  addContent(param) async => await rtQueries.addContent(
-        param.content,
-        insertionIndex: param.insertAt,
-      );
-
-  @override
-  startTheSession() async => await rtQueries.beginSession();
+  startTheSession() async => await sessionInformationQueries.beginSession();
 
   @override
   getUserUID() => supabase.auth.currentUser?.id ?? '';
 
   @override
-  getStaticSessionMetadata() async => await stQueries.select();
+  letEmCook() async =>
+      await sessionInformationQueries.refreshSpeakingTimerStart();
 
   @override
-  letEmCook() async => await rtQueries.refreshSpeakingTimerStart();
-
-  @override
-  rally(params) async {
-    return await rtQueries.updateSecondarySpeakerSpotlight(
-      addToSecondarySpotlight: params.shouldAdd,
-      secondarySpeakerUID: params.userUID,
-    );
-  }
+  rally(params) async =>
+      await sessionInformationQueries.updateSecondarySpeakerSpotlight(
+        addToSecondarySpotlight: params.shouldAdd,
+        secondarySpeakerUID: params.userUID,
+      );
 
   @override
   updateSpeakingTimerStart() async =>
-      await rtQueries.updateSpeakingTimerStart();
+      await sessionInformationQueries.updateSpeakingTimerStart();
 
   @override
-  updateGroupUID(params) async => await stQueries.updateGroupUID(params);
+  updateUserStatus(params) async =>
+      await sessionInformationQueries.updateUserStatus(params);
 
   @override
-  setContent(params) async => await rtQueries.setContent(params);
+  listenToSessionContent(params) =>
+      sessionContentStreams.listenToContent(params);
 
   @override
-  updateQueueUID(params) async => await stQueries.updateQueueUID(params);
-
-  @override
-  moveQueueToTheTop(params) async => await rtQueries.moveQueueToTheTop(
-      index: params.queueIndex, content: params.content);
+  cancelSessionContentStream() async =>
+      await sessionContentStreams.cancelContentListeningStream();
 }

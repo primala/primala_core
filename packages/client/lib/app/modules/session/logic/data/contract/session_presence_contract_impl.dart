@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:nokhte/app/core/constants/constants.dart';
-import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mixins/mixin.dart';
 import 'package:nokhte/app/core/network/network_info.dart';
 import 'package:nokhte/app/modules/session/session.dart';
@@ -26,17 +25,17 @@ class SessionPresenceContractImpl
   }
 
   @override
-  completeTheSession(params) async {
+  completeTheSession() async {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.completeTheSession();
-      return fromFunctionResponse(res);
+      return fromSupabase(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }
   }
 
   @override
-  listenToRTSessionMetadata(params) async {
+  listenToSessionMetadata() async {
     if (await networkInfo.isConnected) {
       final res = remoteSource.listenToSessionMetadata();
       return Right(res);
@@ -46,19 +45,9 @@ class SessionPresenceContractImpl
   }
 
   @override
-  updateCurrentPhase(params) async {
+  updateUserStatus(params) async {
     if (await networkInfo.isConnected) {
-      final res = await remoteSource.updateCurrentPhase(params);
-      return fromSupabase(res);
-    } else {
-      return Left(FailureConstants.internetConnectionFailure);
-    }
-  }
-
-  @override
-  updateOnlineStatus(params) async {
-    if (await networkInfo.isConnected) {
-      final res = await remoteSource.updateOnlineStatus(params);
+      final res = await remoteSource.updateUserStatus(params);
       return fromSupabase(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
@@ -82,29 +71,14 @@ class SessionPresenceContractImpl
   }
 
   @override
-  cancelSessionMetadataStream(NoParams params) async =>
+  cancelSessionMetadataStream() async =>
       await remoteSource.cancelSessionMetadataStream();
 
   @override
-  startTheSession(params) async {
+  startTheSession() async {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.startTheSession();
       return fromSupabase(res);
-    } else {
-      return Left(FailureConstants.internetConnectionFailure);
-    }
-  }
-
-  @override
-  getSTSessionMetadata(params) async {
-    if (await networkInfo.isConnected) {
-      final sessionRes = await remoteSource.getStaticSessionMetadata();
-      return Right(
-        StaticSessionMetadataModel.fromSupabase(
-          sessionRes,
-          remoteSource.getUserUID(),
-        ),
-      );
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }
@@ -136,33 +110,16 @@ class SessionPresenceContractImpl
   }
 
   @override
-  updateGroupUID(params) async {
+  listenToSessionContent(params) async {
     if (await networkInfo.isConnected) {
-      final res = await remoteSource.updateGroupUID(params);
-      return fromSupabase(res);
+      final res = remoteSource.listenToSessionContent(params);
+      return Right(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }
   }
 
   @override
-  updateQueueUID(params) async {
-    if (await networkInfo.isConnected) {
-      final queueRes = await remoteSource.updateQueueUID(params.queueUID);
-      await remoteSource.setContent(params.content);
-      return fromSupabase(queueRes);
-    } else {
-      return Left(FailureConstants.internetConnectionFailure);
-    }
-  }
-
-  @override
-  moveQueueToTheTop(params) async {
-    if (await networkInfo.isConnected) {
-      final res = await remoteSource.moveQueueToTheTop(params);
-      return fromSupabase(res);
-    } else {
-      return Left(FailureConstants.internetConnectionFailure);
-    }
-  }
+  cancelSessionContentStream() async =>
+      await remoteSource.cancelSessionContentStream();
 }

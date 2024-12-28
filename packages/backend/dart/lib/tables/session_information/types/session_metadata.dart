@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:nokhte_backend/tables/session_information.dart';
-import 'package:nokhte_backend/types/types.dart';
 
 class SessionMetadata extends Equatable {
   final bool userCanSpeak;

@@ -35,8 +35,6 @@ class SessionLogicModule extends Module {
     );
     i.add<SessionMetadataStore>(
       () => SessionMetadataStore(
-        storageLogic: Modular.get<StorageLogicCoordinator>(),
-        presetsLogic: Modular.get<PresetsLogicCoordinator>(),
         contract: Modular.get<SessionPresenceContractImpl>(),
       ),
     );

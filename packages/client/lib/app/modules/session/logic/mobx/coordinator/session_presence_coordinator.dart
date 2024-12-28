@@ -2,9 +2,10 @@
 import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
-import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/modules/session/session.dart';
+import 'package:nokhte_backend/tables/session_content.dart';
+import 'package:nokhte_backend/tables/session_information.dart';
 part 'session_presence_coordinator.g.dart';
 
 class SessionPresenceCoordinator = _SessionPresenceCoordinatorBase
@@ -28,28 +29,13 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
   bool contentIsUpdated = false;
 
   @observable
-  bool queueIsMovedToTheTop = false;
-
-  @observable
-  bool queueUIDIsUpdated = false;
-
-  @observable
-  bool groupUIDIsUpdated = false;
-
-  @observable
-  bool purposeIsUpdated = false;
-
-  @observable
   bool sessionIsFinished = false;
 
   @observable
-  bool onlineStatusIsUpdated = false;
+  bool userStatusIsUpdated = false;
 
   @observable
   bool whoIsTalkingIsUpdated = false;
-
-  @observable
-  bool currentPhaseIsUpdated = false;
 
   @observable
   bool powerUpIsUsed = false;
@@ -77,7 +63,8 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
   @action
   dispose() async {
     setState(StoreState.loading);
-    final res = await contract.cancelSessionMetadataStream(const NoParams());
+    final res = await contract.cancelSessionMetadataStream();
+    await contract.cancelSessionContentStream();
     await sessionMetadataStore.dispose();
     isListening = res;
     setState(StoreState.loaded);
@@ -86,7 +73,7 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
   @action
   listen() {
     setState(StoreState.loading);
-    sessionMetadataStore.get(const NoParams());
+    sessionMetadataStore.get();
     setState(StoreState.loaded);
   }
 
@@ -102,7 +89,7 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
 
   @action
   completeTheSession() async {
-    final res = await contract.completeTheSession(const NoParams());
+    final res = await contract.completeTheSession();
     res.fold(
       (failure) => errorUpdater(failure),
       (sessionUpdateStatus) => sessionIsFinished = sessionUpdateStatus,
@@ -133,29 +120,19 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
   }
 
   @action
-  updateOnlineStatus(bool params) async {
-    onlineStatusIsUpdated = false;
+  updateUserStatus(SessionUserStatus params) async {
+    userStatusIsUpdated = false;
     setState(StoreState.loading);
-    final res = await contract.updateOnlineStatus(params);
+    final res = await contract.updateUserStatus(params);
     res.fold((failure) => errorUpdater(failure),
-        (status) => onlineStatusIsUpdated = status);
-    setState(StoreState.loaded);
-  }
-
-  @action
-  updateCurrentPhase(double params) async {
-    currentPhaseIsUpdated = false;
-    setState(StoreState.loading);
-    final res = await contract.updateCurrentPhase(params);
-    res.fold((failure) => errorUpdater(failure),
-        (status) => currentPhaseIsUpdated = status);
+        (status) => userStatusIsUpdated = status);
     setState(StoreState.loaded);
   }
 
   @action
   startTheSession() async {
     setState(StoreState.loading);
-    final res = await contract.startTheSession(const NoParams());
+    final res = await contract.startTheSession();
     res.fold(
       (failure) => errorUpdater(failure),
       (status) => sessionStartStatusIsUpdated = status,
@@ -170,39 +147,6 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
     res.fold(
       (failure) => errorUpdater(failure),
       (status) => powerUpIsUsed = status,
-    );
-    setState(StoreState.loaded);
-  }
-
-  @action
-  updateQueueUID(UpdateQueueUIDParams params) async {
-    setState(StoreState.loading);
-    final res = await contract.updateQueueUID(params);
-    res.fold(
-      (failure) => errorUpdater(failure),
-      (status) => queueUIDIsUpdated = status,
-    );
-    setState(StoreState.loaded);
-  }
-
-  @action
-  updateGroupUID(String params) async {
-    setState(StoreState.loading);
-    final res = await contract.updateGroupUID(params);
-    res.fold(
-      (failure) => errorUpdater(failure),
-      (status) => groupUIDIsUpdated = status,
-    );
-    setState(StoreState.loaded);
-  }
-
-  @action
-  moveQueueToTheTop(MoveQueueToTopParams params) async {
-    setState(StoreState.loading);
-    final res = await contract.moveQueueToTheTop(params);
-    res.fold(
-      (failure) => errorUpdater(failure),
-      (status) => queueIsMovedToTheTop = status,
     );
     setState(StoreState.loaded);
   }
