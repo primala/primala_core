@@ -10,7 +10,7 @@ export 'types/types.dart';
 export 'widgets/widgets.dart';
 export 'widgets/navigation_beach_waves/stepwise_beach_waves_painter.dart';
 
-class NavigationMenu extends HookWidget with ArticleBodyUtils {
+class NavigationMenu extends HookWidget with OpacityUtilities {
   final NavigationMenuStore store;
   final BeachWavesStore beachWaves;
   final Widget? inBetweenWidgets;

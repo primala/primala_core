@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:simple_animations/simple_animations.dart';
 
-class NavigationBeachWaves extends HookWidget with ArticleBodyUtils {
+class NavigationBeachWaves extends HookWidget with OpacityUtilities {
   final double currentPosition;
   final Movie movie;
   final List<GradientConfig> gradients;

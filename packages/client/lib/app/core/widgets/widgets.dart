@@ -1,15 +1,12 @@
 export './back_button/back_button.dart';
 export 'beach_waves/beach_waves.dart';
-export 'preset_article/preset_article.dart';
 export 'gesture_cross/gesture_cross.dart';
 export 'utilities/utilities.dart';
 export 'nokhtes/nokhtes.dart';
 export "fonts/fonts.dart";
 export 'nokhte_blur/nokhte_blur.dart';
 export 'nokhte_qr_code/nokhte_qr_code.dart';
-export 'preset_cards/preset_cards.dart';
 export 'nokhte_gradient_text/nokhte_gradient_text.dart';
-export 'preset_icons/preset_icons.dart';
 export 'swipe_guide/swipe_guide.dart';
 export 'smart_text/smart_text.dart';
 export './tint/tint.dart';

@@ -4,7 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 
-class TopNavigationCarousel extends HookWidget with ArticleBodyUtils {
+class TopNavigationCarousel extends HookWidget with OpacityUtilities {
   final List<String> carouselItems;
   final Function(double) onScrolled;
   final bool isScrollEnabled;
