@@ -57,15 +57,6 @@ class SessionWidgetsModule extends Module {
       ),
     );
 
-    i.add<SessionPlaylistsWidgetsCoordinator>(
-      () => SessionPlaylistsWidgetsCoordinator(
-        queueSelector: QueueSelectorStore(),
-        navigationMenu: Modular.get<NavigationMenuStore>(),
-        headerText: SmartTextStore(),
-        wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
-      ),
-    );
-
     i.add<SessionCollaborationGreeterWidgetsCoordinator>(
       () => SessionCollaborationGreeterWidgetsCoordinator(
         touchRipple: TouchRippleStore(),
