@@ -1,5 +1,6 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
+import 'package:nokhte/app/core/modules/session_content/session_content.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
 
@@ -22,6 +23,9 @@ class StorageWidgetsModule extends Module {
               groupDisplaySessionCard: groupDisplaySessionCard,
               blur: NokhteBlurStore(),
               queueCreationModal: QueueCreationModalStore(
+                blockTextDisplay: BlockTextDisplayStore(
+                  blockTextFields: BlockTextFieldsStore(),
+                ),
                 groupDisplaySessionCard: groupDisplaySessionCard,
                 blur: NokhteBlurStore(),
               ),
@@ -35,14 +39,6 @@ class StorageWidgetsModule extends Module {
           wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
         );
       },
-    );
-    i.add<StorageContentWidgetsCoordinator>(
-      () => StorageContentWidgetsCoordinator(
-        backButton: BackButtonStore(),
-        contentCard: ContentCardStore(),
-        beachWaves: BeachWavesStore(),
-        wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
-      ),
     );
   }
 }
