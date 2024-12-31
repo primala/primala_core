@@ -8,7 +8,6 @@ export 'exit/exit.dart';
 export 'information/information.dart';
 export 'pause/pause.dart';
 export 'lobby/lobby.dart';
-export 'playlists/playlists.dart';
 export './shared/shared.dart';
 export 'action_slider_router/action_slider_router.dart';
 export 'collaboration_greeter/collaboration_greeter.dart';
@@ -32,16 +31,6 @@ class SessionCoreModule extends Module {
         captureScreen: Modular.get<CaptureScreen>(),
         tap: TapDetector(),
         widgets: Modular.get<SessionInformationWidgetsCoordinator>(),
-      ),
-    );
-
-    i.add<SessionPlaylistsCoordinator>(
-      () => SessionPlaylistsCoordinator(
-        storageLogic: Modular.get<StorageLogicCoordinator>(),
-        presence: Modular.get<SessionPresenceCoordinator>(),
-        captureScreen: Modular.get<CaptureScreen>(),
-        tap: TapDetector(),
-        widgets: Modular.get<SessionPlaylistsWidgetsCoordinator>(),
       ),
     );
 
@@ -90,14 +79,6 @@ class SessionCoreModule extends Module {
       transition: TransitionType.noTransition,
       child: (context) => ActionSliderRouterScreen(
         coordinator: Modular.get<ActionSliderRouterCoordinator>(),
-      ),
-    );
-
-    r.child(
-      SessionConstants.relativePlaylists,
-      transition: TransitionType.noTransition,
-      child: (context) => SessionPlaylistsScreen(
-        coordinator: Modular.get<SessionPlaylistsCoordinator>(),
       ),
     );
 
