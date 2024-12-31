@@ -6,6 +6,7 @@ import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
+import 'package:nokhte_backend/tables/session_information.dart';
 export 'group_display_queue_card_store.dart';
 
 class GroupDisplayQueueCard extends HookWidget {
@@ -67,7 +68,7 @@ class GroupDisplayQueueCard extends HookWidget {
   }
 
   Widget _buildQueueContainer(
-      dynamic queues, int index, double width, double height) {
+      SessionEntity queues, int index, double width, double height) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
@@ -105,31 +106,31 @@ class GroupDisplayQueueCard extends HookWidget {
               indent: 20,
               endIndent: 20,
             ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: queues.content.length,
-                itemBuilder: (context, contentIndex) {
-                  return GestureDetector(
-                    onTap: () {
-                      if (!showWidget) return;
-                      store.setCurrentlySelectedMessage(
-                        queues.content[contentIndex],
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5.0),
-                      child: Jost(
-                        queues.content[contentIndex],
-                        fontSize: 18,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
+            // Padding(
+            // padding: const EdgeInsets.all(15.0),
+            // child: ListView.builder(
+            //   shrinkWrap: true,
+            //   physics: const NeverScrollableScrollPhysics(),
+            //   itemCount: 0,
+            //   itemBuilder: (context, contentIndex) {
+            //     return GestureDetector(
+            //       onTap: () {
+            //         if (!showWidget) return;
+            //         // store.setCurrentlySelectedMessage(
+            //           // queues.content[contentIndex],
+            //         // );
+            //       },
+            //       child: Padding(
+            //         padding: const EdgeInsets.symmetric(vertical: 5.0),
+            //         child: Jost(
+            //           queues.content[contentIndex],
+            //           fontSize: 18,
+            //         ),
+            //       ),
+            //     );
+            //   },
+            // ),
+            // ),
           ],
         ],
       ),

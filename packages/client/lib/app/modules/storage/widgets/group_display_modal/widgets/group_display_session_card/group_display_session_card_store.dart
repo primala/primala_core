@@ -2,7 +2,7 @@
 
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
-import 'package:nokhte/app/modules/storage/storage.dart';
+import 'package:nokhte_backend/tables/session_information.dart';
 part 'group_display_session_card_store.g.dart';
 
 class GroupDisplaySessionCardStore = _GroupDisplaySessionCardStoreBase
@@ -14,8 +14,7 @@ abstract class _GroupDisplaySessionCardStoreBase extends BaseWidgetStore
   ObservableList<bool> expandedStates = ObservableList<bool>();
 
   @observable
-  ObservableList<SessionArtifactEntity> sessions =
-      ObservableList<SessionArtifactEntity>();
+  ObservableList<SessionEntity> sessions = ObservableList<SessionEntity>();
 
   @observable
   String currentlySelectedMessage = '';
@@ -29,7 +28,7 @@ abstract class _GroupDisplaySessionCardStoreBase extends BaseWidgetStore
   }
 
   @action
-  setSessions(List<SessionArtifactEntity> sessions) {
+  setSessions(List<SessionEntity> sessions) {
     this.sessions = ObservableList.of(sessions);
     expandedStates = ObservableList.of(List.filled(sessions.length, false));
   }
@@ -50,5 +49,5 @@ abstract class _GroupDisplaySessionCardStoreBase extends BaseWidgetStore
   String get sessionUIDToDelete =>
       currentlySelectedIndex == -1 || sessions.isEmpty
           ? ''
-          : sessions[currentlySelectedIndex].sessionUID;
+          : sessions[currentlySelectedIndex].uid;
 }
