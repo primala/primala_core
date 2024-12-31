@@ -902,3 +902,15 @@ as permissive
 for select
 to authenticated
 using (check_membership_from_session_uid(session_uid, auth.uid()));
+
+alter table "public"."session_content" drop constraint "session_content_parent_uid_fkey";
+
+alter table "public"."session_content" drop constraint "session_content_session_uid_fkey";
+
+alter table "public"."session_content" add constraint "session_content_parent_uid_fkey" FOREIGN KEY (parent_uid) REFERENCES session_content(uid) ON UPDATE CASCADE ON DELETE SET NULL not valid;
+
+alter table "public"."session_content" validate constraint "session_content_parent_uid_fkey";
+
+alter table "public"."session_content" add constraint "session_content_session_uid_fkey" FOREIGN KEY (session_uid) REFERENCES session_information(uid) ON UPDATE CASCADE ON DELETE CASCADE not valid;
+
+alter table "public"."session_content" validate constraint "session_content_session_uid_fkey";
