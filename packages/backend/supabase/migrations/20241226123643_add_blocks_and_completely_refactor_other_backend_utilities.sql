@@ -783,9 +783,9 @@ drop policy "Broad Permissions if Is a Group Member" on "public"."session_inform
 
 alter table "public"."session_information" drop constraint "session_information_collaborator_statuses_key";
 
-drop index if exists "public"."session_information_collaborator_statuses_key";
+-- drop index if exists "public"."session_information_collaborator_statuses_key";
 
-alter table "public"."session_information" alter column "collaborator_statuses" set data type session_user_status[] using "collaborator_statuses"::session_user_status[];
+-- alter table "public"."session_information" alter column "collaborator_statuses" set data type session_user_status[] using "collaborator_statuses"::session_user_status[];
 
 set check_function_bodies = off;
 
@@ -827,3 +827,78 @@ as permissive
 for update
 to authenticated
 using (is_group_member(auth.uid(), group_uid));
+
+
+alter table "public"."session_content" drop constraint "session_content_pkey";
+
+drop index if exists "public"."session_content_pkey";
+
+alter table "public"."session_information" drop column "collaborator_statuses";
+
+CREATE UNIQUE INDEX session_content_pkey ON public.session_content USING btree (uid);
+
+alter table "public"."session_content" add constraint "session_content_pkey" PRIMARY KEY using index "session_content_pkey";
+
+set check_function_bodies = off;
+
+CREATE OR REPLACE FUNCTION public.check_membership_from_session_uid(session_uid_param uuid, user_uid_param uuid)
+ RETURNS boolean
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    group_id uuid;
+BEGIN
+    -- Get the group_uid for the session
+    SELECT group_uid INTO group_id
+    FROM session_information
+    WHERE uid = session_uid_param;
+
+    -- If no session found, return false
+    IF group_id IS NULL THEN
+        RETURN false;
+    END IF;
+
+    -- Check if the user_uid exists in the group_members array
+    RETURN EXISTS (
+        SELECT 1
+        FROM group_information
+        WHERE uid = group_id
+        AND user_uid_param = ANY(group_members)
+    );
+END;
+$function$
+;
+
+
+alter table "public"."session_information" add column "collaborator_statuses" session_user_status[] not null;
+
+create policy "Can Delete if Is a Group Member"
+on "public"."session_content"
+as permissive
+for delete
+to authenticated
+using (check_membership_from_session_uid(session_uid, auth.uid()));
+
+
+create policy "Can Update if Is a Group Member"
+on "public"."session_content"
+as permissive
+for update
+to authenticated
+using (check_membership_from_session_uid(session_uid, auth.uid()));
+
+
+create policy "Enable insert for authenticated users only"
+on "public"."session_content"
+as permissive
+for insert
+to authenticated
+with check (true);
+
+
+create policy "can select if is a member"
+on "public"."session_content"
+as permissive
+for select
+to authenticated
+using (check_membership_from_session_uid(session_uid, auth.uid()));
