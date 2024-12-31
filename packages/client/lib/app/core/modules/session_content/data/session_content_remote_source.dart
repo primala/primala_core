@@ -25,6 +25,8 @@ class SessionContentRemoteSourceImpl implements SessionContentRemoteSource {
       await sessionContentStreams.cancelContentListeningStream();
 
   @override
-  listenToContent(sessionUID) =>
-      sessionContentStreams.listenToContent(sessionUID);
+  listenToContent(sessionUID) {
+    sessionContentQueries.setSessionUID(sessionUID);
+    return sessionContentStreams.listenToContent(sessionUID);
+  }
 }
