@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
-import 'package:nokhte_backend/tables/finished_sessions.dart';
 import 'package:nokhte_backend/tables/group_information.dart';
-import 'package:nokhte_backend/tables/session_queues.dart';
 
 class GroupInformationModel extends GroupInformationEntity {
   const GroupInformationModel({
@@ -10,8 +8,6 @@ class GroupInformationModel extends GroupInformationEntity {
     required super.groupName,
     required super.groupHandle,
     required super.groupUID,
-    required super.sessions,
-    required super.queues,
     required super.collaborators,
   });
 
@@ -41,9 +37,6 @@ class GroupInformationModel extends GroupInformationEntity {
         }
         groups.add(
           GroupInformationModel(
-            sessions: SessionArtifactModel.fromSupabase(
-              group[FinishedSessionsQueries.TABLE],
-            ),
             collaborators: temp,
             groupMembers: group[GroupInformationQueries.GROUP_MEMBERS],
             groupName:
@@ -51,7 +44,6 @@ class GroupInformationModel extends GroupInformationEntity {
             groupHandle:
                 "@${formatTitleString(group[GroupInformationQueries.GROUP_HANDLE])}",
             groupUID: group[GroupInformationQueries.UID],
-            queues: QueueModel.fromSupabase(group[SessionQueuesQueries.TABLE]),
           ),
         );
       }

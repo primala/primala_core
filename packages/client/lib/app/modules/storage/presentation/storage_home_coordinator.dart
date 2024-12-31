@@ -6,6 +6,7 @@ import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/modules/session_content/session_content.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
+import 'package:nokhte_backend/tables/session_information.dart';
 part 'storage_home_coordinator.g.dart';
 
 class StorageHomeCoordinator = _StorageHomeCoordinatorBase
@@ -52,20 +53,49 @@ abstract class _StorageHomeCoordinatorBase
     disposers.add(groupReactor());
     disposers.add(widgets.groupDisplayDragReactor(onGroupsDeleted));
     disposers.add(widgets.groupRegistrationReactor(onGroupCreated));
-    disposers.add(widgets.queueCreationReactor(onQueueCreated));
+    disposers
+        .add(widgets.queueCreationReactor(onQueueCreated, onQueueModalClosed));
     disposers.add(widgets.membershipAdditionReactor(onGroupMembershipUpdated));
     disposers.add(widgets.membershipRemovalReactor(onGroupMembershipUpdated));
     disposers.add(widgets.queueDeletionReactor(onQueueDeleted));
     disposers.add(widgets.sessionDeletionReactor(onSessionDeleted));
-    disposers
-        .add(widgets.sessionContentReactor(sessionContentLogic.addContent));
+    disposers.add(widgets.groupModalOpenStatusReactor(
+      onGroupModalOpened,
+      onGroupModalClosed,
+    ));
+    disposers.add(widgets.sessionContentReactor(
+      sessionContentLogic.addContent,
+    ));
     disposers.add(sessionContentReactor());
     disposers.add(queueUIDReactor());
+    disposers.add(userTitleUpdatesReactor());
+    disposers.add(externalTitleUpdatesReactor());
+    disposers.add(finishedSessionsReactor());
   }
+
+  finishedSessionsReactor() =>
+      reaction((p0) => storageLogic.finishedSessions, (p0) async {
+        widgets.groupDisplayModal.groupDisplaySessionCard.setSessions(p0);
+      });
+
+  userTitleUpdatesReactor() =>
+      reaction((p0) => widgets.queueCreationModal.queueTitle, (p0) async {
+        final params = UpdateSessionTitleParams(
+          sessionUID: storageLogic.queueUID,
+          title: p0,
+        );
+        await onSessionTitleUpdated(params);
+      });
+
+  externalTitleUpdatesReactor() =>
+      reaction((p0) => storageLogic.currentlySelectedDormantSession.title,
+          (p0) async {
+        if (storageLogic.queueUID.isEmpty) return;
+        widgets.queueCreationModal.setTitle(p0);
+      });
 
   sessionContentReactor() =>
       reaction((p0) => sessionContentLogic.sessionContentEntity, (p0) {
-        print('are you working ${p0}');
         widgets.queueCreationModal.blockTextDisplay.setContent(p0);
       });
 
@@ -82,10 +112,32 @@ abstract class _StorageHomeCoordinatorBase
   }
 
   @action
+  onGroupModalOpened(String groupUID) async {
+    await storageLogic.listenToSessions(groupUID);
+  }
+
+  @action
+  onGroupModalClosed() async {
+    await storageLogic.dispose();
+  }
+
+  @action
+  onSessionTitleUpdated(UpdateSessionTitleParams params) async {
+    await storageLogic.updateSessionTitle(params);
+  }
+
+  @action
   onQueueCreated() async {
     await storageLogic.createQueue(
       widgets.groupDisplayModal.currentlySelectedGroup.groupUID,
     );
+  }
+
+  @action
+  onQueueModalClosed() async {
+    // await storageLogic.createQueue(
+    //   widgets.groupDisplayModal.currentlySelectedGroup.groupUID,
+    // );
   }
 
   @action

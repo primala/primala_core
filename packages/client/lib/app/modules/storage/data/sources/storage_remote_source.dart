@@ -1,40 +1,36 @@
 import 'package:nokhte/app/modules/storage/storage.dart';
-import 'package:nokhte_backend/tables/finished_sessions.dart';
+import 'package:nokhte_backend/tables/session_information.dart';
 import 'package:nokhte_backend/tables/user_information.dart';
 import 'package:nokhte_backend/tables/group_information.dart';
-import 'package:nokhte_backend/tables/session_queues.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class StorageRemoteSource {
-  Future<List> getSessions(String groupUID);
   Future<List> createNewGroup(CreateNewGroupParams params);
   Future<List> getGroups();
   Future<List> deleteGroup(String params);
-  Future<List> getQueues(GetQueueParams params);
-  Future<List> createQueue(CreateQueueParams params);
+  Stream<GroupSessions> listenToSessions(String groupUID);
+  Future<List> updateSessionTitle(UpdateSessionTitleParams params);
+  Future<List> createQueue(String groupUID);
   Future<List> deleteSession(String params);
   Future<List> deleteQueue(String params);
   Future<List> getCollaborators();
   Future<List> updateGroupMembers(UpdateGroupMemberParams params);
+  Future<bool> cancelSessionsStream();
 }
 
 class StorageRemoteSourceImpl implements StorageRemoteSource {
   final SupabaseClient supabase;
-  final FinishedSessionsQueries finishedNokhteSessionQueries;
   final UserInformationQueries userNamesQueries;
   final GroupInformationQueries groupInformationQueries;
-  final SessionQueuesQueries sessionQueuesQueries;
+  final DormantSessionInformationQueries sessionInformationQueries;
+  final DormantSessionInformationStreams sessionInformationStreams;
   StorageRemoteSourceImpl({required this.supabase})
-      : finishedNokhteSessionQueries =
-            FinishedSessionsQueries(supabase: supabase),
-        sessionQueuesQueries = SessionQueuesQueries(supabase: supabase),
-        groupInformationQueries = GroupInformationQueries(supabase: supabase),
+      : groupInformationQueries = GroupInformationQueries(supabase: supabase),
+        sessionInformationStreams =
+            DormantSessionInformationStreams(supabase: supabase),
+        sessionInformationQueries =
+            DormantSessionInformationQueries(supabase: supabase),
         userNamesQueries = UserInformationQueries(supabase: supabase);
-
-  @override
-  getSessions(groupUID) async => await finishedNokhteSessionQueries.select(
-        groupId: groupUID,
-      );
 
   @override
   createNewGroup(params) async => await groupInformationQueries.insert(
@@ -50,23 +46,11 @@ class StorageRemoteSourceImpl implements StorageRemoteSource {
   getGroups() async => await groupInformationQueries.select();
 
   @override
-  Future<List> createQueue(CreateQueueParams params) async =>
-      await sessionQueuesQueries.insert(
-        groupId: params.groupId,
-        queueContent: params.content,
-        queueTitle: params.title,
-      );
+  createQueue(groupUID) async =>
+      await sessionInformationQueries.initializeDormantSession(groupUID);
 
   @override
-  Future<List> deleteQueue(String params) async =>
-      await sessionQueuesQueries.delete(uid: params);
-
-  @override
-  Future<List> getQueues(GetQueueParams params) async =>
-      await sessionQueuesQueries.select(
-        groupId: params.groupId,
-        uid: params.uid,
-      );
+  deleteQueue(params) async => [];
 
   @override
   getCollaborators() async => await userNamesQueries.getCollaboratorRows();
@@ -80,6 +64,17 @@ class StorageRemoteSourceImpl implements StorageRemoteSource {
       );
 
   @override
-  deleteSession(String params) async =>
-      await finishedNokhteSessionQueries.delete(params);
+  deleteSession(params) async => [];
+
+  @override
+  listenToSessions(groupUID) =>
+      sessionInformationStreams.listenToSessions(groupUID);
+
+  @override
+  cancelSessionsStream() async =>
+      await sessionInformationStreams.cancelSessionsStream();
+
+  @override
+  updateSessionTitle(params) async =>
+      await sessionInformationQueries.updateSessionTitle(params);
 }

@@ -1,8 +1,11 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
+import 'dart:async';
+
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
+import 'package:nokhte_backend/tables/session_information.dart';
 part 'storage_logic_coordinator.g.dart';
 
 class StorageLogicCoordinator = _StorageLogicCoordinatorBase
@@ -16,7 +19,27 @@ abstract class _StorageLogicCoordinatorBase with Store, BaseMobxLogic {
   }) {
     initBaseLogicActions();
   }
-  //
+
+  @observable
+  ObservableList<SessionEntity> finishedSessions =
+      ObservableList<SessionEntity>();
+
+  @observable
+  ObservableList<SessionEntity> dormantSessions =
+      ObservableList<SessionEntity>();
+
+  StreamSubscription sessionStreamSubscription =
+      const Stream.empty().listen((event) {});
+
+  @observable
+  ObservableStream<GroupSessions> groupSessions =
+      ObservableStream(const Stream.empty());
+
+  @observable
+  bool sessionsStreamIsCancelled = false;
+
+  @observable
+  bool sessionTitleIsUpdated = false;
 
   @observable
   bool groupIsCreated = false;
@@ -25,7 +48,7 @@ abstract class _StorageLogicCoordinatorBase with Store, BaseMobxLogic {
   bool groupIsDeleted = false;
 
   @observable
-  bool queueIsCreated = false;
+  String queueUID = '';
 
   @observable
   bool queueIsDeleted = false;
@@ -77,13 +100,13 @@ abstract class _StorageLogicCoordinatorBase with Store, BaseMobxLogic {
   }
 
   @action
-  createQueue(CreateQueueParams params) async {
-    queueIsCreated = false;
-    final res = await contract.createQueue(params);
+  createQueue(String groupUID) async {
+    queueUID = '';
+    final res = await contract.createQueue(groupUID);
     res.fold(
       (failure) => errorUpdater(failure),
-      (creationStatus) {
-        queueIsCreated = creationStatus;
+      (newQueueUID) {
+        queueUID = newQueueUID;
       },
     );
   }
@@ -122,5 +145,53 @@ abstract class _StorageLogicCoordinatorBase with Store, BaseMobxLogic {
         groupMembersAreUpdated = updateStatus;
       },
     );
+  }
+
+  @action
+  updateSessionTitle(UpdateSessionTitleParams params) async {
+    sessionTitleIsUpdated = false;
+    final res = await contract.updateSessionTitle(params);
+    res.fold(
+      (failure) => errorUpdater(failure),
+      (updateStatus) {
+        sessionTitleIsUpdated = updateStatus;
+      },
+    );
+  }
+
+  @action
+  listenToSessions(String groupUID) async {
+    final result = await contract.listenToSessions(groupUID);
+
+    result.fold(
+      (failure) {
+        setErrorMessage(mapFailureToMessage(failure));
+      },
+      (stream) {
+        groupSessions = ObservableStream(stream);
+        sessionStreamSubscription = groupSessions.listen((value) {
+          finishedSessions = ObservableList.of(value.finishedSessions);
+          dormantSessions = ObservableList.of(value.dormantSessions);
+        });
+      },
+    );
+  }
+
+  @action
+  dispose() async {
+    await contract.cancelSessionsStream();
+    sessionStreamSubscription = const Stream.empty().listen((event) {});
+    groupSessions = ObservableStream(const Stream.empty());
+  }
+
+  @computed
+  int get currentlySelectedDormantSessionIndex =>
+      dormantSessions.indexWhere((element) => element.uid == queueUID);
+
+  @computed
+  SessionEntity get currentlySelectedDormantSession {
+    return currentlySelectedDormantSessionIndex != -1
+        ? dormantSessions[currentlySelectedDormantSessionIndex]
+        : SessionEntity.empty();
   }
 }

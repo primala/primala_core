@@ -1,7 +1,5 @@
 // ignore_for_file: library_private_types_in_public_api
-
 import 'dart:async';
-
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
@@ -88,10 +86,27 @@ abstract class _StorageHomeWidgetsCoordinatorBase
         }
       });
 
-  queueCreationReactor(Function onCreated) =>
+  queueCreationReactor(Function onCreated, Function onClosed) =>
       reaction((p0) => queueCreationModal.modalIsVisible, (p0) async {
-        if (p0) {
-          await onCreated();
+        if (queueCreationModal.isCreatingNewQueue) {
+          if (p0) {
+            await onCreated();
+          } else {
+            await onClosed();
+          }
+        } else {
+          //
+        }
+      });
+
+  groupModalOpenStatusReactor(
+          Function(String groupUID) onOpened, Function onClosed) =>
+      reaction((p0) => groupDisplayModal.currentlySelectedGroup.groupUID,
+          (p0) async {
+        if (p0.isNotEmpty) {
+          await onOpened(p0);
+        } else {
+          await onClosed();
         }
       });
 
