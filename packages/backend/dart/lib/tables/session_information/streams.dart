@@ -1,16 +1,19 @@
 // ignore_for_file: constant_identifier_names
 import 'package:nokhte_backend/tables/group_information.dart';
 import 'package:nokhte_backend/tables/session_information/queries.dart';
+import 'package:nokhte_backend/utils/utils.dart';
 import 'constants.dart';
 import 'types/types.dart';
 import 'utilities/utilities.dart';
 
 class SessionInformationStreams extends SessionInformationQueries
-    with SessionInformationConstants {
+    with SessionInformationConstants, SessionUtils {
   bool requestsListeningStatus = false;
   bool metadataListeningStatus = false;
+  bool groupSessionsListeningStatus = false;
   final Map<String, SessionRequests> _requestsCache = {};
   final GroupInformationQueries groupInformationQueries;
+
   SessionInformationStreams({
     required super.supabase,
   }) : groupInformationQueries = GroupInformationQueries(supabase: supabase);
@@ -24,17 +27,6 @@ class SessionInformationStreams extends SessionInformationQueries
     _requestsCache.clear();
     requestsListeningStatus = false;
     return requestsListeningStatus;
-  }
-
-  bool _areListsEqual(
-      List<SessionRequests> list1, List<SessionRequests> list2) {
-    if (list1.length != list2.length) return false;
-
-    for (int i = 0; i < list1.length; i++) {
-      if (list1[i] != list2[i]) return false;
-    }
-
-    return true;
   }
 
   Stream<List<SessionRequests>> listenToSessionRequests() async* {
@@ -70,7 +62,8 @@ class SessionInformationStreams extends SessionInformationQueries
           temp.add(_requestsCache[sessionUid]!);
         }
 
-        if (temp.isNotEmpty && !_areListsEqual(temp, previousYield)) {
+        if (temp.isNotEmpty &&
+            !areListsEqual<SessionRequests>(temp, previousYield)) {
           previousYield = List.from(temp); // Create a copy of temp
           yield temp;
         }
@@ -107,9 +100,6 @@ class SessionInformationStreams extends SessionInformationQueries
         }
 
         final selectedEvent = event.first;
-
-        print(
-            "collaborator statuses ${selectedEvent[COLLABORATOR_STATUSES].runtimeType}");
 
         final List<SessionUserStatus> collaboratorStatuses = [];
         final List<String> collaboratorNames = [];

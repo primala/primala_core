@@ -107,6 +107,25 @@ class SessionInformationQueries with SessionInformationConstants, SessionUtils {
     );
   }
 
+  // Future<List> updateSessionTitle() async {
+  //   await computeCollaboratorInformation();
+  //   final res = await getSessionTitle();
+  //   return await retry<List>(
+  //     action: () async {
+  //       return await _onCurrentActiveNokhteSession(
+  //         supabase.from(TABLE).update({
+  //           STATUS: ,
+  //           VERSION: res.currentVersion + 1,
+  //         }),
+  //         version: res.currentVersion,
+  //       );
+  //     },
+  //     shouldRetry: (result) {
+  //       return result.isEmpty;
+  //     },
+  //   );
+  // }
+
   Future<List> refreshSpeakingTimerStart() async {
     await computeCollaboratorInformation();
     final res = await getSpeakerSpotlight();
@@ -270,16 +289,16 @@ class SessionInformationQueries with SessionInformationConstants, SessionUtils {
   }
 
   Future<List> initializeDormantSession(
-    InitializeDormantSessionParams params,
+    String groupUID,
   ) async {
     return await supabase.from(TABLE).insert({
       COLLABORATOR_UIDS: [],
       COLLABORATOR_NAMES: [],
+      COLLABORATOR_STATUSES: [],
       STATUS: SessionInformationUtils.mapSessionStatusToString(
         SessionStatus.dormant,
       ),
-      TITLE: params.title,
-      GROUP_UID: params.groupUID,
+      GROUP_UID: groupUID,
     }).select();
   }
 

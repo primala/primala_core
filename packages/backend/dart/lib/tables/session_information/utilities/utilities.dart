@@ -1,4 +1,5 @@
 import 'package:nokhte_backend/tables/session_information.dart';
+export 'session_information_query_utils.dart';
 
 mixin SessionInformationUtils {
   static SessionStatus mapStringToSessionStatus(String status) {
