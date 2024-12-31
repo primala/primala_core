@@ -1,5 +1,8 @@
 // ignore_for_file: library_private_types_in_public_api, must_be_immutable
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/session_content/session_content.dart';
@@ -25,6 +28,8 @@ abstract class _QueueCreationModalStoreBase extends BaseWidgetStore
   // Focus nodes
   FocusNode queueTitleFocusNode = FocusNode();
   FocusNode itemFocusNode = FocusNode();
+  Timer? _debounceTimer;
+  static const _debounceDuration = Duration(milliseconds: 500);
 
   @observable
   bool isManualSelected = true;
@@ -47,6 +52,15 @@ abstract class _QueueCreationModalStoreBase extends BaseWidgetStore
   @observable
   String queueTitle = '';
 
+  @observable
+  bool isCreatingNewQueue = false;
+
+  @observable
+  bool titleEditWasExternal = false;
+
+  @action
+  void setIsCreatingNewQueue(bool value) => isCreatingNewQueue = value;
+
   @action
   void setModalIsVisible(bool value) => modalIsVisible = value;
 
@@ -56,7 +70,43 @@ abstract class _QueueCreationModalStoreBase extends BaseWidgetStore
   }
 
   @action
-  onTitleChanged(String value) {}
+  onTitleChanged(String value) {
+    if (titleEditWasExternal) return;
+
+    _debounceTimer?.cancel();
+    _debounceTimer = Timer(_debounceDuration, () {
+      queueTitle = value;
+    });
+  }
+
+  @action
+  setTitle(String value) {
+    if (value == queueTitleController.text) return;
+
+    titleEditWasExternal = true;
+    final currentPosition = queueTitleController.selection.baseOffset;
+    final oldText = queueTitleController.text;
+
+    // Check if cursor was at the end
+    final wasAtEnd = currentPosition == oldText.length;
+
+    queueTitleController.text = value;
+
+    if (currentPosition != -1) {
+      if (wasAtEnd) {
+        // If cursor was at end, move to new end
+        queueTitleController.selection =
+            TextSelection.fromPosition(TextPosition(offset: value.length));
+      } else {
+        // Keep cursor at same position if that position still exists
+        final newPosition = currentPosition.clamp(0, value.length);
+        queueTitleController.selection =
+            TextSelection.fromPosition(TextPosition(offset: newPosition));
+      }
+    }
+
+    titleEditWasExternal = false;
+  }
 
   @action
   void addQueueItem() {
@@ -116,24 +166,27 @@ abstract class _QueueCreationModalStoreBase extends BaseWidgetStore
           initialChildSize: .9,
           minChildSize: .7,
           expand: false,
-          builder: (context, scrollController) => QueueCreationModal(
-                blur: blur,
-                scrollController: scrollController,
-                queueTitleController: queueTitleController,
-                groupDisplaySessionCard: groupDisplaySessionCard,
-                queueTitleFocusNode: queueTitleFocusNode,
-                isManualSelected: isManualSelected,
-                blockTextDisplay: blockTextDisplay,
-                queueItems: queueItems,
-                onTitleChanged: onTitleChanged,
-                toggleSelectionMode: toggleSelectionMode,
-                editItem: editItem,
-                deleteItem: deleteItem,
-                reorderQueueItems: reorderQueueItems,
-              )),
+          builder: (context, scrollController) => Observer(
+              builder: (context) => QueueCreationModal(
+                    blur: blur,
+                    scrollController: scrollController,
+                    queueTitleController: queueTitleController,
+                    groupDisplaySessionCard: groupDisplaySessionCard,
+                    queueTitleFocusNode: queueTitleFocusNode,
+                    isCreatingNewQueue: isCreatingNewQueue,
+                    isManualSelected: isManualSelected,
+                    blockTextDisplay: blockTextDisplay,
+                    queueItems: queueItems,
+                    onTitleChanged: onTitleChanged,
+                    toggleSelectionMode: toggleSelectionMode,
+                    editItem: editItem,
+                    deleteItem: deleteItem,
+                    reorderQueueItems: reorderQueueItems,
+                  ))),
     ).whenComplete(() {
       blur.reverse();
       setModalIsVisible(false);
+      setIsCreatingNewQueue(false);
       dispose();
     });
   }
@@ -146,6 +199,8 @@ abstract class _QueueCreationModalStoreBase extends BaseWidgetStore
     queueSubmissionCount++;
     if (queueSubmissionCount.isEven) {
       queueTitleController.clear();
+      _debounceTimer?.cancel();
+
       itemController.clear();
       queueItems = ObservableList<String>();
     } else {

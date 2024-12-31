@@ -22,6 +22,7 @@ class QueueCreationModal extends HookWidget {
   final List<String> queueItems;
   final Function(int oldIndex, int newIndex) reorderQueueItems;
   final BlockTextDisplayStore blockTextDisplay;
+  final bool isCreatingNewQueue;
 
   const QueueCreationModal({
     super.key,
@@ -32,6 +33,7 @@ class QueueCreationModal extends HookWidget {
     required this.queueTitleFocusNode,
     required this.isManualSelected,
     required this.toggleSelectionMode,
+    required this.isCreatingNewQueue,
     required this.editItem,
     required this.deleteItem,
     required this.onTitleChanged,
@@ -61,6 +63,7 @@ class QueueCreationModal extends HookWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16.0, vertical: 8.0),
                       child: TextField(
+                        enabled: isCreatingNewQueue,
                         controller: queueTitleController,
                         style: GoogleFonts.chivo(
                           color: Colors.white,
@@ -108,9 +111,10 @@ class QueueCreationModal extends HookWidget {
             ),
           ),
         ),
-        BlockTextFields(
-          store: blockTextDisplay.blockTextFields,
-        ),
+        if (isCreatingNewQueue)
+          BlockTextFields(
+            store: blockTextDisplay.blockTextFields,
+          ),
       ],
     );
   }
