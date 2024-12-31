@@ -10,7 +10,6 @@ environment:
 dependencies:
   action_slider: ^0.7.0
   android_package_manager: ^0.7.1
-  awesome_snackbar_content: ^0.1.4
   blur: ^3.1.0
   carousel_slider: ^5.0.0
   connectivity_plus: ^5.0.1
@@ -28,7 +27,6 @@ dependencies:
   gradient_borders: ^1.0.0
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  intl: ^0.18.1
   mobile_scanner: ^5.1.1
   mobx: ^2.2.1
   nokhte_backend:
