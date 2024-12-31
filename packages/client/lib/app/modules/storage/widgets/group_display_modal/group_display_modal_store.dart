@@ -32,9 +32,9 @@ abstract class _GroupDisplayModalStoreBase extends BaseWidgetStore with Store {
 
   @action
   setCurrentlySelectedGroup(GroupInformationEntity group) {
-    groupDisplaySessionCard.setSessions(group.sessions);
+    // groupDisplaySessionCard.setSessions(group.sessions);
     groupDisplayCollaboratorCard.setCollaborators(group.collaborators);
-    groupDisplayQueueCard.setQueues(group.queues);
+    // groupDisplayQueueCard.setQueues(group.queues);
     currentlySelectedGroup = group;
   }
 
@@ -96,7 +96,7 @@ abstract class _GroupDisplayModalStoreBase extends BaseWidgetStore with Store {
                       currentlySelectedSection: currentlySelectedSection,
                       onSectionTap: setCurrentlySelectedSection,
                       createQueue: () {
-                        queueCreationModal.showGroupDetailsModal(context);
+                        queueCreationModal.showModal(context);
                       },
                     ),
                   ),

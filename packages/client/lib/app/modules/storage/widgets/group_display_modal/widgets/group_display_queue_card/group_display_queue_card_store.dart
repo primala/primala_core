@@ -2,7 +2,6 @@
 
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
-import 'package:nokhte/app/modules/storage/storage.dart';
 part 'group_display_queue_card_store.g.dart';
 
 class GroupDisplayQueueCardStore = _GroupDisplayQueueCardStoreBase
@@ -14,7 +13,7 @@ abstract class _GroupDisplayQueueCardStoreBase extends BaseWidgetStore
   ObservableList<bool> expandedStates = ObservableList<bool>();
 
   @observable
-  ObservableList<QueueEntity> queues = ObservableList<QueueEntity>();
+  ObservableList queues = ObservableList();
 
   @observable
   String currentlySelectedMessage = '';
@@ -26,7 +25,7 @@ abstract class _GroupDisplayQueueCardStoreBase extends BaseWidgetStore
   setCurrentlySelectedIndex(int index) => currentlySelectedIndex = index;
 
   @action
-  setQueues(List<QueueEntity> queues) {
+  setQueues(List queues) {
     this.queues = ObservableList.of(queues);
     expandedStates = ObservableList.of(List.filled(queues.length, false));
   }

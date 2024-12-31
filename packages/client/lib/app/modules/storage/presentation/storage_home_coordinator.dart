@@ -3,6 +3,7 @@ import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mixins/mixin.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
+import 'package:nokhte/app/core/modules/session_content/session_content.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
 part 'storage_home_coordinator.g.dart';
@@ -23,6 +24,7 @@ abstract class _StorageHomeCoordinatorBase
   final CaptureScreen captureScreen;
   final TapDetector tap;
   final StorageLogicCoordinator storageLogic;
+  final SessionContentLogicCoordinator sessionContentLogic;
 
   final SwipeDetector swipe;
   _StorageHomeCoordinatorBase({
@@ -31,6 +33,7 @@ abstract class _StorageHomeCoordinatorBase
     required this.swipe,
     required this.storageLogic,
     required this.tap,
+    required this.sessionContentLogic,
   }) {
     initEnRouteActions();
     initBaseCoordinatorActions();
@@ -54,7 +57,23 @@ abstract class _StorageHomeCoordinatorBase
     disposers.add(widgets.membershipRemovalReactor(onGroupMembershipUpdated));
     disposers.add(widgets.queueDeletionReactor(onQueueDeleted));
     disposers.add(widgets.sessionDeletionReactor(onSessionDeleted));
+    disposers
+        .add(widgets.sessionContentReactor(sessionContentLogic.addContent));
+    disposers.add(sessionContentReactor());
+    disposers.add(queueUIDReactor());
   }
+
+  sessionContentReactor() =>
+      reaction((p0) => sessionContentLogic.sessionContentEntity, (p0) {
+        print('are you working ${p0}');
+        widgets.queueCreationModal.blockTextDisplay.setContent(p0);
+      });
+
+  queueUIDReactor() => reaction((p0) => storageLogic.queueUID, (p0) async {
+        await sessionContentLogic.listenToSessionContent(
+          storageLogic.queueUID,
+        );
+      });
 
   @action
   onGroupCreated() async {
@@ -63,9 +82,10 @@ abstract class _StorageHomeCoordinatorBase
   }
 
   @action
-  onQueueCreated(CreateQueueParams params) async {
-    await storageLogic.createQueue(params);
-    await storageLogic.getGroups();
+  onQueueCreated() async {
+    await storageLogic.createQueue(
+      widgets.groupDisplayModal.currentlySelectedGroup.groupUID,
+    );
   }
 
   @action

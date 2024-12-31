@@ -3,15 +3,15 @@ import 'package:nokhte_backend/tables/session_content.dart';
 mixin SessionContentUtils {
   static ContentBlockType mapStringToContentBlockType(String type) {
     switch (type) {
-      case 'Question':
+      case 'question':
         return ContentBlockType.question;
-      case 'Idea':
+      case 'idea':
         return ContentBlockType.idea;
-      case 'Purpose':
+      case 'purpose':
         return ContentBlockType.purpose;
-      case 'Conclusion':
+      case 'conclusion':
         return ContentBlockType.conclusion;
-      case 'Quotation':
+      case 'quotation':
         return ContentBlockType.quotation;
 
       default:
@@ -22,18 +22,18 @@ mixin SessionContentUtils {
   static String mapContentBlockTypeToString(ContentBlockType type) {
     switch (type) {
       case ContentBlockType.question:
-        return 'Question';
+        return 'question';
       case ContentBlockType.idea:
-        return 'Idea';
+        return 'idea';
       case ContentBlockType.purpose:
-        return 'Purpose';
+        return 'purpose';
       case ContentBlockType.conclusion:
-        return 'Conclusion';
+        return 'conclusion';
       case ContentBlockType.quotation:
-        return 'Quotation';
+        return 'quotation';
 
       default:
-        return 'None';
+        return 'none';
     }
   }
 

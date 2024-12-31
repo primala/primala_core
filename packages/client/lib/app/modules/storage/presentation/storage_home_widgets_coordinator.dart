@@ -10,6 +10,7 @@ import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/home/home.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
+import 'package:nokhte_backend/tables/session_content.dart';
 import 'package:simple_animations/simple_animations.dart';
 part 'storage_home_widgets_coordinator.g.dart';
 
@@ -87,17 +88,20 @@ abstract class _StorageHomeWidgetsCoordinatorBase
         }
       });
 
-  queueCreationReactor(Function(CreateQueueParams params) onSubmit) =>
-      reaction((p0) => queueCreationModal.queueSubmissionCount, (p0) async {
-        if (queueCreationModal.queueItems.isEmpty ||
-            queueCreationModal.queueTitleController.text.isEmpty) return;
-        final params = CreateQueueParams(
-          groupId: groupDisplayModal.currentlySelectedGroup.groupUID,
-          content: queueCreationModal.queueItems,
-          title: queueCreationModal.queueTitleController.text,
-        );
+  queueCreationReactor(Function onCreated) =>
+      reaction((p0) => queueCreationModal.modalIsVisible, (p0) async {
+        if (p0) {
+          await onCreated();
+        }
+      });
+
+  sessionContentReactor(Function(AddContentParams params) onSubmit) =>
+      reaction((p0) => queueCreationModal.blockTextFields.submissionCount,
+          (p0) async {
+        final params =
+            queueCreationModal.blockTextDisplay.blockTextFields.currentParams;
         await onSubmit(params);
-        queueCreationModal.dispose();
+        queueCreationModal.blockTextDisplay.blockTextFields.resetParams();
       });
 
   membershipAdditionReactor(

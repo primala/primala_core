@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:equatable/equatable.dart';
 import 'package:nokhte_backend/tables/session_content.dart';
 
@@ -7,40 +9,30 @@ class SessionContentEntity extends Equatable {
   final String uid;
   final String content;
   final ContentBlockType blockType;
-  final SessionContentEntity? child;
+  final int numberOfParents;
+  final DateTime lastEditedAt;
 
-  const SessionContentEntity({
+  SessionContentEntity({
     required this.uid,
     required this.content,
     required this.blockType,
-    this.child,
+    required this.numberOfParents,
+    required this.lastEditedAt,
   });
 
-  factory SessionContentEntity.initial() => const SessionContentEntity(
-        uid: '',
-        content: '',
-        blockType: ContentBlockType.none,
-      );
-
-  factory SessionContentEntity.fromSupabase(Map<String, dynamic> data,
-      Map<String, SessionContentEntity> contentCache) {
+  factory SessionContentEntity.fromSupabase(
+      Map<String, dynamic> record, int numberOfParents) {
     return SessionContentEntity(
-      uid: data[SessionContentConstants.S_UID],
-      content: data[SessionContentConstants.S_CONTENT],
-      blockType: SessionContentUtils.mapStringToContentBlockType(
-        data[SessionContentConstants.S_TYPE],
-      ),
-      child: data[SessionContentConstants.S_PARENT_UID] != null
-          ? contentCache[data[SessionContentConstants.S_PARENT_UID]]
-          : null,
+      uid: record['uid'],
+      content: record['content'],
+      blockType:
+          SessionContentUtils.mapStringToContentBlockType(record['type']),
+      numberOfParents: numberOfParents,
+      lastEditedAt: DateTime.parse(record['last_edited_at']),
     );
   }
 
   @override
-  List<Object> get props => [
-        uid,
-        content,
-        blockType,
-        child ?? SessionContentEntity.initial(),
-      ];
+  List<Object> get props =>
+      [uid, content, blockType, numberOfParents, lastEditedAt];
 }

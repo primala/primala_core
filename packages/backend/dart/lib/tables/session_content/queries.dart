@@ -12,6 +12,8 @@ class SessionContentQueries with SessionContentConstants {
   setSessionUID(String value) => sessionUID = value;
 
   Future<List> addContent(AddContentParams params) async {
+    print(
+        'what is the parameters: ${params.parentUID} sessionUID: $sessionUID');
     if (sessionUID.isEmpty) return [];
     return await supabase.from(TABLE).insert({
       SESSION_UID: sessionUID,
@@ -19,7 +21,7 @@ class SessionContentQueries with SessionContentConstants {
       TYPE: SessionContentUtils.mapContentBlockTypeToString(
         params.contentBlockType,
       ),
-      PARENT_UID: params.parentUID,
+      PARENT_UID: params.parentUID.isEmpty ? null : params.parentUID,
     }).select();
   }
 

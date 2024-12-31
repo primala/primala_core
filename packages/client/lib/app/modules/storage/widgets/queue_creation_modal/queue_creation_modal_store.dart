@@ -1,12 +1,8 @@
 // ignore_for_file: library_private_types_in_public_api, must_be_immutable
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
+import 'package:nokhte/app/core/modules/session_content/session_content.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
@@ -19,6 +15,8 @@ abstract class _QueueCreationModalStoreBase extends BaseWidgetStore
     with Store, Reactions {
   final NokhteBlurStore blur;
   final GroupDisplaySessionCardStore groupDisplaySessionCard;
+  final BlockTextDisplayStore blockTextDisplay;
+  final BlockTextFieldsStore blockTextFields;
 
   // Text controllers
   TextEditingController queueTitleController = TextEditingController();
@@ -37,21 +35,28 @@ abstract class _QueueCreationModalStoreBase extends BaseWidgetStore
   _QueueCreationModalStoreBase({
     required this.blur,
     required this.groupDisplaySessionCard,
-  });
+    required this.blockTextDisplay,
+  }) : blockTextFields = blockTextDisplay.blockTextFields;
 
   @observable
-  bool showModal = false;
+  bool modalIsVisible = false;
 
   @observable
   int queueSubmissionCount = 0;
 
+  @observable
+  String queueTitle = '';
+
   @action
-  setShowModal(bool value) => showModal = value;
+  void setModalIsVisible(bool value) => modalIsVisible = value;
 
   @action
   void toggleSelectionMode(bool isManual) {
     isManualSelected = isManual;
   }
+
+  @action
+  onTitleChanged(String value) {}
 
   @action
   void addQueueItem() {
@@ -91,8 +96,9 @@ abstract class _QueueCreationModalStoreBase extends BaseWidgetStore
     queueItems.insert(newIndex, item);
   }
 
-  void showGroupDetailsModal(BuildContext context) {
-    if (showModal) return;
+  void showModal(BuildContext context) {
+    if (modalIsVisible) return;
+    setModalIsVisible(true);
     blur.init(end: Seconds.get(0, milli: 200));
     initReactors();
     showModalBottomSheet(
@@ -103,243 +109,31 @@ abstract class _QueueCreationModalStoreBase extends BaseWidgetStore
         ),
       ),
       isScrollControlled: true,
-      backgroundColor: Colors.black.withOpacity(.2),
+      backgroundColor: Colors.black.withOpacity(.5),
       context: context,
       builder: (context) => DraggableScrollableSheet(
-        maxChildSize: .91,
-        initialChildSize: .9,
-        minChildSize: .7,
-        expand: false,
-        builder: (context, scrollController) => Stack(
-          children: [
-            NokhteBlur(
-              store: blur,
-            ),
-            SingleChildScrollView(
-              controller: scrollController,
-              child: Observer(
-                builder: (context) => SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Queue Title TextField (unchanged)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 8.0),
-                          child: TextField(
-                            controller: queueTitleController,
-                            style: GoogleFonts.chivo(
-                              color: Colors.white,
-                              fontSize: 35,
-                              fontWeight: FontWeight.w200,
-                            ),
-                            maxLines: 1,
-                            maxLength: 30,
-                            maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                            cursorColor: Colors.white,
-                            textInputAction: TextInputAction.go,
-                            textAlign: TextAlign.center,
-                            focusNode: queueTitleFocusNode,
-                            decoration: InputDecoration(
-                              hintText: 'QUEUE TITLE',
-                              hintStyle: GoogleFonts.chivo(
-                                color: Colors.white.withOpacity(.5),
-                              ),
-                              counterStyle: GoogleFonts.chivo(
-                                color: Colors.white,
-                              ),
-                              border: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
-                              contentPadding: EdgeInsets.zero,
-                            ),
-                          ),
-                        ),
-
-                        // Selection Buttons (unchanged)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                onTap: () => toggleSelectionMode(true),
-                                child: Opacity(
-                                  opacity: isManualSelected ? 1.0 : 0.5,
-                                  child: Text(
-                                    'Manual',
-                                    style: GoogleFonts.chivo(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 20),
-                              GestureDetector(
-                                onTap: () => toggleSelectionMode(false),
-                                child: Opacity(
-                                  opacity: !isManualSelected ? 1.0 : 0.5,
-                                  child: Text(
-                                    'Previous',
-                                    style: GoogleFonts.chivo(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        // Conditional Content Based on Selection
-                        MultiHitStack(
-                          children: [
-                            // Manual Mode Content
-                            Column(
-                              children: [
-                                // Item Input TextField (unchanged)
-                                if (isManualSelected)
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16.0, vertical: 8.0),
-                                    child: TextField(
-                                      controller: itemController,
-                                      style: GoogleFonts.chivo(
-                                        color: Colors.white,
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.w200,
-                                      ),
-                                      // maxLines: 1,
-                                      // maxLength: 30,
-                                      maxLengthEnforcement:
-                                          MaxLengthEnforcement.enforced,
-                                      cursorColor: Colors.white,
-                                      textInputAction: TextInputAction.go,
-                                      textAlign: TextAlign.center,
-                                      onSubmitted: (_) => addQueueItem(),
-                                      focusNode: itemFocusNode,
-                                      decoration: InputDecoration(
-                                        hintText: 'ITEM',
-                                        hintStyle: GoogleFonts.chivo(
-                                          color: Colors.white.withOpacity(.5),
-                                        ),
-                                        counterStyle: GoogleFonts.chivo(
-                                          color: Colors.white,
-                                        ),
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          borderSide: const BorderSide(
-                                              color: Colors.white),
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          borderSide: const BorderSide(
-                                              color: Colors.white),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          borderSide: const BorderSide(
-                                              color: Colors.white),
-                                        ),
-                                        contentPadding: EdgeInsets.zero,
-                                      ),
-                                    ),
-                                  ),
-
-                                if (!isManualSelected)
-                                  GroupDisplaySessionCard(
-                                    showWidget: true,
-                                    store: groupDisplaySessionCard,
-                                  ),
-
-                                const Divider(
-                                  color: Colors.white,
-                                  thickness: 1,
-                                  indent: 16,
-                                  endIndent: 16,
-                                ),
-
-                                // Reorderable List of Queue Items
-                                Observer(
-                                  builder: (_) => ReorderableListView.builder(
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemCount: queueItems.length,
-                                    itemBuilder: (context, index) {
-                                      return Slidable(
-                                        key: ValueKey(index),
-                                        startActionPane: ActionPane(
-                                          motion: const DrawerMotion(),
-                                          children: [
-                                            SlidableAction(
-                                              spacing: 0,
-                                              padding: EdgeInsets.zero,
-                                              onPressed: (_) => editItem(index),
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              foregroundColor: Colors.white,
-                                              icon: Icons.edit_outlined,
-                                            ),
-                                          ],
-                                        ),
-                                        endActionPane: ActionPane(
-                                          motion: const DrawerMotion(),
-                                          children: [
-                                            SlidableAction(
-                                              spacing: 0,
-                                              padding: EdgeInsets.zero,
-                                              onPressed: (_) =>
-                                                  deleteItem(index),
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              foregroundColor: Colors.white,
-                                              icon: Icons.delete_outlined,
-                                            ),
-                                          ],
-                                        ),
-                                        child: ListTile(
-                                          key: ValueKey(index),
-                                          title: Text(
-                                            queueItems[index],
-                                            style: GoogleFonts.chivo(
-                                              color: Colors.white,
-                                              fontSize: 20,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    onReorder: reorderQueueItems,
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            // Previous Session Content
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+          maxChildSize: .91,
+          initialChildSize: .9,
+          minChildSize: .7,
+          expand: false,
+          builder: (context, scrollController) => QueueCreationModal(
+                blur: blur,
+                scrollController: scrollController,
+                queueTitleController: queueTitleController,
+                groupDisplaySessionCard: groupDisplaySessionCard,
+                queueTitleFocusNode: queueTitleFocusNode,
+                isManualSelected: isManualSelected,
+                blockTextDisplay: blockTextDisplay,
+                queueItems: queueItems,
+                onTitleChanged: onTitleChanged,
+                toggleSelectionMode: toggleSelectionMode,
+                editItem: editItem,
+                deleteItem: deleteItem,
+                reorderQueueItems: reorderQueueItems,
+              )),
     ).whenComplete(() {
       blur.reverse();
-      setShowModal(false);
+      setModalIsVisible(false);
       dispose();
     });
   }
