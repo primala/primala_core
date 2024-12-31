@@ -50,4 +50,10 @@ abstract class _GroupDisplaySessionCardStoreBase extends BaseWidgetStore
       currentlySelectedIndex == -1 || sessions.isEmpty
           ? ''
           : sessions[currentlySelectedIndex].uid;
+
+  @computed
+  String get currentlySelectedUID =>
+      currentlySelectedIndex == -1 || sessions.isEmpty
+          ? ''
+          : sessions[currentlySelectedIndex].uid;
 }

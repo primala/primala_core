@@ -86,6 +86,7 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
 
     this.controller = controller;
     this.focusNode = focusNode;
+    this.controller.clear();
     this.focusNode.addListener(() {
       setisFocused(focusNode.hasFocus);
       if (!focusNode.hasFocus) {

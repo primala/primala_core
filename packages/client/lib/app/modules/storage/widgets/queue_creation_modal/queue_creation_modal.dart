@@ -16,11 +16,8 @@ class QueueCreationModal extends HookWidget {
   final FocusNode queueTitleFocusNode;
   final bool isManualSelected;
   final Function(bool) toggleSelectionMode;
-  final Function(int) editItem;
-  final Function(int) deleteItem;
   final Function(String) onTitleChanged;
   final List<String> queueItems;
-  final Function(int oldIndex, int newIndex) reorderQueueItems;
   final BlockTextDisplayStore blockTextDisplay;
   final bool isCreatingNewQueue;
 
@@ -34,11 +31,9 @@ class QueueCreationModal extends HookWidget {
     required this.isManualSelected,
     required this.toggleSelectionMode,
     required this.isCreatingNewQueue,
-    required this.editItem,
-    required this.deleteItem,
     required this.onTitleChanged,
     required this.queueItems,
-    required this.reorderQueueItems,
+
     required this.blockTextDisplay,
   });
 

@@ -31,10 +31,10 @@ class PurposeBanner extends HookWidget {
           return AnimatedOpacity(
             opacity: useWidgetOpacity(store.showWidget),
             duration: Seconds.get(0, milli: 500),
-            child: Column(
+            child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                BlockTextFields()
+                // BlockTextFields()
                 // GestureDetector(
                 // onTap: () {
                 //   store.onTap();

@@ -47,6 +47,9 @@ abstract class _QueueCreationModalStoreBase extends BaseWidgetStore
   bool modalIsVisible = false;
 
   @observable
+  bool isEditable = false;
+
+  @observable
   int queueSubmissionCount = 0;
 
   @observable
@@ -59,7 +62,13 @@ abstract class _QueueCreationModalStoreBase extends BaseWidgetStore
   bool titleEditWasExternal = false;
 
   @action
-  void setIsCreatingNewQueue(bool value) => isCreatingNewQueue = value;
+  void setIsCreatingNewQueue(bool value) {
+    isEditable = true;
+    isCreatingNewQueue = value;
+  }
+
+  @action
+  setIsEditable(bool val) => isEditable = val;
 
   @action
   void setModalIsVisible(bool value) => modalIsVisible = value;
@@ -108,49 +117,11 @@ abstract class _QueueCreationModalStoreBase extends BaseWidgetStore
     titleEditWasExternal = false;
   }
 
-  @action
-  void addQueueItem() {
-    if (itemController.text.trim().isNotEmpty) {
-      queueItems.add(itemController.text.trim());
-      itemController.clear();
-    }
-  }
-
-  @action
-  deleteItem(int index) => queueItems.removeAt(index);
-
-  @action
-  editItem(int index) {
-    itemController.text = queueItems[index];
-    queueItems.removeAt(index);
-    itemFocusNode.requestFocus();
-  }
-
-  initReactors() {
-    disposers.add(pastSessionMessageReactor());
-  }
-
-  pastSessionMessageReactor() =>
-      reaction((p0) => groupDisplaySessionCard.currentlySelectedMessage, (p0) {
-        if (queueItems.contains(p0.substring(2).trim())) return;
-        queueItems.add(p0.substring(2).trim());
-        // groupDisplaySessionCard.toggleSelection(groupDisplaySessionCard.)
-      });
-
-  @action
-  void reorderQueueItems(int oldIndex, int newIndex) {
-    if (oldIndex < newIndex) {
-      newIndex -= 1;
-    }
-    final String item = queueItems.removeAt(oldIndex);
-    queueItems.insert(newIndex, item);
-  }
-
   void showModal(BuildContext context) {
     if (modalIsVisible) return;
     setModalIsVisible(true);
+
     blur.init(end: Seconds.get(0, milli: 200));
-    initReactors();
     showModalBottomSheet(
       isDismissible: false,
       shape: const RoundedRectangleBorder(
@@ -173,15 +144,12 @@ abstract class _QueueCreationModalStoreBase extends BaseWidgetStore
                     queueTitleController: queueTitleController,
                     groupDisplaySessionCard: groupDisplaySessionCard,
                     queueTitleFocusNode: queueTitleFocusNode,
-                    isCreatingNewQueue: isCreatingNewQueue,
+                    isCreatingNewQueue: isEditable,
                     isManualSelected: isManualSelected,
                     blockTextDisplay: blockTextDisplay,
                     queueItems: queueItems,
                     onTitleChanged: onTitleChanged,
                     toggleSelectionMode: toggleSelectionMode,
-                    editItem: editItem,
-                    deleteItem: deleteItem,
-                    reorderQueueItems: reorderQueueItems,
                   ))),
     ).whenComplete(() {
       blur.reverse();

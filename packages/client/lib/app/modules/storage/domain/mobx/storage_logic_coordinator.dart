@@ -63,6 +63,9 @@ abstract class _StorageLogicCoordinatorBase with Store, BaseMobxLogic {
   ObservableList<GroupInformationEntity> groups = ObservableList.of([]);
 
   @action
+  setQueueUID(String value) => queueUID = value;
+
+  @action
   getGroups() async {
     setState(StoreState.loading);
     final res = await contract.getGroups(const NoParams());
@@ -189,9 +192,20 @@ abstract class _StorageLogicCoordinatorBase with Store, BaseMobxLogic {
       dormantSessions.indexWhere((element) => element.uid == queueUID);
 
   @computed
+  int get currentlySelectedFinishedSessionIndex =>
+      finishedSessions.indexWhere((element) => element.uid == queueUID);
+
+  @computed
   SessionEntity get currentlySelectedDormantSession {
     return currentlySelectedDormantSessionIndex != -1
         ? dormantSessions[currentlySelectedDormantSessionIndex]
+        : SessionEntity.empty();
+  }
+
+  @computed
+  SessionEntity get currentlySelectedFinishedSession {
+    return currentlySelectedFinishedSessionIndex != -1
+        ? finishedSessions[currentlySelectedFinishedSessionIndex]
         : SessionEntity.empty();
   }
 }

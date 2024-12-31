@@ -4,7 +4,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:nokhte/app/core/modules/session_content/session_content.dart';
-import 'package:nokhte/app/core/widgets/fonts/jost/jost.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/widgets/purpose_banner/widgets/purpose_with_conclusions/swipable_tiles/swipable_tiles.dart';
 

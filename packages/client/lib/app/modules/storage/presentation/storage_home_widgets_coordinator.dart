@@ -1,5 +1,6 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
@@ -42,8 +43,11 @@ abstract class _StorageHomeWidgetsCoordinatorBase
     initBaseWidgetsCoordinatorActions();
   }
 
+  late BuildContext buildContext;
+
   @action
-  constructor() {
+  constructor(BuildContext buildContext) {
+    this.buildContext = buildContext;
     beachWaves.currentStore.setControl(Control.stop);
     navigationCarousels.setNavigationCarouselsType(
       NavigationCarouselsType.storage,
@@ -97,6 +101,24 @@ abstract class _StorageHomeWidgetsCoordinatorBase
         } else {
           //
         }
+      });
+
+  sessionOpenReactor(Function(String sessionUID) onSelected) => reaction(
+          (p0) =>
+              groupDisplayModal.groupDisplaySessionCard.currentlySelectedUID,
+          (p0) async {
+        if (p0.isEmpty) return;
+        await onSelected(p0);
+        queueCreationModal.showModal(buildContext);
+      });
+
+  queueOpenReactor(Function(String sessionUID) onSelected) => reaction(
+          (p0) => groupDisplayModal.groupDisplayQueueCard.currentlySelectedUID,
+          (p0) async {
+        if (p0.isEmpty) return;
+        await onSelected(p0);
+        queueCreationModal.setIsEditable(true);
+        queueCreationModal.showModal(buildContext);
       });
 
   groupModalOpenStatusReactor(

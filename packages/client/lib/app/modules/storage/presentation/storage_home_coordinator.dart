@@ -1,4 +1,5 @@
 // ignore_for_file: library_private_types_in_public_api
+import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mixins/mixin.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
@@ -42,8 +43,8 @@ abstract class _StorageHomeCoordinatorBase
   }
 
   @action
-  constructor() async {
-    widgets.constructor();
+  constructor(BuildContext buildContext) async {
+    widgets.constructor(buildContext);
     initReactors();
     await storageLogic.getGroups();
     await captureScreen(StorageConstants.home);
@@ -66,16 +67,24 @@ abstract class _StorageHomeCoordinatorBase
     disposers.add(widgets.sessionContentReactor(
       sessionContentLogic.addContent,
     ));
+    disposers.add(widgets.sessionOpenReactor(onSessionSelected));
+    disposers.add(widgets.queueOpenReactor(onSessionSelected));
     disposers.add(sessionContentReactor());
     disposers.add(queueUIDReactor());
     disposers.add(userTitleUpdatesReactor());
     disposers.add(externalTitleUpdatesReactor());
     disposers.add(finishedSessionsReactor());
+    disposers.add(dormantSessionsReactor());
   }
 
   finishedSessionsReactor() =>
       reaction((p0) => storageLogic.finishedSessions, (p0) async {
         widgets.groupDisplayModal.groupDisplaySessionCard.setSessions(p0);
+      });
+
+  dormantSessionsReactor() =>
+      reaction((p0) => storageLogic.dormantSessions, (p0) async {
+        widgets.groupDisplayModal.groupDisplayQueueCard.setQueues(p0);
       });
 
   userTitleUpdatesReactor() =>
@@ -89,7 +98,7 @@ abstract class _StorageHomeCoordinatorBase
 
   externalTitleUpdatesReactor() =>
       reaction((p0) => storageLogic.currentlySelectedDormantSession.title,
-          (p0) async {
+          (p0) {
         if (storageLogic.queueUID.isEmpty) return;
         widgets.queueCreationModal.setTitle(p0);
       });
@@ -100,6 +109,7 @@ abstract class _StorageHomeCoordinatorBase
       });
 
   queueUIDReactor() => reaction((p0) => storageLogic.queueUID, (p0) async {
+        if (p0.isEmpty) return;
         await sessionContentLogic.listenToSessionContent(
           storageLogic.queueUID,
         );
@@ -109,6 +119,14 @@ abstract class _StorageHomeCoordinatorBase
   onGroupCreated() async {
     await storageLogic.createNewGroup(widgets.groupRegistration.params);
     await storageLogic.getGroups();
+  }
+
+  @action
+  onSessionSelected(String sessionUID) async {
+    await sessionContentLogic.listenToSessionContent(sessionUID);
+    storageLogic.setQueueUID(sessionUID);
+    widgets.queueCreationModal
+        .setTitle(storageLogic.currentlySelectedFinishedSession.title);
   }
 
   @action
@@ -174,6 +192,7 @@ abstract class _StorageHomeCoordinatorBase
 
   deconstructor() {
     dispose();
+    // widgets.buildContext
     widgets.dispose();
   }
 }

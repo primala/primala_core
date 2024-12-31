@@ -16,7 +16,7 @@ class StorageHomeScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     useEffect(() {
-      coordinator.constructor();
+      coordinator.constructor(context);
       return () => coordinator.deconstructor();
     }, []);
     return Scaffold(

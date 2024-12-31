@@ -47,4 +47,10 @@ abstract class _GroupDisplayQueueCardStoreBase extends BaseWidgetStore
   String get queueUIDToDelete => currentlySelectedIndex == -1 || queues.isEmpty
       ? ''
       : queues[currentlySelectedIndex].uid;
+
+  @computed
+  String get currentlySelectedUID =>
+      currentlySelectedIndex == -1 || queues.isEmpty
+          ? ''
+          : queues[currentlySelectedIndex].uid;
 }

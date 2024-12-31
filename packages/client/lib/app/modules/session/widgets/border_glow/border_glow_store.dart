@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
-import 'package:flutter/material.dart';
+import 'dart:ui';
+
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/base_widget_store.dart';
@@ -58,7 +59,7 @@ abstract class _BorderGlowStoreBase extends BaseWidgetStore<NoParams>
   }
 
   @observable
-  Color currentColor = Colors.transparent;
+  Color currentColor = const Color(0x00000000);
 
   @observable
   double currentWidth = 0.0;

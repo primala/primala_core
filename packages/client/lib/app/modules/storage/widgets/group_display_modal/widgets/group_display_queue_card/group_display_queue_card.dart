@@ -85,7 +85,7 @@ class GroupDisplayQueueCard extends HookWidget {
             onTap: !showWidget
                 ? null
                 : () {
-                    store.toggleExpansion(index);
+                    store.setCurrentlySelectedIndex(index);
                   },
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 15.0),
@@ -99,39 +99,6 @@ class GroupDisplayQueueCard extends HookWidget {
               ),
             ),
           ),
-          if (store.expandedStates[index]) ...[
-            const Divider(
-              color: Colors.white24,
-              thickness: 1,
-              indent: 20,
-              endIndent: 20,
-            ),
-            // Padding(
-            // padding: const EdgeInsets.all(15.0),
-            // child: ListView.builder(
-            //   shrinkWrap: true,
-            //   physics: const NeverScrollableScrollPhysics(),
-            //   itemCount: 0,
-            //   itemBuilder: (context, contentIndex) {
-            //     return GestureDetector(
-            //       onTap: () {
-            //         if (!showWidget) return;
-            //         // store.setCurrentlySelectedMessage(
-            //           // queues.content[contentIndex],
-            //         // );
-            //       },
-            //       child: Padding(
-            //         padding: const EdgeInsets.symmetric(vertical: 5.0),
-            //         child: Jost(
-            //           queues.content[contentIndex],
-            //           fontSize: 18,
-            //         ),
-            //       ),
-            //     );
-            //   },
-            // ),
-            // ),
-          ],
         ],
       ),
     );
