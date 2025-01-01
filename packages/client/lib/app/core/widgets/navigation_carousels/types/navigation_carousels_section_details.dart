@@ -17,11 +17,11 @@ class NavigationCarouselsSectionDetails extends Equatable {
   ) {
     switch (type) {
       case NavigationCarouselsSectionTypes.cameraIcon:
-        assetPath = 'assets/camera_icon.png';
+        assetPath = 'assets/home/camera_icon.png';
       case NavigationCarouselsSectionTypes.qrCodeIcon:
-        assetPath = 'assets/qr_code_icon.png';
+        assetPath = 'assets/home/qr_code_icon.png';
       case NavigationCarouselsSectionTypes.queueIcon:
-        assetPath = 'assets/queue_icon.png';
+        assetPath = 'assets/groups/queue_icon.png';
     }
   }
 

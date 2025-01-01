@@ -8,7 +8,6 @@ import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte_backend/tables/company_presets.dart';
 part 'session_notes_widgets_coordinator.g.dart';
 
 class SessionNotesWidgetsCoordinator = _SessionNotesWidgetsCoordinatorBase
@@ -42,14 +41,6 @@ abstract class _SessionNotesWidgetsCoordinatorBase
 
   @observable
   int inactivityCount = 0;
-
-  @observable
-  PresetTypes presetType = PresetTypes.none;
-
-  @action
-  setPresetType(PresetTypes type) {
-    presetType = type;
-  }
 
   constructor({required Function onEarlyReturn}) {
     smartText.setMessagesData(SessionLists.notesPrimary);
@@ -164,13 +155,13 @@ abstract class _SessionNotesWidgetsCoordinatorBase
   beachWavesMovieStatusReactor() =>
       reaction((p0) => beachWaves.movieStatus, (p0) {
         if (p0 == MovieStatus.finished) {
-          if (presetType == PresetTypes.consultative) {
-            Modular.to.navigate(SessionConstants.groupHybrid);
-          } else if (presetType == PresetTypes.collaborative) {
-            Modular.to.navigate(SessionConstants.soloHybrid);
-          } else if (presetType == PresetTypes.solo) {
-            Modular.to.navigate(SessionConstants.polymorphicSolo);
-          }
+          // if (presetType == PresetTypes.consultative) {
+          //   Modular.to.navigate(SessionConstants.groupHybrid);
+          // } else if (presetType == PresetTypes.collaborative) {
+          Modular.to.navigate(SessionConstants.soloHybrid);
+          // } else if (presetType == PresetTypes.solo) {
+          //   Modular.to.navigate(SessionConstants.polymorphicSolo);
+          // }
         }
       });
 

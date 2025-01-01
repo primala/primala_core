@@ -1,7 +1,4 @@
 // ignore_for_file: constant_identifier_names
-
-import 'package:nokhte_backend/tables/finished_sessions.dart';
-import 'package:nokhte_backend/tables/session_queues.dart';
 import 'package:nokhte_backend/tables/user_information.dart';
 import 'package:nokhte_backend/types/types.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -12,8 +9,7 @@ class GroupInformationQueries {
   static const GROUP_MEMBERS = 'group_members';
   static const GROUP_NAME = 'group_name';
   static const GROUP_HANDLE = 'group_handle';
-  static const WITH_SESSIONS =
-      '*, ${FinishedSessionsQueries.TABLE}(*), ${SessionQueuesQueries.TABLE}(*)';
+  static const WITH_SESSIONS = '';
 
   final SupabaseClient supabase;
   final String userUID;
@@ -39,10 +35,10 @@ class GroupInformationQueries {
   }) async =>
       groupUID.isNotEmpty
           ? await supabase.from(TABLE).select().eq(UID, groupUID)
-          : await supabase.from(TABLE).select(WITH_SESSIONS).order(
-                'session_timestamp',
-                referencedTable: FinishedSessionsQueries.TABLE,
-              );
+          : await supabase.from(TABLE).select();
+
+  Future<String> getGroupName(String uid) async =>
+      (await select(groupUID: uid)).first[GROUP_NAME];
 
   Future<List<UserInformationEntity>> getGroupMembers(
     String groupUID,

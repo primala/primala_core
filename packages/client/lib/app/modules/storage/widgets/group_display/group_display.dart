@@ -166,7 +166,7 @@ class GroupDisplay extends HookWidget {
       return GestureDetector(
         onTap: () {
           store.setCurrentlySelectedIndex(index);
-          store.groupDisplayModal.showGroupDetailsModal(group, context);
+          store.groupDisplayModal.showModal(group, context);
         },
         child: Column(
           children: [

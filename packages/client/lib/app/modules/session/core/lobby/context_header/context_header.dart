@@ -7,7 +7,6 @@ import 'package:gradient_borders/gradient_borders.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
-import 'package:nokhte/app/modules/session_starters/session_starters.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 import 'mobx/context_header_store.dart';

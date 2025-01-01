@@ -7,7 +7,6 @@ import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte_backend/tables/company_presets.dart';
 part 'session_pause_coordinator.g.dart';
 
 class SessionPauseCoordinator = _SessionPauseCoordinatorBase
@@ -60,7 +59,7 @@ abstract class _SessionPauseCoordinatorBase
         setDisableAllTouchFeedback(true);
       },
     ));
-    disposers.add(sessionPresetReactor());
+    disposers.add(tapReactor());
   }
 
   tapReactor() => reaction((p0) => tap.tapCount, (p0) async {
@@ -68,19 +67,8 @@ abstract class _SessionPauseCoordinatorBase
           hasTapped = true;
           widgets.onTap();
           Timer(Seconds.get(1), () {
-            Modular.to.navigate(
-              sessionMetadata.presetType == PresetTypes.collaborative
-                  ? SessionConstants.soloHybrid
-                  : SessionConstants.groupHybrid,
-            );
+            Modular.to.navigate(SessionConstants.soloHybrid);
           });
-        }
-      });
-
-  sessionPresetReactor() =>
-      reaction((p0) => sessionMetadata.presetsLogic.state, (p0) async {
-        if (p0 == StoreState.loaded) {
-          disposers.add(tapReactor());
         }
       });
 

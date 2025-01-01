@@ -42,7 +42,6 @@ class PosthogRemoteSourceImpl
       eventName: END_SESSION,
       properties: {
         "duration_minutes": durationInMinutes,
-        "preset_type": params.presetType.toString(),
         "number_of_collaborators": params.numberOfCollaborators,
       },
     );
@@ -57,7 +56,6 @@ class PosthogRemoteSourceImpl
         properties: {
           "sent_at": DateTime.now().toIso8601String(),
           "number_of_collaborators": params.numberOfCollaborators,
-          "preset_type": params.presetType.toString(),
         },
       );
 

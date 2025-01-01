@@ -37,7 +37,7 @@ class Rally extends HookWidget with RallyConstants {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/rally_button_blue.png',
+                  'assets/power_up/rally_button_blue.png',
                   width: containerSize,
                   height: containerSize,
                 ),
@@ -87,13 +87,10 @@ class Rally extends HookWidget with RallyConstants {
                     itemBuilder: (context, index) {
                       return Observer(builder: (context) {
                         final collaborator = store.collaborators[index];
-                        final isRallyable = store.canRally[index];
                         return GestureDetector(
-                          onTap: isRallyable
-                              ? () => store.setCurrentlySelectedIndex(index)
-                              : () {},
+                          onTap: () => store.setCurrentlySelectedIndex(index),
                           child: AnimatedOpacity(
-                            opacity: isRallyable ? 1.0 : 0.5,
+                            opacity: 1.0,
                             duration: Seconds.get(1),
                             child: Container(
                               margin: const EdgeInsets.symmetric(
@@ -130,7 +127,7 @@ class Rally extends HookWidget with RallyConstants {
                 child: Column(
                   children: [
                     Image.asset(
-                      'assets/rally_button_blue.png',
+                      'assets/power_up/rally_button_blue.png',
                       width: containerSize,
                       height: containerSize,
                     ),
@@ -157,7 +154,7 @@ class Rally extends HookWidget with RallyConstants {
                     child: Column(
                       children: [
                         Image.asset(
-                          'assets/rally_button_red.png',
+                          'assets/power_up/rally_button_red.png',
                           width: containerSize,
                           height: containerSize,
                         ),
@@ -183,7 +180,7 @@ class Rally extends HookWidget with RallyConstants {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/rally_button_blue.png',
+                'assets/power_up/rally_button_blue.png',
                 width: containerSize,
                 height: containerSize,
               ),

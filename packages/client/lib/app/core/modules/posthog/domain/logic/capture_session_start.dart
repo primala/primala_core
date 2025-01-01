@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
-import 'package:nokhte_backend/tables/company_presets.dart';
 
 class CaptureSessionStart
     implements AbstractFutureLogic<void, CaptureSessionStartParams> {
@@ -15,13 +14,11 @@ class CaptureSessionStart
 
 class CaptureSessionStartParams extends Equatable {
   final int numberOfCollaborators;
-  final PresetTypes presetType;
 
   const CaptureSessionStartParams({
     required this.numberOfCollaborators,
-    required this.presetType,
   });
 
   @override
-  List<Object> get props => [numberOfCollaborators, presetType];
+  List<Object> get props => [numberOfCollaborators];
 }

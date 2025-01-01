@@ -3,6 +3,7 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
+import 'package:nokhte_backend/tables/session_information.dart';
 
 mixin BaseExitCoordinator on BaseCoordinator {
   SwipeDetector get swipe;
@@ -27,7 +28,7 @@ mixin BaseExitCoordinator on BaseCoordinator {
         switch (p0) {
           case GestureDirections.down:
             ifTouchIsNotDisabled(() async {
-              await presence.updateCurrentPhase(2.0);
+              await presence.updateUserStatus(SessionUserStatus.online);
               onSwipeDown();
               setDisableAllTouchFeedback(true);
             });
@@ -39,9 +40,10 @@ mixin BaseExitCoordinator on BaseCoordinator {
   userPhaseReactor({
     required Function initWrapUp,
   }) =>
-      reaction((p0) => sessionMetadata.currentPhases.toString(), (p0) async {
-        if ((sessionMetadata.numberOfAffirmative ==
-            sessionMetadata.numberOfCollaborators)) {
+      reaction((p0) => sessionMetadata.collaboratorStatuses.toString(),
+          (p0) async {
+        if (sessionMetadata.collaboratorStatuses
+            .every((element) => element == SessionUserStatus.readyToLeave)) {
           await initWrapUp();
         }
       });

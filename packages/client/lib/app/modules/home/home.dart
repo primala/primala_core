@@ -1,5 +1,5 @@
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:nokhte/app/core/modules/clean_up_collaboration_artifacts/clean_up_collaboration_artifacts.dart';
+import 'package:nokhte/app/core/modules/clean_up_sessions/clean_up_sessions.dart';
 import 'package:nokhte/app/core/modules/legacy_connectivity/legacy_connectivity.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
@@ -18,7 +18,7 @@ class HomeModule extends Module {
   @override
   List<Module> get imports => [
         HomeWidgetsModule(),
-        CleanUpCollaborationArtifactsModule(),
+        CleanUpSessionsModule(),
         UserInformationModule(),
         LegacyConnectivityModule(),
         PosthogModule(),
@@ -29,16 +29,14 @@ class HomeModule extends Module {
   binds(i) {
     i.add<HomeScreenRootRouterCoordinator>(
       () => HomeScreenRootRouterCoordinator(
-        cleanUpCollaborationArtifacts:
-            Modular.get<CleanUpCollaborationArtifactsCoordinator>(),
+        cleanUpSessions: Modular.get<CleanUpSessionsCoordinator>(),
         userInfo: Modular.get<UserInformationCoordinator>(),
         widgets: Modular.get<HomeScreenRootRouterWidgetsCoordinator>(),
       ),
     );
     i.add<QuickActionsRouterCoordinator>(
       () => QuickActionsRouterCoordinator(
-        cleanUpCollaborationArtifacts:
-            Modular.get<CleanUpCollaborationArtifactsCoordinator>(),
+        cleanUpSessions: Modular.get<CleanUpSessionsCoordinator>(),
         widgets: Modular.get<QuickActionsRouterWidgetsCoordinator>(),
         userInfo: Modular.get<UserInformationCoordinator>(),
         captureScreen: Modular.get<CaptureScreen>(),

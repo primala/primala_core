@@ -127,7 +127,7 @@ class NavigationMenuConfiguration extends Equatable {
 
   void _configureInSession() {
     sliderInfo = [
-      _createSliderItem(ActionSliderOptions.sessionInformation),
+      // _createSliderItem(ActionSliderOptions.sessionInformation),
       _createSliderItem(ActionSliderOptions.endSession),
       _createSliderItem(ActionSliderOptions.pauseSession),
     ];

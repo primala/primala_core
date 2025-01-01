@@ -2,7 +2,7 @@
 
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
-import 'package:nokhte/app/modules/storage/storage.dart';
+import 'package:nokhte_backend/tables/session_information.dart';
 part 'group_display_queue_card_store.g.dart';
 
 class GroupDisplayQueueCardStore = _GroupDisplayQueueCardStoreBase
@@ -14,7 +14,7 @@ abstract class _GroupDisplayQueueCardStoreBase extends BaseWidgetStore
   ObservableList<bool> expandedStates = ObservableList<bool>();
 
   @observable
-  ObservableList<QueueEntity> queues = ObservableList<QueueEntity>();
+  ObservableList<SessionEntity> queues = ObservableList();
 
   @observable
   String currentlySelectedMessage = '';
@@ -26,7 +26,7 @@ abstract class _GroupDisplayQueueCardStoreBase extends BaseWidgetStore
   setCurrentlySelectedIndex(int index) => currentlySelectedIndex = index;
 
   @action
-  setQueues(List<QueueEntity> queues) {
+  setQueues(List<SessionEntity> queues) {
     this.queues = ObservableList.of(queues);
     expandedStates = ObservableList.of(List.filled(queues.length, false));
   }
@@ -47,4 +47,10 @@ abstract class _GroupDisplayQueueCardStoreBase extends BaseWidgetStore
   String get queueUIDToDelete => currentlySelectedIndex == -1 || queues.isEmpty
       ? ''
       : queues[currentlySelectedIndex].uid;
+
+  @computed
+  String get currentlySelectedUID =>
+      currentlySelectedIndex == -1 || queues.isEmpty
+          ? ''
+          : queues[currentlySelectedIndex].uid;
 }

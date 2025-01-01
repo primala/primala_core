@@ -134,10 +134,7 @@ abstract class _HomeCoordinatorBase
               label: 'Accept',
               onPressed: () async {
                 await logic.joinSession(
-                  JoinSessionParams(
-                    userIndex: p0.last.userIndex,
-                    sessionUID: p0.last.sessionUID,
-                  ),
+                  p0.last.sessionUID,
                 );
                 Modular.to.navigate(SessionConstants.lobby);
               },
@@ -148,7 +145,7 @@ abstract class _HomeCoordinatorBase
             content: Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: Jost(
-                'Session from ${p0.last.sessionLeaderFirstName}',
+                '${p0.last.groupName}: Join Session?',
                 fontSize: 18,
               ),
             ),

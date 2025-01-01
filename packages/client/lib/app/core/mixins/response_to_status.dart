@@ -12,11 +12,12 @@ mixin ResponseToStatus {
     }
   }
 
-  T fromSupabaseProperty<T>(List res, String property, T defaultType) {
+  Either<Failure, T> fromSupabaseProperty<T>(
+      List res, String property, T defaultType) {
     if (res.isEmpty) {
-      return defaultType;
+      return Right(defaultType);
     } else {
-      return res.first[property];
+      return Right(res.first[property]);
     }
   }
 

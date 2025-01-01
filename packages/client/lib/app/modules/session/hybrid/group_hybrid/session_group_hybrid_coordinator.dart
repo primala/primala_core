@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/extensions/extensions.dart';
-import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/types/types.dart';
@@ -38,11 +37,11 @@ abstract class _SessionGroupHybridCoordinatorBase
   @action
   constructor() async {
     widgets.constructor(
-      sessionMetadata.someoneIsTakingANote,
+      false,
       sessionMetadata.everyoneIsOnline,
     );
     initReactors();
-    await presence.updateCurrentPhase(2.0);
+    // await presence.updateCurrentPhase(2.0);
     await onResumed();
     await captureScreen(SessionConstants.groupHybrid);
   }
@@ -85,7 +84,7 @@ abstract class _SessionGroupHybridCoordinatorBase
     disposers.add(tapReactor());
     disposers.add(userIsSpeakingReactor());
     disposers.add(userCanSpeakReactor());
-    disposers.add(othersAreTakingNotesReactor());
+    // disposers.add(othersAreTakingNotesReactor());
     disposers.add(glowColorReactor());
     disposers.add(secondarySpeakerSpotlightReactor());
     disposers.add(letEmCookTapReactor());
@@ -109,7 +108,7 @@ abstract class _SessionGroupHybridCoordinatorBase
           setUserIsSpeaking(true);
           widgets.onHold(hold.placement);
           setDisableAllTouchFeedback(true);
-          await presence.updateCurrentPhase(2);
+          // await presence.updateCurrentPhase(2);
         }
       });
 
@@ -168,14 +167,14 @@ abstract class _SessionGroupHybridCoordinatorBase
         },
       );
 
-  othersAreTakingNotesReactor() =>
-      reaction((p0) => sessionMetadata.someoneIsTakingANote, (p0) {
-        if (p0 && !widgets.isGoingToNotes) {
-          widgets.othersAreTakingNotesTint.initMovie(const NoParams());
-        } else {
-          widgets.othersAreTakingNotesTint.reverseMovie(const NoParams());
-        }
-      });
+  // othersAreTakingNotesReactor() =>
+  //     reaction((p0) => sessionMetadata.someoneIsTakingANote, (p0) {
+  //       if (p0 && !widgets.isGoingToNotes) {
+  //         widgets.othersAreTakingNotesTint.initMovie(const NoParams());
+  //       } else {
+  //         widgets.othersAreTakingNotesTint.reverseMovie(const NoParams());
+  //       }
+  //     });
 
   tapReactor() => reaction(
         (p0) => tap.tapCount,
@@ -183,7 +182,7 @@ abstract class _SessionGroupHybridCoordinatorBase
           () async {
             if (sessionMetadata.userCanSpeak) {
               widgets.onTap(tap.currentTapPosition, () async {
-                await presence.updateCurrentPhase(3.5);
+                // await presence.updateCurrentPhase(3.5);
               });
             }
           },
@@ -194,7 +193,7 @@ abstract class _SessionGroupHybridCoordinatorBase
         ifTouchIsNotDisabled(() async {
           if (sessionMetadata.everyoneIsOnline &&
               sessionMetadata.canStartUsingSession &&
-              !sessionMetadata.someoneIsTakingANote &&
+              // !sessionMetadata.someoneIsTakingANote &&
               !widgets.sessionNavigation.hasInitiatedBlur &&
               hold.placement == GesturePlacement.bottomHalf) {
             await presence

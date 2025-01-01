@@ -30,10 +30,8 @@ abstract class _RallyStoreBase extends BaseWidgetStore with Store, Reactions {
 
   setValues({
     required List<String> fullNames,
-    required List<bool> canRally,
   }) {
     setCollaborators(fullNames);
-    setCanRally(canRally);
   }
 
   @observable
