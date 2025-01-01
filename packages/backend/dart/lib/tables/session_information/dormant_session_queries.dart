@@ -49,4 +49,19 @@ class DormantSessionInformationQueries
       GROUP_UID: groupUID,
     }).select();
   }
+
+  Future<List> awakenDormantSession(
+    String sessionUID,
+  ) async {
+    return await supabase
+        .from(TABLE)
+        .update({
+          STATUS: SessionInformationUtils.mapSessionStatusToString(
+            SessionStatus.recruiting,
+          ),
+          CREATED_AT: DateTime.now().toUtc().toIso8601String()
+        })
+        .eq(UID, sessionUID)
+        .select();
+  }
 }

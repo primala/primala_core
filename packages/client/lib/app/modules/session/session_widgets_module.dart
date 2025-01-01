@@ -1,5 +1,6 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
+import 'package:nokhte/app/core/modules/session_content/session_content.dart';
 import 'package:nokhte/app/core/widgets/widget_modules/mirrored_text_module.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'session.dart';
@@ -84,7 +85,10 @@ class SessionWidgetsModule extends Module {
     i.add<SessionSoloHybridWidgetsCoordinator>(
       () => SessionSoloHybridWidgetsCoordinator(
         purposeBanner: PurposeBannerStore(
-          nokhteBlur: NokhteBlurStore(),
+          blur: NokhteBlurStore(),
+          blockTextDisplay: BlockTextDisplayStore(
+            blockTextFields: BlockTextFieldsStore(),
+          ),
         ),
         navigationMenu: Modular.get<NavigationMenuStore>(),
         presenceOverlay:
@@ -96,7 +100,6 @@ class SessionWidgetsModule extends Module {
           tint: TintStore(),
         ),
         primarySmartText: SmartTextStore(),
-        secondarySmartText: SmartTextStore(),
         othersAreTalkingTint: HalfScreenTintStore(),
         speakLessSmileMore: SpeakLessSmileMoreStore(),
         touchRipple: TouchRippleStore(),

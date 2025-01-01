@@ -25,9 +25,15 @@ abstract class _SessionStarterCoordinatorBase with Store, Reactions {
   @action
   constructor() async {
     widgets.constructor();
+    initReactors();
+    await storageLogic.getGroups();
+  }
+
+  initReactors() {
     disposers.add(groupReactor());
     disposers.add(sessionStartReactor());
-    await storageLogic.getGroups();
+    disposers.add(selectedGroupReactor());
+    disposers.add(dormantSessionsReactor());
   }
 
   groupReactor() => reaction(
@@ -38,15 +44,42 @@ abstract class _SessionStarterCoordinatorBase with Store, Reactions {
         },
       );
 
+  selectedGroupReactor() => reaction(
+        (p0) => widgets.sessionStarterDropdown.groupUID,
+        (p0) async {
+          if (p0.isEmpty) return;
+          await storageLogic.listenToSessions(p0);
+          // if (storageLogic.selectedGroup == null) return;
+          // widgets.onGroupSelected(storageLogic.selectedGroup!);
+        },
+      );
+
+  dormantSessionsReactor() => reaction(
+        (p0) => storageLogic.dormantSessions,
+        (p0) {
+          if (p0.isEmpty) return;
+          widgets.sessionStarterDropdown.setAvailableQueues(p0);
+          // if (storageLogic.state == StoreState.loading) return;
+          // widgets.onDormantSessionsReceived(storageLogic.dormantSessions);
+        },
+      );
+
   sessionStartReactor() => reaction(
         (p0) => widgets.sessionStarterDropdown.tapCount,
         (p0) async {
           if (p0 == 1) {
-            await homeLogic.initializeSession(
-              InitializeSessionParams(
-                groupUID: widgets.sessionStarterDropdown.groupUID,
-              ),
-            );
+            if (widgets.sessionStarterDropdown.queueUID.isEmpty) {
+              await homeLogic.initializeSession(
+                InitializeSessionParams(
+                  groupUID: widgets.sessionStarterDropdown.groupUID,
+                ),
+              );
+            } else {
+              await homeLogic
+                  .awakenSession(widgets.sessionStarterDropdown.queueUID);
+              await homeLogic
+                  .joinSession(widgets.sessionStarterDropdown.queueUID);
+            }
             Modular.to.navigate(
               HomeConstants.quickActionsRouter,
               arguments: {

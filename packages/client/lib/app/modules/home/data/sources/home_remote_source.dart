@@ -14,6 +14,7 @@ abstract class HomeRemoteSource {
   Future<List> updateRequestStatus(UpdateRequestStatusParams params);
   Future<List> sendRequest(SendRequestParams params);
   Future<List> getUserInformation();
+  Future<List> awakenSession(String params);
   Future<List> initializeSession(InitializeSessionParams params);
   Stream<List<SessionRequests>> listenToSessionRequests();
   Future<List> joinSession(String params);
@@ -26,6 +27,7 @@ class HomeRemoteSourceImpl implements HomeRemoteSource {
   final CollaboratorRelationshipsQueries collaboratorRelationshipsQueries;
   final CollaboratorRelationshipsStream collaboratorRelationshipsStream;
   final UserInformationQueries userInfoQueries;
+  final DormantSessionInformationQueries dormantSessionQueries;
   final SessionInformationStreams sessionInformationStreams;
   final SessionInformationQueries sessionInformationQueries;
 
@@ -36,6 +38,8 @@ class HomeRemoteSourceImpl implements HomeRemoteSource {
             CollaboratorRequestsQueries(supabase: supabase),
         collaboratorRelationshipsQueries =
             CollaboratorRelationshipsQueries(supabase: supabase),
+        dormantSessionQueries =
+            DormantSessionInformationQueries(supabase: supabase),
         sessionInformationStreams =
             SessionInformationStreams(supabase: supabase),
         sessionInformationQueries =
@@ -88,4 +92,8 @@ class HomeRemoteSourceImpl implements HomeRemoteSource {
   @override
   listenToSessionRequests() =>
       sessionInformationStreams.listenToSessionRequests().distinct();
+
+  @override
+  Future<List> awakenSession(String params) async =>
+      dormantSessionQueries.awakenDormantSession(params);
 }

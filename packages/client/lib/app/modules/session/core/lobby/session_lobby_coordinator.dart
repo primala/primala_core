@@ -101,8 +101,8 @@ abstract class _SessionLobbyCoordinatorBase
   @action
   onPresetInfoReceived() async {
     showPresetInfo();
+    await presence.updateUserStatus(SessionUserStatus.readyToStart);
     if (hasReceivedRoutingArgs) {
-      await presence.updateUserStatus(SessionUserStatus.readyToStart);
       disposers.add(tapReactor());
       disposers.add(canStartTheSessionReactor());
     }

@@ -6,14 +6,13 @@ import 'package:nokhte/app/core/modules/session_content/session_content.dart';
 import 'package:nokhte_backend/tables/session_content.dart';
 part 'session_content_logic_coordinator.g.dart';
 
-class SessionContentLogicCoordinatorStore = _SessionContentLogicCoordinatorStoreBase
-    with _$SessionContentLogicCoordinatorStore;
+class SessionContentLogicCoordinator = _SessionContentLogicCoordinatorBase
+    with _$SessionContentLogicCoordinator;
 
-abstract class _SessionContentLogicCoordinatorStoreBase
-    with Store, BaseMobxLogic {
+abstract class _SessionContentLogicCoordinatorBase with Store, BaseMobxLogic {
   final SessionContentContract contract;
 
-  _SessionContentLogicCoordinatorStoreBase({
+  _SessionContentLogicCoordinatorBase({
     required this.contract,
   }) {
     initBaseLogicActions();
@@ -65,5 +64,17 @@ abstract class _SessionContentLogicCoordinatorStoreBase
     await contract.cancelSessionContentStream();
     contentStreamSubscription = const Stream.empty().listen((event) {});
     sessionContent = ObservableStream(const Stream.empty());
+  }
+
+  @computed
+  String get currentFocus {
+    if (sessionContentEntity.isEmpty) {
+      return '';
+    } else {
+      return sessionContentEntity
+          .where((element) => element.numberOfParents == 0)
+          .last
+          .content;
+    }
   }
 }

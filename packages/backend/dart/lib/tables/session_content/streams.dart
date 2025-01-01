@@ -29,7 +29,7 @@ class SessionContentStreams with SessionContentConstants, SessionUtils {
     final events = supabase
         .from(TABLE)
         .stream(
-          primaryKey: ['uid'],
+          primaryKey: [UID],
         )
         .eq(
           SESSION_UID,
@@ -51,7 +51,7 @@ class SessionContentStreams with SessionContentConstants, SessionUtils {
       final depthCache = <String, int>{};
 
       for (var item in event) {
-        parentMap[item['uid'].toString()] = item['parent_uid']?.toString();
+        parentMap[item[UID].toString()] = item[PARENT_UID]?.toString();
       }
 
       int calculateDepth(String uid) {
@@ -71,23 +71,24 @@ class SessionContentStreams with SessionContentConstants, SessionUtils {
 
       final itemsMap = {
         for (var e in event)
-          e['uid'].toString(): SessionContentEntity.fromSupabase(
+          e[UID].toString(): SessionContentEntity.fromSupabase(
             e,
-            calculateDepth(e['uid'].toString()),
+            calculateDepth(e[UID].toString()),
           )
       };
 
       final childrenMap = <String, List<Map<String, dynamic>>>{};
       for (var item in event) {
-        final parentUid = item['parent_uid']?.toString();
+        final parentUid = item[PARENT_UID]?.toString();
         if (parentUid != null) {
           childrenMap.putIfAbsent(parentUid, () => []).add(item);
         }
       }
 
+      // print(' what are the children map values ${childrenMap.values}');
       for (var children in childrenMap.values) {
-        children.sort((a, b) => DateTime.parse(a['last _edited_at'])
-            .compareTo(DateTime.parse(b['last_edited_at'])));
+        children.sort((a, b) => DateTime.parse(a[LAST_EDITED_AT])
+            .compareTo(DateTime.parse(b[LAST_EDITED_AT])));
       }
 
       void addItemAndChildren(String uid) {
@@ -97,16 +98,16 @@ class SessionContentStreams with SessionContentConstants, SessionUtils {
 
         final children = childrenMap[uid] ?? [];
         for (var child in children) {
-          addItemAndChildren(child['uid'].toString());
+          addItemAndChildren(child[UID].toString());
         }
       }
 
-      final rootItems = event.where((e) => e['parent_uid'] == null).toList()
-        ..sort((a, b) => DateTime.parse(a['last_edited_at'])
-            .compareTo(DateTime.parse(b['last_edited_at'])));
+      final rootItems = event.where((e) => e[PARENT_UID] == null).toList()
+        ..sort((a, b) => DateTime.parse(a[LAST_EDITED_AT])
+            .compareTo(DateTime.parse(b[LAST_EDITED_AT])));
 
       for (var rootItem in rootItems) {
-        addItemAndChildren(rootItem['uid'].toString());
+        addItemAndChildren(rootItem[UID].toString());
       }
 
       if (!areListsEqual<SessionContentEntity>(_contentList, previousYield)) {

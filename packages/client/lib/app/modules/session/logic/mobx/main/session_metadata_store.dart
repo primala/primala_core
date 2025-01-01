@@ -4,8 +4,8 @@ import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/types/types.dart';
+import 'package:nokhte/app/core/modules/session_content/session_content.dart';
 import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte_backend/tables/session_content.dart';
 import 'package:nokhte_backend/tables/session_information.dart';
 part 'session_metadata_store.g.dart';
 
@@ -15,8 +15,10 @@ class SessionMetadataStore = _SessionMetadataStoreBase
 abstract class _SessionMetadataStoreBase
     with Store, BaseMobxLogic<NoParams, Stream<SessionMetadata>> {
   final SessionPresenceContract contract;
+  final SessionContentLogicCoordinator sessionContentLogic;
   _SessionMetadataStoreBase({
     required this.contract,
+    required this.sessionContentLogic,
   }) {
     initBaseLogicActions();
   }
@@ -39,9 +41,6 @@ abstract class _SessionMetadataStoreBase
   @observable
   ObservableList<SessionUserInfoEntity> collaboratorInformation =
       ObservableList.of([]);
-
-  @observable
-  ObservableList<ContentBlock> content = ObservableList.of([]);
 
   @observable
   String? currentSpeakerUID = '';
@@ -97,9 +96,10 @@ abstract class _SessionMetadataStoreBase
       const Stream.empty().listen((event) {});
 
   @action
-  dispose() {
+  dispose() async {
     metadataStreamSubscription = const Stream.empty().listen((event) {});
     sessionMetadata = ObservableStream(const Stream.empty());
+    await sessionContentLogic.dispose();
   }
 
   @action
@@ -127,6 +127,7 @@ abstract class _SessionMetadataStoreBase
           userIsSpeaking = value.userIsSpeaking;
           userCanSpeak = value.userCanSpeak;
           sessionUID = value.sessionUID;
+          await sessionContentLogic.listenToSessionContent(sessionUID);
 
           setState(StoreState.loaded);
         });
@@ -153,10 +154,6 @@ abstract class _SessionMetadataStoreBase
   @computed
   bool get canExitTheSession => collaboratorStatuses
       .every((element) => element == SessionUserStatus.readyToLeave);
-
-  @computed
-  String get currentPurpose =>
-      content.isEmpty ? 'No purpose yet' : content.last.content;
 
   @computed
   bool get canStillAbort => numberOfCollaborators == 1;

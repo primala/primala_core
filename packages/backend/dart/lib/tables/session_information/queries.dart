@@ -33,13 +33,31 @@ class SessionInformationQueries with SessionInformationConstants, SessionUtils {
               SessionStatus.recruiting,
             ),
           );
-      for (var row in res) {
-        if (row[COLLABORATOR_UIDS].contains(userUID)) {
-          sessionUID = row[UID];
-          userIndex = row[COLLABORATOR_UIDS].indexOf(userUID);
+      if (res.isNotEmpty) {
+        for (var row in res) {
+          if (row[COLLABORATOR_UIDS].contains(userUID)) {
+            sessionUID = row[UID];
+            userIndex = row[COLLABORATOR_UIDS].indexOf(userUID);
+            break;
+          }
+        }
+      } else {
+        final res = await supabase.from(TABLE).select().eq(
+              STATUS,
+              SessionInformationUtils.mapSessionStatusToString(
+                SessionStatus.started,
+              ),
+            );
+        for (var row in res) {
+          if (row[COLLABORATOR_UIDS].contains(userUID)) {
+            sessionUID = row[UID];
+            userIndex = row[COLLABORATOR_UIDS].indexOf(userUID);
+            break;
+          }
         }
       }
     }
+    print('what is the session uid: $sessionUID user index $userIndex');
   }
 
   resetValues() {
@@ -47,7 +65,7 @@ class SessionInformationQueries with SessionInformationConstants, SessionUtils {
     userFullName = '';
   }
 
-  select() async => await supabase.from(TABLE).select();
+  select() async => await supabase.from(TABLE).select().eq(UID, sessionUID);
 
   Future<SessionResponse<T>> _getProperty<T>(String property) async {
     final row = (await select()).first;
@@ -94,10 +112,12 @@ class SessionInformationQueries with SessionInformationConstants, SessionUtils {
         final newStatus = SessionInformationUtils.mapSessionStatusToString(
             SessionStatus.started);
         return await _onCurrentActiveNokhteSession(
-          supabase.from(TABLE).update({
-            STATUS: newStatus,
-            VERSION: res.currentVersion + 1,
-          }),
+          supabase.from(TABLE).update(
+            {
+              STATUS: newStatus,
+              VERSION: res.currentVersion + 1,
+            },
+          ),
           version: res.currentVersion,
         );
       },
@@ -106,25 +126,6 @@ class SessionInformationQueries with SessionInformationConstants, SessionUtils {
       },
     );
   }
-
-  // Future<List> updateSessionTitle() async {
-  //   await computeCollaboratorInformation();
-  //   final res = await getSessionTitle();
-  //   return await retry<List>(
-  //     action: () async {
-  //       return await _onCurrentActiveNokhteSession(
-  //         supabase.from(TABLE).update({
-  //           STATUS: ,
-  //           VERSION: res.currentVersion + 1,
-  //         }),
-  //         version: res.currentVersion,
-  //       );
-  //     },
-  //     shouldRetry: (result) {
-  //       return result.isEmpty;
-  //     },
-  //   );
-  // }
 
   Future<List> refreshSpeakingTimerStart() async {
     await computeCollaboratorInformation();
@@ -341,6 +342,7 @@ class SessionInformationQueries with SessionInformationConstants, SessionUtils {
     required int version,
   }) async {
     await computeCollaboratorInformation();
+    print('on current session: $sessionUID');
     if (sessionUID.isNotEmpty) {
       return await query.eq(VERSION, version).eq(UID, sessionUID).select();
     } else {

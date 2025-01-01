@@ -32,6 +32,9 @@ abstract class _HomeLogicCoordinatorBase with Store, BaseMobxLogic {
   bool sessionJoined = false;
 
   @observable
+  bool sessionAwakened = false;
+
+  @observable
   ObservableList<SessionRequests> sessionRequests = ObservableList.of([]);
 
   @observable
@@ -169,6 +172,18 @@ abstract class _HomeLogicCoordinatorBase with Store, BaseMobxLogic {
       (failure) => errorUpdater(failure),
       (status) {
         sessionJoined = status;
+      },
+    );
+  }
+
+  @action
+  awakenSession(String params) async {
+    sessionAwakened = false;
+    final res = await contract.awakenSession(params);
+    res.fold(
+      (failure) => errorUpdater(failure),
+      (status) {
+        sessionAwakened = status;
       },
     );
   }

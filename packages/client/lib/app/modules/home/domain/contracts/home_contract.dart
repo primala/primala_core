@@ -20,6 +20,8 @@ abstract class HomeContract {
 
   Future<Either<Failure, bool>> joinSession(String params);
 
+  Future<Either<Failure, bool>> awakenSession(String params);
+
   Future<bool> cancelCollaboratorRequestsStream(
     NoParams params,
   );

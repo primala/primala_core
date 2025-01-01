@@ -1,295 +1,116 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/base_widget_store.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
+import 'package:nokhte/app/core/modules/session_content/session_content.dart';
+import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
-import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte_backend/tables/session_content.dart';
-import 'package:simple_animations/simple_animations.dart';
+
 part 'purpose_banner_store.g.dart';
 
 class PurposeBannerStore = _PurposeBannerStoreBase with _$PurposeBannerStore;
 
 abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
     with Store {
-  final NokhteBlurStore nokhteBlur;
+  final NokhteBlurStore blur;
+  final BlockTextDisplayStore blockTextDisplay;
+  final BlockTextFieldsStore blockTextFields;
 
   _PurposeBannerStoreBase({
-    required this.nokhteBlur,
-  });
+    required this.blur,
+    required this.blockTextDisplay,
+  }) : blockTextFields = blockTextDisplay.blockTextFields;
 
   late BuildContext buildContext;
-  late AnimationController controller;
-
-  final TextEditingController textEditingController = TextEditingController();
-  final FocusNode textFieldFocusNode = FocusNode();
+  // late AnimationController controller;
 
   @action
-  constructor(context, controller) {
-    if (tapCount == 0) {
-      buildContext = context;
-      this.controller = controller;
-      tapCount++;
-    }
+  constructor(BuildContext buildContext) {
+    this.buildContext = buildContext;
   }
 
   @observable
-  ObservableList<String> sessionContent = ObservableList.of(['No purpose yet']);
+  String currentFocus = 'No Focus Yet';
 
   @observable
-  bool showModal = false;
-
-  @observable
-  bool showTextInput = false;
-
-  @observable
-  int currentPurposeIndex = -1;
-
-  @observable
-  int currentQueueIndex = -1;
-
-  Function(AddContentParams params) addContent = (params) {};
-  Function(MoveQueueToTopParams params) moveQueueToTheTop = (params) {};
+  bool modalIsVisible = false;
 
   @action
-  setAddContent(Function(AddContentParams params) value) => addContent = value;
+  setModalIsVisible(bool value) => modalIsVisible = value;
 
   @action
-  setMoveQueueToTheTop(Function(MoveQueueToTopParams params) value) =>
-      moveQueueToTheTop = value;
-
-  @action
-  setCurrentPurposeIndex(int index) {
-    currentPurposeIndex = index;
+  setFocus(String content) {
+    currentFocus = content;
   }
-
-  @action
-  setCurrentQueueIndex(int index) {
-    currentQueueIndex = index;
-  }
-
-  @action
-  setShowModal(bool value) => showModal = value;
-
-  @action
-  setSessionContent(ObservableList<String> content) {
-    sessionContent = content;
-  }
-
-  @observable
-  String purpose = '';
-
-  // bool hasSubstringAtAnyIndex(List<String> list, String substring) {
-  // // Iterate through each string in the list
-  // for (String item in list) {
-  //   // Check if the substring is present in the current string
-  //   if (item.contains(substring)) {
-  //     return true;
-  //   }
-  // }
-
-  // // Return false if no match is found
-  // return false;
-  // }
-
-  @action
-  setPurpose(ObservableList<ContentBlock> content) {
-    nokhteBlur.setControl(Control.stop);
-    // if (content.isNotEmpty) {
-    //   if ((content.last != purpose && content.last.content.contains("P: ")) ||
-    //       purpose.isEmpty) {
-    //     setWidgetVisibility(false);
-    //   }
-    // } else {
-    //   setWidgetVisibility(false);
-    // }
-    // Timer(Seconds.get(0, milli: 500), () {
-    // if (content.isEmpty || !hasSubstringAtAnyIndex(content, "P: ")) {
-    //   purpose = 'No purpose yet';
-    //   if (hasSubstringAtAnyIndex(content, "Q: ")) {
-    //     sessionContent = content;
-    //   }
-    // } else {
-    //   sessionContent = content;
-    //   // if (content.last.contains("P: ")) {
-    //   //   purpose = content.last.substring(3);
-    //   // } else {
-    //   purpose = content
-    //       .lastWhere((element) => element.contains("P: "))
-    //       .substring(3);
-    // }
-    // }
-    // setWidgetVisibility(true);
-    // });
-  }
-
-  @action
-  toggleTextInput(bool value) {
-    if (value) {
-      textFieldFocusNode.requestFocus();
-      showTextInput = value;
-    } else {
-      textFieldFocusNode.unfocus();
-      showTextInput = value;
-    }
-  }
-
-  int getIsertionIndex(
-    List<String> list,
-    int purposeIndex,
-  ) {
-    int insertIndex = list.length;
-
-    for (int i = purposeIndex + 1; i < list.length; i++) {
-      if (list[i].startsWith("P: ")) {
-        insertIndex = i;
-        break;
-      }
-    }
-
-    return insertIndex;
-  }
-
-  // AddContentParams getParams(
-  // int purposeIndex,
-  // ) {
-  // return AddContentParams(
-  // content: 'C: ${textEditingController.text}',
-  // insertAt: getIsertionIndex(sessionContent, purposeIndex),
-  // );
-  // }
 
   @action
   onTap() => tapCount++;
 
   @action
-  openModal({
+  showModal({
     required Function onOpen,
     required Function onClose,
   }) {
-    // if (showWidget && !showModal) {
-    //   onOpen();
-    //   setShowModal(true);
-    //   nokhteBlur.init(
-    //     end: Seconds.get(0, milli: 200),
-    //   );
-    //   showModalBottomSheet(
-    //     isDismissible: false,
-    //     shape: const RoundedRectangleBorder(
-    //       borderRadius: BorderRadius.vertical(
-    //         top: Radius.circular(36),
-    //       ),
-    //     ),
-    //     isScrollControlled: true,
-    //     backgroundColor: Colors.black.withOpacity(.2),
-    //     context: buildContext,
-    //     builder: (context) => DraggableScrollableSheet(
-    //       maxChildSize: .91,
-    //       initialChildSize: .9,
-    //       minChildSize: .7,
-    //       expand: false,
-    //       builder: (context, scrollController) => Stack(
-    //         children: [
-    //           NokhteBlur(
-    //             store: nokhteBlur,
-    //           ),
-    //           SingleChildScrollView(
-    //             controller: scrollController,
-    //             child: Observer(
-    //               builder: (context) => SizedBox(
-    //                 width: MediaQuery.of(context).size.width,
-    //                 child: PurposeConclusionBody(
-    //                   sessionContent: sessionContent,
-    //                   onPurposeTap: (int index) {
-    //                     toggleTextInput(true);
-    //                     setCurrentPurposeIndex(index);
-    //                   },
-    //                   onQueueTap: (int index) async {
-    //                     // toggleTextInput(true);
-    //                     setCurrentQueueIndex(index);
-    //                     await moveQueueToTheTop(
-    //                       MoveQueueToTopParams(
-    //                         content: 'P: ${sessionContent[index].substring(3)}',
-    //                         queueIndex: index,
-    //                       ),
-    //                     );
-    //                   },
-    //                 ),
-    //               ),
-    //             ),
-    //           ),
-    //           Observer(builder: (context) {
-    //             return Positioned(
-    //               bottom: MediaQuery.of(context).viewInsets.bottom,
-    //               left: 0,
-    //               right: 0,
-    //               child: AnimatedOpacity(
-    //                 opacity: useWidgetOpacity(showTextInput),
-    //                 duration: Seconds.get(1),
-    //                 child: Container(
-    //                   padding: const EdgeInsets.symmetric(
-    //                       horizontal: 16.0, vertical: 8.0),
-    //                   decoration: BoxDecoration(
-    //                     color: Colors.white,
-    //                     border: Border(
-    //                       top: BorderSide(color: Colors.grey.shade300),
-    //                     ),
-    //                   ),
-    //                   child: Row(
-    //                     children: [
-    //                       Expanded(
-    //                         child: TextField(
-    //                           maxLength: 104,
-    //                           maxLengthEnforcement:
-    //                               MaxLengthEnforcement.enforced,
-    //                           // maxLines: 1,
-    //                           controller: textEditingController,
-    //                           focusNode: textFieldFocusNode,
-    //                           decoration: const InputDecoration(
-    //                             hintText: 'Type your message...',
-    //                             counterText: '',
-    //                             border: InputBorder.none,
-    //                           ),
-    //                           onSubmitted: (text) async {
-    //                             toggleTextInput(false);
-    //                             Timer(Seconds.get(1), () {
-    //                               textEditingController.clear();
-    //                             });
-    //                             if (text.isNotEmpty) {
-    //                               // await addContent(
-    //                               //     getParams(currentPurposeIndex));
-    //                             }
-    //                           },
-    //                         ),
-    //                       ),
-    //                       IconButton(
-    //                         icon: const Icon(Icons.send),
-    //                         onPressed: () async {
-    //                           toggleTextInput(false);
-    //                           Timer(Seconds.get(1), () {
-    //                             textEditingController.clear();
-    //                           });
-    //                           if (textEditingController.text.isNotEmpty) {
-    //                             // await addContent(
-    //                             //     getParams(currentPurposeIndex));
-    //                           }
-    //                         },
-    //                       ),
-    //                     ],
-    //                   ),
-    //                 ),
-    //               ),
-    //             );
-    //           }),
-    //         ],
-    //       ),
-    //     ),
-    //   ).whenComplete(() {
-    //     onClose();
-    //     nokhteBlur.reverse();
-    //     setShowModal(false);
-    //   });
-    // }
+    if (true) {
+      print(' is this being called $modalIsVisible');
+      onOpen();
+      setModalIsVisible(true);
+      blur.init(
+        end: Seconds.get(0, milli: 200),
+      );
+      showModalBottomSheet(
+        isDismissible: false,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(36),
+          ),
+        ),
+        isScrollControlled: true,
+        backgroundColor: Colors.black.withOpacity(.2),
+        context: buildContext,
+        builder: (context) => DraggableScrollableSheet(
+          maxChildSize: .91,
+          initialChildSize: .9,
+          minChildSize: .7,
+          expand: false,
+          builder: (context, scrollController) => Observer(
+            builder: (context) => MultiHitStack(
+              children: [
+                NokhteBlur(
+                  store: blur,
+                ),
+                SingleChildScrollView(
+                  controller: scrollController,
+                  child: Observer(
+                    builder: (context) => SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            BlockTextDisplay(
+                              store: blockTextDisplay,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                BlockTextFields(
+                  store: blockTextDisplay.blockTextFields,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ).whenComplete(() {
+        onClose();
+        blur.reverse();
+        setModalIsVisible(false);
+      });
+    }
   }
 }

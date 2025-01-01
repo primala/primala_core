@@ -5,6 +5,7 @@ import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
+import 'package:nokhte/app/core/modules/session_content/session_content.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
@@ -20,6 +21,7 @@ abstract class _SessionSoloHybridCoordinatorBase
   final TapDetector tap;
   final SwipeDetector swipe;
   final SessionMetadataStore sessionMetadata;
+  final SessionContentLogicCoordinator sessionContent;
   @override
   final SessionPresenceCoordinator presence;
   @override
@@ -33,6 +35,7 @@ abstract class _SessionSoloHybridCoordinatorBase
     required this.captureScreen,
     required this.presence,
   })  : sessionMetadata = presence.sessionMetadataStore,
+        sessionContent = presence.sessionMetadataStore.sessionContentLogic,
         navigationMenu = widgets.navigationMenu {
     initBaseCoordinatorActions();
   }
@@ -49,10 +52,7 @@ abstract class _SessionSoloHybridCoordinatorBase
     if (!sessionMetadata.everyoneIsOnline) {
       widgets.onCollaboratorLeft();
     }
-    // widgets.purposeBanner.setAddContent(presence.addContent);
-    // widgets.purposeBanner.setMoveQueueToTheTop(presence.moveQueueToTheTop);
     initReactors();
-    // await presence.updateUserStatus(SessionUserStatus.online);
     await onResumed();
     await captureScreen(SessionConstants.soloHybrid);
   }
@@ -95,7 +95,7 @@ abstract class _SessionSoloHybridCoordinatorBase
       },
     ));
     disposers.add(tapReactor());
-    disposers.add(currentPurposeReactor());
+    disposers.add(currentFocusReactor());
     disposers.add(
       widgets.baseBeachWavesMovieStatusReactor(
         onBorderGlowInitialized: () async {
@@ -112,6 +112,8 @@ abstract class _SessionSoloHybridCoordinatorBase
     );
     disposers.add(userIsSpeakingReactor());
     disposers.add(userCanSpeakReactor());
+    disposers.add(sessionContentReactor());
+    disposers.add(sessionContentSubmissionReactor());
     // disposers.add(othersAreTakingNotesReactor());
     disposers.add(rallyReactor());
     disposers.add(glowColorReactor());
@@ -158,6 +160,20 @@ abstract class _SessionSoloHybridCoordinatorBase
           }
         },
       );
+
+  sessionContentReactor() =>
+      reaction((p0) => sessionContent.sessionContentEntity, (p0) {
+        widgets.purposeBanner.blockTextDisplay.setContent(p0);
+      });
+
+  sessionContentSubmissionReactor() =>
+      reaction((p0) => widgets.purposeBanner.blockTextFields.submissionCount,
+          (p0) async {
+        final params = widgets
+            .purposeBanner.blockTextDisplay.blockTextFields.currentParams;
+        await sessionContent.addContent(params);
+        widgets.purposeBanner.blockTextDisplay.blockTextFields.resetParams();
+      });
 
   userIsSpeakingReactor() =>
       reaction((p0) => sessionMetadata.userIsSpeaking, (p0) async {
@@ -232,10 +248,10 @@ abstract class _SessionSoloHybridCoordinatorBase
         },
       );
 
-  currentPurposeReactor() => reaction(
-        (p0) => sessionMetadata.content.toString(),
+  currentFocusReactor() => reaction(
+        (p0) => sessionContent.currentFocus,
         (p0) {
-          widgets.purposeBanner.setPurpose(sessionMetadata.content);
+          widgets.purposeBanner.setFocus(p0);
         },
       );
 
