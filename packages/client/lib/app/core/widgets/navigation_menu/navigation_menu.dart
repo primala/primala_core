@@ -72,10 +72,12 @@ class NavigationMenu extends HookWidget with OpacityUtilities {
                     NokhteBlur(
                       store: store.blur,
                     ),
-                    !store.showWidget
-                        ? Container()
-                        : Observer(builder: (context) {
-                            return AnimatedOpacity(
+                    // if (!store.showWidget)
+                    // Container()
+                    // else
+                    Observer(builder: (context) {
+                      return store.showWidget
+                          ? AnimatedOpacity(
                               opacity: useWidgetOpacity(store.showWidget),
                               duration: Seconds.get(1),
                               child: MultiHitStack(
@@ -144,8 +146,9 @@ class NavigationMenu extends HookWidget with OpacityUtilities {
                                   ),
                                 ],
                               ),
-                            );
-                          }),
+                            )
+                          : Container();
+                    }),
                   ],
                 ),
               );

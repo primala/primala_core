@@ -46,6 +46,8 @@ abstract class _SessionSoloHybridCoordinatorBase
       userCanSpeak: sessionMetadata.userCanSpeak,
       everyoneIsOnline: sessionMetadata.everyoneIsOnline,
     );
+
+    print(' the full names are ${sessionMetadata.fullNames}');
     widgets.rally.setValues(
       fullNames: sessionMetadata.fullNames,
     );

@@ -914,3 +914,7 @@ alter table "public"."session_content" validate constraint "session_content_pare
 alter table "public"."session_content" add constraint "session_content_session_uid_fkey" FOREIGN KEY (session_uid) REFERENCES session_information(uid) ON UPDATE CASCADE ON DELETE CASCADE not valid;
 
 alter table "public"."session_content" validate constraint "session_content_session_uid_fkey";
+
+alter table "public"."session_information" alter column "status" set not null;
+
+alter table "public"."session_information" alter column "title" set not null;

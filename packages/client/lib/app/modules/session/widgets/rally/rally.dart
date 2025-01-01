@@ -87,13 +87,10 @@ class Rally extends HookWidget with RallyConstants {
                     itemBuilder: (context, index) {
                       return Observer(builder: (context) {
                         final collaborator = store.collaborators[index];
-                        final isRallyable = store.canRally[index];
                         return GestureDetector(
-                          onTap: isRallyable
-                              ? () => store.setCurrentlySelectedIndex(index)
-                              : () {},
+                          onTap: () => store.setCurrentlySelectedIndex(index),
                           child: AnimatedOpacity(
-                            opacity: isRallyable ? 1.0 : 0.5,
+                            opacity: 1.0,
                             duration: Seconds.get(1),
                             child: Container(
                               margin: const EdgeInsets.symmetric(
