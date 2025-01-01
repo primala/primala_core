@@ -40,7 +40,7 @@ class GroupDisplaySessionCard extends HookWidget {
                 onTap: !showWidget
                     ? null
                     : () {
-                        store.setCurrentlySelectedMessage(session.title);
+                        store.setCurrentlySelectedIndex(index);
                       },
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: height * 0.04),
@@ -91,7 +91,7 @@ class GroupDisplaySessionCard extends HookWidget {
             onTap: !showWidget
                 ? null
                 : () {
-                    store.toggleExpansion(index);
+                    store.setCurrentlySelectedIndex(index);
                   },
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 15.0),
@@ -105,39 +105,6 @@ class GroupDisplaySessionCard extends HookWidget {
               ),
             ),
           ),
-          if (store.expandedStates[index]) ...[
-            const Divider(
-              color: Colors.white24,
-              thickness: 1,
-              indent: 20,
-              endIndent: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: session.content.length,
-                itemBuilder: (context, contentIndex) {
-                  return GestureDetector(
-                    onTap: () {
-                      if (!showWidget) return;
-                      store.setCurrentlySelectedMessage(
-                        session.content[contentIndex],
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5.0),
-                      child: Jost(
-                        session.content[contentIndex],
-                        fontSize: 18,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
         ],
       ),
     );

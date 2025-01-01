@@ -54,13 +54,6 @@ class SessionSoloHybridScreen extends HookWidget {
                   ),
                   Center(
                     child: SmartText(
-                      store: coordinator.widgets.secondarySmartText,
-                      bottomPadding: .3,
-                      opacityDuration: Seconds.get(1),
-                    ),
-                  ),
-                  Center(
-                    child: SmartText(
                       store: coordinator.widgets.primarySmartText,
                       topPadding: .3,
                       opacityDuration: Seconds.get(1),

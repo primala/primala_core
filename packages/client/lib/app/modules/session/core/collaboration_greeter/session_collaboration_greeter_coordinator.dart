@@ -68,7 +68,6 @@ abstract class _SessionCollaborationGreeterCoordinatorBase
         (p0) => ifTouchIsNotDisabled(() {
           widgets.onTap(
             tapPosition: tap.currentTapPosition,
-            phoneType: sessionMetadata.screenType,
           );
         }),
       );

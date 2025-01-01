@@ -13,13 +13,13 @@ class GroupDisplayModalDetails {
   ) {
     switch (type) {
       case GroupDisplayModalSectionType.storage:
-        assetPath = 'assets/storage_icon.png';
+        assetPath = 'assets/groups/storage_icon.png';
         sectionHeader = 'Storage';
       case GroupDisplayModalSectionType.queue:
-        assetPath = 'assets/queue_icon.png';
+        assetPath = 'assets/groups/queue_icon.png';
         sectionHeader = 'Queue';
       case GroupDisplayModalSectionType.addRemove:
-        assetPath = 'assets/add_remove_icon.png';
+        assetPath = 'assets/groups/add_remove_icon.png';
         sectionHeader = 'Add/Remove';
     }
   }

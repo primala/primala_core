@@ -7,7 +7,7 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte_backend/tables/company_presets.dart';
+import 'package:nokhte_backend/tables/company_presets/types/types.dart';
 part 'session_collaboration_greeter_widgets_coordinator.g.dart';
 
 class SessionCollaborationGreeterWidgetsCoordinator = _SessionCollaborationGreeterWidgetsCoordinatorBase
@@ -48,7 +48,7 @@ abstract class _SessionCollaborationGreeterWidgetsCoordinatorBase
   @action
   onTap({
     required Offset tapPosition,
-    required SessionScreenTypes phoneType,
+    SessionScreenTypes phoneType = SessionScreenTypes.soloHybrid,
   }) async {
     if (isFirstTap) {
       touchRipple.onTap(tapPosition);

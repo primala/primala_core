@@ -18,13 +18,16 @@ class PurposeBanner extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    store.constructor(
-      context,
-      useAnimationController(
-        duration: Seconds.get(1),
-        reverseDuration: Seconds.get(1),
-      ),
-    );
+    useEffect(() {
+      store.constructor(
+        context,
+        // useAnimationController(
+        //   duration: Seconds.get(1),
+        //   reverseDuration: Seconds.get(1),
+        // ),
+      );
+      return null;
+    }, []);
     final height = useFullScreenSize().height;
     final width = useFullScreenSize().width;
 
@@ -39,6 +42,7 @@ class PurposeBanner extends HookWidget {
               children: [
                 GestureDetector(
                   onTap: () {
+                    print('tap ');
                     store.onTap();
                   },
                   child: Container(
@@ -52,6 +56,7 @@ class PurposeBanner extends HookWidget {
                     width: width,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
@@ -66,7 +71,7 @@ class PurposeBanner extends HookWidget {
                             ),
                           ),
                         ),
-                        // Content
+                        // // Content
                         Padding(
                           padding: EdgeInsets.only(
                             left: height * .03,
@@ -75,7 +80,7 @@ class PurposeBanner extends HookWidget {
                             bottom: height * .04,
                           ),
                           child: Text(
-                            store.purpose,
+                            store.currentFocus,
                             style: GoogleFonts.jost(
                               color: Colors.white,
                               fontSize: height * .025,
@@ -83,14 +88,6 @@ class PurposeBanner extends HookWidget {
                             ),
                             overflow: TextOverflow.visible,
                             softWrap: true,
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(top: 2, right: 8.0),
-                          child: Icon(
-                            Icons.arrow_forward_ios,
-                            color: Colors.white,
-                            size: 18,
                           ),
                         ),
                       ],
@@ -101,9 +98,6 @@ class PurposeBanner extends HookWidget {
             ),
           );
         }),
-        NokhteBlur(
-          store: store.nokhteBlur,
-        ),
       ],
     );
   }

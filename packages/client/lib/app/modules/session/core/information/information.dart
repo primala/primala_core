@@ -37,9 +37,6 @@ class SessionInformationScreen extends HookWidget {
               ),
             ),
             BorderGlow(store: BorderGlowStore()),
-            PresetArticle(
-              store: coordinator.widgets.presetArticle,
-            ),
             WifiDisconnectOverlay(
               store: coordinator.widgets.wifiDisconnectOverlay,
             ),

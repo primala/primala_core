@@ -4,11 +4,10 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mixins/mixin.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
-import 'package:nokhte/app/core/modules/clean_up_collaboration_artifacts/clean_up_collaboration_artifacts.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte_backend/tables/company_presets.dart';
+import 'package:nokhte_backend/tables/session_information.dart';
 part 'session_exit_coordinator.g.dart';
 
 class SessionExitCoordinator = _SessionExitCoordinatorBase
@@ -28,7 +27,6 @@ abstract class _SessionExitCoordinatorBase
   final SwipeDetector swipe;
   @override
   final SessionMetadataStore sessionMetadata;
-  final CleanUpCollaborationArtifactsCoordinator cleanUpCollaborationArtifacts;
   final CaptureSessionEnd captureEnd;
   @override
   final SessionPresenceCoordinator presence;
@@ -41,7 +39,6 @@ abstract class _SessionExitCoordinatorBase
     required this.swipe,
     required this.captureEnd,
     required this.presence,
-    required this.cleanUpCollaborationArtifacts,
   }) : sessionMetadata = presence.sessionMetadataStore {
     initEnRouteActions();
     initBaseCoordinatorActions();
@@ -63,7 +60,7 @@ abstract class _SessionExitCoordinatorBase
     phaseHasBeenSet = false;
     widgets.constructor();
     initReactors();
-    await presence.updateCurrentPhase(4.0);
+    await presence.updateUserStatus(SessionUserStatus.readyToLeave);
     sessionMetadata.setAffirmativePhase(4.0);
     disposers.add(
       userPhaseReactor(
@@ -104,18 +101,14 @@ abstract class _SessionExitCoordinatorBase
     disposers.add(
       widgets.beachWavesMovieStatusReactor(
         onBackToSession: () {
-          if (sessionMetadata.presetType == PresetTypes.collaborative) {
-            Modular.to.navigate(SessionConstants.soloHybrid);
-          } else {
-            Modular.to.navigate(SessionConstants.groupHybrid);
-          }
+          Modular.to.navigate(SessionConstants.soloHybrid);
         },
       ),
     );
     // if (isNotASocraticSession) {
     disposers.add(swipeReactor(onSwipeDown: () {
       widgets.onReadyToGoBack(() async {
-        await presence.updateCurrentPhase(2.0);
+        await presence.updateUserStatus(SessionUserStatus.online);
         setDisableAllTouchFeedback(true);
       });
     }));
@@ -131,16 +124,12 @@ abstract class _SessionExitCoordinatorBase
       await captureEnd(
         CaptureSessionEndParams(
           sessionsStartTime: sessionMetadata.sessionStartTime,
-          presetType: sessionMetadata.presetType,
           numberOfCollaborators: sessionMetadata.numberOfCollaborators,
         ),
       );
     }
     widgets.initHomeTransition();
   }
-
-  @computed
-  SessionScreenTypes get phoneRole => sessionMetadata.screenType;
 
   deconstructor() {
     if (isGoingHome) {

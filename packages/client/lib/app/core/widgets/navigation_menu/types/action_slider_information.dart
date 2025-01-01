@@ -21,19 +21,19 @@ class ActionSliderInformation extends Equatable {
       //   assetPath = 'assets/camera_icon.png';
       //   sliderText = 'Join Session';
       case ActionSliderOptions.homeScreen:
-        assetPath = 'assets/home_beach_icon.png';
+        assetPath = 'assets/session/home_beach_icon.png';
         sliderText = 'Home Screen';
         break;
       case ActionSliderOptions.sessionInformation:
-        assetPath = 'assets/session_information_icon.png';
+        assetPath = 'assets/session/session_information_icon.png';
         sliderText = 'Session Information';
         break;
       case ActionSliderOptions.endSession:
-        assetPath = 'assets/end_session_icon.png';
+        assetPath = 'assets/session/end_session_icon.png';
         sliderText = 'End Session';
         break;
       case ActionSliderOptions.pauseSession:
-        assetPath = 'assets/pause_icon.png';
+        assetPath = 'assets/session/pause_icon.png';
         sliderText = 'Pause Session';
         break;
       case ActionSliderOptions.none:

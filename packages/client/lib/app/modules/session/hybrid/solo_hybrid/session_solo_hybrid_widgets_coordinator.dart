@@ -22,7 +22,6 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
         TouchRippleUtils,
         SessionSpeakingUtilities {
   final SmartTextStore primarySmartText;
-  final SmartTextStore secondarySmartText;
   final HalfScreenTintStore othersAreTalkingTint;
   final CollaboratorPresenceIncidentsOverlayStore presenceOverlay;
 
@@ -48,7 +47,6 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
     required this.primarySmartText,
     required this.rally,
     required this.refreshBanner,
-    required this.secondarySmartText,
     required this.sessionNavigation,
     required this.othersAreTalkingTint,
     required this.presenceOverlay,
@@ -68,18 +66,14 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   constructor({
     required bool userCanSpeak,
     required bool everyoneIsOnline,
-    required ObservableList<String> content,
   }) {
     navigationMenu.setNavigationMenuType(NavigationMenuType.inSession,
         shouldInitReactors: false);
     tapStopwatch.start();
-    purposeBanner.setPurpose(content);
     beachWaves.setMovieMode(BeachWaveMovieModes.halfAndHalfToDrySand);
     primarySmartText.setMessagesData(SessionLists.tapToTalk);
-    secondarySmartText.setMessagesData(SessionLists.tapToTakeANote);
     primarySmartText.setStaticAltMovie(SessionConstants.blue);
     primarySmartText.startRotatingText();
-    secondarySmartText.startRotatingText();
     if (!userCanSpeak) {
       othersAreTalkingTint.initMovie(const NoParams());
     }
@@ -123,7 +117,6 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
     sessionNavigation.setWidgetVisibility(false);
     primarySmartText.setWidgetVisibility(false);
     purposeBanner.setWidgetVisibility(false);
-    secondarySmartText.setWidgetVisibility(false);
     setCollaboratorHasLeft(false);
     othersAreTalkingTint.reverseMovie(const NoParams());
 
@@ -137,7 +130,7 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   @action
   openPurposeModal() {
     if (navigationMenu.hasSwipedDown) return;
-    purposeBanner.openModal(onOpen: () {
+    purposeBanner.showModal(onOpen: () {
       navigationMenu.setWidgetVisibility(false);
     }, onClose: () {
       navigationMenu.setWidgetVisibility(true);
@@ -150,13 +143,11 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
     purposeBanner.setWidgetVisibility(true);
     primarySmartText.setWidgetVisibility(true);
     sessionNavigation.setWidgetVisibility(true);
-    secondarySmartText.setWidgetVisibility(true);
   }
 
   @action
   setSmartTextVisibilities(bool newVisibility) {
     primarySmartText.setWidgetVisibility(newVisibility);
-    secondarySmartText.setWidgetVisibility(newVisibility);
   }
 
   @action
@@ -182,21 +173,11 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
     if ((tapStopwatch.elapsedMilliseconds > 1000 || holdCount == 0) &&
         !sessionNavigation.hasInitiatedBlur) {
       touchRipple.onTap(tapPosition, adjustColorBasedOnPosition: true);
-      if (tapPlacement == GesturePlacement.topHalf) {
-        if (!isHolding &&
-            canHold &&
-            !collaboratorHasLeft &&
-            !isASecondarySpeaker) {
-          initFullScreenNotes();
-          await asyncNotesTapCall();
-        } else if (isHolding) {
-          await asyncTalkingTapCall();
-        }
-      } else {
+      if (tapPlacement == GesturePlacement.bottomHalf) {
         await asyncTalkingTapCall();
+        incrementHoldCount();
+        tapStopwatch.reset();
       }
-      incrementHoldCount();
-      tapStopwatch.reset();
     }
   }
 
@@ -281,12 +262,10 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
         onInit: () {
           primarySmartText.setWidgetVisibility(false);
           purposeBanner.setWidgetVisibility(false);
-          secondarySmartText.setWidgetVisibility(false);
         },
         onReverse: () {
           primarySmartText.setWidgetVisibility(true);
           purposeBanner.setWidgetVisibility(true);
-          secondarySmartText.setWidgetVisibility(true);
         },
       ),
     );

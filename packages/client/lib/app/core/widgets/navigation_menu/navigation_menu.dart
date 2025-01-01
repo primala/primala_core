@@ -10,7 +10,7 @@ export 'types/types.dart';
 export 'widgets/widgets.dart';
 export 'widgets/navigation_beach_waves/stepwise_beach_waves_painter.dart';
 
-class NavigationMenu extends HookWidget with ArticleBodyUtils {
+class NavigationMenu extends HookWidget with OpacityUtilities {
   final NavigationMenuStore store;
   final BeachWavesStore beachWaves;
   final Widget? inBetweenWidgets;
@@ -72,10 +72,12 @@ class NavigationMenu extends HookWidget with ArticleBodyUtils {
                     NokhteBlur(
                       store: store.blur,
                     ),
-                    !store.showWidget
-                        ? Container()
-                        : Observer(builder: (context) {
-                            return AnimatedOpacity(
+                    // if (!store.showWidget)
+                    // Container()
+                    // else
+                    Observer(builder: (context) {
+                      return store.showWidget
+                          ? AnimatedOpacity(
                               opacity: useWidgetOpacity(store.showWidget),
                               duration: Seconds.get(1),
                               child: MultiHitStack(
@@ -144,8 +146,9 @@ class NavigationMenu extends HookWidget with ArticleBodyUtils {
                                   ),
                                 ],
                               ),
-                            );
-                          }),
+                            )
+                          : Container();
+                    }),
                   ],
                 ),
               );

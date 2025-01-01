@@ -1,6 +1,4 @@
 import 'package:nokhte/app/modules/storage/storage.dart';
-import 'package:nokhte_backend/tables/finished_sessions.dart';
-import 'package:intl/intl.dart';
 
 class SessionArtifactModel extends SessionArtifactEntity {
   const SessionArtifactModel({
@@ -10,11 +8,6 @@ class SessionArtifactModel extends SessionArtifactEntity {
     required super.date,
   });
 
-  static formatDate(DateTime date) {
-    DateFormat formatter = DateFormat('MMMM d, yyyy');
-    return formatter.format(date);
-  }
-
   static List<SessionArtifactModel> fromSupabase(
     List response,
   ) {
@@ -22,22 +15,19 @@ class SessionArtifactModel extends SessionArtifactEntity {
     Set<String> uniqueContents = {};
 
     for (var session in response) {
-      final content = session[FinishedSessionsQueries.CONTENT];
+      final content = session['FinishedSessionsQueries.CONTENT'];
       if (content.isNotEmpty) {
         final contentString = content.toString();
 
         if (uniqueContents.add(contentString)) {
           String title = '';
-          final date = DateTime.parse(
-            session[FinishedSessionsQueries.SESSION_TIMESTAMP],
-          );
-          title = 'Session on ${formatDate(date)}';
+          title = '';
 
           temp.add(SessionArtifactModel(
-            date: formatDate(date),
+            date: '',
             title: title,
             content: content,
-            sessionUID: session[FinishedSessionsQueries.SESSION_UID],
+            sessionUID: session['FinishedSessionsQueries.SESSION_UID'],
           ));
         }
       }

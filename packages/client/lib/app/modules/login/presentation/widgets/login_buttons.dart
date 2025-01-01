@@ -72,7 +72,7 @@ class LoginButtons extends HookWidget {
             opacity: Platform.isIOS ? 1 : 0.5,
             child: buildLoginButton(
               label: "Sign in with Apple",
-              assetPath: 'assets/apple_icon.png',
+              assetPath: 'assets/login/apple_icon.png',
               width: width,
               onPressed: Platform.isIOS
                   ? () async => await onSignInWithApple()
@@ -82,7 +82,7 @@ class LoginButtons extends HookWidget {
           ),
           buildLoginButton(
             label: "Sign in with Google",
-            assetPath: 'assets/google_icon.png',
+            assetPath: 'assets/login/google_icon.png',
             width: width,
             onPressed: () async => await onSignInWithGoogle(),
             bottomPadding: 50,

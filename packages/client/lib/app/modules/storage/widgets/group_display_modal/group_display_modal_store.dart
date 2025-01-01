@@ -32,9 +32,9 @@ abstract class _GroupDisplayModalStoreBase extends BaseWidgetStore with Store {
 
   @action
   setCurrentlySelectedGroup(GroupInformationEntity group) {
-    groupDisplaySessionCard.setSessions(group.sessions);
+    // groupDisplaySessionCard.setSessions(group.sessions);
     groupDisplayCollaboratorCard.setCollaborators(group.collaborators);
-    groupDisplayQueueCard.setQueues(group.queues);
+    // groupDisplayQueueCard.setQueues(group.queues);
     currentlySelectedGroup = group;
   }
 
@@ -43,7 +43,7 @@ abstract class _GroupDisplayModalStoreBase extends BaseWidgetStore with Store {
       GroupDisplayModalSectionType.storage;
 
   @observable
-  bool showModal = false;
+  bool modalIsVisible = false;
 
   @action
   setCurrentlySelectedSection(GroupDisplayModalSectionType section) =>
@@ -56,11 +56,11 @@ abstract class _GroupDisplayModalStoreBase extends BaseWidgetStore with Store {
   }
 
   @action
-  setShowModal(bool value) => showModal = value;
+  setModalIsVisible(bool value) => modalIsVisible = value;
 
-  showGroupDetailsModal(
-      GroupInformationEntity selectedGroup, BuildContext context) {
-    if (showModal) return;
+  showModal(GroupInformationEntity selectedGroup, BuildContext context) {
+    if (modalIsVisible) return;
+    setModalIsVisible(true);
     setCurrentlySelectedGroup(selectedGroup);
     blur.init(end: Seconds.get(0, milli: 200));
     showModalBottomSheet(
@@ -96,7 +96,8 @@ abstract class _GroupDisplayModalStoreBase extends BaseWidgetStore with Store {
                       currentlySelectedSection: currentlySelectedSection,
                       onSectionTap: setCurrentlySelectedSection,
                       createQueue: () {
-                        queueCreationModal.showGroupDetailsModal(context);
+                        queueCreationModal.setIsCreatingNewQueue(true);
+                        queueCreationModal.showModal(context);
                       },
                     ),
                   ),
@@ -109,7 +110,7 @@ abstract class _GroupDisplayModalStoreBase extends BaseWidgetStore with Store {
     ).whenComplete(() {
       resetValues();
       blur.reverse();
-      setShowModal(false);
+      setModalIsVisible(false);
     });
   }
 }

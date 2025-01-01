@@ -6,8 +6,6 @@ class GroupInformationEntity extends Equatable {
   final String groupName;
   final String groupHandle;
   final String groupUID;
-  final List<SessionArtifactEntity> sessions;
-  final List<QueueEntity> queues;
   final List<CollaboratorEntity> collaborators;
 
   const GroupInformationEntity({
@@ -15,8 +13,6 @@ class GroupInformationEntity extends Equatable {
     required this.groupName,
     required this.groupHandle,
     required this.groupUID,
-    required this.sessions,
-    required this.queues,
     required this.collaborators,
   });
 
@@ -25,8 +21,6 @@ class GroupInformationEntity extends Equatable {
         groupName: '',
         groupHandle: '',
         groupUID: '',
-        sessions: [],
-        queues: [],
         collaborators: [],
       );
 
@@ -36,8 +30,6 @@ class GroupInformationEntity extends Equatable {
         groupName,
         groupHandle,
         groupUID,
-        sessions,
-        queues,
         collaborators,
       ];
 }

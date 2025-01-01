@@ -8,7 +8,7 @@ export 'navigation_carousels_store.dart';
 export 'types/types.dart';
 export 'widgets/widgets.dart';
 
-class NavigationCarousels extends HookWidget with ArticleBodyUtils {
+class NavigationCarousels extends HookWidget with OpacityUtilities {
   final NavigationCarouselsStore store;
   final BeachWavesStore beachWaves;
   final Widget? inBetweenWidgets;

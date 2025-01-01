@@ -76,9 +76,6 @@ class SessionLobbyScreen extends HookWidget {
                   CollaboratorPresenceIncidentsOverlay(
                     store: coordinator.presence.incidentsOverlayStore,
                   ),
-                  PresetArticle(
-                    store: coordinator.widgets.presetArticle,
-                  ),
                 ],
               ),
             ),
