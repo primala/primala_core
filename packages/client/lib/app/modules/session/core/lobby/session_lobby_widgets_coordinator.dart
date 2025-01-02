@@ -47,7 +47,7 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
     primarySmartText.setMessagesData(SessionLists.lobby);
     // primarySmartText.setWidgetVisibility(false);
 
-    disposers.add(smartTextIndexReactor());
+    // disposers.add(smartTextIndexReactor());
     disposers.add(navigationMenu.swipeReactor());
 
     Timer(Seconds.get(1), () {

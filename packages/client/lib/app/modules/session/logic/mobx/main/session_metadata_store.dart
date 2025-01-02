@@ -124,8 +124,10 @@ abstract class _SessionMetadataStoreBase
   }
 
   @computed
-  bool get canStartTheSession => collaboratorStatuses
-      .every((element) => element == SessionUserStatus.readyToStart);
+  bool get canStartTheSession =>
+      collaboratorStatuses
+          .every((element) => element == SessionUserStatus.readyToStart) &&
+      collaboratorStatuses.length > 1;
 
   @computed
   bool get canStartUsingSession => collaboratorStatuses
