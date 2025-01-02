@@ -9,6 +9,7 @@ import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
+import 'package:simple_animations/simple_animations.dart';
 part 'session_solo_hybrid_widgets_coordinator.g.dart';
 
 class SessionSoloHybridWidgetsCoordinator = _SessionSoloHybridWidgetsCoordinatorBase
@@ -131,6 +132,15 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   openPurposeModal() {
     if (navigationMenu.hasSwipedDown) return;
     purposeBanner.showModal(onOpen: () {
+      if (isHolding) {
+        Timer.periodic(Seconds.get(0, milli: 250), (t) {
+          if (borderGlow.currentWidth > 0) {
+            beachWaves.currentStore.setControl(Control.stop);
+            borderGlow.setControl(Control.play);
+            t.cancel();
+          }
+        });
+      }
       navigationMenu.setWidgetVisibility(false);
     }, onClose: () {
       navigationMenu.setWidgetVisibility(true);
