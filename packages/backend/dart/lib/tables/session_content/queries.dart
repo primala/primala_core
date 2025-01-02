@@ -24,8 +24,4 @@ class SessionContentQueries with SessionContentConstants {
       PARENT_UID: params.parentUID.isEmpty ? null : params.parentUID,
     }).select();
   }
-
-  // Future<List> moveContent() async {}
-
-  // Future<List> editContent() async {}
 }

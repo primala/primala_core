@@ -87,7 +87,7 @@ class SessionInformationStreams extends SessionInformationQueries
   Stream<SessionMetadata> listenToPresenceMetadata() async* {
     metadataListeningStatus = true;
     resetValues();
-    await computeCollaboratorInformation();
+    await findCurrentSession();
 
     final events = supabase.from(TABLE).stream(primaryKey: ['id']).eq(
       UID,

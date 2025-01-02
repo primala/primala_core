@@ -24,7 +24,7 @@ class SessionInformationQueries with SessionInformationConstants, SessionUtils {
     }
   }
 
-  computeCollaboratorInformation() async {
+  findCurrentSession() async {
     await getUserInformation();
     if (userIndex == -1 || sessionUID.isEmpty) {
       final res = await supabase.from(TABLE).select().eq(
@@ -57,7 +57,6 @@ class SessionInformationQueries with SessionInformationConstants, SessionUtils {
         }
       }
     }
-    print('what is the session uid: $sessionUID user index $userIndex');
   }
 
   resetValues() {
@@ -93,7 +92,7 @@ class SessionInformationQueries with SessionInformationConstants, SessionUtils {
       await _getProperty(STATUS);
 
   Future<List> updateUserStatus(SessionUserStatus params) async {
-    await computeCollaboratorInformation();
+    await findCurrentSession();
     final newstatus =
         SessionInformationUtils.mapSessionUserStatusToString(params);
     await supabase.rpc('update_collaborator_status', params: {
@@ -105,7 +104,7 @@ class SessionInformationQueries with SessionInformationConstants, SessionUtils {
   }
 
   Future<List> beginSession() async {
-    await computeCollaboratorInformation();
+    await findCurrentSession();
     final res = await getSessionStatus();
     return await retry<List>(
       action: () async {
@@ -128,7 +127,7 @@ class SessionInformationQueries with SessionInformationConstants, SessionUtils {
   }
 
   Future<List> refreshSpeakingTimerStart() async {
-    await computeCollaboratorInformation();
+    await findCurrentSession();
     final res = await getSpeakerSpotlight();
     return await retry<List>(
       action: () async {
@@ -151,7 +150,7 @@ class SessionInformationQueries with SessionInformationConstants, SessionUtils {
   }
 
   Future<List> updateSpeakingTimerStart() async {
-    await computeCollaboratorInformation();
+    await findCurrentSession();
     final res = await getSpeakerSpotlight();
     return await retry<List>(
       action: () async {
@@ -176,7 +175,7 @@ class SessionInformationQueries with SessionInformationConstants, SessionUtils {
     required bool addToSecondarySpotlight,
     required String secondarySpeakerUID,
   }) async {
-    await computeCollaboratorInformation();
+    await findCurrentSession();
     final res = await getSpeakerSpotlight();
     final currentSpotlightSpeaker = res.mainType;
     return await retry<List>(
@@ -221,7 +220,7 @@ class SessionInformationQueries with SessionInformationConstants, SessionUtils {
     required bool addUserToSpotlight,
     DateTime time = const ConstDateTime.fromMillisecondsSinceEpoch(0),
   }) async {
-    await computeCollaboratorInformation();
+    await findCurrentSession();
     final res = await getSpeakerSpotlight();
     final currentSpotlightSpeaker = res.mainType;
     return await retry<List>(
@@ -289,60 +288,25 @@ class SessionInformationQueries with SessionInformationConstants, SessionUtils {
         .select();
   }
 
-  Future<List> initializeDormantSession(
-    String groupUID,
-  ) async {
+  Future<List> initializeSession(String groupUID) async {
+    await getUserInformation();
     return await supabase.from(TABLE).insert({
-      COLLABORATOR_UIDS: [],
-      COLLABORATOR_NAMES: [],
-      COLLABORATOR_STATUSES: [],
-      STATUS: SessionInformationUtils.mapSessionStatusToString(
-        SessionStatus.dormant,
-      ),
+      COLLABORATOR_UIDS: [userUID],
+      COLLABORATOR_NAMES: [userFullName],
+      COLLABORATOR_STATUSES: [
+        SessionInformationUtils.mapSessionUserStatusToString(
+          SessionUserStatus.hasJoined,
+        ),
+      ],
       GROUP_UID: groupUID,
     }).select();
-  }
-
-  Future<List> initializeSession(InitializeSessionParams params) async {
-    await getUserInformation();
-    if (params.sessionUID.isEmpty) {
-      return await supabase.from(TABLE).insert({
-        COLLABORATOR_UIDS: [userUID],
-        COLLABORATOR_NAMES: [userFullName],
-        COLLABORATOR_STATUSES: [
-          SessionInformationUtils.mapSessionUserStatusToString(
-            SessionUserStatus.hasJoined,
-          ),
-        ],
-        GROUP_UID: params.groupUID,
-      }).select();
-    } else {
-      return await supabase
-          .from(TABLE)
-          .update({
-            COLLABORATOR_UIDS: [userUID],
-            COLLABORATOR_NAMES: [userFullName],
-            STATUS: SessionInformationUtils.mapSessionStatusToString(
-              SessionStatus.recruiting,
-            ),
-          })
-          .eq(UID, sessionUID)
-          .eq(
-            STATUS,
-            SessionInformationUtils.mapSessionStatusToString(
-              SessionStatus.dormant,
-            ),
-          )
-          .select();
-    }
   }
 
   Future<List> _onCurrentActiveNokhteSession(
     PostgrestFilterBuilder query, {
     required int version,
   }) async {
-    await computeCollaboratorInformation();
-    print('on current session: $sessionUID');
+    await findCurrentSession();
     if (sessionUID.isNotEmpty) {
       return await query.eq(VERSION, version).eq(UID, sessionUID).select();
     } else {
