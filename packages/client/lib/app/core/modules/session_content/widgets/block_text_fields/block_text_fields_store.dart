@@ -12,6 +12,10 @@ class BlockTextFieldsStore = _BlockTextFieldsStoreBase
 
 abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
     with Store, BlockTextFieldMovies {
+  _BlockTextFieldsStoreBase() {
+    setBlockType(ContentBlockType.purpose);
+    setIconMovie(getExpandingIcons(blockIcons));
+  }
   //
   late TextEditingController controller;
   late FocusNode focusNode;
@@ -77,12 +81,11 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
 
   constructor(TextEditingController controller, FocusNode focusNode) {
     setControl(Control.stop);
-    setMovie(getTextFieldTransition(
-      ContentBlockType.purpose,
-      ContentBlockType.purpose,
-    ));
-    setBlockType(ContentBlockType.purpose);
     setIconMovie(getExpandingIcons(blockIcons));
+    setMovie(getTextFieldTransition(
+      blockType,
+      blockType,
+    ));
 
     this.controller = controller;
     this.focusNode = focusNode;
