@@ -97,17 +97,21 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
 
   @action
   onSubmit() {
-    currentTextContent = controller.text;
-    setCurrentParams(
-      AddContentParams(
-        content: currentTextContent,
-        contentBlockType: blockType,
-        parentUID: currentlySelectedParentUID,
-      ),
-    );
-    controller.clear();
-    focusNode.unfocus();
-    submissionCount++;
+    if (controller.text.trim().isNotEmpty) {
+      currentTextContent = controller.text;
+      setCurrentParams(
+        AddContentParams(
+          content: currentTextContent,
+          contentBlockType: blockType,
+          parentUID: currentlySelectedParentUID,
+        ),
+      );
+      controller.clear();
+      focusNode.unfocus();
+      submissionCount++;
+    } else {
+      focusNode.unfocus();
+    }
   }
 
   @action

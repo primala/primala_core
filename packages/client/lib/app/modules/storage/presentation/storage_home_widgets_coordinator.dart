@@ -109,6 +109,7 @@ abstract class _StorageHomeWidgetsCoordinatorBase
           (p0) async {
         if (p0.isEmpty) return;
         await onSelected(p0);
+        queueCreationModal.setIsEditable(false);
         queueCreationModal.showModal(buildContext);
       });
 
