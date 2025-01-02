@@ -30,6 +30,7 @@ class CommonCollaborativeTestFunctions {
     await SignIn.user2(supabase: user2Supabase);
     await SignIn.user3(supabase: user3Supabase);
     await SignIn.user4(supabase: user4Supabase);
+    groupQueries = GroupInformationQueries(supabase: user1Supabase);
 
     final userIdResults = await UserSetupConstants.getUIDs();
     firstUserUID = userIdResults.first;
