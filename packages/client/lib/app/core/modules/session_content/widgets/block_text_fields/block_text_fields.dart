@@ -100,8 +100,6 @@ class BlockTextFields extends HookWidget {
                             children: [
                               AnimatedContainer(
                                 duration: Seconds.get(0, milli: 300),
-                                // color: Colors.black,
-                                // decoration: ,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(9),
                                 ),
@@ -148,14 +146,9 @@ class BlockTextFields extends HookWidget {
                                     stops: [value.get('s1'), value.get('s2')],
                                   ),
                                 ),
-                                // color: Color.fromARGB(255, 0, 0, 0),
                               ),
                               child: MultiHitStack(
                                 children: [
-                                  // Blur(
-                                  //   child:
-                                  //   Container()
-                                  // ),
                                   TextFormField(
                                     controller: store.controller,
                                     focusNode: store.focusNode,
@@ -197,6 +190,7 @@ class BlockTextFields extends HookWidget {
                                       child: GestureDetector(
                                         onTap: () {
                                           store.onSubmit();
+                                          textFieldHeight.value = 97;
                                         },
                                         child: Container(
                                           width: 30,
