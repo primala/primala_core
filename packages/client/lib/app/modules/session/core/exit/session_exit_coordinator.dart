@@ -61,7 +61,6 @@ abstract class _SessionExitCoordinatorBase
     widgets.constructor();
     initReactors();
     await presence.updateUserStatus(SessionUserStatus.readyToLeave);
-    sessionMetadata.setAffirmativePhase(4.0);
     disposers.add(
       userPhaseReactor(
         initWrapUp: () async => await onReturnHome(),

@@ -140,6 +140,15 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
             t.cancel();
           }
         });
+      } else if (isLettingGo) {
+        Timer.periodic(Seconds.get(0, milli: 250), (t) {
+          if (canHold) {
+            beachWaves.currentStore.setControl(Control.stop);
+            t.cancel();
+          }
+        });
+      } else {
+        beachWaves.currentStore.setControl(Control.stop);
       }
       navigationMenu.setWidgetVisibility(false);
     }, onClose: () {
@@ -168,10 +177,10 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
     });
   }
 
-  @action
-  setCollaboratorNames(List<String> collaboratorNames) {
-    rally.setCollaborators(collaboratorNames);
-  }
+  // @action
+  // setCollaboratorNames(List<String> collaboratorNames) {
+  //   rally.setCollaborators(collaboratorNames);
+  // }
 
   @action
   onTap({

@@ -75,6 +75,8 @@ mixin SessionSpeakingUtilities {
   }
 
   endSpeaking() {
+    setIsHolding(false);
+    setIsLettingGo(true);
     borderGlow.initGlowDown();
     beachWaves.setMovieMode(BeachWaveMovieModes.anyToHalfAndHalf);
     beachWaves.currentStore.initMovie(beachWaves.currentColorsAndStops);

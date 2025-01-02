@@ -90,7 +90,6 @@ abstract class _SessionLobbyCoordinatorBase
   @action
   onClose() async {
     await presence.updateUserStatus(SessionUserStatus.readyToStart);
-    widgets.qrCode.setWidgetVisibility(true);
     if (hasReceivedRoutingArgs &&
         sessionMetadata.numberOfCollaborators.isLessThan(2)) {
       widgets.navigationMenu.setWidgetVisibility(true);
@@ -100,7 +99,6 @@ abstract class _SessionLobbyCoordinatorBase
 
   @action
   onPresetInfoReceived() async {
-    showPresetInfo();
     await presence.updateUserStatus(SessionUserStatus.readyToStart);
     if (hasReceivedRoutingArgs) {
       disposers.add(tapReactor());
@@ -130,15 +128,6 @@ abstract class _SessionLobbyCoordinatorBase
   //         await onPresetInfoReceived();
   //       }
   //     });
-
-  @action
-  showPresetInfo() {
-    widgets.contextHeader.setHeader(
-      sessionMetadata.currentGroup,
-      sessionMetadata.currentQueue,
-    );
-    widgets.onQrCodeReady(sessionMetadata.leaderUID);
-  }
 
   tapReactor() => reaction(
         (p0) => tap.tapCount,

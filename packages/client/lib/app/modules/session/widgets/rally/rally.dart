@@ -101,7 +101,7 @@ class Rally extends HookWidget with RallyConstants {
                                 borderRadius: BorderRadius.circular(13),
                               ),
                               child: Chivo(
-                                collaborator,
+                                collaborator.fullName,
                                 fontSize: containerSize * 0.3,
                                 fontWeight: FontWeight.w300,
                               ),

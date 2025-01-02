@@ -145,6 +145,7 @@ class SessionInformationStreams extends SessionInformationQueries
         final userIsSpeaking = selectedEvent[SPEAKER_SPOTLIGHT] == userUID;
 
         yield SessionMetadata(
+          userUID: userUID,
           sessionUID: sessionUID,
           speakingTimerStart: speakingTimerStart,
           secondarySpotlightIsEmpty: secondarySpotlightIsEmpty,

@@ -8,7 +8,6 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
-import 'package:nokhte/app/modules/session/session.dart';
 part 'session_lobby_widgets_coordinator.g.dart';
 
 class SessionLobbyWidgetsCoordinator = _SessionLobbyWidgetsCoordinatorBase
@@ -18,10 +17,8 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
     with Store, BaseWidgetsCoordinator, Reactions, RoutingArgs {
   final BeachWavesStore beachWaves;
   final SmartTextStore primarySmartText;
-  final NokhteQrCodeStore qrCode;
   final TouchRippleStore touchRipple;
   final NavigationMenuStore navigationMenu;
-  final ContextHeaderStore contextHeader;
   @override
   final WifiDisconnectOverlayStore wifiDisconnectOverlay;
 
@@ -29,9 +26,7 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
     required this.primarySmartText,
     required this.wifiDisconnectOverlay,
     required this.navigationMenu,
-    required this.qrCode,
     required this.touchRipple,
-    required this.contextHeader,
   }) : beachWaves = navigationMenu.beachWaves {
     initBaseWidgetsCoordinatorActions();
   }
@@ -49,10 +44,8 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
     beachWaves.setMovieMode(
       BeachWaveMovieModes.deepSeaToSky,
     );
-    contextHeader.setWidgetVisibility(false);
     primarySmartText.setMessagesData(SessionLists.lobby);
     // primarySmartText.setWidgetVisibility(false);
-    qrCode.setWidgetVisibility(false);
 
     disposers.add(smartTextIndexReactor());
     disposers.add(navigationMenu.swipeReactor());
@@ -86,12 +79,6 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
     await onTap();
   }
 
-  @action
-  onQrCodeReady(String data) {
-    qrCode.setQrCodeData(data);
-    qrCode.setWidgetVisibility(true);
-  }
-
   @observable
   bool presetInfoRecieved = false;
 
@@ -123,32 +110,23 @@ abstract class _SessionLobbyWidgetsCoordinatorBase
   @action
   onModalOpened() {
     navigationMenu.setWidgetVisibility(false);
-    qrCode.setWidgetVisibility(false);
     primarySmartText.setWidgetVisibility(false);
   }
 
   @action
   onCollaboratorLeft() {
     primarySmartText.setWidgetVisibility(false);
-    if (qrCode.qrCodeData.isNotEmpty) {
-      qrCode.setWidgetVisibility(false);
-    }
   }
 
   @action
   onCollaboratorJoined() {
     primarySmartText.setWidgetVisibility(primarySmartText.pastShowWidget);
-    if (qrCode.qrCodeData.isNotEmpty) {
-      qrCode.setWidgetVisibility(qrCode.pastShowWidget);
-    }
   }
 
   @action
   enterSession() {
     beachWaves.setMovieMode(BeachWaveMovieModes.deepSeaToSky);
     beachWaves.currentStore.initMovie(const NoParams());
-    qrCode.setWidgetVisibility(false);
-    contextHeader.setWidgetVisibility(false);
     primarySmartText.setWidgetVisibility(false);
   }
 
