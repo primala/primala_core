@@ -1,3 +1,4 @@
+import 'package:nokhte_backend/tables/session_content.dart';
 import 'package:nokhte_backend/tables/session_information.dart';
 import 'package:nokhte_backend/tables/user_information.dart';
 import 'package:nokhte_backend/types/types.dart';
@@ -273,7 +274,7 @@ class SessionInformationQueries with SessionInformationConstants, SessionUtils {
   }
 
   Future<List> cleanUpSessions() async {
-    return await supabase
+    final activeResponse = await supabase
         .from(TABLE)
         .update({
           STATUS: SessionInformationUtils.mapSessionStatusToString(
@@ -286,6 +287,34 @@ class SessionInformationQueries with SessionInformationConstants, SessionUtils {
               SessionStatus.dormant,
             ))
         .select();
+    for (var row in activeResponse) {
+      final uid = row[UID];
+      final contentRes = await supabase
+          .from(SessionContentConstants.S_TABLE)
+          .select()
+          .eq(UID, uid);
+      if (contentRes.isEmpty) {
+        await supabase.from(TABLE).delete().eq(UID, uid);
+      }
+    }
+    final dormantResponse = await supabase.from(TABLE).select().eq(
+        STATUS,
+        SessionInformationUtils.mapSessionStatusToString(
+          SessionStatus.dormant,
+        ));
+
+    for (var row in dormantResponse) {
+      final uid = row[UID];
+      final contentRes = await supabase
+          .from(SessionContentConstants.S_TABLE)
+          .select()
+          .eq(UID, uid);
+      if (contentRes.isEmpty) {
+        await supabase.from(TABLE).delete().eq(UID, uid);
+      }
+    }
+
+    return activeResponse;
   }
 
   Future<List> initializeSession(String groupUID) async {
