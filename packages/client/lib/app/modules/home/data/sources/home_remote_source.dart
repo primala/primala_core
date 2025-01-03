@@ -15,7 +15,7 @@ abstract class HomeRemoteSource {
   Future<List> sendRequest(SendRequestParams params);
   Future<List> getUserInformation();
   Future<List> awakenSession(String params);
-  Future<List> initializeSession(InitializeSessionParams params);
+  Future<List> initializeSession(String groupUID);
   Stream<List<SessionRequests>> listenToSessionRequests();
   Future<List> joinSession(String params);
 }
@@ -83,8 +83,8 @@ class HomeRemoteSourceImpl implements HomeRemoteSource {
   getUserInformation() async => await userInfoQueries.getUserInfo();
 
   @override
-  Future<List> initializeSession(InitializeSessionParams params) async =>
-      await sessionInformationQueries.initializeSession(params);
+  Future<List> initializeSession(groupUID) async =>
+      await sessionInformationQueries.initializeSession(groupUID);
   @override
   joinSession(params) async =>
       await sessionInformationQueries.joinSession(params);

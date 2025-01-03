@@ -10,6 +10,7 @@ class SessionMetadata extends Equatable {
   final bool secondarySpotlightIsEmpty;
   final bool userIsInSecondarySpeakingSpotlight;
   final String? speakerUID;
+  final String userUID;
   final DateTime speakingTimerStart;
 
   SessionMetadata({
@@ -17,6 +18,7 @@ class SessionMetadata extends Equatable {
     required this.collaboratorInformation,
     required this.sessionStatus,
     required this.userCanSpeak,
+    required this.userUID,
     required this.userIsSpeaking,
     required this.secondarySpotlightIsEmpty,
     required this.speakerUID,

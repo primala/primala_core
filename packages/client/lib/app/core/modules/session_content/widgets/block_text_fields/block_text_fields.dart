@@ -1,3 +1,4 @@
+import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -21,6 +22,8 @@ class BlockTextFields extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textFieldKey = useMemoized(() => GlobalKey());
+    final textFieldHeight = useState<double>(97.0);
     useEffect(() {
       store.constructor(
         TextEditingController(),
@@ -31,6 +34,15 @@ class BlockTextFields extends HookWidget {
 
     // Get the keyboard height
     final bottomPadding = MediaQuery.of(context).viewInsets.bottom;
+
+    void updateTextFieldHeight() {
+      final RenderObject? renderBox =
+          textFieldKey.currentContext?.findRenderObject();
+      if (renderBox != null) {
+        textFieldHeight.value = (renderBox.semanticBounds.height) + 60;
+        print('height ${textFieldHeight.value}');
+      }
+    }
 
     Widget buildBlockIcon(ContentBlockType type, double position) {
       return Observer(builder: (context) {
@@ -58,6 +70,20 @@ class BlockTextFields extends HookWidget {
             children: [
               Padding(
                 padding: EdgeInsets.only(bottom: bottomPadding),
+                child: Blur(
+                  blur: 10,
+                  colorOpacity: 0.2,
+                  child: AnimatedContainer(
+                    duration: Seconds.get(0, milli: 300),
+                    height: (bottomPadding == 0 ? 0 : -35) +
+                        (store.isExpanded ? 190 : 0) +
+                        textFieldHeight.value,
+                    color: Colors.transparent,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: bottomPadding),
                 child: MultiHitStack(
                   alignment: Alignment.bottomCenter,
                   children: [
@@ -72,13 +98,17 @@ class BlockTextFields extends HookWidget {
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Container(
+                              AnimatedContainer(
+                                duration: Seconds.get(0, milli: 300),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(9),
+                                ),
                                 alignment: Alignment.bottomLeft,
                                 width: 35,
                                 margin: EdgeInsets.only(
                                     left: 10.0,
                                     bottom: bottomPadding == 0 ? 50 : 20),
-                                height: store.isExpanded ? 237 : 37,
+                                height: store.isExpanded ? 233 : 37,
                                 child: MultiHitStack(
                                   clipBehavior: Clip.none,
                                   children: store.blockIcons
@@ -107,6 +137,7 @@ class BlockTextFields extends HookWidget {
                                 bottom: bottomPadding == 0 ? 50 : 20,
                                 right: 20),
                             child: Container(
+                              key: textFieldKey,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(19),
                                 border: GradientBoxBorder(
@@ -122,8 +153,11 @@ class BlockTextFields extends HookWidget {
                                     controller: store.controller,
                                     focusNode: store.focusNode,
                                     scrollPadding: EdgeInsets.zero,
+                                    onChanged: (_) => updateTextFieldHeight(),
+
                                     keyboardType: TextInputType.multiline,
                                     maxLines: null,
+                                    // backgroundColor: Colors.transparent,
                                     decoration: InputDecoration(
                                       isDense: true,
                                       border: InputBorder.none,
@@ -156,6 +190,7 @@ class BlockTextFields extends HookWidget {
                                       child: GestureDetector(
                                         onTap: () {
                                           store.onSubmit();
+                                          textFieldHeight.value = 97;
                                         },
                                         child: Container(
                                           width: 30,

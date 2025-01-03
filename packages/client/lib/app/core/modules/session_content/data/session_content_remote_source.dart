@@ -5,6 +5,8 @@ abstract class SessionContentRemoteSource {
   Stream<SessionContentList> listenToContent(String sessionUID);
   Future<bool> cancelContentStream();
   Future<List> addContent(AddContentParams params);
+  Future<List> updateContent(UpdateContentParams params);
+  Future<List> updateParent(UpdateParentParams params);
 }
 
 class SessionContentRemoteSourceImpl implements SessionContentRemoteSource {
@@ -29,4 +31,12 @@ class SessionContentRemoteSourceImpl implements SessionContentRemoteSource {
     sessionContentQueries.setSessionUID(sessionUID);
     return sessionContentStreams.listenToContent(sessionUID);
   }
+
+  @override
+  updateContent(params) async =>
+      await sessionContentQueries.updateContent(params);
+
+  @override
+  updateParent(params) async =>
+      await sessionContentQueries.updateParent(params);
 }

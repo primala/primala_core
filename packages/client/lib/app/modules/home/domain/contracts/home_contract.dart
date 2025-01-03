@@ -43,7 +43,5 @@ abstract class HomeContract {
     SendRequestParams params,
   );
 
-  Future<Either<Failure, bool>> initializeSession(
-    InitializeSessionParams params,
-  );
+  Future<Either<Failure, bool>> initializeSession(String groupUID);
 }

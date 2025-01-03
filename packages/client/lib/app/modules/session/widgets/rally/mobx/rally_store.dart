@@ -6,6 +6,7 @@ import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/logic/types/types.dart';
 import 'package:nokhte/app/modules/session/widgets/widgets.dart';
+import 'package:nokhte_backend/tables/session_information.dart';
 part 'rally_store.g.dart';
 
 class RallyStore = _RallyStoreBase with _$RallyStore;
@@ -28,11 +29,11 @@ abstract class _RallyStoreBase extends BaseWidgetStore with Store, Reactions {
     disposers.add(glowColorReactor());
   }
 
-  setValues({
-    required List<String> fullNames,
-  }) {
-    setCollaborators(fullNames);
-  }
+  // setValues({
+  //   required List<SessionUserInfoEntity> fullNames,
+  // }) {
+  //   setCollaborators(fullNames);
+  // }
 
   @observable
   RallyPhase phase = RallyPhase.initial;
@@ -41,7 +42,7 @@ abstract class _RallyStoreBase extends BaseWidgetStore with Store, Reactions {
   bool cancelButtonVisibility = true;
 
   @observable
-  ObservableList<String> collaborators = ObservableList.of([]);
+  ObservableList<SessionUserInfoEntity> collaborators = ObservableList.of([]);
 
   @observable
   ObservableList<bool> canRally = ObservableList.of([]);
@@ -70,7 +71,7 @@ abstract class _RallyStoreBase extends BaseWidgetStore with Store, Reactions {
   }
 
   @action
-  setCollaborators(List<String> value) =>
+  setCollaborators(List<SessionUserInfoEntity> value) =>
       collaborators = ObservableList.of(value);
 
   @action
@@ -117,6 +118,12 @@ abstract class _RallyStoreBase extends BaseWidgetStore with Store, Reactions {
       : currentPartnerFullName.split(' ').first;
 
   @computed
-  String get currentPartnerFullName =>
-      currentlySelectedIndex == -1 ? '' : collaborators[currentlySelectedIndex];
+  String get currentPartnerFullName => currentlySelectedIndex == -1
+      ? ''
+      : collaborators[currentlySelectedIndex].fullName;
+
+  @computed
+  String get currentPartnerUID => currentlySelectedIndex == -1
+      ? ''
+      : collaborators[currentlySelectedIndex].uid;
 }

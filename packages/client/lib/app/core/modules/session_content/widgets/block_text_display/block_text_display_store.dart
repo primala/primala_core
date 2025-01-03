@@ -16,10 +16,10 @@ abstract class _BlockTextDisplayStoreBase extends BaseWidgetStore with Store {
   });
 
   @observable
-  double swipeProgress = 0;
+  ObservableList<double> swipeProgresses = ObservableList<double>();
 
   @action
-  setSwipeProgress(double val) => swipeProgress = val;
+  setSwipeProgress(double val, int index) => swipeProgresses[index] = val;
 
   @observable
   ObservableList<SessionContentEntity> content =
@@ -33,7 +33,14 @@ abstract class _BlockTextDisplayStoreBase extends BaseWidgetStore with Store {
 
   @action
   setContent(ObservableList<SessionContentEntity> newContent) {
-    return content = newContent;
+    content = newContent;
+    swipeProgresses =
+        ObservableList<double>.of(List.generate(content.length, (index) => 0));
+  }
+
+  @action
+  clear() {
+    content = ObservableList<SessionContentEntity>();
   }
 
   @action

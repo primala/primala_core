@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:gradient_borders/gradient_borders.dart';
+import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/modules/session_content/session_content.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/widgets/purpose_banner/widgets/purpose_with_conclusions/swipable_tiles/swipable_tiles.dart';
@@ -16,14 +17,17 @@ class BlockTextDisplay extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = useFullScreenSize().width;
     return Observer(builder: (context) {
       final bottomPadding = MediaQuery.of(context).viewInsets.bottom;
-      return FullScreen(
+      return SizedBox(
+        width: width,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ...store.content.map((element) {
+              final index = store.content.indexOf(element);
               return SwipeableTile(
                 isElevated: false,
                 swipeThreshold: .2,
@@ -34,7 +38,7 @@ class BlockTextDisplay extends HookWidget {
                   return AnimatedBuilder(
                     animation: progress,
                     builder: (context, child) {
-                      store.setSwipeProgress(progress.value);
+                      store.setSwipeProgress(progress.value, index);
                       return Row(
                         children: [
                           SizedBox(width: (progress.value * 50)), //
@@ -59,11 +63,13 @@ class BlockTextDisplay extends HookWidget {
                 },
                 child: Observer(builder: (context) {
                   return AnimatedPadding(
-                    padding: EdgeInsets.only(left: store.swipeProgress * 100),
+                    padding: EdgeInsets.only(
+                        left: store.swipeProgresses[index] * 100),
                     // padding: EdgeInsets.all(padValue),
                     duration: Duration.zero,
                     curve: Curves.easeInOut,
                     child: Container(
+                      // width: width,
                       margin: EdgeInsets.only(
                         left: 16.0 *
                             (element.numberOfParents == 0
@@ -112,7 +118,7 @@ class BlockTextDisplay extends HookWidget {
               );
             }),
             SizedBox(
-              height: bottomPadding + 80,
+              height: bottomPadding + 150,
             ),
           ],
         ),

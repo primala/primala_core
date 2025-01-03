@@ -8,6 +8,7 @@ mixin CollaboratorRelationshipsConstants {
   static const String S_FIRST_NAME = 'first_name';
   static const String S_LAST_NAME = 'last_name';
   static const String S_UID = 'uid';
+  static const String S_CREATED_AT = 'created_at';
 
   final TABLE = S_TABLE;
   final USER_INFO_TABLE = S_USER_INFO_TABLE;
@@ -16,4 +17,5 @@ mixin CollaboratorRelationshipsConstants {
   final FIRST_NAME = S_FIRST_NAME;
   final LAST_NAME = S_LAST_NAME;
   final UID = S_UID;
+  final CREATED_AT = S_CREATED_AT;
 }

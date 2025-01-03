@@ -87,7 +87,7 @@ class SessionInformationStreams extends SessionInformationQueries
   Stream<SessionMetadata> listenToPresenceMetadata() async* {
     metadataListeningStatus = true;
     resetValues();
-    await computeCollaboratorInformation();
+    await findCurrentSession();
 
     final events = supabase.from(TABLE).stream(primaryKey: ['id']).eq(
       UID,
@@ -145,6 +145,7 @@ class SessionInformationStreams extends SessionInformationQueries
         final userIsSpeaking = selectedEvent[SPEAKER_SPOTLIGHT] == userUID;
 
         yield SessionMetadata(
+          userUID: userUID,
           sessionUID: sessionUID,
           speakingTimerStart: speakingTimerStart,
           secondarySpotlightIsEmpty: secondarySpotlightIsEmpty,

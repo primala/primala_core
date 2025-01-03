@@ -69,25 +69,25 @@ class GroupDisplayQueueCard extends HookWidget {
 
   Widget _buildQueueContainer(
       SessionEntity queues, int index, double width, double height) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.white,
-          width: 1.5,
+    return GestureDetector(
+      onTap: !showWidget
+          ? null
+          : () {
+              store.setCurrentlySelectedIndex(index);
+            },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: Colors.white,
+            width: 1.5,
+          ),
         ),
-      ),
-      width: width * .8,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          GestureDetector(
-            onTap: !showWidget
-                ? null
-                : () {
-                    store.setCurrentlySelectedIndex(index);
-                  },
-            child: Padding(
+        width: width * .8,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
               padding: const EdgeInsets.symmetric(vertical: 15.0),
               child: Column(
                 children: [
@@ -98,8 +98,8 @@ class GroupDisplayQueueCard extends HookWidget {
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

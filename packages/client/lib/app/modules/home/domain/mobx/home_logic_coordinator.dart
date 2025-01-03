@@ -154,8 +154,8 @@ abstract class _HomeLogicCoordinatorBase with Store, BaseMobxLogic {
   }
 
   @action
-  initializeSession(InitializeSessionParams params) async {
-    final res = await contract.initializeSession(params);
+  initializeSession(String groupUID) async {
+    final res = await contract.initializeSession(groupUID);
     res.fold(
       (failure) => errorUpdater(failure),
       (status) {

@@ -18,7 +18,7 @@ class SessionLists {
   static List<RotatingTextData> lobby = [
     // SharedLists.emptyItem,
     RotatingTextData(
-      text: 'Scan to Join',
+      text: "Tap to begin",
       pauseHere: true,
     ),
     RotatingTextData(
