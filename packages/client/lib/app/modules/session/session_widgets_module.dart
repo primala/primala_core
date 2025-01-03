@@ -49,11 +49,9 @@ class SessionWidgetsModule extends Module {
 
     i.add<SessionLobbyWidgetsCoordinator>(
       () => SessionLobbyWidgetsCoordinator(
-        contextHeader: ContextHeaderStore(),
         navigationMenu: Modular.get<NavigationMenuStore>(),
         touchRipple: TouchRippleStore(),
         primarySmartText: SmartTextStore(),
-        qrCode: NokhteQrCodeStore(),
         wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
       ),
     );

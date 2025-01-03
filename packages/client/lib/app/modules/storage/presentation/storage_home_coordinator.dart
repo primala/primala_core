@@ -79,11 +79,13 @@ abstract class _StorageHomeCoordinatorBase
 
   finishedSessionsReactor() =>
       reaction((p0) => storageLogic.finishedSessions, (p0) async {
+        if (p0.isEmpty) return;
         widgets.groupDisplayModal.groupDisplaySessionCard.setSessions(p0);
       });
 
   dormantSessionsReactor() =>
       reaction((p0) => storageLogic.dormantSessions, (p0) async {
+        if (p0.isEmpty) return;
         widgets.groupDisplayModal.groupDisplayQueueCard.setQueues(p0);
       });
 

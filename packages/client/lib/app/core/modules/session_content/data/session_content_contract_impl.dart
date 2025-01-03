@@ -37,4 +37,24 @@ class SessionContentContractImpl
   @override
   cancelSessionContentStream() async =>
       await remoteSource.cancelContentStream();
+
+  @override
+  updateContent(params) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.updateContent(params);
+      return fromSupabase(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  @override
+  updateParent(params) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.updateParent(params);
+      return fromSupabase(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
 }

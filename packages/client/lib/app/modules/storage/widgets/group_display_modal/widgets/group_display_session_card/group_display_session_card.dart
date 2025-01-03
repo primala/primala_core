@@ -36,35 +36,28 @@ class GroupDisplaySessionCard extends HookWidget {
             return AnimatedOpacity(
               opacity: useWidgetOpacity(showWidget),
               duration: Seconds.get(0, milli: 500),
-              child: GestureDetector(
-                onTap: !showWidget
-                    ? null
-                    : () {
-                        store.setCurrentlySelectedIndex(index);
-                      },
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: height * 0.04),
-                  child: showWidget
-                      ? Slidable(
-                          endActionPane: ActionPane(
-                            motion: const DrawerMotion(),
-                            children: [
-                              SlidableAction(
-                                spacing: 0,
-                                padding: EdgeInsets.zero,
-                                onPressed: (_) =>
-                                    store.setCurrentlySelectedIndex(index),
-                                backgroundColor: Colors.transparent,
-                                foregroundColor: Colors.white,
-                                icon: Icons.delete_forever,
-                              ),
-                            ],
-                          ),
-                          child: _buildSessionContainer(
-                              session, index, width, height),
-                        )
-                      : _buildSessionContainer(session, index, width, height),
-                ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: height * 0.04),
+                child: showWidget
+                    ? Slidable(
+                        endActionPane: ActionPane(
+                          motion: const DrawerMotion(),
+                          children: [
+                            SlidableAction(
+                              spacing: 0,
+                              padding: EdgeInsets.zero,
+                              onPressed: (_) =>
+                                  store.setCurrentlySelectedIndex(index),
+                              backgroundColor: Colors.transparent,
+                              foregroundColor: Colors.white,
+                              icon: Icons.delete_forever,
+                            ),
+                          ],
+                        ),
+                        child: _buildSessionContainer(
+                            session, index, width, height),
+                      )
+                    : _buildSessionContainer(session, index, width, height),
               ),
             );
           });
@@ -75,25 +68,25 @@ class GroupDisplaySessionCard extends HookWidget {
 
   Widget _buildSessionContainer(
       dynamic session, int index, double width, double height) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.white,
-          width: 1.5,
+    return GestureDetector(
+      onTap: !showWidget
+          ? null
+          : () {
+              store.setCurrentlySelectedIndex(index);
+            },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: Colors.white,
+            width: 1.5,
+          ),
         ),
-      ),
-      width: width * .8,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          GestureDetector(
-            onTap: !showWidget
-                ? null
-                : () {
-                    store.setCurrentlySelectedIndex(index);
-                  },
-            child: Padding(
+        width: width * .8,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
               padding: const EdgeInsets.symmetric(vertical: 15.0),
               child: Column(
                 children: [
@@ -104,8 +97,8 @@ class GroupDisplaySessionCard extends HookWidget {
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

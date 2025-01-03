@@ -24,16 +24,10 @@ abstract class _SessionMetadataStoreBase
   }
 
   @observable
-  int userIndex = 0;
-
-  @observable
   bool everyoneIsOnline = false;
 
   @observable
   bool userIsSpeaking = false;
-
-  @observable
-  String userUID = '';
 
   @observable
   String sessionUID = '';
@@ -49,7 +43,7 @@ abstract class _SessionMetadataStoreBase
   String groupUID = '';
 
   @observable
-  String queueUID = '';
+  String userUID = '';
 
   @observable
   bool userIsInSecondarySpeakingSpotlight = false;
@@ -68,25 +62,10 @@ abstract class _SessionMetadataStoreBase
   bool sessionHasBegun = false;
 
   @observable
-  double affirmativePhase = -1.0;
-
-  @observable
-  String leaderUID = '';
-
-  @observable
-  String presetUID = '';
-
-  @observable
   DateTime speakingTimerStart = DateTime.fromMillisecondsSinceEpoch(0);
 
   @observable
   DateTime sessionStartTime = DateTime.fromMillisecondsSinceEpoch(0);
-
-  @observable
-  SessionInstructionTypes instructionType = SessionInstructionTypes.initial;
-
-  @action
-  setAffirmativePhase(double value) => affirmativePhase = value;
 
   @observable
   ObservableStream<SessionMetadata> sessionMetadata =
@@ -116,6 +95,7 @@ abstract class _SessionMetadataStoreBase
           everyoneIsOnline = value.collaboratorInformation.every(
             (element) => element.sessionUserStatus != SessionUserStatus.offline,
           );
+          userUID = value.userUID;
           collaboratorInformation =
               ObservableList.of(value.collaboratorInformation);
           speakingTimerStart = value.speakingTimerStart;
@@ -144,8 +124,10 @@ abstract class _SessionMetadataStoreBase
   }
 
   @computed
-  bool get canStartTheSession => collaboratorStatuses
-      .every((element) => element == SessionUserStatus.readyToStart);
+  bool get canStartTheSession =>
+      collaboratorStatuses
+          .every((element) => element == SessionUserStatus.readyToStart) &&
+      collaboratorStatuses.length > 1;
 
   @computed
   bool get canStartUsingSession => collaboratorStatuses
@@ -157,14 +139,6 @@ abstract class _SessionMetadataStoreBase
 
   @computed
   bool get canStillAbort => numberOfCollaborators == 1;
-
-  @computed
-  String get currentGroup =>
-      groupUID.isEmpty ? 'No group selected' : 'Group: $groupUID';
-
-  @computed
-  String get currentQueue =>
-      queueUID.isEmpty ? 'No queue selected' : 'Queue: $queueUID';
 
   @computed
   DateTime get now => time.value ?? DateTime.now();
@@ -227,34 +201,32 @@ abstract class _SessionMetadataStoreBase
   bool get canStillLeave => collaboratorInformation.length < 2;
 
   @computed
-  List<String> get fullNames {
-    final names = <String>[];
+  int get userIndex {
+    int index = -1;
     for (int i = 0; i < collaboratorInformation.length; i++) {
-      if (i != userIndex) {
-        names.add(collaboratorInformation[i].fullName);
+      if (collaboratorInformation[i].uid != userUID) {
+        index = i;
       }
     }
-    return names;
+    return index;
   }
 
   @computed
-  List<String> get collaboratorUIDs {
-    final uids = <String>[];
+  List<SessionUserInfoEntity> get collaboratorsMinusUser {
+    final temp = <SessionUserInfoEntity>[];
     for (int i = 0; i < collaboratorInformation.length; i++) {
-      if (i != userIndex) {
-        uids.add(collaboratorInformation[i].uid);
+      if (collaboratorInformation[i].uid != userUID) {
+        temp.add(collaboratorInformation[i]);
       }
     }
-    return uids;
+    return temp;
   }
 
   @computed
   List<SessionUserStatus> get collaboratorStatuses {
     final statuses = <SessionUserStatus>[];
     for (int i = 0; i < collaboratorInformation.length; i++) {
-      if (i != userIndex) {
-        statuses.add(collaboratorInformation[i].sessionUserStatus);
-      }
+      statuses.add(collaboratorInformation[i].sessionUserStatus);
     }
     return statuses;
   }

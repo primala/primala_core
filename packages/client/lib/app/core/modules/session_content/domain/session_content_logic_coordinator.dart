@@ -22,6 +22,12 @@ abstract class _SessionContentLogicCoordinatorBase with Store, BaseMobxLogic {
   bool contentIsUpdated = false;
 
   @observable
+  bool parentIsUpdated = false;
+
+  @observable
+  bool contentIsAdded = false;
+
+  @observable
   ObservableList<SessionContentEntity> sessionContentEntity =
       ObservableList<SessionContentEntity>();
 
@@ -54,7 +60,27 @@ abstract class _SessionContentLogicCoordinatorBase with Store, BaseMobxLogic {
     final res = await contract.addContent(params);
     res.fold(
       (failure) => errorUpdater(failure),
+      (contentAdditionStatus) => contentIsAdded = contentAdditionStatus,
+    );
+    setState(StoreState.loaded);
+  }
+
+  @action
+  updateContent(UpdateContentParams params) async {
+    final res = await contract.updateContent(params);
+    res.fold(
+      (failure) => errorUpdater(failure),
       (contentUpdateStatus) => contentIsUpdated = contentUpdateStatus,
+    );
+    setState(StoreState.loaded);
+  }
+
+  @action
+  updateParent(UpdateParentParams params) async {
+    final res = await contract.updateParent(params);
+    res.fold(
+      (failure) => errorUpdater(failure),
+      (parentUpdateStatus) => parentIsUpdated = parentUpdateStatus,
     );
     setState(StoreState.loaded);
   }

@@ -1,9 +1,6 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
-import 'dart:async';
-
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
-import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:simple_animations/simple_animations.dart';
 part 'half_and_half_to_dry_sand.g.dart';
@@ -29,8 +26,5 @@ abstract class _HalfAndHalfToDrySandBase
   @action
   initMovie(NoParams params) {
     control = Control.playFromStart;
-    Timer(Seconds.get(0, milli: 1), () {
-      control = Control.play;
-    });
   }
 }

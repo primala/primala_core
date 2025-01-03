@@ -33,7 +33,6 @@ class QueueCreationModal extends HookWidget {
     required this.isCreatingNewQueue,
     required this.onTitleChanged,
     required this.queueItems,
-
     required this.blockTextDisplay,
   });
 
@@ -54,48 +53,49 @@ class QueueCreationModal extends HookWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     // Queue Title TextField (unchanged)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 8.0),
-                      child: TextField(
-                        enabled: isCreatingNewQueue,
-                        controller: queueTitleController,
-                        style: GoogleFonts.chivo(
-                          color: Colors.white,
-                          fontSize: 35,
-                          fontWeight: FontWeight.w200,
-                        ),
-                        maxLines: 1,
-                        maxLength: 30,
-                        maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                        cursorColor: Colors.white,
-                        textInputAction: TextInputAction.go,
-                        textAlign: TextAlign.center,
-                        focusNode: queueTitleFocusNode,
-                        onChanged: onTitleChanged,
-                        decoration: InputDecoration(
-                          hintText: 'QUEUE TITLE',
-                          hintStyle: GoogleFonts.chivo(
-                            color: Colors.white.withOpacity(.5),
-                          ),
-                          counterStyle: GoogleFonts.chivo(
+                    if (isCreatingNewQueue)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 8.0),
+                        child: TextField(
+                          enabled: isCreatingNewQueue,
+                          controller: queueTitleController,
+                          style: GoogleFonts.chivo(
                             color: Colors.white,
+                            fontSize: 35,
+                            fontWeight: FontWeight.w200,
                           ),
-                          border: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                          contentPadding: EdgeInsets.zero,
+                          maxLines: 1,
+                          maxLength: 30,
+                          maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                          cursorColor: Colors.white,
+                          textInputAction: TextInputAction.go,
+                          textAlign: TextAlign.center,
+                          focusNode: queueTitleFocusNode,
+                          onChanged: onTitleChanged,
+                          decoration: InputDecoration(
+                            hintText: 'QUEUE TITLE',
+                            hintStyle: GoogleFonts.chivo(
+                              color: Colors.white.withOpacity(.5),
+                            ),
+                            counterStyle: GoogleFonts.chivo(
+                              color: Colors.white,
+                            ),
+                            border: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            disabledBorder: InputBorder.none,
+                            contentPadding: EdgeInsets.zero,
+                          ),
                         ),
                       ),
-                    ),
-
-                    const Divider(
-                      color: Colors.white,
-                      thickness: 1,
-                      indent: 16,
-                      endIndent: 16,
-                    ),
+                    if (isCreatingNewQueue)
+                      const Divider(
+                        color: Colors.white,
+                        thickness: 1,
+                        indent: 16,
+                        endIndent: 16,
+                      ),
 
                     BlockTextDisplay(
                       store: blockTextDisplay,

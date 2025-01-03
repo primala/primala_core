@@ -46,11 +46,12 @@ abstract class _SessionSoloHybridCoordinatorBase
       userCanSpeak: sessionMetadata.userCanSpeak,
       everyoneIsOnline: sessionMetadata.everyoneIsOnline,
     );
-
-    print(' the full names are ${sessionMetadata.fullNames}');
-    widgets.rally.setValues(
-      fullNames: sessionMetadata.fullNames,
+    widgets.rally.setCollaborators(
+      sessionMetadata.collaboratorsMinusUser,
     );
+    if (sessionContent.currentFocus.isNotEmpty) {
+      widgets.purposeBanner.setFocus(sessionContent.currentFocus);
+    }
     if (!sessionMetadata.everyoneIsOnline) {
       widgets.onCollaboratorLeft();
     }
@@ -194,10 +195,7 @@ abstract class _SessionSoloHybridCoordinatorBase
             Right(
               RallyParams(
                 shouldAdd: p0 != -1,
-                userUID: p0 != -1
-                    ? sessionMetadata
-                        .getUIDFromName(widgets.rally.currentPartnerFullName)
-                    : '',
+                userUID: p0 != -1 ? widgets.rally.currentPartnerUID : '',
               ),
             ),
           );
