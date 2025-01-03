@@ -155,6 +155,11 @@ abstract class _QueueCreationModalStoreBase extends BaseWidgetStore
       blur.reverse();
       setModalIsVisible(false);
       setIsCreatingNewQueue(false);
+      queueTitleController.clear();
+      blockTextDisplay.clear();
+      if (isEditable) {
+        blockTextFields.controller.clear();
+      }
       dispose();
     });
   }

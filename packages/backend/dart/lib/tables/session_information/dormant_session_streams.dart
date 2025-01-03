@@ -69,7 +69,9 @@ class DormantSessionInformationStreams extends SessionInformationQueries
         // Handle updates
         for (var item in event) {
           final newSession = SessionEntity(
-            title: item[TITLE],
+            title: item[TITLE].isEmpty
+                ? 'Session on ${formatDate(DateTime.parse(item[CREATED_AT]))}'
+                : item[TITLE],
             uid: item[UID],
             createdAt: item[CREATED_AT],
           );

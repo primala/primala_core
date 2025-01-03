@@ -111,6 +111,7 @@ abstract class _StorageHomeWidgetsCoordinatorBase
         await onSelected(p0);
         queueCreationModal.setIsEditable(false);
         queueCreationModal.showModal(buildContext);
+        groupDisplayModal.groupDisplaySessionCard.setCurrentlySelectedIndex(-1);
       });
 
   queueOpenReactor(Function(String sessionUID) onSelected) => reaction(
@@ -120,6 +121,7 @@ abstract class _StorageHomeWidgetsCoordinatorBase
         await onSelected(p0);
         queueCreationModal.setIsEditable(true);
         queueCreationModal.showModal(buildContext);
+        groupDisplayModal.groupDisplayQueueCard.setCurrentlySelectedIndex(-1);
       });
 
   groupModalOpenStatusReactor(

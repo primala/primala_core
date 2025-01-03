@@ -39,6 +39,11 @@ abstract class _BlockTextDisplayStoreBase extends BaseWidgetStore with Store {
   }
 
   @action
+  clear() {
+    content = ObservableList<SessionContentEntity>();
+  }
+
+  @action
   onSubmit() {
     blockTextFields.onSubmit();
   }
