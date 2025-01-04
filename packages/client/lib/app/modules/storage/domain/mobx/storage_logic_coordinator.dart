@@ -28,6 +28,12 @@ abstract class _StorageLogicCoordinatorBase with Store, BaseMobxLogic {
   ObservableList<SessionEntity> dormantSessions =
       ObservableList<SessionEntity>();
 
+  @observable
+  bool someoneIsRecruiting = false;
+
+  @observable
+  bool sessionHasAlreadyStarted = false;
+
   StreamSubscription sessionStreamSubscription =
       const Stream.empty().listen((event) {});
 
@@ -163,6 +169,8 @@ abstract class _StorageLogicCoordinatorBase with Store, BaseMobxLogic {
         sessionStreamSubscription = groupSessions.listen((value) {
           finishedSessions = ObservableList.of(value.finishedSessions);
           dormantSessions = ObservableList.of(value.dormantSessions);
+          someoneIsRecruiting = value.recruitingSessions.isNotEmpty;
+          sessionHasAlreadyStarted = value.startedSessions.isNotEmpty;
         });
       },
     );

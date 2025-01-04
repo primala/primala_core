@@ -44,8 +44,10 @@ class DormantSessionInformationStreams extends SessionInformationQueries
       // if (event.isEmpty) continue;
 
       // Clear both lists at the start
-      List<SessionEntity> newDormantSessions = [];
-      List<SessionEntity> newFinishedSessions = [];
+      List<SessionEntity> dormantSessions = [];
+      List<SessionEntity> finishedSessions = [];
+      List<SessionEntity> recruitingSessions = [];
+      List<SessionEntity> startedSessions = [];
 
       // Process all items
       for (var item in event) {
@@ -58,30 +60,36 @@ class DormantSessionInformationStreams extends SessionInformationQueries
         );
 
         if (item[STATUS] == 'dormant') {
-          newDormantSessions.add(session);
+          dormantSessions.add(session);
         } else if (item[STATUS] == 'finished') {
-          newFinishedSessions.add(session);
+          finishedSessions.add(session);
+        } else if (item[STATUS] == 'recruiting') {
+          recruitingSessions.add(session);
+        } else if (item[STATUS] == 'started') {
+          startedSessions.add(session);
         }
       }
 
       // Sort if there are items
-      if (newDormantSessions.isNotEmpty) {
-        newDormantSessions.sort((a, b) =>
+      if (dormantSessions.isNotEmpty) {
+        dormantSessions.sort((a, b) =>
             DateTime.parse(b.createdAt).compareTo(DateTime.parse(a.createdAt)));
       }
 
-      if (newFinishedSessions.isNotEmpty) {
-        newFinishedSessions.sort((a, b) =>
+      if (finishedSessions.isNotEmpty) {
+        finishedSessions.sort((a, b) =>
             DateTime.parse(b.createdAt).compareTo(DateTime.parse(a.createdAt)));
       }
 
       // Update the group sessions with potentially empty lists
-      _groupSessions.dormantSessions = newDormantSessions;
-      _groupSessions.finishedSessions = newFinishedSessions;
+      // _groupSessions.dormantSessions = dormantSessions;
+      // _groupSessions.finishedSessions = finishedSessions;
 
       yield GroupSessions(
-        dormantSessions: newDormantSessions,
-        finishedSessions: newFinishedSessions,
+        dormantSessions: dormantSessions,
+        finishedSessions: finishedSessions,
+        recruitingSessions: recruitingSessions,
+        startedSessions: startedSessions,
       );
     }
   }

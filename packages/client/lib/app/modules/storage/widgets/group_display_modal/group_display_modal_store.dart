@@ -45,6 +45,30 @@ abstract class _GroupDisplayModalStoreBase extends BaseWidgetStore with Store {
   @observable
   bool modalIsVisible = false;
 
+  @observable
+  bool canStartSession = false;
+
+  @observable
+  bool canJoinSession = false;
+
+  @observable
+  int startSessionCount = 0;
+
+  @observable
+  int joinSessionCount = 0;
+
+  @action
+  setCanStartSession(bool value) => canStartSession = value;
+
+  @action
+  setCanJoinSession(bool value) => canJoinSession = value;
+
+  @action
+  onStartPressed() => startSessionCount++;
+
+  @action
+  onJoinPressed() => joinSessionCount++;
+
   @action
   setCurrentlySelectedSection(GroupDisplayModalSectionType section) =>
       currentlySelectedSection = section;
@@ -87,6 +111,10 @@ abstract class _GroupDisplayModalStoreBase extends BaseWidgetStore with Store {
                   width: MediaQuery.of(context).size.width,
                   child: SingleChildScrollView(
                     child: GroupDisplayModal(
+                      onStartPressed: onStartPressed,
+                      onJoinPressed: onJoinPressed,
+                      startIsEnabled: canStartSession,
+                      joinIsEnabled: canJoinSession,
                       groupName: currentlySelectedGroup.groupName,
                       groupHandle: currentlySelectedGroup.groupHandle,
                       groupDisplaySessionCard: groupDisplaySessionCard,

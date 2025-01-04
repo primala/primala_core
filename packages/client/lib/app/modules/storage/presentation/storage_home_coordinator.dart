@@ -75,18 +75,62 @@ abstract class _StorageHomeCoordinatorBase
     disposers.add(externalTitleUpdatesReactor());
     disposers.add(finishedSessionsReactor());
     disposers.add(dormantSessionsReactor());
+    disposers.add(recruitingSessionsReactor());
+    disposers.add(ongoingSessionsReactor());
+    disposers.add(sessionStartReactor());
+    disposers.add(sessionJoinReactor());
   }
 
   finishedSessionsReactor() =>
       reaction((p0) => storageLogic.finishedSessions, (p0) async {
-        // if (p0.isEmpty) return;
         widgets.groupDisplayModal.groupDisplaySessionCard.setSessions(p0);
       });
 
   dormantSessionsReactor() =>
       reaction((p0) => storageLogic.dormantSessions, (p0) async {
-        // if (p0.isEmpty) return;
         widgets.groupDisplayModal.groupDisplayQueueCard.setSessions(p0);
+      });
+
+  recruitingSessionsReactor() =>
+      reaction((p0) => storageLogic.someoneIsRecruiting, (p0) async {
+        if (p0) {
+          widgets.groupDisplayModal.setCanJoinSession(true);
+          widgets.groupDisplayModal.setCanStartSession(false);
+        } else {
+          widgets.groupDisplayModal.setCanJoinSession(false);
+        }
+      });
+
+  ongoingSessionsReactor() =>
+      reaction((p0) => storageLogic.sessionHasAlreadyStarted, (p0) async {
+        if (p0) {
+          widgets.groupDisplayModal.setCanJoinSession(false);
+          widgets.groupDisplayModal.setCanStartSession(false);
+        } else {
+          widgets.groupDisplayModal.setCanStartSession(true);
+        }
+      });
+
+  sessionStartReactor() =>
+      reaction((p0) => widgets.groupDisplayModal.startSessionCount, (p0) async {
+        // Modular.to.navigate(
+        //     HomeConstants.quickActionsRouter,
+        //     arguments: {
+        //       HomeConstants.QUICK_ACTIONS_ROUTE: SessionConstants.lobby,
+        //     },
+        //   );
+        // they need to go to the spot where they pick the cue if any
+      });
+
+  sessionJoinReactor() =>
+      reaction((p0) => widgets.groupDisplayModal.joinSessionCount, (p0) async {
+        // Modular.to.navigate(
+        //     HomeConstants.quickActionsRouter,
+        //     arguments: {
+        //       HomeConstants.QUICK_ACTIONS_ROUTE: SessionConstants.lobby,
+        //     },
+        //   );
+        // they need to go to the spot where they pwait for the session to start
       });
 
   userTitleUpdatesReactor() =>
