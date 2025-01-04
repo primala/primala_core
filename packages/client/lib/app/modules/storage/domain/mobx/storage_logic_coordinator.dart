@@ -161,8 +161,6 @@ abstract class _StorageLogicCoordinatorBase with Store, BaseMobxLogic {
       (stream) {
         groupSessions = ObservableStream(stream);
         sessionStreamSubscription = groupSessions.listen((value) {
-          print('finished sessions: ${value.finishedSessions}');
-          print('dormant sessions: ${value.dormantSessions}');
           finishedSessions = ObservableList.of(value.finishedSessions);
           dormantSessions = ObservableList.of(value.dormantSessions);
         });

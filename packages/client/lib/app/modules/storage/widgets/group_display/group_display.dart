@@ -145,8 +145,12 @@ class GroupDisplay extends HookWidget {
         width: 80,
         height: 80,
         decoration: BoxDecoration(
-          color: Colors.blue.withOpacity(0.8),
+          color: Colors.white.withOpacity(0.27),
           shape: BoxShape.circle,
+          border: Border.all(
+            color: Colors.white,
+            width: 2,
+          ),
         ),
         child: const Icon(
           Icons.add,
