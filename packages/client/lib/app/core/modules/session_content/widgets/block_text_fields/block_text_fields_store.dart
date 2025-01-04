@@ -94,6 +94,8 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
       setisFocused(focusNode.hasFocus);
       if (!focusNode.hasFocus) {
         setCurrentlySelectedParentUID('');
+      } else {
+        // setControl(Control.stop);
       }
     });
   }
