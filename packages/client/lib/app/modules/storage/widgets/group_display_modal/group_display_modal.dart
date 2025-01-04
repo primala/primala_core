@@ -7,8 +7,8 @@ export 'group_display_modal_store.dart';
 export 'widgets/widgets.dart';
 
 class GroupDisplayModal extends HookWidget {
-  final GroupDisplaySessionCardStore groupDisplaySessionCard;
-  final GroupDisplayQueueCardStore groupDisplayQueueCard;
+  final GroupDisplayCardStore groupDisplaySessionCard;
+  final GroupDisplayCardStore groupDisplayQueueCard;
   final GroupDisplayCollaboratorCardStore groupDisplayCollaboratorCard;
   final String groupName;
   final String groupHandle;
@@ -101,12 +101,12 @@ class GroupDisplayModal extends HookWidget {
             padding: const EdgeInsets.only(top: 28),
             child: MultiHitStack(
               children: [
-                GroupDisplaySessionCard(
+                GroupDisplayCard(
                   store: groupDisplaySessionCard,
                   showWidget: currentlySelectedSection ==
                       GroupDisplayModalSectionType.storage,
                 ),
-                GroupDisplayQueueCard(
+                GroupDisplayCard(
                   store: groupDisplayQueueCard,
                   showWidget: currentlySelectedSection ==
                       GroupDisplayModalSectionType.queue,

@@ -58,7 +58,7 @@ abstract class _StorageHomeCoordinatorBase
         .add(widgets.queueCreationReactor(onQueueCreated, onQueueModalClosed));
     disposers.add(widgets.membershipAdditionReactor(onGroupMembershipUpdated));
     disposers.add(widgets.membershipRemovalReactor(onGroupMembershipUpdated));
-    disposers.add(widgets.queueDeletionReactor(onQueueDeleted));
+    disposers.add(widgets.queueDeletionReactor(onSessionDeleted));
     disposers.add(widgets.sessionDeletionReactor(onSessionDeleted));
     disposers.add(widgets.groupModalOpenStatusReactor(
       onGroupModalOpened,
@@ -79,14 +79,14 @@ abstract class _StorageHomeCoordinatorBase
 
   finishedSessionsReactor() =>
       reaction((p0) => storageLogic.finishedSessions, (p0) async {
-        if (p0.isEmpty) return;
+        // if (p0.isEmpty) return;
         widgets.groupDisplayModal.groupDisplaySessionCard.setSessions(p0);
       });
 
   dormantSessionsReactor() =>
       reaction((p0) => storageLogic.dormantSessions, (p0) async {
-        if (p0.isEmpty) return;
-        widgets.groupDisplayModal.groupDisplayQueueCard.setQueues(p0);
+        // if (p0.isEmpty) return;
+        widgets.groupDisplayModal.groupDisplayQueueCard.setSessions(p0);
       });
 
   userTitleUpdatesReactor() =>
@@ -101,7 +101,7 @@ abstract class _StorageHomeCoordinatorBase
   externalTitleUpdatesReactor() =>
       reaction((p0) => storageLogic.currentlySelectedDormantSession.title,
           (p0) {
-        if (storageLogic.queueUID.isEmpty) return;
+        // if (storageLogic.queueUID.isEmpty) return;
         widgets.queueCreationModal.setTitle(p0);
       });
 
@@ -129,6 +129,8 @@ abstract class _StorageHomeCoordinatorBase
     storageLogic.setQueueUID(sessionUID);
     widgets.queueCreationModal
         .setTitle(storageLogic.currentlySelectedFinishedSession.title);
+    widgets.queueCreationModal.queueTitleController.text =
+        storageLogic.currentlySelectedFinishedSession.title;
   }
 
   @action
@@ -175,12 +177,6 @@ abstract class _StorageHomeCoordinatorBase
   @action
   onSessionDeleted(String params) async {
     await storageLogic.deleteSession(params);
-    await storageLogic.getGroups();
-  }
-
-  @action
-  onQueueDeleted(String params) async {
-    await storageLogic.deleteQueue(params);
     await storageLogic.getGroups();
   }
 

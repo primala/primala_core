@@ -292,7 +292,7 @@ class SessionInformationQueries with SessionInformationConstants, SessionUtils {
       final contentRes = await supabase
           .from(SessionContentConstants.S_TABLE)
           .select()
-          .eq(UID, uid);
+          .eq(SessionContentConstants.S_SESSION_UID, uid);
       if (contentRes.isEmpty) {
         await supabase.from(TABLE).delete().eq(UID, uid);
       }
@@ -308,7 +308,7 @@ class SessionInformationQueries with SessionInformationConstants, SessionUtils {
       final contentRes = await supabase
           .from(SessionContentConstants.S_TABLE)
           .select()
-          .eq(UID, uid);
+          .eq(SessionContentConstants.S_SESSION_UID, uid);
       if (contentRes.isEmpty) {
         await supabase.from(TABLE).delete().eq(UID, uid);
       }

@@ -17,7 +17,7 @@ class QueueCreationModalStore = _QueueCreationModalStoreBase
 abstract class _QueueCreationModalStoreBase extends BaseWidgetStore
     with Store, Reactions {
   final NokhteBlurStore blur;
-  final GroupDisplaySessionCardStore groupDisplaySessionCard;
+  final GroupDisplayCardStore groupDisplaySessionCard;
   final BlockTextDisplayStore blockTextDisplay;
   final BlockTextFieldsStore blockTextFields;
 
@@ -120,6 +120,8 @@ abstract class _QueueCreationModalStoreBase extends BaseWidgetStore
   void showModal(BuildContext context) {
     if (modalIsVisible) return;
     setModalIsVisible(true);
+
+    ;
 
     blur.init(end: Seconds.get(0, milli: 200));
     showModalBottomSheet(

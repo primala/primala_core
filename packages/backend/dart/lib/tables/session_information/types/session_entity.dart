@@ -1,10 +1,12 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:equatable/equatable.dart';
 
 typedef SessionList = List<SessionEntity>;
 
 class GroupSessions extends Equatable {
-  final SessionList finishedSessions;
-  final SessionList dormantSessions;
+  SessionList finishedSessions;
+  SessionList dormantSessions;
 
   GroupSessions({
     required this.finishedSessions,

@@ -12,8 +12,8 @@ class GroupDisplayModalStore = _GroupDisplayModalStoreBase
     with _$GroupDisplayModalStore;
 
 abstract class _GroupDisplayModalStoreBase extends BaseWidgetStore with Store {
-  final GroupDisplaySessionCardStore groupDisplaySessionCard;
-  final GroupDisplayQueueCardStore groupDisplayQueueCard;
+  final GroupDisplayCardStore groupDisplaySessionCard;
+  final GroupDisplayCardStore groupDisplayQueueCard;
   final GroupDisplayCollaboratorCardStore groupDisplayCollaboratorCard;
   final NokhteBlurStore blur;
   final QueueCreationModalStore queueCreationModal;

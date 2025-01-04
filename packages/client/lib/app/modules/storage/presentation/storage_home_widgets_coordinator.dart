@@ -104,24 +104,23 @@ abstract class _StorageHomeWidgetsCoordinatorBase
       });
 
   sessionOpenReactor(Function(String sessionUID) onSelected) => reaction(
-          (p0) =>
-              groupDisplayModal.groupDisplaySessionCard.currentlySelectedUID,
+          (p0) => groupDisplayModal.groupDisplaySessionCard.sessionUIDToOpen,
           (p0) async {
         if (p0.isEmpty) return;
         await onSelected(p0);
         queueCreationModal.setIsEditable(false);
         queueCreationModal.showModal(buildContext);
-        groupDisplayModal.groupDisplaySessionCard.setCurrentlySelectedIndex(-1);
+        groupDisplayModal.groupDisplaySessionCard.setSessionUIDToOpen('');
       });
 
-  queueOpenReactor(Function(String sessionUID) onSelected) => reaction(
-          (p0) => groupDisplayModal.groupDisplayQueueCard.currentlySelectedUID,
+  queueOpenReactor(Function(String sessionUID) onSelected) =>
+      reaction((p0) => groupDisplayModal.groupDisplayQueueCard.sessionUIDToOpen,
           (p0) async {
         if (p0.isEmpty) return;
         await onSelected(p0);
         queueCreationModal.setIsEditable(true);
         queueCreationModal.showModal(buildContext);
-        groupDisplayModal.groupDisplayQueueCard.setCurrentlySelectedIndex(-1);
+        groupDisplayModal.groupDisplayQueueCard.setSessionUIDToOpen('');
       });
 
   groupModalOpenStatusReactor(
@@ -159,20 +158,19 @@ abstract class _StorageHomeWidgetsCoordinatorBase
       });
 
   queueDeletionReactor(Function(String params) onSubmit) => reaction(
-          (p0) =>
-              groupDisplayModal.groupDisplayQueueCard.currentlySelectedIndex,
+          (p0) => groupDisplayModal.groupDisplayQueueCard.sessionUIDToDelete,
           (p0) async {
-        final params = groupDisplayModal.groupDisplayQueueCard.queueUIDToDelete;
-        await onSubmit(params);
+        // final params = groupDisplayModal.groupDisplayQueueCard.queueUIDToDelete;
+        await onSubmit(p0);
       });
 
   sessionDeletionReactor(Function(String params) onSubmit) => reaction(
-          (p0) =>
-              groupDisplayModal.groupDisplaySessionCard.currentlySelectedIndex,
+          (p0) => groupDisplayModal.groupDisplaySessionCard.sessionUIDToDelete,
           (p0) async {
-        final params =
-            groupDisplayModal.groupDisplaySessionCard.sessionUIDToDelete;
-        await onSubmit(params);
+        // final params =
+        //     groupDisplayModal.groupDisplaySessionCard.sessionUIDToDelete;
+        // print('deleting session $params');
+        await onSubmit(p0);
       });
 
   membershipRemovalReactor(Function(UpdateGroupMemberParams params) onSubmit) =>

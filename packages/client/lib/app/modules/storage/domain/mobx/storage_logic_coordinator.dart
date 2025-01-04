@@ -115,18 +115,6 @@ abstract class _StorageLogicCoordinatorBase with Store, BaseMobxLogic {
   }
 
   @action
-  deleteQueue(String params) async {
-    queueIsDeleted = false;
-    final res = await contract.deleteQueue(params);
-    res.fold(
-      (failure) => errorUpdater(failure),
-      (deletionStatus) {
-        queueIsDeleted = deletionStatus;
-      },
-    );
-  }
-
-  @action
   deleteSession(String params) async {
     sessionIsDeleted = false;
     final res = await contract.deleteSession(params);
@@ -173,6 +161,8 @@ abstract class _StorageLogicCoordinatorBase with Store, BaseMobxLogic {
       (stream) {
         groupSessions = ObservableStream(stream);
         sessionStreamSubscription = groupSessions.listen((value) {
+          print('finished sessions: ${value.finishedSessions}');
+          print('dormant sessions: ${value.dormantSessions}');
           finishedSessions = ObservableList.of(value.finishedSessions);
           dormantSessions = ObservableList.of(value.dormantSessions);
         });
