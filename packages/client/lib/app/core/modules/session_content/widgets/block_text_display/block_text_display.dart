@@ -1,5 +1,6 @@
 export 'block_text_display_store.dart';
 import 'package:flutter/material.dart';
+import 'context_menu/context_menu.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:gradient_borders/gradient_borders.dart';
@@ -68,49 +69,81 @@ class BlockTextDisplay extends HookWidget {
                     // padding: EdgeInsets.all(padValue),
                     duration: Duration.zero,
                     curve: Curves.easeInOut,
-                    child: Container(
-                      // width: width,
-                      margin: EdgeInsets.only(
-                        left: 16.0 *
-                            (element.numberOfParents == 0
-                                ? 1
-                                : element.numberOfParents + 1),
-                        right: 16.0,
-                        bottom: 10,
-                      ),
-                      padding: const EdgeInsets.all(
-                        12.0,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16.0),
-                        border: GradientBoxBorder(
-                          gradient: LinearGradient(
-                            colors: BlockTextConstants.getGradient(
-                                    element.blockType)
-                                .map((e) => e.color)
-                                .toList(),
-                            stops: const [0, 1],
+                    child: GestureDetector(
+                      onLongPressStart: (details) {
+                        showContextMenu(
+                          context,
+                          contextMenu: ContextMenu(
+                            boxDecoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16.0),
+                              color: Colors.white,
+                            ),
+                            entries: <ContextMenuEntry>[
+                              // const MenuHeader(text: "Context Menu"),
+                              MenuItem(
+                                label: 'edit',
+                                iconPath: 'pencil_icon',
+                                onSelected: () {
+                                  store.onEdit(element);
+                                },
+                              ),
+                              MenuItem(
+                                label: 'delete',
+                                iconPath: 'trash_icon_black',
+                                onSelected: () {
+                                  store.setItemUIDToDelete(element.uid);
+                                },
+                              ),
+                            ],
+                            position: details.globalPosition,
+                            padding: const EdgeInsets.all(8.0),
                           ),
+                        );
+                      },
+                      child: Container(
+                        // width: width,
+                        margin: EdgeInsets.only(
+                          left: 16.0 *
+                              (element.numberOfParents == 0
+                                  ? 1
+                                  : element.numberOfParents + 1),
+                          right: 16.0,
+                          bottom: 10,
                         ),
-                      ),
-                      child: Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          Positioned(
-                            top: -2,
-                            left: 0,
-                            child: Image.asset(
-                              BlockTextConstants.getAssetPath(
-                                  element.blockType),
-                              width: 25,
-                              height: 25,
+                        padding: const EdgeInsets.all(
+                          12.0,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16.0),
+                          border: GradientBoxBorder(
+                            gradient: LinearGradient(
+                              colors: BlockTextConstants.getGradient(
+                                      element.blockType)
+                                  .map((e) => e.color)
+                                  .toList(),
+                              stops: const [0, 1],
                             ),
                           ),
-                          Jost(
-                            '${BlockTextConstants.whiteSpace}${element.content}',
-                            fontSize: 16,
-                          ),
-                        ],
+                        ),
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            Positioned(
+                              top: -2,
+                              left: 0,
+                              child: Image.asset(
+                                BlockTextConstants.getAssetPath(
+                                    element.blockType),
+                                width: 25,
+                                height: 25,
+                              ),
+                            ),
+                            Jost(
+                              '${BlockTextConstants.whiteSpace}${element.content}',
+                              fontSize: 16,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );

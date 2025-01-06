@@ -22,6 +22,9 @@ abstract class _SessionContentLogicCoordinatorBase with Store, BaseMobxLogic {
   bool contentIsUpdated = false;
 
   @observable
+  bool contentIsDeleted = false;
+
+  @observable
   bool parentIsUpdated = false;
 
   @observable
@@ -61,6 +64,16 @@ abstract class _SessionContentLogicCoordinatorBase with Store, BaseMobxLogic {
     res.fold(
       (failure) => errorUpdater(failure),
       (contentAdditionStatus) => contentIsAdded = contentAdditionStatus,
+    );
+    setState(StoreState.loaded);
+  }
+
+  @action
+  deleteContent(String params) async {
+    final res = await contract.deleteContent(params);
+    res.fold(
+      (failure) => errorUpdater(failure),
+      (contentDeletionStatus) => contentIsDeleted = contentDeletionStatus,
     );
     setState(StoreState.loaded);
   }

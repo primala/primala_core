@@ -12,6 +12,7 @@ import 'package:nokhte_backend/tables/session_content.dart';
 import 'package:simple_animations/simple_animations.dart';
 export 'block_text_fields_store.dart';
 export 'movies/movies.dart';
+export 'block_text_field_mode.dart';
 
 class BlockTextFields extends HookWidget {
   final BlockTextFieldsStore store;

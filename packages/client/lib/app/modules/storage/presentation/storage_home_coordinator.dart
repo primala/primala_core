@@ -65,7 +65,11 @@ abstract class _StorageHomeCoordinatorBase
       onGroupModalClosed,
     ));
     disposers.add(widgets.sessionContentReactor(
-      sessionContentLogic.addContent,
+      onAdd: sessionContentLogic.addContent,
+      onUpdate: sessionContentLogic.updateContent,
+    ));
+    disposers.add(widgets.contentDeletionReactor(
+      sessionContentLogic.deleteContent,
     ));
     disposers.add(widgets.sessionOpenReactor(onSessionSelected));
     disposers.add(widgets.queueOpenReactor(onSessionSelected));
@@ -201,6 +205,7 @@ abstract class _StorageHomeCoordinatorBase
 
   @action
   onQueueModalClosed() async {
+    storageLogic.setQueueUID('');
     // await storageLogic.createQueue(
     //   widgets.groupDisplayModal.currentlySelectedGroup.groupUID,
     // );

@@ -3,6 +3,7 @@ import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/session_content/session_content.dart';
 import 'package:nokhte_backend/tables/session_content.dart';
+import 'package:simple_animations/simple_animations.dart';
 part 'block_text_display_store.g.dart';
 
 class BlockTextDisplayStore = _BlockTextDisplayStoreBase
@@ -22,11 +23,27 @@ abstract class _BlockTextDisplayStoreBase extends BaseWidgetStore with Store {
   setSwipeProgress(double val, int index) => swipeProgresses[index] = val;
 
   @observable
+  String itemUIDToDelete = '';
+
+  @action
+  setItemUIDToDelete(String value) => itemUIDToDelete = value;
+
+  @action
+  onEdit(SessionContentEntity item) {
+    blockTextFields.setCurrentlySelectedItemUID(item.uid);
+    blockTextFields.focusNode.requestFocus();
+    blockTextFields.setMode(BlockTextFieldMode.editing);
+    blockTextFields.controller.text = item.content;
+    //
+  }
+
+  @observable
   ObservableList<SessionContentEntity> content =
       ObservableList<SessionContentEntity>();
 
   @action
   onParentSelected(String itemUID) {
+    blockTextFields.setControl(Control.stop);
     blockTextFields.setCurrentlySelectedParentUID(itemUID);
     blockTextFields.focusNode.requestFocus();
   }

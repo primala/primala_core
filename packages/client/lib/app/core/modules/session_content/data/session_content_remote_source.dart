@@ -7,6 +7,7 @@ abstract class SessionContentRemoteSource {
   Future<List> addContent(AddContentParams params);
   Future<List> updateContent(UpdateContentParams params);
   Future<List> updateParent(UpdateParentParams params);
+  Future<List> deleteContent(String params);
 }
 
 class SessionContentRemoteSourceImpl implements SessionContentRemoteSource {
@@ -39,4 +40,8 @@ class SessionContentRemoteSourceImpl implements SessionContentRemoteSource {
   @override
   updateParent(params) async =>
       await sessionContentQueries.updateParent(params);
+
+  @override
+  deleteContent(params) async =>
+      await sessionContentQueries.deleteContent(params);
 }

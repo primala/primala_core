@@ -5,6 +5,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
+import 'package:nokhte/app/core/modules/session_content/session_content.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/home/home.dart';
@@ -114,6 +115,9 @@ abstract class _StorageHomeWidgetsCoordinatorBase
             await onClosed();
           }
         } else {
+          if (!p0) {
+            await onClosed();
+          }
           //
         }
       });
@@ -149,13 +153,28 @@ abstract class _StorageHomeWidgetsCoordinatorBase
         }
       });
 
-  sessionContentReactor(Function(AddContentParams params) onSubmit) =>
+  sessionContentReactor({
+    required Function(AddContentParams params) onAdd,
+    required Function(UpdateContentParams params) onUpdate,
+  }) =>
       reaction((p0) => queueCreationModal.blockTextFields.submissionCount,
           (p0) async {
-        final params =
-            queueCreationModal.blockTextDisplay.blockTextFields.currentParams;
-        await onSubmit(params);
+        if (queueCreationModal.blockTextFields.mode ==
+            BlockTextFieldMode.adding) {
+          await onAdd(queueCreationModal
+              .blockTextDisplay.blockTextFields.addContentParams);
+        } else {
+          await onUpdate(queueCreationModal
+              .blockTextDisplay.blockTextFields.updateContentParams);
+        }
         queueCreationModal.blockTextDisplay.blockTextFields.resetParams();
+      });
+
+  contentDeletionReactor(Function(String params) onDelete) =>
+      reaction((p0) => queueCreationModal.blockTextDisplay.itemUIDToDelete,
+          (p0) async {
+        if (p0.isEmpty) return;
+        await onDelete(p0);
       });
 
   membershipAdditionReactor(

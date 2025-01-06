@@ -27,6 +27,7 @@ class SettingsLayout extends HookWidget {
             Padding(
               padding: EdgeInsets.only(
                 top: screenSize.height * 0.16,
+                bottom: 30,
               ),
               child: Image.asset(
                 'assets/groups/user_icon.png',
@@ -37,16 +38,21 @@ class SettingsLayout extends HookWidget {
             Jost(
               store.fullName,
             ),
-            const Divider(
-              color: Colors.white,
-              thickness: 1,
-              indent: 16,
-              endIndent: 16,
+            const Padding(
+              padding: EdgeInsets.only(
+                top: 30.0,
+              ),
+              child: Divider(
+                color: Colors.white,
+                thickness: 1,
+                indent: 16,
+                endIndent: 16,
+              ),
             ),
             ExpansionTile(
-              title: Padding(
+              title: const Padding(
                 padding: EdgeInsets.only(left: 8.0),
-                child: const Jost(
+                child: Jost(
                   'Deactivate Account',
                   fontSize: 18,
                 ),
