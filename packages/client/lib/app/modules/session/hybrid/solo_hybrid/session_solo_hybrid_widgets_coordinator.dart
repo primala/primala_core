@@ -42,7 +42,6 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   @override
   final WifiDisconnectOverlayStore wifiDisconnectOverlay;
   final PurposeBannerStore purposeBanner;
-  final NavigationMenuStore navigationMenu;
 
   _SessionSoloHybridWidgetsCoordinatorBase({
     required this.primarySmartText,
@@ -57,7 +56,6 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
     required this.purposeBanner,
     required this.touchRipple,
     required this.speakLessSmileMore,
-    required this.navigationMenu,
   }) {
     initBaseWidgetsCoordinatorActions();
     initSessionSpeakingUtilities();
@@ -68,9 +66,8 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
     required bool userCanSpeak,
     required bool everyoneIsOnline,
   }) {
-    navigationMenu.setNavigationMenuType(NavigationMenuType.inSession,
-        shouldInitReactors: false);
     tapStopwatch.start();
+    // refreshBanner.setWidgetVisibility(true);
     beachWaves.setMovieMode(BeachWaveMovieModes.halfAndHalfToDrySand);
     primarySmartText.setMessagesData(SessionLists.tapToTalk);
     primarySmartText.setStaticAltMovie(SessionConstants.blue);
@@ -130,7 +127,7 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
 
   @action
   openPurposeModal() {
-    if (navigationMenu.hasSwipedDown) return;
+    if (!purposeBanner.showWidget) return;
     purposeBanner.showModal(onOpen: () {
       if (isHolding) {
         Timer.periodic(Seconds.get(0, milli: 250), (t) {
@@ -150,9 +147,11 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
       } else {
         beachWaves.currentStore.setControl(Control.stop);
       }
-      navigationMenu.setWidgetVisibility(false);
+      refreshBanner.setWidgetVisibility(false);
     }, onClose: () {
-      navigationMenu.setWidgetVisibility(true);
+      if (!isHolding) {
+        refreshBanner.setWidgetVisibility(true);
+      }
     });
   }
 
@@ -173,7 +172,7 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   onHold(GesturePlacement holdPosition) {
     initSpeaking(holdPosition, onHold: () {
       setSmartTextVisibilities(false);
-      navigationMenu.setWidgetVisibility(false);
+      refreshBanner.setWidgetVisibility(false);
     });
   }
 
@@ -211,18 +210,18 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   @action
   onSomeoneElseIsTalking() {
     othersAreTalkingTint.reverseMovie(const NoParams());
-    navigationMenu.setWidgetVisibility(false);
+    refreshBanner.setWidgetVisibility(false);
   }
 
   @action
   onSomeoneElseIsDoneTalking() {
     othersAreTalkingTint.initMovie(const NoParams());
-    navigationMenu.setWidgetVisibility(true);
+    refreshBanner.setWidgetVisibility(true);
   }
 
   @action
   onLetGoCompleted() {
-    navigationMenu.setWidgetVisibility(true);
+    refreshBanner.setWidgetVisibility(true);
     resetSpeakingVariables();
 
     isASecondarySpeaker = false;
@@ -236,7 +235,6 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   @action
   initFullScreenNotes() {
     baseInitFullScreenNotes(() {
-      navigationMenu.setWidgetVisibility(false);
       setSmartTextVisibilities(false);
       purposeBanner.setWidgetVisibility(false);
       othersAreTalkingTint.reverseMovie(const NoParams());
@@ -261,7 +259,7 @@ abstract class _SessionSoloHybridWidgetsCoordinatorBase
   }) {
     speakingTimerStart = startTime;
     isASecondarySpeaker = true;
-    navigationMenu.setWidgetVisibility(false);
+    refreshBanner.setWidgetVisibility(false);
     sessionNavigation.setWidgetVisibility(false);
     rally.setCurrentInitiator(initiatorFullName);
     beachWaves.setMovieMode(

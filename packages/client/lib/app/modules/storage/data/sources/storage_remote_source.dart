@@ -12,7 +12,6 @@ abstract class StorageRemoteSource {
   Future<List> updateSessionTitle(UpdateSessionTitleParams params);
   Future<List> createQueue(String groupUID);
   Future<List> deleteSession(String params);
-  Future<List> deleteQueue(String params);
   Future<List> getCollaborators();
   Future<List> updateGroupMembers(UpdateGroupMemberParams params);
   Future<bool> cancelSessionsStream();
@@ -50,9 +49,6 @@ class StorageRemoteSourceImpl implements StorageRemoteSource {
       await sessionInformationQueries.initializeDormantSession(groupUID);
 
   @override
-  deleteQueue(params) async => [];
-
-  @override
   getCollaborators() async => await userNamesQueries.getCollaboratorRows();
 
   @override
@@ -64,7 +60,8 @@ class StorageRemoteSourceImpl implements StorageRemoteSource {
       );
 
   @override
-  deleteSession(params) async => [];
+  deleteSession(params) async =>
+      await sessionInformationQueries.deleteSession(params);
 
   @override
   listenToSessions(groupUID) =>

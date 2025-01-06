@@ -1,4 +1,6 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
@@ -28,7 +30,11 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
 
   @action
   constructor(BuildContext buildContext) {
+    setWidgetVisibility(false);
     this.buildContext = buildContext;
+    Timer(Seconds.get(0, milli: 1), () {
+      setWidgetVisibility(true);
+    });
   }
 
   @observable

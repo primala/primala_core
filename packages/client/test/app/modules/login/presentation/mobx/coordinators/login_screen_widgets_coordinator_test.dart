@@ -5,7 +5,6 @@ import '../../../../shared/shared_mocks.mocks.dart';
 
 void main() {
   late BeachWavesStore layer1BeachWavesStore;
-  late BeachWavesStore layer2BeachWavesStore;
   late SmartTextStore smartTextStore;
   late MockWifiDisconnectOverlayStore wifiDisconnectOverlayStore;
   late LoginScreenWidgetsCoordinator testStore;
@@ -13,7 +12,6 @@ void main() {
   setUp(() {
     wifiDisconnectOverlayStore = MockWifiDisconnectOverlayStore();
     layer1BeachWavesStore = BeachWavesStore();
-    layer2BeachWavesStore = BeachWavesStore();
     smartTextStore = SmartTextStore();
     testStore = LoginScreenWidgetsCoordinator(
       wifiDisconnectOverlay: wifiDisconnectOverlayStore,
@@ -32,13 +30,6 @@ void main() {
     test("toggleHasTriggeredLoginAnimation", () {
       testStore.toggleHasTriggeredLoginAnimation();
       expect(testStore.hasTriggeredLoginAnimation, true);
-    });
-
-    test("connstructor", () {
-      testStore.constructor();
-      expect(layer1BeachWavesStore.movieMode,
-          BeachWaveMovieModes.blackOutToDrySand);
-      expect(layer2BeachWavesStore.movieMode, BeachWaveMovieModes.onShore);
     });
   });
 

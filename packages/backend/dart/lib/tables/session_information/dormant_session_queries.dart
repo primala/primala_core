@@ -24,7 +24,6 @@ class DormantSessionInformationQueries
     final res =
         await supabase.from(TABLE).select().eq(UID, params.sessionUID).single();
 
-    print('what is the title ${params.title} ${res[VERSION]}');
     return await supabase
         .from(TABLE)
         .update({
@@ -35,6 +34,9 @@ class DormantSessionInformationQueries
         .eq(UID, params.sessionUID)
         .select();
   }
+
+  Future<List> deleteSession(String sessionUID) async =>
+      await supabase.from(TABLE).delete().eq(UID, sessionUID).select();
 
   Future<List> initializeDormantSession(
     String groupUID,

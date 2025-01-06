@@ -7,13 +7,13 @@ import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
 import 'package:nokhte_backend/tables/session_information.dart';
-export 'group_display_queue_card_store.dart';
+export 'group_display_card_store.dart';
 
-class GroupDisplayQueueCard extends HookWidget {
-  final GroupDisplayQueueCardStore store;
+class GroupDisplayCard extends HookWidget {
+  final GroupDisplayCardStore store;
   final bool showWidget;
 
-  const GroupDisplayQueueCard({
+  const GroupDisplayCard({
     super.key,
     required this.store,
     required this.showWidget,
@@ -28,12 +28,11 @@ class GroupDisplayQueueCard extends HookWidget {
       return ListView.separated(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: store.queues.length,
+        itemCount: store.sessions.length,
         separatorBuilder: (context, index) => SizedBox(height: height * 0.02),
         itemBuilder: (context, index) {
-          final queues = store.queues[index];
-
           return Observer(builder: (context) {
+            final sessions = store.sessions[index];
             return AnimatedOpacity(
               opacity: useWidgetOpacity(showWidget),
               duration: Seconds.get(0, milli: 500),
@@ -47,18 +46,18 @@ class GroupDisplayQueueCard extends HookWidget {
                             SlidableAction(
                               spacing: 0,
                               padding: EdgeInsets.zero,
-                              onPressed: (_) =>
-                                  store.setCurrentlySelectedIndex(index),
+                              onPressed: (_) => store.setSessionUIDToDelete(
+                                  store.sessions[index].uid),
                               backgroundColor: Colors.transparent,
                               foregroundColor: Colors.white,
                               icon: Icons.delete_forever,
                             ),
                           ],
                         ),
-                        child:
-                            _buildQueueContainer(queues, index, width, height),
+                        child: _buildQueueContainer(
+                            sessions, index, width, height),
                       )
-                    : _buildQueueContainer(queues, index, width, height),
+                    : _buildQueueContainer(sessions, index, width, height),
               ),
             );
           });
@@ -68,12 +67,12 @@ class GroupDisplayQueueCard extends HookWidget {
   }
 
   Widget _buildQueueContainer(
-      SessionEntity queues, int index, double width, double height) {
+      SessionEntity sessions, int index, double width, double height) {
     return GestureDetector(
       onTap: !showWidget
           ? null
           : () {
-              store.setCurrentlySelectedIndex(index);
+              store.setSessionUIDToOpen(store.sessions[index].uid);
             },
       child: Container(
         decoration: BoxDecoration(
@@ -92,7 +91,7 @@ class GroupDisplayQueueCard extends HookWidget {
               child: Column(
                 children: [
                   Jost(
-                    queues.title,
+                    sessions.title,
                     fontSize: 20,
                   ),
                 ],

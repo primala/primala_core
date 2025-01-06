@@ -16,7 +16,7 @@ abstract class StorageContract {
   );
 
   Future<Either<Failure, bool>> deleteSession(
-    String params,
+    String sessionUID,
   );
 
   Future<Either<Failure, bool>> updateSessionTitle(
@@ -25,10 +25,6 @@ abstract class StorageContract {
 
   Future<Either<Failure, String>> createQueue(
     String groupUID,
-  );
-
-  Future<Either<Failure, bool>> deleteQueue(
-    String sessionUID,
   );
 
   Future<Either<Failure, bool>> createNewGroup(

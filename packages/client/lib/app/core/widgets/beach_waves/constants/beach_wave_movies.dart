@@ -10,7 +10,7 @@ mixin BeachWaveMovies {
         BeachWaveMovieModes.borealisToSky: BorealisToSky(),
         BeachWaveMovieModes.invertedDeeperBlueToDeepSea:
             InvertedDeeperBlueToDeepSea(),
-        BeachWaveMovieModes.blackOutToDrySand: BlackOutToDrySand(),
+        BeachWaveMovieModes.anyToBlackOut: AnyToBlackout(),
         BeachWaveMovieModes.deepSeaToBorealis: DeepSeaToBorealis(),
         BeachWaveMovieModes.deepSeaToSky: DeepSeaToSky(),
         BeachWaveMovieModes.deepSeaToHalfAndHalf: DeepSeaToHalfAndHalf(),

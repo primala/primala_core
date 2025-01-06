@@ -23,6 +23,11 @@ class SessionContentQueries with SessionContentConstants {
     }).select();
   }
 
+  Future<List> deleteContent(String params) async {
+    if (sessionUID.isEmpty) return [];
+    return await supabase.from(TABLE).delete().eq(UID, params).select();
+  }
+
   Future<List> updateContent(UpdateContentParams params) async {
     if (sessionUID.isEmpty) return [];
     return await supabase

@@ -12,6 +12,7 @@ import 'package:nokhte_backend/tables/session_content.dart';
 import 'package:simple_animations/simple_animations.dart';
 export 'block_text_fields_store.dart';
 export 'movies/movies.dart';
+export 'block_text_field_mode.dart';
 
 class BlockTextFields extends HookWidget {
   final BlockTextFieldsStore store;
@@ -32,13 +33,13 @@ class BlockTextFields extends HookWidget {
       return null;
     }, []);
 
-    // Get the keyboard height
     final bottomPadding = MediaQuery.of(context).viewInsets.bottom;
 
     void updateTextFieldHeight() {
       final RenderObject? renderBox =
           textFieldKey.currentContext?.findRenderObject();
       if (renderBox != null) {
+        store.setControl(Control.stop);
         textFieldHeight.value = (renderBox.semanticBounds.height) + 60;
         print('height ${textFieldHeight.value}');
       }
@@ -74,7 +75,9 @@ class BlockTextFields extends HookWidget {
                   blur: 10,
                   colorOpacity: 0.2,
                   child: AnimatedContainer(
-                    duration: Seconds.get(0, milli: 300),
+                    duration: store.isExpanded
+                        ? Seconds.get(0, milli: 300)
+                        : Seconds.get(0),
                     height: (bottomPadding == 0 ? 0 : -35) +
                         (store.isExpanded ? 190 : 0) +
                         textFieldHeight.value,
@@ -99,7 +102,9 @@ class BlockTextFields extends HookWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               AnimatedContainer(
-                                duration: Seconds.get(0, milli: 300),
+                                duration: store.isExpanded
+                                    ? Seconds.get(0, milli: 300)
+                                    : Seconds.get(0),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(9),
                                 ),

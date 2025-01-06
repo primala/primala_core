@@ -5,9 +5,11 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
+import 'package:nokhte/app/core/modules/session_content/session_content.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/home/home.dart';
+import 'package:nokhte/app/modules/settings/settings.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
 import 'package:nokhte_backend/tables/session_content.dart';
 import 'package:simple_animations/simple_animations.dart';
@@ -63,6 +65,7 @@ abstract class _StorageHomeWidgetsCoordinatorBase
   initReactors() {
     disposers.add(beachWavesMovieStatusReactor());
     disposers.add(groupDisplayReactor());
+    disposers.add(userButtonTapReactor());
   }
 
   @observable
@@ -70,6 +73,19 @@ abstract class _StorageHomeWidgetsCoordinatorBase
 
   groupDisplayReactor() => reaction((p0) => groupDisplay.tapCount, (p0) {
         groupRegistration.setWidgetVisibility(true);
+      });
+
+  userButtonTapReactor() =>
+      reaction((p0) => groupDisplay.userButtonTapCount, (p0) {
+        //
+        print('we are tapping ');
+        if (p0 == 1) {
+          groupDisplay.setWidgetVisibility(false);
+          navigationCarousels.setWidgetVisibility(false);
+          Timer(Seconds.get(1), () {
+            Modular.to.navigate(SettingsConstants.settings);
+          });
+        }
       });
 
   groupRegistrationReactor(Function onSubmit) =>
@@ -99,29 +115,31 @@ abstract class _StorageHomeWidgetsCoordinatorBase
             await onClosed();
           }
         } else {
+          if (!p0) {
+            await onClosed();
+          }
           //
         }
       });
 
   sessionOpenReactor(Function(String sessionUID) onSelected) => reaction(
-          (p0) =>
-              groupDisplayModal.groupDisplaySessionCard.currentlySelectedUID,
+          (p0) => groupDisplayModal.groupDisplaySessionCard.sessionUIDToOpen,
           (p0) async {
         if (p0.isEmpty) return;
         await onSelected(p0);
         queueCreationModal.setIsEditable(false);
         queueCreationModal.showModal(buildContext);
-        groupDisplayModal.groupDisplaySessionCard.setCurrentlySelectedIndex(-1);
+        groupDisplayModal.groupDisplaySessionCard.setSessionUIDToOpen('');
       });
 
-  queueOpenReactor(Function(String sessionUID) onSelected) => reaction(
-          (p0) => groupDisplayModal.groupDisplayQueueCard.currentlySelectedUID,
+  queueOpenReactor(Function(String sessionUID) onSelected) =>
+      reaction((p0) => groupDisplayModal.groupDisplayQueueCard.sessionUIDToOpen,
           (p0) async {
         if (p0.isEmpty) return;
         await onSelected(p0);
         queueCreationModal.setIsEditable(true);
         queueCreationModal.showModal(buildContext);
-        groupDisplayModal.groupDisplayQueueCard.setCurrentlySelectedIndex(-1);
+        groupDisplayModal.groupDisplayQueueCard.setSessionUIDToOpen('');
       });
 
   groupModalOpenStatusReactor(
@@ -135,13 +153,28 @@ abstract class _StorageHomeWidgetsCoordinatorBase
         }
       });
 
-  sessionContentReactor(Function(AddContentParams params) onSubmit) =>
+  sessionContentReactor({
+    required Function(AddContentParams params) onAdd,
+    required Function(UpdateContentParams params) onUpdate,
+  }) =>
       reaction((p0) => queueCreationModal.blockTextFields.submissionCount,
           (p0) async {
-        final params =
-            queueCreationModal.blockTextDisplay.blockTextFields.currentParams;
-        await onSubmit(params);
+        if (queueCreationModal.blockTextFields.mode ==
+            BlockTextFieldMode.adding) {
+          await onAdd(queueCreationModal
+              .blockTextDisplay.blockTextFields.addContentParams);
+        } else {
+          await onUpdate(queueCreationModal
+              .blockTextDisplay.blockTextFields.updateContentParams);
+        }
         queueCreationModal.blockTextDisplay.blockTextFields.resetParams();
+      });
+
+  contentDeletionReactor(Function(String params) onDelete) =>
+      reaction((p0) => queueCreationModal.blockTextDisplay.itemUIDToDelete,
+          (p0) async {
+        if (p0.isEmpty) return;
+        await onDelete(p0);
       });
 
   membershipAdditionReactor(
@@ -159,20 +192,19 @@ abstract class _StorageHomeWidgetsCoordinatorBase
       });
 
   queueDeletionReactor(Function(String params) onSubmit) => reaction(
-          (p0) =>
-              groupDisplayModal.groupDisplayQueueCard.currentlySelectedIndex,
+          (p0) => groupDisplayModal.groupDisplayQueueCard.sessionUIDToDelete,
           (p0) async {
-        final params = groupDisplayModal.groupDisplayQueueCard.queueUIDToDelete;
-        await onSubmit(params);
+        // final params = groupDisplayModal.groupDisplayQueueCard.queueUIDToDelete;
+        await onSubmit(p0);
       });
 
   sessionDeletionReactor(Function(String params) onSubmit) => reaction(
-          (p0) =>
-              groupDisplayModal.groupDisplaySessionCard.currentlySelectedIndex,
+          (p0) => groupDisplayModal.groupDisplaySessionCard.sessionUIDToDelete,
           (p0) async {
-        final params =
-            groupDisplayModal.groupDisplaySessionCard.sessionUIDToDelete;
-        await onSubmit(params);
+        // final params =
+        //     groupDisplayModal.groupDisplaySessionCard.sessionUIDToDelete;
+        // print('deleting session $params');
+        await onSubmit(p0);
       });
 
   membershipRemovalReactor(Function(UpdateGroupMemberParams params) onSubmit) =>

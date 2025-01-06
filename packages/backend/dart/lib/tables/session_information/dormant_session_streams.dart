@@ -41,60 +41,56 @@ class DormantSessionInformationStreams extends SessionInformationQueries
         .stream(primaryKey: ['uid']).eq(GROUP_UID, groupUID);
 
     await for (var event in events) {
-      if (event.isEmpty) continue;
+      // if (event.isEmpty) continue;
 
-      if (_groupSessions.finishedSessions.isEmpty &&
-          _groupSessions.dormantSessions.isEmpty) {
-        for (var item in event) {
-          final session = SessionEntity(
-            title: item[TITLE].isEmpty
-                ? 'Session on ${formatDate(DateTime.parse(item[CREATED_AT]))}'
-                : item[TITLE],
-            uid: item[UID],
-            createdAt: item[CREATED_AT],
-          );
+      // Clear both lists at the start
+      List<SessionEntity> dormantSessions = [];
+      List<SessionEntity> finishedSessions = [];
+      List<SessionEntity> recruitingSessions = [];
+      List<SessionEntity> startedSessions = [];
 
-          if (item[STATUS] == 'dormant') {
-            _groupSessions.dormantSessions.add(session);
-          } else if (item[STATUS] == 'finished') {
-            _groupSessions.finishedSessions.add(session);
-          }
-        }
+      // Process all items
+      for (var item in event) {
+        final session = SessionEntity(
+          title: item[TITLE].isEmpty
+              ? 'Session on ${formatDate(DateTime.parse(item[CREATED_AT]))}'
+              : item[TITLE],
+          uid: item[UID],
+          createdAt: item[CREATED_AT],
+        );
 
-        _groupSessions.dormantSessions.sort((a, b) =>
-            DateTime.parse(b.createdAt).compareTo(DateTime.parse(a.createdAt)));
-        _groupSessions.finishedSessions.sort((a, b) =>
-            DateTime.parse(b.createdAt).compareTo(DateTime.parse(a.createdAt)));
-      } else {
-        // Handle updates
-        for (var item in event) {
-          final newSession = SessionEntity(
-            title: item[TITLE].isEmpty
-                ? 'Session on ${formatDate(DateTime.parse(item[CREATED_AT]))}'
-                : item[TITLE],
-            uid: item[UID],
-            createdAt: item[CREATED_AT],
-          );
-
-          _groupSessions.dormantSessions.removeWhere((s) => s.uid == item[UID]);
-          _groupSessions.finishedSessions
-              .removeWhere((s) => s.uid == item[UID]);
-
-          if (item[STATUS] == 'dormant') {
-            _groupSessions.dormantSessions.add(newSession);
-            _groupSessions.dormantSessions.sort((a, b) =>
-                DateTime.parse(b.createdAt)
-                    .compareTo(DateTime.parse(a.createdAt)));
-          } else if (item[STATUS] == 'finished') {
-            _groupSessions.finishedSessions.add(newSession);
-            _groupSessions.finishedSessions.sort((a, b) =>
-                DateTime.parse(b.createdAt)
-                    .compareTo(DateTime.parse(a.createdAt)));
-          }
+        if (item[STATUS] == 'dormant') {
+          dormantSessions.add(session);
+        } else if (item[STATUS] == 'finished') {
+          finishedSessions.add(session);
+        } else if (item[STATUS] == 'recruiting') {
+          recruitingSessions.add(session);
+        } else if (item[STATUS] == 'started') {
+          startedSessions.add(session);
         }
       }
 
-      yield _groupSessions;
+      // Sort if there are items
+      if (dormantSessions.isNotEmpty) {
+        dormantSessions.sort((a, b) =>
+            DateTime.parse(b.createdAt).compareTo(DateTime.parse(a.createdAt)));
+      }
+
+      if (finishedSessions.isNotEmpty) {
+        finishedSessions.sort((a, b) =>
+            DateTime.parse(b.createdAt).compareTo(DateTime.parse(a.createdAt)));
+      }
+
+      // Update the group sessions with potentially empty lists
+      // _groupSessions.dormantSessions = dormantSessions;
+      // _groupSessions.finishedSessions = finishedSessions;
+
+      yield GroupSessions(
+        dormantSessions: dormantSessions,
+        finishedSessions: finishedSessions,
+        recruitingSessions: recruitingSessions,
+        startedSessions: startedSessions,
+      );
     }
   }
 }

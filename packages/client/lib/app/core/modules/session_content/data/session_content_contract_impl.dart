@@ -57,4 +57,14 @@ class SessionContentContractImpl
       return Left(FailureConstants.internetConnectionFailure);
     }
   }
+
+  @override
+  deleteContent(itemUID) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.deleteContent(itemUID);
+      return fromSupabase(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
 }

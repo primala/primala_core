@@ -29,4 +29,15 @@ abstract class _AnyToSkyBase
     );
     control = Control.playFromStart;
   }
+
+  @override
+  reverseMovie(DurationAndGradient param) {
+    movie = TwoSecondBeachTransitionMovie.getMovie(
+      MovieTween(),
+      param.gradient,
+      WaterColorsAndStops.sky,
+      end: param.duration,
+    );
+    control = Control.playReverseFromEnd;
+  }
 }

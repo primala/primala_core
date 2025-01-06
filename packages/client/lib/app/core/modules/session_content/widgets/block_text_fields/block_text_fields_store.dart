@@ -27,20 +27,44 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   bool isExpanded = false;
 
   @observable
+  BlockTextFieldMode mode = BlockTextFieldMode.adding;
+
+  @observable
   String currentlySelectedParentUID = '';
 
   @observable
-  AddContentParams currentParams = AddContentParams.initial();
+  String currentlySelectedItemUID = '';
+
+  @observable
+  AddContentParams addContentParams = AddContentParams.initial();
+
+  @observable
+  UpdateContentParams updateContentParams = UpdateContentParams.initial();
 
   @action
-  setCurrentParams(AddContentParams value) => currentParams = value;
+  setCurrentAddContentParams(AddContentParams value) =>
+      addContentParams = value;
 
   @action
-  resetParams() => currentParams = AddContentParams.initial();
+  setCurrentUpdateContentParams(UpdateContentParams value) =>
+      updateContentParams = value;
+
+  @action
+  setMode(BlockTextFieldMode value) => mode = value;
+
+  @action
+  resetParams() {
+    setMode(BlockTextFieldMode.adding);
+    addContentParams = AddContentParams.initial();
+    updateContentParams = UpdateContentParams.initial();
+  }
 
   @action
   setCurrentlySelectedParentUID(String value) =>
       currentlySelectedParentUID = value;
+
+  @action
+  setCurrentlySelectedItemUID(String value) => currentlySelectedItemUID = value;
 
   @observable
   ContentBlockType blockType = ContentBlockType.purpose;
@@ -94,6 +118,9 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
       setisFocused(focusNode.hasFocus);
       if (!focusNode.hasFocus) {
         setCurrentlySelectedParentUID('');
+        setCurrentlySelectedItemUID('');
+      } else {
+        // setControl(Control.stop);
       }
     });
   }
@@ -102,13 +129,24 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   onSubmit() {
     if (controller.text.trim().isNotEmpty) {
       currentTextContent = controller.text;
-      setCurrentParams(
-        AddContentParams(
-          content: currentTextContent,
-          contentBlockType: blockType,
-          parentUID: currentlySelectedParentUID,
-        ),
-      );
+      if (mode == BlockTextFieldMode.adding) {
+        setCurrentAddContentParams(
+          AddContentParams(
+            content: currentTextContent,
+            contentBlockType: blockType,
+            parentUID: currentlySelectedParentUID,
+          ),
+        );
+      } else {
+        setCurrentUpdateContentParams(
+          UpdateContentParams(
+            content: currentTextContent,
+            contentBlockType: blockType,
+            uid: currentlySelectedItemUID,
+          ),
+        );
+      }
+
       controller.clear();
       focusNode.unfocus();
       submissionCount++;

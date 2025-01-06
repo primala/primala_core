@@ -38,12 +38,6 @@ void main() {
     });
 
     group('movieModeToStoreLookup', () {
-      test("blackOutToDrySand key", () {
-        final res = testStore
-            .movieModeToStoreLookup[BeachWaveMovieModes.blackOutToDrySand];
-        expect(res?.movie.duration, Seconds.get(2));
-      });
-
       test("onShore key", () {
         final onShoreRes =
             testStore.movieModeToStoreLookup[BeachWaveMovieModes.onShore];

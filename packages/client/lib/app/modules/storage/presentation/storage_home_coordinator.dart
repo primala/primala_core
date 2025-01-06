@@ -58,14 +58,18 @@ abstract class _StorageHomeCoordinatorBase
         .add(widgets.queueCreationReactor(onQueueCreated, onQueueModalClosed));
     disposers.add(widgets.membershipAdditionReactor(onGroupMembershipUpdated));
     disposers.add(widgets.membershipRemovalReactor(onGroupMembershipUpdated));
-    disposers.add(widgets.queueDeletionReactor(onQueueDeleted));
+    disposers.add(widgets.queueDeletionReactor(onSessionDeleted));
     disposers.add(widgets.sessionDeletionReactor(onSessionDeleted));
     disposers.add(widgets.groupModalOpenStatusReactor(
       onGroupModalOpened,
       onGroupModalClosed,
     ));
     disposers.add(widgets.sessionContentReactor(
-      sessionContentLogic.addContent,
+      onAdd: sessionContentLogic.addContent,
+      onUpdate: sessionContentLogic.updateContent,
+    ));
+    disposers.add(widgets.contentDeletionReactor(
+      sessionContentLogic.deleteContent,
     ));
     disposers.add(widgets.sessionOpenReactor(onSessionSelected));
     disposers.add(widgets.queueOpenReactor(onSessionSelected));
@@ -75,18 +79,62 @@ abstract class _StorageHomeCoordinatorBase
     disposers.add(externalTitleUpdatesReactor());
     disposers.add(finishedSessionsReactor());
     disposers.add(dormantSessionsReactor());
+    disposers.add(recruitingSessionsReactor());
+    disposers.add(ongoingSessionsReactor());
+    disposers.add(sessionStartReactor());
+    disposers.add(sessionJoinReactor());
   }
 
   finishedSessionsReactor() =>
       reaction((p0) => storageLogic.finishedSessions, (p0) async {
-        if (p0.isEmpty) return;
         widgets.groupDisplayModal.groupDisplaySessionCard.setSessions(p0);
       });
 
   dormantSessionsReactor() =>
       reaction((p0) => storageLogic.dormantSessions, (p0) async {
-        if (p0.isEmpty) return;
-        widgets.groupDisplayModal.groupDisplayQueueCard.setQueues(p0);
+        widgets.groupDisplayModal.groupDisplayQueueCard.setSessions(p0);
+      });
+
+  recruitingSessionsReactor() =>
+      reaction((p0) => storageLogic.someoneIsRecruiting, (p0) async {
+        if (p0) {
+          widgets.groupDisplayModal.setCanJoinSession(true);
+          widgets.groupDisplayModal.setCanStartSession(false);
+        } else {
+          widgets.groupDisplayModal.setCanJoinSession(false);
+        }
+      });
+
+  ongoingSessionsReactor() =>
+      reaction((p0) => storageLogic.sessionHasAlreadyStarted, (p0) async {
+        if (p0) {
+          widgets.groupDisplayModal.setCanJoinSession(false);
+          widgets.groupDisplayModal.setCanStartSession(false);
+        } else {
+          widgets.groupDisplayModal.setCanStartSession(true);
+        }
+      });
+
+  sessionStartReactor() =>
+      reaction((p0) => widgets.groupDisplayModal.startSessionCount, (p0) async {
+        // Modular.to.navigate(
+        //     HomeConstants.quickActionsRouter,
+        //     arguments: {
+        //       HomeConstants.QUICK_ACTIONS_ROUTE: SessionConstants.lobby,
+        //     },
+        //   );
+        // they need to go to the spot where they pick the cue if any
+      });
+
+  sessionJoinReactor() =>
+      reaction((p0) => widgets.groupDisplayModal.joinSessionCount, (p0) async {
+        // Modular.to.navigate(
+        //     HomeConstants.quickActionsRouter,
+        //     arguments: {
+        //       HomeConstants.QUICK_ACTIONS_ROUTE: SessionConstants.lobby,
+        //     },
+        //   );
+        // they need to go to the spot where they pwait for the session to start
       });
 
   userTitleUpdatesReactor() =>
@@ -101,7 +149,7 @@ abstract class _StorageHomeCoordinatorBase
   externalTitleUpdatesReactor() =>
       reaction((p0) => storageLogic.currentlySelectedDormantSession.title,
           (p0) {
-        if (storageLogic.queueUID.isEmpty) return;
+        // if (storageLogic.queueUID.isEmpty) return;
         widgets.queueCreationModal.setTitle(p0);
       });
 
@@ -129,6 +177,8 @@ abstract class _StorageHomeCoordinatorBase
     storageLogic.setQueueUID(sessionUID);
     widgets.queueCreationModal
         .setTitle(storageLogic.currentlySelectedFinishedSession.title);
+    widgets.queueCreationModal.queueTitleController.text =
+        storageLogic.currentlySelectedFinishedSession.title;
   }
 
   @action
@@ -155,6 +205,7 @@ abstract class _StorageHomeCoordinatorBase
 
   @action
   onQueueModalClosed() async {
+    storageLogic.setQueueUID('');
     // await storageLogic.createQueue(
     //   widgets.groupDisplayModal.currentlySelectedGroup.groupUID,
     // );
@@ -175,12 +226,6 @@ abstract class _StorageHomeCoordinatorBase
   @action
   onSessionDeleted(String params) async {
     await storageLogic.deleteSession(params);
-    await storageLogic.getGroups();
-  }
-
-  @action
-  onQueueDeleted(String params) async {
-    await storageLogic.deleteQueue(params);
     await storageLogic.getGroups();
   }
 

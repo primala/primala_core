@@ -26,7 +26,6 @@ abstract class _SessionSoloHybridCoordinatorBase
   final SessionPresenceCoordinator presence;
   @override
   final CaptureScreen captureScreen;
-  final NavigationMenuStore navigationMenu;
 
   _SessionSoloHybridCoordinatorBase({
     required this.widgets,
@@ -35,8 +34,7 @@ abstract class _SessionSoloHybridCoordinatorBase
     required this.captureScreen,
     required this.presence,
   })  : sessionMetadata = presence.sessionMetadataStore,
-        sessionContent = presence.sessionMetadataStore.sessionContentLogic,
-        navigationMenu = widgets.navigationMenu {
+        sessionContent = presence.sessionMetadataStore.sessionContentLogic {
     initBaseCoordinatorActions();
   }
 
@@ -117,23 +115,11 @@ abstract class _SessionSoloHybridCoordinatorBase
     disposers.add(userCanSpeakReactor());
     disposers.add(sessionContentReactor());
     disposers.add(sessionContentSubmissionReactor());
-    // disposers.add(othersAreTakingNotesReactor());
     disposers.add(rallyReactor());
     disposers.add(glowColorReactor());
     disposers.add(secondarySpotlightReactor());
-    disposers.add(navigationMenu.swipeReactor(onSwipeUp: () {
-      widgets.openPurposeModal();
-    }));
-    disposers.add(
-      navigationMenu.actionSliderReactor(
-        onActionSliderSelected: () async {
-          if (navigationMenu.currentlySelectedSlider ==
-              ActionSliderOptions.pauseSession) {
-            await presence.dispose();
-          }
-        },
-      ),
-    );
+    disposers.add(swipeReactor());
+    disposers.add(contentDeletionReactor());
   }
 
   swipeReactor() => reaction((p0) => swipe.directionsType, (p0) async {
@@ -169,12 +155,26 @@ abstract class _SessionSoloHybridCoordinatorBase
         widgets.purposeBanner.blockTextDisplay.setContent(p0);
       });
 
+  contentDeletionReactor() =>
+      reaction((p0) => widgets.purposeBanner.blockTextDisplay.itemUIDToDelete,
+          (p0) async {
+        if (p0.isEmpty) return;
+        await sessionContent.deleteContent(p0);
+      });
+
   sessionContentSubmissionReactor() =>
       reaction((p0) => widgets.purposeBanner.blockTextFields.submissionCount,
           (p0) async {
-        final params = widgets
-            .purposeBanner.blockTextDisplay.blockTextFields.currentParams;
-        await sessionContent.addContent(params);
+        if (widgets.purposeBanner.blockTextFields.mode ==
+            BlockTextFieldMode.adding) {
+          final params = widgets
+              .purposeBanner.blockTextDisplay.blockTextFields.addContentParams;
+          await sessionContent.addContent(params);
+        } else {
+          final params = widgets.purposeBanner.blockTextDisplay.blockTextFields
+              .updateContentParams;
+          await sessionContent.updateContent(params);
+        }
         widgets.purposeBanner.blockTextDisplay.blockTextFields.resetParams();
       });
 
