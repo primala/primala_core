@@ -2,7 +2,7 @@ name: nokhte
 description: A new Flutter project.
 publish_to: "none"
 
-version: 2.46.0+137247187
+version: 2.47.0+137578871
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -65,6 +65,8 @@ flutter:
     - assets/groups/storage_icon.png
     - assets/groups/queue_icon.png
     - assets/groups/add_remove_icon.png
+    - assets/groups/trash_icon_white.png
+    - assets/groups/user_icon.png
 
     - assets/blocks/conclusion_icon.png
     - assets/blocks/conclusion_send_icon.png
@@ -93,6 +95,8 @@ flutter:
     - assets/session/end_session_icon.png
     - assets/session/session_information_icon.png
     - assets/session/pause_icon.png
+    - assets/session/pencil_icon.png
+    - assets/session/trash_icon_black.png
 
 flutter_icons:
   android: true

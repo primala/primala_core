@@ -14,11 +14,11 @@ class StorageWidgetsModule extends Module {
   exportedBinds(i) {
     i.add<StorageHomeWidgetsCoordinator>(
       () {
-        final groupDisplaySessionCard = GroupDisplaySessionCardStore();
+        final groupDisplaySessionCard = GroupDisplayCardStore();
         return StorageHomeWidgetsCoordinator(
           groupDisplay: GroupDisplayStore(
             groupDisplayModal: GroupDisplayModalStore(
-              groupDisplayQueueCard: GroupDisplayQueueCardStore(),
+              groupDisplayQueueCard: GroupDisplayCardStore(),
               groupDisplayCollaboratorCard: GroupDisplayCollaboratorCardStore(),
               groupDisplaySessionCard: groupDisplaySessionCard,
               blur: NokhteBlurStore(),

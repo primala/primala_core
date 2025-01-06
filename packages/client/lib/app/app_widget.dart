@@ -9,6 +9,8 @@ class AppWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       theme: ThemeData(
+          dividerColor: Colors.transparent, // Removes the border
+
           canvasColor: Colors.transparent,
           bottomSheetTheme: BottomSheetThemeData(
             showDragHandle: true,

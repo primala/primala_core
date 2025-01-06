@@ -1,23 +1,36 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:equatable/equatable.dart';
 
 typedef SessionList = List<SessionEntity>;
 
 class GroupSessions extends Equatable {
-  final SessionList finishedSessions;
-  final SessionList dormantSessions;
+  SessionList finishedSessions;
+  SessionList dormantSessions;
+  SessionList recruitingSessions;
+  SessionList startedSessions;
 
   GroupSessions({
     required this.finishedSessions,
     required this.dormantSessions,
+    required this.recruitingSessions,
+    required this.startedSessions,
   });
 
   factory GroupSessions.initial() => GroupSessions(
         finishedSessions: [],
         dormantSessions: [],
+        recruitingSessions: [],
+        startedSessions: [],
       );
 
   @override
-  List<Object> get props => [finishedSessions, dormantSessions];
+  List<Object> get props => [
+        finishedSessions,
+        dormantSessions,
+        recruitingSessions,
+        startedSessions,
+      ];
 }
 
 class SessionEntity extends Equatable {

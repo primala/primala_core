@@ -2,7 +2,7 @@ export 'any_to_inverted_half_and_half.dart';
 export 'inverted_deeper_blue_to_deep_sea.dart';
 export 'any_to_sky.dart';
 export 'any_to_half_and_half.dart';
-export 'black_out_to_dry_sand.dart';
+export 'any_to_blackout.dart';
 export 'deep_sea_to_sky.dart';
 export 'deep_sea_to_half_and_half.dart';
 export 'deep_sea_to_inverted_half_and_half.dart';

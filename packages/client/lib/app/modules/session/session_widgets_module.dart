@@ -88,7 +88,6 @@ class SessionWidgetsModule extends Module {
             blockTextFields: BlockTextFieldsStore(),
           ),
         ),
-        navigationMenu: Modular.get<NavigationMenuStore>(),
         presenceOverlay:
             Modular.get<SessionPresenceCoordinator>().incidentsOverlayStore,
         refreshBanner: RefreshBannerStore(),

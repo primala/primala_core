@@ -27,7 +27,7 @@ abstract class _LoginScreenWidgetsCoordinatorBase
   }
 
   constructor() {
-    beachWaves.setMovieMode(BeachWaveMovieModes.blackOutToDrySand);
+    beachWaves.setMovieMode(BeachWaveMovieModes.anyToBlackOut);
     smartTextStore.setMessagesData(LoginList.list);
     smartTextStore.startRotatingText();
   }

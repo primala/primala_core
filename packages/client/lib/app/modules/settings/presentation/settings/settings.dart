@@ -1,6 +1,6 @@
 export './settings_coordinator.dart';
 export './settings_widgets_coordinator.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide BackButton;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
@@ -18,7 +18,7 @@ class SettingsScreen extends HookWidget {
   Widget build(BuildContext context) {
     useEffect(() {
       coordinator.constructor();
-      return () => coordinator.widgets.dispose();
+      return () => coordinator.dispose();
     }, []);
 
     return Observer(builder: (context) {
@@ -26,8 +26,15 @@ class SettingsScreen extends HookWidget {
         resizeToAvoidBottomInset: false,
         body: MultiHitStack(
           children: [
-            NavigationCarousels(
-              store: coordinator.widgets.navigationCarousels,
+            BeachWaves(
+              store: coordinator.widgets.beachWaves,
+            ),
+            SettingsLayout(
+              store: coordinator.widgets.settingsLayout,
+            ),
+            BackButton(
+              store: coordinator.widgets.backButton,
+              overridedColor: Colors.white,
             ),
             WifiDisconnectOverlay(
               store: coordinator.widgets.wifiDisconnectOverlay,

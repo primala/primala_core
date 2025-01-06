@@ -69,16 +69,6 @@ class StorageContractImpl
   }
 
   @override
-  deleteQueue(params) async {
-    if (await networkInfo.isConnected) {
-      final res = await remoteSource.deleteQueue(params);
-      return fromSupabase(res);
-    } else {
-      return Left(FailureConstants.internetConnectionFailure);
-    }
-  }
-
-  @override
   updateGroupMembers(params) async {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.updateGroupMembers(params);

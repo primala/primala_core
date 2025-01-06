@@ -7,14 +7,18 @@ export 'group_display_modal_store.dart';
 export 'widgets/widgets.dart';
 
 class GroupDisplayModal extends HookWidget {
-  final GroupDisplaySessionCardStore groupDisplaySessionCard;
-  final GroupDisplayQueueCardStore groupDisplayQueueCard;
+  final GroupDisplayCardStore groupDisplaySessionCard;
+  final GroupDisplayCardStore groupDisplayQueueCard;
   final GroupDisplayCollaboratorCardStore groupDisplayCollaboratorCard;
   final String groupName;
   final String groupHandle;
   final GroupDisplayModalSectionType currentlySelectedSection;
   final Function(GroupDisplayModalSectionType) onSectionTap;
   final Function createQueue;
+  final Function onStartPressed;
+  final Function onJoinPressed;
+  final bool startIsEnabled;
+  final bool joinIsEnabled;
 
   const GroupDisplayModal({
     super.key,
@@ -26,6 +30,10 @@ class GroupDisplayModal extends HookWidget {
     required this.onSectionTap,
     required this.createQueue,
     required this.groupDisplayQueueCard,
+    required this.onStartPressed,
+    required this.onJoinPressed,
+    required this.startIsEnabled,
+    required this.joinIsEnabled,
   });
 
   @override
@@ -40,7 +48,8 @@ class GroupDisplayModal extends HookWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(
-                    bottom: 8.0,
+                    // bottom: 8.0,
+
                     right: 16.0,
                   ),
                   child: Container(
@@ -65,6 +74,12 @@ class GroupDisplayModal extends HookWidget {
               fontSize: 16,
               fontWeight: FontWeight.w400,
             ),
+          ),
+          GroupDisplayButtons(
+            startIsEnabled: startIsEnabled,
+            joinIsEnabled: joinIsEnabled,
+            onStartPressed: onStartPressed,
+            onJoinPressed: onJoinPressed,
           ),
           const SizedBox(height: 20),
           Row(
@@ -101,12 +116,12 @@ class GroupDisplayModal extends HookWidget {
             padding: const EdgeInsets.only(top: 28),
             child: MultiHitStack(
               children: [
-                GroupDisplaySessionCard(
+                GroupDisplayCard(
                   store: groupDisplaySessionCard,
                   showWidget: currentlySelectedSection ==
                       GroupDisplayModalSectionType.storage,
                 ),
-                GroupDisplayQueueCard(
+                GroupDisplayCard(
                   store: groupDisplayQueueCard,
                   showWidget: currentlySelectedSection ==
                       GroupDisplayModalSectionType.queue,
