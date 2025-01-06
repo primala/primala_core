@@ -53,10 +53,16 @@ abstract class _GroupDisplayStoreBase extends BaseWidgetStore with Store {
   int successfulDragsCount = 0;
 
   @observable
+  int userButtonTapCount = 0;
+
+  @observable
   int currentlySelectedIndex = 0;
 
   @observable
   String groupUIDToDelete = '';
+
+  @action
+  onUserButtonTapped() => userButtonTapCount++;
 
   @action
   setCurrentlySelectedIndex(int value) => currentlySelectedIndex = value;

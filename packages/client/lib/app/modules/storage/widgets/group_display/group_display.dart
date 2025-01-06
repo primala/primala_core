@@ -26,18 +26,45 @@ class GroupDisplay extends HookWidget {
     }, []);
 
     return Observer(builder: (context) {
-      // print('show widget ${store.showWidget}');
       return AnimatedOpacity(
         opacity: useWidgetOpacity(store.showWidget),
         duration: Seconds.get(1),
         child: MultiHitStack(
           children: [
-            // Background Grid
+            GestureDetector(
+              onTap: () {
+                print('he did this print ');
+                store.onUserButtonTapped();
+              },
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: screenSize.height * 0.16,
+                  left: 30,
+                ),
+                child: Image.asset(
+                  'assets/groups/user_icon.png',
+                  width: 60,
+                  height: 60,
+                ),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  bottom: screenSize.height * 0.45,
+                ),
+                child: Jost(
+                  'Your Groups',
+                  fontSize: 40,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+            ),
             Positioned.fill(
               child: store.groups.isNotEmpty
                   ? Padding(
                       padding: EdgeInsets.only(
-                        top: screenSize.height * 0.2,
+                        top: screenSize.height * 0.35,
                       ),
                       child: GridView.builder(
                         shrinkWrap: true,

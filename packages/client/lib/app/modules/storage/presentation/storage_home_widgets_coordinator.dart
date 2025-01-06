@@ -8,6 +8,7 @@ import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/home/home.dart';
+import 'package:nokhte/app/modules/settings/settings.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
 import 'package:nokhte_backend/tables/session_content.dart';
 import 'package:simple_animations/simple_animations.dart';
@@ -63,6 +64,7 @@ abstract class _StorageHomeWidgetsCoordinatorBase
   initReactors() {
     disposers.add(beachWavesMovieStatusReactor());
     disposers.add(groupDisplayReactor());
+    disposers.add(userButtonTapReactor());
   }
 
   @observable
@@ -70,6 +72,19 @@ abstract class _StorageHomeWidgetsCoordinatorBase
 
   groupDisplayReactor() => reaction((p0) => groupDisplay.tapCount, (p0) {
         groupRegistration.setWidgetVisibility(true);
+      });
+
+  userButtonTapReactor() =>
+      reaction((p0) => groupDisplay.userButtonTapCount, (p0) {
+        //
+        print('we are tapping ');
+        if (p0 == 1) {
+          groupDisplay.setWidgetVisibility(false);
+          navigationCarousels.setWidgetVisibility(false);
+          Timer(Seconds.get(1), () {
+            Modular.to.navigate(SettingsConstants.settings);
+          });
+        }
       });
 
   groupRegistrationReactor(Function onSubmit) =>
