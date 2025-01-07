@@ -23,8 +23,8 @@ class BlockTextFields extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textFieldKey = useMemoized(() => GlobalKey());
-    final textFieldHeight = useState<double>(97.0);
+    // final textFieldKey = useMemoized(() => GlobalKey());
+    // final textFieldHeight = useState<double>(97.0);
     useEffect(() {
       store.constructor(
         TextEditingController(),
@@ -35,15 +35,15 @@ class BlockTextFields extends HookWidget {
 
     final bottomPadding = MediaQuery.of(context).viewInsets.bottom;
 
-    void updateTextFieldHeight() {
-      final RenderObject? renderBox =
-          textFieldKey.currentContext?.findRenderObject();
-      if (renderBox != null) {
-        store.setControl(Control.stop);
-        textFieldHeight.value = (renderBox.semanticBounds.height) + 60;
-        print('height ${textFieldHeight.value}');
-      }
-    }
+    // void updateTextFieldHeight() {
+    //   final RenderObject? renderBox =
+    //       textFieldKey.currentContext?.findRenderObject();
+    //   if (renderBox != null) {
+    //     store.setControl(Control.stop);
+    //     textFieldHeight.value = (renderBox.semanticBounds.height) + 60;
+    //     print('height ${textFieldHeight.value}');
+    //   }
+    // }
 
     Widget buildBlockIcon(ContentBlockType type, double position) {
       return Observer(builder: (context) {
@@ -80,7 +80,7 @@ class BlockTextFields extends HookWidget {
                         : Seconds.get(0),
                     height: (bottomPadding == 0 ? 0 : -35) +
                         (store.isExpanded ? 190 : 0) +
-                        textFieldHeight.value,
+                        store.textFieldHeight,
                     color: Colors.transparent,
                   ),
                 ),
@@ -142,7 +142,7 @@ class BlockTextFields extends HookWidget {
                                 bottom: bottomPadding == 0 ? 50 : 20,
                                 right: 20),
                             child: Container(
-                              key: textFieldKey,
+                              key: store.textFieldKey,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(19),
                                 border: GradientBoxBorder(
@@ -158,7 +158,9 @@ class BlockTextFields extends HookWidget {
                                     controller: store.controller,
                                     focusNode: store.focusNode,
                                     scrollPadding: EdgeInsets.zero,
-                                    onChanged: (_) => updateTextFieldHeight(),
+
+                                    onChanged: (_) =>
+                                        store.updateTextFieldHeight(),
 
                                     keyboardType: TextInputType.multiline,
                                     maxLines: null,
@@ -195,7 +197,7 @@ class BlockTextFields extends HookWidget {
                                       child: GestureDetector(
                                         onTap: () {
                                           store.onSubmit();
-                                          textFieldHeight.value = 97;
+                                          store.textFieldHeight = 97;
                                         },
                                         child: Container(
                                           width: 30,

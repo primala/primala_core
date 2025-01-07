@@ -1,8 +1,11 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/session_content/session_content.dart';
+import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte_backend/tables/session_content.dart';
 import 'package:simple_animations/simple_animations.dart';
 part 'block_text_fields_store.g.dart';
@@ -15,6 +18,10 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   _BlockTextFieldsStoreBase() {
     setBlockType(ContentBlockType.purpose);
     setIconMovie(getExpandingIcons(blockIcons));
+    setMovie(getTextFieldTransition(
+      ContentBlockType.purpose,
+      ContentBlockType.purpose,
+    ));
   }
   //
   late TextEditingController controller;
@@ -36,10 +43,28 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   String currentlySelectedItemUID = '';
 
   @observable
+  GlobalKey textFieldKey = GlobalKey();
+
+  @observable
+  double textFieldHeight = 97.0;
+
+  @observable
   AddContentParams addContentParams = AddContentParams.initial();
 
   @observable
   UpdateContentParams updateContentParams = UpdateContentParams.initial();
+
+  @action
+  updateTextFieldHeight() {
+    final RenderObject? renderBox =
+        textFieldKey.currentContext?.findRenderObject();
+    print('is render box null ${renderBox == null}');
+    if (renderBox != null) {
+      setControl(Control.stop);
+      textFieldHeight = (renderBox.semanticBounds.height) + 60;
+      print('height ${textFieldHeight}');
+    }
+  }
 
   @action
   setCurrentAddContentParams(AddContentParams value) =>
@@ -105,11 +130,7 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
 
   constructor(TextEditingController controller, FocusNode focusNode) {
     setControl(Control.stop);
-    setIconMovie(getExpandingIcons(blockIcons));
-    setMovie(getTextFieldTransition(
-      blockType,
-      blockType,
-    ));
+    // setIconMovie(getExpandingIcons(blockIcons));
 
     this.controller = controller;
     this.focusNode = focusNode;
@@ -152,6 +173,9 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
       submissionCount++;
     } else {
       focusNode.unfocus();
+      Timer(Seconds.get(0, milli: 1), () {
+        updateTextFieldHeight();
+      });
     }
   }
 

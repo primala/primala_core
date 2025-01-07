@@ -1,7 +1,10 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
+import 'dart:async';
+
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/session_content/session_content.dart';
+import 'package:nokhte/app/core/types/seconds.dart';
 import 'package:nokhte_backend/tables/session_content.dart';
 import 'package:simple_animations/simple_animations.dart';
 part 'block_text_display_store.g.dart';
@@ -31,9 +34,15 @@ abstract class _BlockTextDisplayStoreBase extends BaseWidgetStore with Store {
   @action
   onEdit(SessionContentEntity item) {
     blockTextFields.setCurrentlySelectedItemUID(item.uid);
-    blockTextFields.focusNode.requestFocus();
     blockTextFields.setMode(BlockTextFieldMode.editing);
     blockTextFields.controller.text = item.content;
+    blockTextFields.focusNode.requestFocus();
+    Timer(Seconds.get(0, milli: 1), () {
+      blockTextFields.updateTextFieldHeight();
+    });
+    Timer(Seconds.get(0, milli: 200), () {
+      blockTextFields.changeBlockType(item.blockType);
+    });
     //
   }
 
