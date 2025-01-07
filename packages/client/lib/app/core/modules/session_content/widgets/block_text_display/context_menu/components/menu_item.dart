@@ -93,7 +93,7 @@ final class MenuItem<T> extends ContextMenuItem<T> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 25.0),
+                const SizedBox(width: 85.0),
                 SizedBox.square(
                   dimension: 25.0,
                   child: Image.asset(
