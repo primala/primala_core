@@ -62,6 +62,7 @@ class BlockTextFields extends HookWidget {
     }
 
     return Observer(builder: (context) {
+      final movieIsInProgress = store.movieStatus == MovieStatus.inProgress;
       return AnimatedOpacity(
         opacity: useWidgetOpacity(store.showWidget),
         duration: Seconds.get(1),
@@ -75,10 +76,10 @@ class BlockTextFields extends HookWidget {
                   blur: 10,
                   colorOpacity: 0.2,
                   child: AnimatedContainer(
-                    duration: store.isExpanded
+                    duration: store.iconMovieStatus == MovieStatus.inProgress
                         ? Seconds.get(0, milli: 300)
                         : Seconds.get(0),
-                    height: (bottomPadding == 0 ? 0 : -35) +
+                    height: (bottomPadding < 100 ? 0 : -35) +
                         (store.isExpanded ? 190 : 0) +
                         store.textFieldHeight,
                     color: Colors.transparent,
@@ -95,6 +96,7 @@ class BlockTextFields extends HookWidget {
                         duration: store.iconMovie.duration,
                         control: store.iconControl,
                         onCompleted: () {
+                          store.setIconMovieStatus(MovieStatus.finished);
                           store.setIconControl(Control.stop);
                         },
                         builder: (context, value, child) {
@@ -112,7 +114,7 @@ class BlockTextFields extends HookWidget {
                                 width: 35,
                                 margin: EdgeInsets.only(
                                     left: 10.0,
-                                    bottom: bottomPadding == 0 ? 50 : 20),
+                                    bottom: bottomPadding < 100 ? 50 : 20),
                                 height: store.isExpanded ? 233 : 37,
                                 child: MultiHitStack(
                                   clipBehavior: Clip.none,
@@ -139,7 +141,7 @@ class BlockTextFields extends HookWidget {
                           return Padding(
                             padding: EdgeInsets.only(
                                 left: 60.0,
-                                bottom: bottomPadding == 0 ? 50 : 20,
+                                bottom: bottomPadding < 100 ? 50 : 20,
                                 right: 20),
                             child: Container(
                               key: store.textFieldKey,
@@ -159,11 +161,15 @@ class BlockTextFields extends HookWidget {
                                     focusNode: store.focusNode,
                                     scrollPadding: EdgeInsets.zero,
 
-                                    onChanged: (_) =>
-                                        store.updateTextFieldHeight(),
+                                    // onChanged: (_) =>
+                                    //     store.updateTextFieldHeight(),
 
                                     keyboardType: TextInputType.multiline,
                                     maxLines: null,
+                                    enabled:
+                                        bottomPadding == 0 && movieIsInProgress
+                                            ? false
+                                            : true,
                                     // backgroundColor: Colors.transparent,
                                     decoration: InputDecoration(
                                       isDense: true,
