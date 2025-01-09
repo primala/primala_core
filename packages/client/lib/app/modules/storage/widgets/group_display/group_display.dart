@@ -151,13 +151,20 @@ class GroupDisplay extends HookWidget {
       width: 80,
       height: 80,
       decoration: BoxDecoration(
-        color: Colors.red.withOpacity(0.8),
+        color: Colors.white.withOpacity(0.27),
         shape: BoxShape.circle,
+        border: Border.all(
+          color: Colors.white,
+          width: 2,
+        ),
       ),
-      child: const Icon(
-        Icons.delete_outline,
-        color: Colors.white,
-        size: 40,
+      child: Center(
+        child: Image.asset(
+          'assets/groups/trash_icon_white.png',
+          fit: BoxFit.contain,
+          height: 60.0,
+          width: 60.0,
+        ),
       ),
     );
   }
