@@ -7,7 +7,7 @@ import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/modules/session_content/session_content.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
-import 'package:nokhte_backend/tables/session_information.dart';
+import 'package:nokhte_backend/tables/sessions.dart';
 part 'storage_home_coordinator.g.dart';
 
 class StorageHomeCoordinator = _StorageHomeCoordinatorBase

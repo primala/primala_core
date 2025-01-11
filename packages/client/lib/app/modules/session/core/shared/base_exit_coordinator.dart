@@ -3,7 +3,7 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte_backend/tables/session_information.dart';
+import 'package:nokhte_backend/tables/sessions.dart';
 
 mixin BaseExitCoordinator on BaseCoordinator {
   SwipeDetector get swipe;

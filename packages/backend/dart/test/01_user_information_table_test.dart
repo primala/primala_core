@@ -1,7 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nokhte_backend/tables/user_information.dart';
+import 'package:nokhte_backend/tables/users.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:nokhte_backend/constants/constants.dart';
 
@@ -12,8 +12,8 @@ void main() {
   late SupabaseClient supabaseAdmin;
   late SupabaseClient supabase;
   late String? firstUserUID;
-  late UserInformationQueries user1UserInfoQueries;
-  late UserInformationQueries adminUserInfoQueries;
+  late UsersQueries user1UserInfoQueries;
+  late UsersQueries adminUserInfoQueries;
 
   setUpAll(() async {
     supabase = SupabaseClientConfigConstants.supabase;
@@ -22,8 +22,8 @@ void main() {
     final userIdResults = await UserSetupConstants.getUIDs();
     firstUserUID = userIdResults.first;
     await SignIn.user1(supabase: supabase);
-    user1UserInfoQueries = UserInformationQueries(supabase: supabase);
-    adminUserInfoQueries = UserInformationQueries(supabase: supabaseAdmin);
+    user1UserInfoQueries = UsersQueries(supabase: supabase);
+    adminUserInfoQueries = UsersQueries(supabase: supabaseAdmin);
     adminUserInfoQueries.userUID = firstUserUID ?? '';
   });
 

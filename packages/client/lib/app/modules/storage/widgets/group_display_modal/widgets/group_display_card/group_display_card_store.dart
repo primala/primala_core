@@ -2,7 +2,7 @@
 
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
-import 'package:nokhte_backend/tables/session_information.dart';
+import 'package:nokhte_backend/tables/sessions.dart';
 part 'group_display_card_store.g.dart';
 
 class GroupDisplayCardStore = _GroupDisplayCardStoreBase

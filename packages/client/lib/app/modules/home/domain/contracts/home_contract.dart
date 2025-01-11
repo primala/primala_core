@@ -3,7 +3,7 @@ import 'package:nokhte/app/core/error/failure.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/modules/home/home.dart';
 import 'package:nokhte_backend/tables/collaborator_requests.dart';
-import 'package:nokhte_backend/tables/session_information.dart';
+import 'package:nokhte_backend/tables/sessions.dart';
 import 'package:nokhte_backend/types/types.dart';
 
 abstract class HomeContract {

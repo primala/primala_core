@@ -8,7 +8,7 @@ import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/modules/session_content/session_content.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
-import 'package:nokhte_backend/tables/session_content.dart';
+import 'package:nokhte_backend/tables/content_blocks.dart';
 import 'package:simple_animations/simple_animations.dart';
 export 'block_text_fields_store.dart';
 export 'movies/movies.dart';

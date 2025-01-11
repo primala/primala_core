@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:nokhte/app/core/error/failure.dart';
 import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte_backend/tables/session_information.dart';
+import 'package:nokhte_backend/tables/sessions.dart';
 
 abstract class SessionPresenceContract {
   Future<Either<Failure, bool>> completeTheSession();

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:nokhte_backend/tables/user_information.dart';
+import 'package:nokhte_backend/tables/users.dart';
 
 class UserInformationEntity extends Equatable {
   final String uid;
@@ -34,9 +34,9 @@ class UserInformationModel extends UserInformationEntity {
         fullName: '',
       );
     } else {
-      final uid = response.first[UserInformationConstants.S_UID];
-      final fName = response.first[UserInformationConstants.S_FIRST_NAME];
-      final lName = response.first[UserInformationConstants.S_LAST_NAME];
+      final uid = response.first[UsersConstants.S_UID];
+      final fName = response.first[UsersConstants.S_FIRST_NAME];
+      final lName = response.first[UsersConstants.S_LAST_NAME];
       return UserInformationModel(
         uid: uid,
         fullName: '$fName $lName',

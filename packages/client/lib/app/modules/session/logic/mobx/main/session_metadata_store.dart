@@ -6,7 +6,7 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/modules/session_content/session_content.dart';
 import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte_backend/tables/session_information.dart';
+import 'package:nokhte_backend/tables/sessions.dart';
 part 'session_metadata_store.g.dart';
 
 class SessionMetadataStore = _SessionMetadataStoreBase
@@ -92,12 +92,11 @@ abstract class _SessionMetadataStoreBase
       (stream) {
         sessionMetadata = ObservableStream(stream);
         metadataStreamSubscription = sessionMetadata.listen((value) async {
-          everyoneIsOnline = value.collaboratorInformation.every(
+          everyoneIsOnline = value.collaborators.every(
             (element) => element.sessionUserStatus != SessionUserStatus.offline,
           );
           userUID = value.userUID;
-          collaboratorInformation =
-              ObservableList.of(value.collaboratorInformation);
+          collaboratorInformation = ObservableList.of(value.collaborators);
           speakingTimerStart = value.speakingTimerStart;
           secondarySpeakerSpotlightIsEmpty = value.secondarySpotlightIsEmpty;
           userIsInSecondarySpeakingSpotlight =

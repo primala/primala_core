@@ -2,7 +2,7 @@
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
-import 'package:nokhte_backend/tables/session_information.dart';
+import 'package:nokhte_backend/tables/sessions.dart';
 part 'session_starter_dropdown_store.g.dart';
 
 class SessionStarterDropdownStore = _SessionStarterDropdownStore

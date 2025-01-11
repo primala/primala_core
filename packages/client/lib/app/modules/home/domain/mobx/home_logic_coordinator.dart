@@ -5,7 +5,7 @@ import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/modules/home/home.dart';
 import 'package:nokhte_backend/tables/collaborator_requests.dart';
-import 'package:nokhte_backend/tables/session_information.dart';
+import 'package:nokhte_backend/tables/sessions.dart';
 import 'package:nokhte_backend/types/types.dart';
 part 'home_logic_coordinator.g.dart';
 

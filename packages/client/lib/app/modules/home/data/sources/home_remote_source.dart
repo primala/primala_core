@@ -1,8 +1,8 @@
 import 'package:nokhte/app/modules/home/home.dart';
 import 'package:nokhte_backend/tables/collaborator_relationships.dart';
 import 'package:nokhte_backend/tables/collaborator_requests.dart';
-import 'package:nokhte_backend/tables/session_information.dart';
-import 'package:nokhte_backend/tables/user_information.dart';
+import 'package:nokhte_backend/tables/sessions.dart';
+import 'package:nokhte_backend/tables/users.dart';
 import 'package:nokhte_backend/types/types.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -26,10 +26,10 @@ class HomeRemoteSourceImpl implements HomeRemoteSource {
   final CollaboratorRequestsQueries collaboratorRequestsQueries;
   final CollaboratorRelationshipsQueries collaboratorRelationshipsQueries;
   final CollaboratorRelationshipsStream collaboratorRelationshipsStream;
-  final UserInformationQueries userInfoQueries;
-  final DormantSessionInformationQueries dormantSessionQueries;
-  final SessionInformationStreams sessionInformationStreams;
-  final SessionInformationQueries sessionInformationQueries;
+  final UsersQueries userInfoQueries;
+  final DormantSessionsQueries dormantSessionQueries;
+  final SessionsStreams sessionInformationStreams;
+  final SessionsQueries sessionInformationQueries;
 
   HomeRemoteSourceImpl({required this.supabase})
       : collaboratorRequestsStream =
@@ -38,13 +38,10 @@ class HomeRemoteSourceImpl implements HomeRemoteSource {
             CollaboratorRequestsQueries(supabase: supabase),
         collaboratorRelationshipsQueries =
             CollaboratorRelationshipsQueries(supabase: supabase),
-        dormantSessionQueries =
-            DormantSessionInformationQueries(supabase: supabase),
-        sessionInformationStreams =
-            SessionInformationStreams(supabase: supabase),
-        sessionInformationQueries =
-            SessionInformationQueries(supabase: supabase),
-        userInfoQueries = UserInformationQueries(supabase: supabase),
+        dormantSessionQueries = DormantSessionsQueries(supabase: supabase),
+        sessionInformationStreams = SessionsStreams(supabase: supabase),
+        sessionInformationQueries = SessionsQueries(supabase: supabase),
+        userInfoQueries = UsersQueries(supabase: supabase),
         collaboratorRelationshipsStream =
             CollaboratorRelationshipsStream(supabase: supabase);
 

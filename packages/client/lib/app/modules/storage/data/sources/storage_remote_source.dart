@@ -1,7 +1,7 @@
 import 'package:nokhte/app/modules/storage/storage.dart';
-import 'package:nokhte_backend/tables/session_information.dart';
-import 'package:nokhte_backend/tables/user_information.dart';
-import 'package:nokhte_backend/tables/group_information.dart';
+import 'package:nokhte_backend/tables/groups.dart';
+import 'package:nokhte_backend/tables/sessions.dart';
+import 'package:nokhte_backend/tables/users.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class StorageRemoteSource {
@@ -19,59 +19,52 @@ abstract class StorageRemoteSource {
 
 class StorageRemoteSourceImpl implements StorageRemoteSource {
   final SupabaseClient supabase;
-  final UserInformationQueries userNamesQueries;
-  final GroupInformationQueries groupInformationQueries;
-  final DormantSessionInformationQueries sessionInformationQueries;
-  final DormantSessionInformationStreams sessionInformationStreams;
+  final UsersQueries usersQueries;
+  final GroupsQueries groupsQueries;
+  final DormantSessionsQueries sessionQueries;
+  final DormantSessionsStreams sessionStreams;
   StorageRemoteSourceImpl({required this.supabase})
-      : groupInformationQueries = GroupInformationQueries(supabase: supabase),
-        sessionInformationStreams =
-            DormantSessionInformationStreams(supabase: supabase),
-        sessionInformationQueries =
-            DormantSessionInformationQueries(supabase: supabase),
-        userNamesQueries = UserInformationQueries(supabase: supabase);
+      : groupsQueries = GroupsQueries(supabase: supabase),
+        sessionStreams = DormantSessionsStreams(supabase: supabase),
+        sessionQueries = DormantSessionsQueries(supabase: supabase),
+        usersQueries = UsersQueries(supabase: supabase);
 
   @override
-  createNewGroup(params) async => await groupInformationQueries.insert(
+  createNewGroup(params) async => await groupsQueries.insert(
         groupName: params.groupName,
         groupHandle: params.groupHandle,
       );
 
   @override
-  deleteGroup(params) async =>
-      await groupInformationQueries.delete(uid: params);
+  deleteGroup(params) async => await groupsQueries.delete(uid: params);
 
   @override
-  getGroups() async => await groupInformationQueries.select();
+  getGroups() async => await groupsQueries.select();
 
   @override
   createQueue(groupUID) async =>
-      await sessionInformationQueries.initializeDormantSession(groupUID);
+      await sessionQueries.initializeDormantSession(groupUID);
 
   @override
-  getCollaborators() async => await userNamesQueries.getCollaboratorRows();
+  getCollaborators() async => await usersQueries.getCollaboratorRows();
 
   @override
-  updateGroupMembers(params) async =>
-      await groupInformationQueries.updateGroupMembers(
+  updateGroupMembers(params) async => await groupsQueries.updateGroupMembers(
         groupId: params.groupId,
         members: params.members,
         isAdding: params.isAdding,
       );
 
   @override
-  deleteSession(params) async =>
-      await sessionInformationQueries.deleteSession(params);
+  deleteSession(params) async => await sessionQueries.deleteSession(params);
 
   @override
-  listenToSessions(groupUID) =>
-      sessionInformationStreams.listenToSessions(groupUID);
+  listenToSessions(groupUID) => sessionStreams.listenToSessions(groupUID);
 
   @override
-  cancelSessionsStream() async =>
-      await sessionInformationStreams.cancelSessionsStream();
+  cancelSessionsStream() async => await sessionStreams.cancelSessionsStream();
 
   @override
   updateSessionTitle(params) async =>
-      await sessionInformationQueries.updateSessionTitle(params);
+      await sessionQueries.updateSessionTitle(params);
 }

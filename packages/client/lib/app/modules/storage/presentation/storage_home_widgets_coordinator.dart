@@ -11,7 +11,7 @@ import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/home/home.dart';
 import 'package:nokhte/app/modules/settings/settings.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
-import 'package:nokhte_backend/tables/session_content.dart';
+import 'package:nokhte_backend/tables/content_blocks.dart';
 import 'package:simple_animations/simple_animations.dart';
 part 'storage_home_widgets_coordinator.g.dart';
 

@@ -1,5 +1,5 @@
 import 'package:nokhte/app/modules/storage/storage.dart';
-import 'package:nokhte_backend/tables/user_information.dart';
+import 'package:nokhte_backend/tables/users.dart';
 
 class CollaboratorModel extends CollaboratorEntity {
   const CollaboratorModel({
@@ -16,9 +16,9 @@ class CollaboratorModel extends CollaboratorEntity {
       for (var group in collaboratorResponse) {
         groups.add(
           CollaboratorModel(
-            uid: group[UserInformationConstants.S_UID],
+            uid: group[UsersConstants.S_UID],
             name:
-                '${group[UserInformationConstants.S_FIRST_NAME]} ${group[UserInformationConstants.S_LAST_NAME]}',
+                '${group[UsersConstants.S_FIRST_NAME]} ${group[UsersConstants.S_LAST_NAME]}',
           ),
         );
       }

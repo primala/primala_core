@@ -5,7 +5,7 @@ import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
-import 'package:nokhte_backend/tables/session_information.dart';
+import 'package:nokhte_backend/tables/sessions.dart';
 part 'storage_logic_coordinator.g.dart';
 
 class StorageLogicCoordinator = _StorageLogicCoordinatorBase

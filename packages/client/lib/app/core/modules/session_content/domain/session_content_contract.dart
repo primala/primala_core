@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
-
 import 'package:nokhte/app/core/error/failure.dart';
-import 'package:nokhte_backend/tables/session_content.dart';
+import 'package:nokhte_backend/tables/content_blocks.dart';
 
 abstract class SessionContentContract {
   Future<Either<Failure, bool>> addContent(AddContentParams params);

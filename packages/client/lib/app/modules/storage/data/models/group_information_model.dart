@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nokhte/app/modules/storage/storage.dart';
-import 'package:nokhte_backend/tables/group_information.dart';
+import 'package:nokhte_backend/tables/groups.dart';
 
 class GroupInformationModel extends GroupInformationEntity {
   const GroupInformationModel({
@@ -26,8 +26,8 @@ class GroupInformationModel extends GroupInformationEntity {
       for (var group in sessionsResponse) {
         final List<CollaboratorModel> temp = [];
         for (var collaborator in collaborators) {
-          final isAMember = group[GroupInformationQueries.GROUP_MEMBERS]
-              .contains(collaborator.uid);
+          final isAMember =
+              group[GroupsQueries.GROUP_MEMBERS].contains(collaborator.uid);
           temp.add(
             CollaboratorModel.fromGroupInformation(
               collaborator,
@@ -38,12 +38,11 @@ class GroupInformationModel extends GroupInformationEntity {
         groups.add(
           GroupInformationModel(
             collaborators: temp,
-            groupMembers: group[GroupInformationQueries.GROUP_MEMBERS],
-            groupName:
-                formatTitleString(group[GroupInformationQueries.GROUP_NAME]),
+            groupMembers: group[GroupsQueries.GROUP_MEMBERS],
+            groupName: formatTitleString(group[GroupsQueries.GROUP_NAME]),
             groupHandle:
-                "@${formatTitleString(group[GroupInformationQueries.GROUP_HANDLE])}",
-            groupUID: group[GroupInformationQueries.UID],
+                "@${formatTitleString(group[GroupsQueries.GROUP_HANDLE])}",
+            groupUID: group[GroupsQueries.UID],
           ),
         );
       }

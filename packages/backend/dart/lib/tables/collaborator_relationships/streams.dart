@@ -1,5 +1,5 @@
 import 'package:nokhte_backend/tables/collaborator_relationships.dart';
-import 'package:nokhte_backend/tables/user_information.dart';
+import 'package:nokhte_backend/tables/users.dart';
 import 'package:nokhte_backend/types/types.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -7,11 +7,11 @@ class CollaboratorRelationshipsStream with CollaboratorRelationshipsConstants {
   final SupabaseClient supabase;
   bool collaboratorRelationshipsListeningStatus = false;
   final List<String> trackedCollaboratorIds = [];
-  final UserInformationQueries userQueries;
+  final UsersQueries userQueries;
 
   CollaboratorRelationshipsStream({
     required this.supabase,
-  }) : userQueries = UserInformationQueries(supabase: supabase);
+  }) : userQueries = UsersQueries(supabase: supabase);
 
   Future<bool> cancelRelationshipsListeningStream() async {
     final res = supabase.realtime.getChannels();

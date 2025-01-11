@@ -1,4 +1,4 @@
-import 'package:nokhte_backend/tables/session_content.dart';
+import 'package:nokhte_backend/tables/content_blocks.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class SessionContentRemoteSource {

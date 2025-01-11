@@ -1,16 +1,18 @@
 // ignore_for_file: file_names
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nokhte_backend/tables/session_information.dart';
-import 'package:nokhte_backend/tables/session_information/utilities/utilities.dart';
+import 'package:nokhte_backend/tables/sessions.dart';
+import 'package:nokhte_backend/tables/sessions/utilities/utilities.dart';
+import 'package:nokhte_backend/tables/users.dart';
 import 'shared/shared.dart';
 
 void main() {
-  late DormantSessionInformationQueries dormantQueries;
-  late DormantSessionInformationStreams dormantStreams;
-  late SessionInformationQueries regularQueries;
-  late SessionInformationQueries regularQueries2;
-  late SessionInformationStreams regularStreams;
+  late DormantSessionsQueries dormantQueries;
+  late DormantSessionsStreams dormantStreams;
+  late SessionsQueries regularQueries;
+  late SessionsQueries regularQueries2;
+  late UsersQueries usersQueries;
+  late SessionsStreams regularStreams;
   late CommonCollaborativeTestFunctions tSetup;
   String dormantSessionUID = '';
   String regularSessionUID = '';
@@ -18,13 +20,12 @@ void main() {
   setUpAll(() async {
     tSetup = CommonCollaborativeTestFunctions();
     await tSetup.setUp(createGroup: true);
-    dormantQueries =
-        DormantSessionInformationQueries(supabase: tSetup.user1Supabase);
-    dormantStreams =
-        DormantSessionInformationStreams(supabase: tSetup.user1Supabase);
-    regularQueries = SessionInformationQueries(supabase: tSetup.user1Supabase);
-    regularQueries2 = SessionInformationQueries(supabase: tSetup.user2Supabase);
-    regularStreams = SessionInformationStreams(supabase: tSetup.user1Supabase);
+    dormantQueries = DormantSessionsQueries(supabase: tSetup.user1Supabase);
+    dormantStreams = DormantSessionsStreams(supabase: tSetup.user1Supabase);
+    usersQueries = UsersQueries(supabase: tSetup.user1Supabase);
+    regularQueries = SessionsQueries(supabase: tSetup.user1Supabase);
+    regularQueries2 = SessionsQueries(supabase: tSetup.user2Supabase);
+    regularStreams = SessionsStreams(supabase: tSetup.user1Supabase);
   });
 
   tearDownAll(() async {
@@ -100,11 +101,6 @@ void main() {
         expect(regularQueries.userIndex, 0);
       });
 
-      test('getUserInformation - retrieves user info', () async {
-        await regularQueries.getUserInformation();
-        expect(regularQueries.userFullName, isNotEmpty);
-      });
-
       test('updateUserStatus - updates user status', () async {
         final res = await regularQueries.updateUserStatus(
           SessionUserStatus.readyToStart,
@@ -114,7 +110,7 @@ void main() {
         final metadata = await regularQueries.getCollaboratorStatuses();
         expect(
           metadata.mainType[0],
-          SessionInformationUtils.mapSessionUserStatusToString(
+          regularQueries.mapSessionUserStatusToString(
             SessionUserStatus.readyToStart,
           ),
         );
@@ -126,10 +122,10 @@ void main() {
         expect(
           res.first['collaborator_statuses'],
           [
-            SessionInformationUtils.mapSessionUserStatusToString(
+            regularQueries.mapSessionUserStatusToString(
               SessionUserStatus.readyToStart,
             ),
-            SessionInformationUtils.mapSessionUserStatusToString(
+            regularQueries.mapSessionUserStatusToString(
               SessionUserStatus.hasJoined,
             ),
           ],
@@ -143,7 +139,7 @@ void main() {
         final status = await regularQueries.getSessionStatus();
         expect(
           status.mainType,
-          SessionInformationUtils.mapSessionStatusToString(
+          regularQueries.mapSessionStatusToString(
             SessionStatus.started,
           ),
         );
@@ -209,9 +205,9 @@ void main() {
 
         expect(result.sessionUID, regularSessionUID);
         expect(result.sessionStatus, SessionStatus.started);
-        expect(result.collaboratorInformation, hasLength(2));
-        expect(result.collaboratorInformation.first.uid, tSetup.firstUserUID);
-        expect(result.collaboratorInformation[1].uid, tSetup.secondUserUID);
+        expect(result.collaborators, hasLength(2));
+        expect(result.collaborators.first.uid, tSetup.firstUserUID);
+        expect(result.collaborators[1].uid, tSetup.secondUserUID);
       });
 
       test('cancelGetSessionMetadataStream - stops streaming', () async {

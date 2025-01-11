@@ -6,7 +6,7 @@ import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/logic/types/types.dart';
 import 'package:nokhte/app/modules/session/widgets/widgets.dart';
-import 'package:nokhte_backend/tables/session_information.dart';
+import 'package:nokhte_backend/tables/sessions.dart';
 part 'rally_store.g.dart';
 
 class RallyStore = _RallyStoreBase with _$RallyStore;

@@ -1,5 +1,5 @@
 import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte_backend/tables/session_information.dart';
+import 'package:nokhte_backend/tables/sessions.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class SessionPresenceRemoteSource {
@@ -20,13 +20,11 @@ abstract class SessionPresenceRemoteSource {
 
 class SessionPresenceRemoteSourceImpl implements SessionPresenceRemoteSource {
   final SupabaseClient supabase;
-  final SessionInformationQueries sessionInformationQueries;
-  final SessionInformationStreams sessionInformationStreams;
+  final SessionsQueries sessionInformationQueries;
+  final SessionsStreams sessionInformationStreams;
   SessionPresenceRemoteSourceImpl({required this.supabase})
-      : sessionInformationQueries =
-            SessionInformationQueries(supabase: supabase),
-        sessionInformationStreams =
-            SessionInformationStreams(supabase: supabase);
+      : sessionInformationQueries = SessionsQueries(supabase: supabase),
+        sessionInformationStreams = SessionsStreams(supabase: supabase);
 
   @override
   cancelSessionMetadataStream() =>

@@ -1,10 +1,10 @@
 // ignore_for_file: constant_identifier_names
-import 'package:nokhte_backend/tables/user_information.dart';
+import 'package:nokhte_backend/tables/users.dart';
 import 'package:nokhte_backend/types/types.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class GroupInformationQueries {
-  static const TABLE = 'group_information';
+class GroupsQueries {
+  static const TABLE = 'groups';
   static const UID = 'uid';
   static const GROUP_MEMBERS = 'group_members';
   static const GROUP_NAME = 'group_name';
@@ -13,12 +13,12 @@ class GroupInformationQueries {
 
   final SupabaseClient supabase;
   final String userUID;
-  final UserInformationQueries userInfoQueries;
+  final UsersQueries userInfoQueries;
 
-  GroupInformationQueries({
+  GroupsQueries({
     required this.supabase,
   })  : userUID = supabase.auth.currentUser?.id ?? '',
-        userInfoQueries = UserInformationQueries(supabase: supabase);
+        userInfoQueries = UsersQueries(supabase: supabase);
 
   Future<List> insert({
     required String groupName,

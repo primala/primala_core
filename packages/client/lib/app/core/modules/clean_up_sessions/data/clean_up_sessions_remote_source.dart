@@ -1,4 +1,4 @@
-import 'package:nokhte_backend/tables/session_information.dart';
+import 'package:nokhte_backend/tables/sessions.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class CleanUpSessionsRemoteSource {
@@ -7,11 +7,10 @@ abstract class CleanUpSessionsRemoteSource {
 
 class CleanUpSessionsRemoteSourceImpl implements CleanUpSessionsRemoteSource {
   final SupabaseClient supabase;
-  final SessionInformationQueries sessionInformationQueries;
+  final SessionsQueries sessionInformationQueries;
   CleanUpSessionsRemoteSourceImpl({
     required this.supabase,
-  }) : sessionInformationQueries =
-            SessionInformationQueries(supabase: supabase);
+  }) : sessionInformationQueries = SessionsQueries(supabase: supabase);
 
   @override
   deleteActiveNokhteSession() async =>

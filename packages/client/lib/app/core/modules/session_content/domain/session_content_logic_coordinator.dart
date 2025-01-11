@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/session_content/session_content.dart';
-import 'package:nokhte_backend/tables/session_content.dart';
+import 'package:nokhte_backend/tables/content_blocks.dart';
+import 'package:nokhte_backend/tables/sessions.dart';
 part 'session_content_logic_coordinator.g.dart';
 
 class SessionContentLogicCoordinator = _SessionContentLogicCoordinatorBase

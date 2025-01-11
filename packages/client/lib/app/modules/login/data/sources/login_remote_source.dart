@@ -5,7 +5,7 @@ import 'package:nokhte/app/core/modules/hive/mixin/mixin.dart';
 import 'package:nokhte/app/core/modules/hive/types/boxes.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/modules/login/login.dart';
-import 'package:nokhte_backend/tables/user_information.dart';
+import 'package:nokhte_backend/tables/users.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/foundation.dart';
@@ -67,7 +67,7 @@ class LoginRemoteSourceImpl with HiveBoxUtils implements LoginRemoteSource {
       idToken: idToken,
       nonce: rawNonce,
     );
-    final queries = UserInformationQueries(supabase: supabase);
+    final queries = UsersQueries(supabase: supabase);
 
     await queries.insertUserInfo(firstName: firstName, lastName: lastName);
     return AuthProviderModel.fromSupabase(
@@ -82,7 +82,7 @@ class LoginRemoteSourceImpl with HiveBoxUtils implements LoginRemoteSource {
 
   @override
   addName({String theName = ""}) async {
-    final queries = UserInformationQueries(supabase: supabase);
+    final queries = UsersQueries(supabase: supabase);
     final List nameCheck = await queries.getUserInfo();
     List insertRes;
     String fullName;
@@ -111,7 +111,7 @@ class LoginRemoteSourceImpl with HiveBoxUtils implements LoginRemoteSource {
 
   @override
   getUserInfo() async {
-    final queries = UserInformationQueries(supabase: supabase);
+    final queries = UsersQueries(supabase: supabase);
     return await queries.getUserInfo();
   }
 

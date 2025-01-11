@@ -4,7 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte_backend/tables/session_information.dart';
+import 'package:nokhte_backend/tables/sessions.dart';
 part 'session_presence_coordinator.g.dart';
 
 class SessionPresenceCoordinator = _SessionPresenceCoordinatorBase

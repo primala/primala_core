@@ -1,5 +1,5 @@
 import 'package:nokhte_backend/constants/constants.dart';
-import 'package:nokhte_backend/tables/group_information.dart';
+import 'package:nokhte_backend/tables/groups.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CommonCollaborativeTestFunctions {
@@ -8,7 +8,7 @@ class CommonCollaborativeTestFunctions {
   late SupabaseClient user3Supabase;
   late SupabaseClient user4Supabase;
   late SupabaseClient supabaseAdmin;
-  late GroupInformationQueries groupQueries;
+  late GroupsQueries groupQueries;
   late String firstUserUID;
   late String secondUserUID;
   late String thirdUserUID;
@@ -30,7 +30,7 @@ class CommonCollaborativeTestFunctions {
     await SignIn.user2(supabase: user2Supabase);
     await SignIn.user3(supabase: user3Supabase);
     await SignIn.user4(supabase: user4Supabase);
-    groupQueries = GroupInformationQueries(supabase: user1Supabase);
+    groupQueries = GroupsQueries(supabase: user1Supabase);
 
     final userIdResults = await UserSetupConstants.getUIDs();
     firstUserUID = userIdResults.first;
@@ -43,7 +43,7 @@ class CommonCollaborativeTestFunctions {
         groupName: 'Test Group',
         groupHandle: '@testgroup',
       ))
-          .first[GroupInformationQueries.UID];
+          .first[GroupsQueries.UID];
 
       await groupQueries.updateGroupMembers(
         groupId: groupUID,

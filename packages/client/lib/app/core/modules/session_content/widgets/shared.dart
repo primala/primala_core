@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
-import 'package:nokhte_backend/tables/session_content.dart';
+import 'package:nokhte_backend/tables/content_blocks.dart';
 
 mixin BlockTextConstants {
   static List<ColorAndStop> getGradient(
