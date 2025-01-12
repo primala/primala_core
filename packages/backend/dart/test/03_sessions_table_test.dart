@@ -38,7 +38,7 @@ void main() {
         expect(res.first['collaborator_uids'], isEmpty);
         expect(res.first['collaborator_names'], isEmpty);
         expect(res.first['collaborator_statuses'], isEmpty);
-        dormantSessionID = res.first['uid'];
+        dormantSessionID = res.first['id'];
       });
 
       test('updateSessionTitle - updates dormant session title', () async {
@@ -84,7 +84,7 @@ void main() {
   group('Regular Session Flow', () {
     test('initializeSession - initializes active session', () async {
       final res = await regularQueries.initializeSession(tSetup.groupID);
-      regularSessionID = res.first['uid'];
+      regularSessionID = res.first['id'];
       expect(res, isNotEmpty);
       expect(res.first['collaborator_uids'], contains(tSetup.firstUserUID));
       expect(res.first['status'], 'recruiting');

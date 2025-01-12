@@ -1798,7 +1798,7 @@ CREATE OR REPLACE FUNCTION public.update_collaborator_status(incoming_session_id
  RETURNS void
  LANGUAGE plpgsql
 AS $function$BEGIN
-    update public.session_information SET collaborator_statuses[index_to_edit+1] = new_status WHERE id = incoming_session_id;
+    update public.sessions SET collaborator_statuses[index_to_edit+1] = new_status WHERE id = incoming_session_id;
 END;$function$
 ;
 
@@ -1831,10 +1831,10 @@ BEGIN
             _current_collaborator_names,
             _current_collaborator_statuses,
             _session_status
-        FROM session_information
+        FROM sessions
         WHERE id IN (
             SELECT id 
-            FROM session_information 
+            FROM sessions 
             WHERE _session_id = id
         );
 
@@ -1844,10 +1844,10 @@ BEGIN
             END IF;
 
             IF _session_status = 'recruiting' THEN
-                -- Get the user's name from the user_information table
+                -- Get the user's name from the users table
                 SELECT first_name || ' ' || last_name
                 INTO _user_name
-                FROM user_information
+                FROM users
                 WHERE uid = _user_uid;
 
                 -- Append values to arrays
@@ -1858,8 +1858,8 @@ BEGIN
                 -- Increment version
                 _current_version := _current_version + 1;
 
-                -- Update session_information
-                UPDATE public.session_information
+                -- Update sessions
+                UPDATE public.sessions
                 SET 
                     collaborator_uids = _current_collaborator_uids,
                     collaborator_names = _current_collaborator_names,
@@ -1870,7 +1870,7 @@ BEGIN
 
                 -- Check if the update succeeded
                 IF NOT FOUND THEN
-                    RAISE EXCEPTION 'Update on session_information failed due to version mismatch';
+                    RAISE EXCEPTION 'Update on sessions failed due to version mismatch';
                 END IF;
             END IF;
         END IF;

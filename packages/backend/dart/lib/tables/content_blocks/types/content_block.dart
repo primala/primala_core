@@ -3,15 +3,15 @@ import 'package:nokhte_backend/tables/content_blocks.dart';
 
 class ContentBlock extends Equatable with SessionContentConstants {
   final String content;
-  final String uid;
+  final int id;
   final ContentBlockType contentBlockType;
-  final String? parentUID;
+  final int? parentID;
 
   ContentBlock({
     required this.content,
-    required this.uid,
+    required this.id,
     required this.contentBlockType,
-    required this.parentUID,
+    required this.parentID,
   });
 
   static List<ContentBlock> fromSupabase(List res) {
@@ -19,11 +19,11 @@ class ContentBlock extends Equatable with SessionContentConstants {
     for (var block in res) {
       temp.add(ContentBlock(
         content: block[SessionContentConstants.S_CONTENT],
-        uid: block[SessionContentConstants.S_UID],
+        id: block[SessionContentConstants.S_ID],
         contentBlockType: SessionContentUtils.mapStringToContentBlockType(
           block[SessionContentConstants.S_TYPE],
         ),
-        parentUID: block[SessionContentConstants.S_PARENT_UID],
+        parentID: block[SessionContentConstants.S_PARENT_ID],
       ));
     }
     return temp;
@@ -32,8 +32,8 @@ class ContentBlock extends Equatable with SessionContentConstants {
   @override
   List<Object> get props => [
         content,
-        uid,
+        id,
         contentBlockType,
-        parentUID ?? '',
+        parentID ?? -1,
       ];
 }

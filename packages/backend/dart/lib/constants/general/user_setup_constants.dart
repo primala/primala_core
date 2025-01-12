@@ -35,7 +35,7 @@ class UserSetupConstants {
   }) async {
     final userUIDs = await getUIDs();
     for (var userUID in userUIDs) {
-      await supabaseAdmin.from('user_information').delete().eq(
+      await supabaseAdmin.from('users').delete().eq(
             'uid',
             userUID,
           );
@@ -46,14 +46,13 @@ class UserSetupConstants {
       {required SupabaseClient supabase}) async {
     final userUIDs = await getUIDs();
     for (var i = 0; i < userUIDs.length; i++) {
-      await supabase.from('user_information').insert(
+      await supabase.from('users').insert(
         {
           "uid": userUIDs[i],
           "first_name": UserDataConstants.usersData[i]['firstName'],
           "last_name": UserDataConstants.usersData[i]['lastName'],
         },
       );
-    
     }
   }
 }

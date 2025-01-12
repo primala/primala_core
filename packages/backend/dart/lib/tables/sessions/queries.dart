@@ -1,4 +1,3 @@
-import 'package:nokhte_backend/tables/content_blocks.dart';
 import 'package:nokhte_backend/tables/sessions.dart';
 import 'package:nokhte_backend/tables/users.dart';
 import 'package:nokhte_backend/types/types.dart';
@@ -284,32 +283,6 @@ class SessionsQueries with SessionsConstants, SessionsUtils {
               SessionStatus.dormant,
             ))
         .select();
-    for (var row in activeResponse) {
-      final uid = row[ID];
-      final contentRes = await supabase
-          .from(SessionContentConstants.S_TABLE)
-          .select()
-          .eq(SessionContentConstants.S_SESSION_UID, uid);
-      if (contentRes.isEmpty) {
-        await supabase.from(TABLE).delete().eq(ID, uid);
-      }
-    }
-    final dormantResponse = await supabase.from(TABLE).select().eq(
-        STATUS,
-        mapSessionStatusToString(
-          SessionStatus.dormant,
-        ));
-
-    for (var row in dormantResponse) {
-      final uid = row[ID];
-      final contentRes = await supabase
-          .from(SessionContentConstants.S_TABLE)
-          .select()
-          .eq(SessionContentConstants.S_SESSION_UID, uid);
-      if (contentRes.isEmpty) {
-        await supabase.from(TABLE).delete().eq(ID, uid);
-      }
-    }
 
     return activeResponse;
   }
