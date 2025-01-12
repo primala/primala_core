@@ -1,14 +1,14 @@
 import 'package:equatable/equatable.dart';
 
 class UpdateSessionTitleParams extends Equatable {
-  final String sessionUID;
+  final int sessionID;
   final String title;
 
   UpdateSessionTitleParams({
-    required this.sessionUID,
+    required this.sessionID,
     required this.title,
   });
 
   @override
-  List<Object> get props => [sessionUID, title];
+  List<Object> get props => [sessionID, title];
 }

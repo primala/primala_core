@@ -1,4 +1,5 @@
 import 'package:nokhte_backend/constants/constants.dart';
+import 'package:nokhte_backend/tables/group_roles.dart';
 import 'package:nokhte_backend/tables/groups.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -9,11 +10,12 @@ class CommonCollaborativeTestFunctions {
   late SupabaseClient user4Supabase;
   late SupabaseClient supabaseAdmin;
   late GroupsQueries groupQueries;
+  late GroupRolesQueries groupRolesQueries;
   late String firstUserUID;
   late String secondUserUID;
   late String thirdUserUID;
   late String fourthUserUID;
-  late String groupUID;
+  late int groupID;
 
   CommonCollaborativeTestFunctions() {
     user1Supabase = SupabaseClientConfigConstants.supabase;
@@ -31,6 +33,7 @@ class CommonCollaborativeTestFunctions {
     await SignIn.user3(supabase: user3Supabase);
     await SignIn.user4(supabase: user4Supabase);
     groupQueries = GroupsQueries(supabase: user1Supabase);
+    groupRolesQueries = GroupRolesQueries(supabase: user1Supabase);
 
     final userIdResults = await UserSetupConstants.getUIDs();
     firstUserUID = userIdResults.first;
@@ -39,21 +42,30 @@ class CommonCollaborativeTestFunctions {
     fourthUserUID = userIdResults[3];
 
     if (createGroup) {
-      groupUID = (await groupQueries.insert(
+      groupID = (await groupQueries.insert(
         groupName: 'Test Group',
-        groupHandle: '@testgroup',
       ))
-          .first[GroupsQueries.UID];
+          .first[GroupsQueries.ID];
 
-      await groupQueries.updateGroupMembers(
-        groupId: groupUID,
-        members: [secondUserUID],
-        isAdding: true,
+      await groupRolesQueries.addUserRole(
+        UserRoleParams(
+          groupID: groupID,
+          userUID: firstUserUID,
+          role: GroupRole.admin,
+        ),
+      );
+
+      await groupRolesQueries.addUserRole(
+        UserRoleParams(
+          groupID: groupID,
+          userUID: secondUserUID,
+          role: GroupRole.collaborator,
+        ),
       );
     }
   }
 
   teardown() async {
-    await groupQueries.delete(uid: groupUID);
+    await groupQueries.delete(id: groupID);
   }
 }

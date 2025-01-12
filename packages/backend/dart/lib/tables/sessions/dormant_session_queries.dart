@@ -18,7 +18,7 @@ class DormantSessionsQueries
 
   Future<List> updateSessionTitle(UpdateSessionTitleParams params) async {
     final res =
-        await supabase.from(TABLE).select().eq(UID, params.sessionUID).single();
+        await supabase.from(TABLE).select().eq(ID, params.sessionID).single();
 
     return await supabase
         .from(TABLE)
@@ -27,15 +27,15 @@ class DormantSessionsQueries
           VERSION: res[VERSION] + 1,
         })
         .eq(VERSION, res[VERSION])
-        .eq(UID, params.sessionUID)
+        .eq(ID, params.sessionID)
         .select();
   }
 
   Future<List> deleteSession(String sessionUID) async =>
-      await supabase.from(TABLE).delete().eq(UID, sessionUID).select();
+      await supabase.from(TABLE).delete().eq(ID, sessionUID).select();
 
   Future<List> initializeDormantSession(
-    String groupUID,
+    int groupID,
   ) async {
     return await supabase.from(TABLE).insert({
       COLLABORATOR_UIDS: [],
@@ -44,12 +44,12 @@ class DormantSessionsQueries
       STATUS: mapSessionStatusToString(
         SessionStatus.dormant,
       ),
-      GROUP_UID: groupUID,
+      GROUP_ID: groupID,
     }).select();
   }
 
   Future<List> awakenDormantSession(
-    String sessionUID,
+    int sessionID,
   ) async {
     return await supabase
         .from(TABLE)
@@ -59,7 +59,7 @@ class DormantSessionsQueries
           ),
           CREATED_AT: DateTime.now().toUtc().toIso8601String()
         })
-        .eq(UID, sessionUID)
+        .eq(ID, sessionID)
         .select();
   }
 }

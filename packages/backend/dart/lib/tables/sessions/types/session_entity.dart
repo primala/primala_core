@@ -36,19 +36,19 @@ class GroupSessions extends Equatable {
 class SessionEntity extends Equatable {
   final String title;
   final String createdAt;
-  final String uid;
+  final int id;
   const SessionEntity({
     required this.title,
-    required this.uid,
+    required this.id,
     required this.createdAt,
   });
 
   factory SessionEntity.empty() => const SessionEntity(
         title: '',
-        uid: '',
+        id: -1,
         createdAt: '',
       );
 
   @override
-  List<Object> get props => [title, uid, createdAt];
+  List<Object> get props => [title, id, createdAt];
 }

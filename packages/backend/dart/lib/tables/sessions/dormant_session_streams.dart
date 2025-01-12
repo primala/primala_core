@@ -30,13 +30,12 @@ class DormantSessionsStreams extends SessionsQueries
     return formatter.format(date);
   }
 
-  Stream<GroupSessions> listenToSessions(String groupUID) async* {
+  Stream<GroupSessions> listenToSessions(int groupUID) async* {
     _groupSessions.dormantSessions.clear();
     _groupSessions.finishedSessions.clear();
     groupSessionsListeningStatus = true;
-    final events = supabase
-        .from(TABLE)
-        .stream(primaryKey: ['uid']).eq(GROUP_UID, groupUID);
+    final events =
+        supabase.from(TABLE).stream(primaryKey: ['uid']).eq(GROUP_ID, groupUID);
 
     await for (var event in events) {
       // if (event.isEmpty) continue;
@@ -53,7 +52,7 @@ class DormantSessionsStreams extends SessionsQueries
           title: item[TITLE].isEmpty
               ? 'Session on ${formatDate(DateTime.parse(item[CREATED_AT]))}'
               : item[TITLE],
-          uid: item[UID],
+          id: item[ID],
           createdAt: item[CREATED_AT],
         );
 

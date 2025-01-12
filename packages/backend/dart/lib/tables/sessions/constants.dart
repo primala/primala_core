@@ -6,11 +6,11 @@ mixin SessionsConstants {
   String SPEAKING_TIMER_START = S_SPEAKING_TIMER_START;
   String SECONDARY_SPEAKER_SPOTLIGHT = S_SECONDARY_SPEAKER_SPOTLIGHT;
   String COLLABORATOR_STATUSES = S_COLLABORATOR_STATUSES;
-  String UID = S_UID;
+  String ID = S_ID;
   String VERSION = S_VERSION;
   String COLLABORATOR_UIDS = S_COLLABORATOR_UIDS;
   String CREATED_AT = S_CREATED_AT;
-  String GROUP_UID = S_GROUP_UID;
+  String GROUP_ID = S_GROUP_ID;
   String STATUS = S_STATUS;
   String TITLE = S_TITLE;
   String COLLABORATOR_NAMES = S_COLLABORATOR_NAMES;
@@ -21,11 +21,11 @@ mixin SessionsConstants {
   static const S_SECONDARY_SPEAKER_SPOTLIGHT = 'secondary_speaker_spotlight';
   static const S_COLLABORATOR_STATUSES = 'collaborator_statuses';
   static const S_COLLABORATOR_NAMES = 'collaborator_names';
-  static const S_UID = 'uid';
+  static const S_ID = 'id';
   static const S_VERSION = 'version';
   static const S_COLLABORATOR_UIDS = 'collaborator_uids';
   static const S_CREATED_AT = 'created_at';
-  static const S_GROUP_UID = 'group_uid';
+  static const S_GROUP_ID = 'group_id';
   static const S_STATUS = 'status';
   static const S_TITLE = 'title';
 }

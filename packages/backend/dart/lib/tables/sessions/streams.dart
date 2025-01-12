@@ -47,13 +47,13 @@ class SessionsStreams extends SessionsQueries
       final temp = <SessionRequests>[];
       if (event.isNotEmpty) {
         for (var event in event) {
-          final sessionUid = event[UID];
+          final sessionUid = event[ID];
           if (!_requestsCache.containsKey(sessionUid)) {
             final groupName = await groupsQueries.getGroupName(
-              event[GROUP_UID],
+              event[GROUP_ID],
             );
             final res = SessionRequests(
-              sessionUID: event[UID],
+              sessionID: event[ID],
               groupName: groupName,
             );
             _requestsCache[sessionUid] = res;
@@ -89,8 +89,8 @@ class SessionsStreams extends SessionsQueries
     await findCurrentSession();
 
     final events = supabase.from(TABLE).stream(primaryKey: ['id']).eq(
-      UID,
-      sessionUID,
+      ID,
+      sessionID,
     );
     await for (var event in events) {
       if (event.isNotEmpty) {
@@ -134,7 +134,7 @@ class SessionsStreams extends SessionsQueries
 
         final speakerUID = selectedEvent[SPEAKER_SPOTLIGHT];
 
-        final sessionUID = selectedEvent[UID];
+        final sessionID = selectedEvent[ID];
 
         final userIsInSecondarySpeakingSpotlight =
             selectedEvent[SECONDARY_SPEAKER_SPOTLIGHT] == userUID;
@@ -144,7 +144,7 @@ class SessionsStreams extends SessionsQueries
 
         yield SessionMetadata(
           userUID: userUID,
-          sessionUID: sessionUID,
+          sessionID: sessionID,
           speakingTimerStart: speakingTimerStart,
           secondarySpotlightIsEmpty: secondarySpotlightIsEmpty,
           speakerUID: speakerUID,

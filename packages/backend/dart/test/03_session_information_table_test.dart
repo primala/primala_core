@@ -2,8 +2,6 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nokhte_backend/tables/sessions.dart';
-import 'package:nokhte_backend/tables/sessions/utilities/utilities.dart';
-import 'package:nokhte_backend/tables/users.dart';
 import 'shared/shared.dart';
 
 void main() {
@@ -11,18 +9,16 @@ void main() {
   late DormantSessionsStreams dormantStreams;
   late SessionsQueries regularQueries;
   late SessionsQueries regularQueries2;
-  late UsersQueries usersQueries;
   late SessionsStreams regularStreams;
   late CommonCollaborativeTestFunctions tSetup;
-  String dormantSessionUID = '';
-  String regularSessionUID = '';
+  int dormantSessionID = -1;
+  int regularSessionID = -1;
 
   setUpAll(() async {
     tSetup = CommonCollaborativeTestFunctions();
     await tSetup.setUp(createGroup: true);
     dormantQueries = DormantSessionsQueries(supabase: tSetup.user1Supabase);
     dormantStreams = DormantSessionsStreams(supabase: tSetup.user1Supabase);
-    usersQueries = UsersQueries(supabase: tSetup.user1Supabase);
     regularQueries = SessionsQueries(supabase: tSetup.user1Supabase);
     regularQueries2 = SessionsQueries(supabase: tSetup.user2Supabase);
     regularStreams = SessionsStreams(supabase: tSetup.user1Supabase);
@@ -36,18 +32,18 @@ void main() {
     group('Dormant Queries', () {
       test('initializeDormantSession - creates dormant session', () async {
         final res =
-            await dormantQueries.initializeDormantSession(tSetup.groupUID);
+            await dormantQueries.initializeDormantSession(tSetup.groupID);
         expect(res, isNotEmpty);
         expect(res.first['status'], 'dormant');
         expect(res.first['collaborator_uids'], isEmpty);
         expect(res.first['collaborator_names'], isEmpty);
         expect(res.first['collaborator_statuses'], isEmpty);
-        dormantSessionUID = res.first['uid'];
+        dormantSessionID = res.first['uid'];
       });
 
       test('updateSessionTitle - updates dormant session title', () async {
         final params = UpdateSessionTitleParams(
-          sessionUID: dormantSessionUID,
+          sessionID: dormantSessionID,
           title: 'Test Session',
         );
         final res = await dormantQueries.updateSessionTitle(params);
@@ -59,11 +55,11 @@ void main() {
 
     group('Dormant Streams', () {
       test('listenToSessions - streams dormant session updates', () async {
-        final stream = dormantStreams.listenToSessions(tSetup.groupUID);
+        final stream = dormantStreams.listenToSessions(tSetup.groupID);
         final result = await stream.first;
 
         expect(result.dormantSessions, hasLength(1));
-        expect(result.dormantSessions.first.uid, dormantSessionUID);
+        expect(result.dormantSessions.first.id, dormantSessionID);
         expect(result.dormantSessions.first.title, 'Test Session');
         expect(result.finishedSessions, isEmpty);
       });
@@ -76,7 +72,7 @@ void main() {
     });
 
     test('awakenDormantSession - transitions to recruiting', () async {
-      final res = await dormantQueries.awakenDormantSession(dormantSessionUID);
+      final res = await dormantQueries.awakenDormantSession(dormantSessionID);
       expect(res, isNotEmpty);
       expect(res.first['status'], 'recruiting');
       expect(res.first['created_at'], isNotNull);
@@ -87,8 +83,8 @@ void main() {
 
   group('Regular Session Flow', () {
     test('initializeSession - initializes active session', () async {
-      final res = await regularQueries.initializeSession(tSetup.groupUID);
-      regularSessionUID = res.first['uid'];
+      final res = await regularQueries.initializeSession(tSetup.groupID);
+      regularSessionID = res.first['uid'];
       expect(res, isNotEmpty);
       expect(res.first['collaborator_uids'], contains(tSetup.firstUserUID));
       expect(res.first['status'], 'recruiting');
@@ -97,7 +93,7 @@ void main() {
     group('Regular Session Operations', () {
       test('findCurrentSession - finds active session', () async {
         await regularQueries.findCurrentSession();
-        expect(regularQueries.sessionUID, regularSessionUID);
+        expect(regularQueries.sessionID, regularSessionID);
         expect(regularQueries.userIndex, 0);
       });
 
@@ -117,7 +113,7 @@ void main() {
       });
 
       test('joinSession - second user can join the session', () async {
-        await regularQueries2.joinSession(regularSessionUID);
+        await regularQueries2.joinSession(regularSessionID);
         final res = await regularQueries.select();
         expect(
           res.first['collaborator_statuses'],
@@ -203,7 +199,7 @@ void main() {
         final stream = regularStreams.listenToPresenceMetadata();
         final result = await stream.first;
 
-        expect(result.sessionUID, regularSessionUID);
+        expect(result.sessionID, regularSessionID);
         expect(result.sessionStatus, SessionStatus.started);
         expect(result.collaborators, hasLength(2));
         expect(result.collaborators.first.uid, tSetup.firstUserUID);

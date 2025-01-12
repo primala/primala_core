@@ -3,7 +3,7 @@ import 'package:nokhte_backend/tables/sessions.dart';
 
 class SessionMetadata extends Equatable {
   final bool userCanSpeak;
-  final String sessionUID;
+  final int sessionID;
   final List<SessionUserInfoEntity> collaborators;
   final SessionStatus sessionStatus;
   final bool userIsSpeaking;
@@ -14,7 +14,7 @@ class SessionMetadata extends Equatable {
   final DateTime speakingTimerStart;
 
   SessionMetadata({
-    required this.sessionUID,
+    required this.sessionID,
     required this.collaborators,
     required this.sessionStatus,
     required this.userCanSpeak,

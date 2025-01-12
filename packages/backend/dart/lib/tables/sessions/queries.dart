@@ -9,7 +9,7 @@ import 'utilities/utilities.dart';
 class SessionsQueries with SessionsConstants, SessionsUtils {
   final SupabaseClient supabase;
   final String userUID;
-  String sessionUID = '';
+  int sessionID = -1;
   String userFullName = '';
   int userIndex = -1;
   final UsersQueries usersQueries;
@@ -26,7 +26,7 @@ class SessionsQueries with SessionsConstants, SessionsUtils {
 
   findCurrentSession() async {
     await getUserInformation();
-    if (userIndex == -1 || sessionUID.isEmpty) {
+    if (userIndex == -1 || sessionID == -1) {
       final res = await supabase.from(TABLE).select().eq(
             STATUS,
             mapSessionStatusToString(
@@ -36,7 +36,7 @@ class SessionsQueries with SessionsConstants, SessionsUtils {
       if (res.isNotEmpty) {
         for (var row in res) {
           if (row[COLLABORATOR_UIDS].contains(userUID)) {
-            sessionUID = row[UID];
+            sessionID = row[ID];
             userIndex = row[COLLABORATOR_UIDS].indexOf(userUID);
             break;
           }
@@ -50,7 +50,7 @@ class SessionsQueries with SessionsConstants, SessionsUtils {
             );
         for (var row in res) {
           if (row[COLLABORATOR_UIDS].contains(userUID)) {
-            sessionUID = row[UID];
+            sessionID = row[ID];
             userIndex = row[COLLABORATOR_UIDS].indexOf(userUID);
             break;
           }
@@ -60,11 +60,11 @@ class SessionsQueries with SessionsConstants, SessionsUtils {
   }
 
   resetValues() {
-    sessionUID = '';
+    sessionID = -1;
     userFullName = '';
   }
 
-  select() async => await supabase.from(TABLE).select().eq(UID, sessionUID);
+  select() async => await supabase.from(TABLE).select().eq(ID, sessionID);
 
   Future<SessionResponse<T>> _getProperty<T>(String property) async {
     final row = (await select()).first;
@@ -82,8 +82,8 @@ class SessionsQueries with SessionsConstants, SessionsUtils {
   Future<SessionResponse<String?>> getSpeakerSpotlight() async =>
       await _getProperty(SPEAKER_SPOTLIGHT);
 
-  Future<SessionResponse<String>> getSessionUID() async =>
-      await _getProperty(UID);
+  Future<SessionResponse<String>> getSessionID() async =>
+      await _getProperty(ID);
 
   Future<SessionResponse<String>> getSessionTitle() async =>
       await _getProperty(TITLE);
@@ -93,10 +93,9 @@ class SessionsQueries with SessionsConstants, SessionsUtils {
 
   Future<List> updateUserStatus(SessionUserStatus params) async {
     await findCurrentSession();
-    final newstatus =
-        mapSessionUserStatusToString(params);
+    final newstatus = mapSessionUserStatusToString(params);
     await supabase.rpc('update_collaborator_status', params: {
-      'incoming_session_uid': sessionUID,
+      'incoming_session_id': sessionID,
       'index_to_edit': userIndex,
       'new_status': newstatus,
     });
@@ -108,8 +107,7 @@ class SessionsQueries with SessionsConstants, SessionsUtils {
     final res = await getSessionStatus();
     return await retry<List>(
       action: () async {
-        final newStatus = mapSessionStatusToString(
-            SessionStatus.started);
+        final newStatus = mapSessionStatusToString(SessionStatus.started);
         return await _onCurrentActiveNokhteSession(
           supabase.from(TABLE).update(
             {
@@ -264,9 +262,9 @@ class SessionsQueries with SessionsConstants, SessionsUtils {
     );
   }
 
-  Future<List> joinSession(String sessionUID) async {
+  Future<List> joinSession(int sessionID) async {
     await supabase.rpc('join_session', params: {
-      '_session_uid': sessionUID,
+      '_session_id': sessionID,
       '_user_uid': userUID,
     });
     return [];
@@ -287,13 +285,13 @@ class SessionsQueries with SessionsConstants, SessionsUtils {
             ))
         .select();
     for (var row in activeResponse) {
-      final uid = row[UID];
+      final uid = row[ID];
       final contentRes = await supabase
           .from(SessionContentConstants.S_TABLE)
           .select()
           .eq(SessionContentConstants.S_SESSION_UID, uid);
       if (contentRes.isEmpty) {
-        await supabase.from(TABLE).delete().eq(UID, uid);
+        await supabase.from(TABLE).delete().eq(ID, uid);
       }
     }
     final dormantResponse = await supabase.from(TABLE).select().eq(
@@ -303,20 +301,20 @@ class SessionsQueries with SessionsConstants, SessionsUtils {
         ));
 
     for (var row in dormantResponse) {
-      final uid = row[UID];
+      final uid = row[ID];
       final contentRes = await supabase
           .from(SessionContentConstants.S_TABLE)
           .select()
           .eq(SessionContentConstants.S_SESSION_UID, uid);
       if (contentRes.isEmpty) {
-        await supabase.from(TABLE).delete().eq(UID, uid);
+        await supabase.from(TABLE).delete().eq(ID, uid);
       }
     }
 
     return activeResponse;
   }
 
-  Future<List> initializeSession(String groupUID) async {
+  Future<List> initializeSession(int groupUID) async {
     await getUserInformation();
     return await supabase.from(TABLE).insert({
       COLLABORATOR_UIDS: [userUID],
@@ -326,7 +324,7 @@ class SessionsQueries with SessionsConstants, SessionsUtils {
           SessionUserStatus.hasJoined,
         ),
       ],
-      GROUP_UID: groupUID,
+      GROUP_ID: groupUID,
     }).select();
   }
 
@@ -335,8 +333,8 @@ class SessionsQueries with SessionsConstants, SessionsUtils {
     required int version,
   }) async {
     await findCurrentSession();
-    if (sessionUID.isNotEmpty) {
-      return await query.eq(VERSION, version).eq(UID, sessionUID).select();
+    if (sessionID != -1) {
+      return await query.eq(VERSION, version).eq(ID, sessionID).select();
     } else {
       return [];
     }
