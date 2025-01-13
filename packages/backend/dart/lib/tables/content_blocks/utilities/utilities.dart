@@ -38,11 +38,11 @@ mixin SessionContentUtils {
   }
 
   static bool areContentListsEqual(
-      SessionContentList list1, SessionContentList list2) {
+      ContentBlockList list1, ContentBlockList list2) {
     if (list1.length != list2.length) return false;
 
     for (int i = 0; i < list1.length; i++) {
-      if (list1[i].uid != list2[i].uid ||
+      if (list1[i].id != list2[i].id ||
           list1[i].content != list2[i].content ||
           list1[i].blockType != list2[i].blockType) {
         return false;

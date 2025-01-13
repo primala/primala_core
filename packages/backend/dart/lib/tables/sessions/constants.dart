@@ -9,10 +9,8 @@ mixin SessionsConstants {
   String ID = S_ID;
   String VERSION = S_VERSION;
   String COLLABORATOR_UIDS = S_COLLABORATOR_UIDS;
-  String CREATED_AT = S_CREATED_AT;
   String GROUP_ID = S_GROUP_ID;
   String STATUS = S_STATUS;
-  String TITLE = S_TITLE;
   String COLLABORATOR_NAMES = S_COLLABORATOR_NAMES;
 
   static const S_TABLE = "sessions";
@@ -24,8 +22,6 @@ mixin SessionsConstants {
   static const S_ID = 'id';
   static const S_VERSION = 'version';
   static const S_COLLABORATOR_UIDS = 'collaborator_uids';
-  static const S_CREATED_AT = 'created_at';
   static const S_GROUP_ID = 'group_id';
   static const S_STATUS = 'status';
-  static const S_TITLE = 'title';
 }

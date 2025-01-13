@@ -1885,3 +1885,22 @@ END;
 $function$
 ;
 
+
+
+alter table "public"."documents" add column "parent_document_id" bigint;
+
+alter table "public"."sessions" drop column "created_at";
+
+alter table "public"."sessions" drop column "title";
+
+alter table "public"."sessions" add column "active_documents" bigint[] not null default '{}'::bigint[];
+
+alter table "public"."sessions" add column "current_document" bigint;
+
+alter table "public"."documents" add constraint "documents_parent_document_id_fkey" FOREIGN KEY (parent_document_id) REFERENCES documents(id) ON UPDATE CASCADE ON DELETE SET NULL not valid;
+
+alter table "public"."documents" validate constraint "documents_parent_document_id_fkey";
+
+alter table "public"."sessions" add constraint "sessions_current_document_fkey" FOREIGN KEY (current_document) REFERENCES documents(id) ON UPDATE CASCADE ON DELETE SET NULL not valid;
+
+alter table "public"."sessions" validate constraint "sessions_current_document_fkey";

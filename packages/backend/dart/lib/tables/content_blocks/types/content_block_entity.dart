@@ -3,27 +3,27 @@
 import 'package:equatable/equatable.dart';
 import 'package:nokhte_backend/tables/content_blocks.dart';
 
-typedef SessionContentList = List<SessionContentEntity>;
+typedef ContentBlockList = List<ContentBlockEntity>;
 
-class SessionContentEntity extends Equatable {
-  final String uid;
+class ContentBlockEntity extends Equatable {
+  final int id;
   final String content;
   final ContentBlockType blockType;
   final int numberOfParents;
   final DateTime lastEditedAt;
 
-  SessionContentEntity({
-    required this.uid,
+  ContentBlockEntity({
+    required this.id,
     required this.content,
     required this.blockType,
     required this.numberOfParents,
     required this.lastEditedAt,
   });
 
-  factory SessionContentEntity.fromSupabase(
+  factory ContentBlockEntity.fromSupabase(
       Map<String, dynamic> record, int numberOfParents) {
-    return SessionContentEntity(
-      uid: record['uid'],
+    return ContentBlockEntity(
+      id: record['id'],
       content: record['content'],
       blockType:
           SessionContentUtils.mapStringToContentBlockType(record['type']),
@@ -32,7 +32,15 @@ class SessionContentEntity extends Equatable {
     );
   }
 
+  factory ContentBlockEntity.initial() => ContentBlockEntity(
+        id: 0,
+        content: '',
+        blockType: ContentBlockType.none,
+        numberOfParents: 0,
+        lastEditedAt: DateTime.now(),
+      );
+
   @override
   List<Object> get props =>
-      [uid, content, blockType, numberOfParents, lastEditedAt];
+      [id, content, blockType, numberOfParents, lastEditedAt];
 }

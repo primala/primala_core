@@ -84,9 +84,6 @@ class SessionsQueries with SessionsConstants, SessionsUtils {
   Future<SessionResponse<String>> getSessionID() async =>
       await _getProperty(ID);
 
-  Future<SessionResponse<String>> getSessionTitle() async =>
-      await _getProperty(TITLE);
-
   Future<SessionResponse<String>> getSessionStatus() async =>
       await _getProperty(STATUS);
 

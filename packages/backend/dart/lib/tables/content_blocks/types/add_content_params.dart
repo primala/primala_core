@@ -3,25 +3,25 @@ import 'package:nokhte_backend/tables/content_blocks.dart';
 
 class AddContentParams extends Equatable {
   final String content;
-  final String parentUID;
+  final int parentId;
   final ContentBlockType contentBlockType;
 
   AddContentParams({
     required this.content,
-    required this.parentUID,
+    required this.parentId,
     required this.contentBlockType,
   });
 
   factory AddContentParams.initial() => AddContentParams(
         content: '',
-        parentUID: '',
+        parentId: -1,
         contentBlockType: ContentBlockType.none,
       );
 
   @override
   List<Object> get props => [
         content,
-        parentUID,
+        parentId,
         contentBlockType,
       ];
 }
