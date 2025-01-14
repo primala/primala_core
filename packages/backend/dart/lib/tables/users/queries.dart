@@ -19,10 +19,13 @@ class UsersQueries with UsersConstants {
         LAST_NAME: lastName,
       }).select();
 
-  Future<List> updateActiveGroup(int groupId) async =>
-      await supabase.from(TABLE).update({
+  Future<List> updateActiveGroup(int groupId) async => await supabase
+      .from(TABLE)
+      .update({
         ACTIVE_GROUP: groupId,
-      }).select();
+      })
+      .eq(UID, userUID)
+      .select();
 
   Future<List> getUserInfo({
     String queryUID = '',
