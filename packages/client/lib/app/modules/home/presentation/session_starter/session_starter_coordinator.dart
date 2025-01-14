@@ -47,7 +47,7 @@ abstract class _SessionStarterCoordinatorBase with Store, Reactions {
         (p0) => widgets.sessionStarterDropdown.groupUID,
         (p0) async {
           if (p0.isEmpty) return;
-          await storageLogic.listenToSessions(p0);
+          await storageLogic.listenToSessions(-1);
           // if (storageLogic.selectedGroup == null) return;
           // widgets.onGroupSelected(storageLogic.selectedGroup!);
         },
@@ -67,16 +67,7 @@ abstract class _SessionStarterCoordinatorBase with Store, Reactions {
         (p0) => widgets.sessionStarterDropdown.tapCount,
         (p0) async {
           if (p0 == 1) {
-            if (widgets.sessionStarterDropdown.queueUID.isEmpty) {
-              await homeLogic.initializeSession(
-                widgets.sessionStarterDropdown.groupUID,
-              );
-            } else {
-              await homeLogic
-                  .awakenSession(widgets.sessionStarterDropdown.queueUID);
-              await homeLogic
-                  .joinSession(widgets.sessionStarterDropdown.queueUID);
-            }
+            await homeLogic.initializeSession();
             Modular.to.navigate(
               HomeConstants.quickActionsRouter,
               arguments: {

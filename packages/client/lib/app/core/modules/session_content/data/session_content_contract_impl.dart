@@ -15,9 +15,9 @@ class SessionContentContractImpl
       {required this.remoteSource, required this.networkInfo});
 
   @override
-  listenToSessionContent(sessionUID) async {
+  listenToDocumentContent(documentId) async {
     if (await networkInfo.isConnected) {
-      final res = remoteSource.listenToContent(sessionUID);
+      final res = remoteSource.listenToDocumentContent(documentId);
       return Right(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
@@ -59,9 +59,9 @@ class SessionContentContractImpl
   }
 
   @override
-  deleteContent(itemUID) async {
+  deleteContent(contentId) async {
     if (await networkInfo.isConnected) {
-      final res = await remoteSource.deleteContent(itemUID);
+      final res = await remoteSource.deleteContent(contentId);
       return fromSupabase(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);

@@ -26,14 +26,14 @@ abstract class _BlockTextDisplayStoreBase extends BaseWidgetStore with Store {
   setSwipeProgress(double val, int index) => swipeProgresses[index] = val;
 
   @observable
-  String itemUIDToDelete = '';
+  int contentIdToDelete = -1;
 
   @action
-  setItemUIDToDelete(String value) => itemUIDToDelete = value;
+  setItemUIDToDelete(int value) => contentIdToDelete = value;
 
   @action
-  onEdit(SessionContentEntity item) {
-    blockTextFields.setCurrentlySelectedItemUID(item.uid);
+  onEdit(ContentBlockEntity item) {
+    blockTextFields.setCurrentlySelectedContentId(item.id);
     blockTextFields.setMode(BlockTextFieldMode.editing);
     blockTextFields.controller.text = item.content;
     blockTextFields.focusNode.requestFocus();
@@ -47,18 +47,18 @@ abstract class _BlockTextDisplayStoreBase extends BaseWidgetStore with Store {
   }
 
   @observable
-  ObservableList<SessionContentEntity> content =
-      ObservableList<SessionContentEntity>();
+  ObservableList<ContentBlockEntity> content =
+      ObservableList<ContentBlockEntity>();
 
   @action
-  onParentSelected(String itemUID) {
+  onParentSelected(int itemId) {
     blockTextFields.setControl(Control.stop);
-    blockTextFields.setCurrentlySelectedParentUID(itemUID);
+    blockTextFields.setCurrentlySelectedParentId(itemId);
     blockTextFields.focusNode.requestFocus();
   }
 
   @action
-  setContent(ObservableList<SessionContentEntity> newContent) {
+  setContent(ObservableList<ContentBlockEntity> newContent) {
     content = newContent;
     swipeProgresses =
         ObservableList<double>.of(List.generate(content.length, (index) => 0));
@@ -66,7 +66,7 @@ abstract class _BlockTextDisplayStoreBase extends BaseWidgetStore with Store {
 
   @action
   clear() {
-    content = ObservableList<SessionContentEntity>();
+    content = ObservableList<ContentBlockEntity>();
   }
 
   @action

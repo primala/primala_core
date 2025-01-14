@@ -62,7 +62,7 @@ class BlockTextDisplay extends HookWidget {
                 confirmSwipe: (_) async {
                   HapticFeedback.mediumImpact();
 
-                  store.onParentSelected(element.uid);
+                  store.onParentSelected(element.id);
                   return false;
                 },
                 child: Observer(builder: (context) {
@@ -95,7 +95,7 @@ class BlockTextDisplay extends HookWidget {
                                 label: 'delete',
                                 iconPath: 'trash_icon_black',
                                 onSelected: () {
-                                  store.setItemUIDToDelete(element.uid);
+                                  store.setItemUIDToDelete(element.id);
                                 },
                               ),
                             ],

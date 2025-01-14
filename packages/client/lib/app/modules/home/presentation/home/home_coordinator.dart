@@ -133,10 +133,10 @@ abstract class _HomeCoordinatorBase
               textColor: const Color.fromARGB(255, 58, 225, 108),
               label: 'Accept',
               onPressed: () async {
-                await logic.joinSession(
-                  p0.last.sessionUID,
-                );
-                Modular.to.navigate(SessionConstants.lobby);
+                // await logic.joinSession(
+                //   p0.last.sessionUID,
+                // );
+                // Modular.to.navigate(SessionConstants.lobby);
               },
             ),
             showCloseIcon: true,

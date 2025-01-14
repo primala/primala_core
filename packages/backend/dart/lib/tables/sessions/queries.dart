@@ -11,6 +11,7 @@ class SessionsQueries with SessionsConstants, SessionsUtils {
   int sessionID = -1;
   String userFullName = '';
   int userIndex = -1;
+  int groupId = -1;
   final UsersQueries usersQueries;
   SessionsQueries({
     required this.supabase,
@@ -20,6 +21,7 @@ class SessionsQueries with SessionsConstants, SessionsUtils {
   getUserInformation() async {
     if (userFullName.isEmpty) {
       userFullName = await usersQueries.getFullName();
+      groupId = await usersQueries.getActiveGroup();
     }
   }
 
@@ -284,7 +286,7 @@ class SessionsQueries with SessionsConstants, SessionsUtils {
     return activeResponse;
   }
 
-  Future<List> initializeSession(int groupUID) async {
+  Future<List> initializeSession() async {
     await getUserInformation();
     return await supabase.from(TABLE).insert({
       COLLABORATOR_UIDS: [userUID],
@@ -294,7 +296,7 @@ class SessionsQueries with SessionsConstants, SessionsUtils {
           SessionUserStatus.hasJoined,
         ),
       ],
-      GROUP_ID: groupUID,
+      GROUP_ID: groupId,
     }).select();
   }
 

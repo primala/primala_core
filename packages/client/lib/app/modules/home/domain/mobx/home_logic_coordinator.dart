@@ -4,7 +4,6 @@ import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/modules/home/home.dart';
-import 'package:nokhte_backend/tables/collaborator_requests.dart';
 import 'package:nokhte_backend/tables/sessions.dart';
 import 'package:nokhte_backend/types/types.dart';
 part 'home_logic_coordinator.g.dart';
@@ -22,8 +21,7 @@ abstract class _HomeLogicCoordinatorBase with Store, BaseMobxLogic {
   }
 
   @observable
-  ObservableList<CollaboratorRequests> collaboratorRequests =
-      ObservableList.of([]);
+  ObservableList<dynamic> collaboratorRequests = ObservableList.of([]);
 
   @observable
   ObservableList<UserInformationEntity> collaborators = ObservableList.of([]);
@@ -154,8 +152,8 @@ abstract class _HomeLogicCoordinatorBase with Store, BaseMobxLogic {
   }
 
   @action
-  initializeSession(String groupUID) async {
-    final res = await contract.initializeSession(groupUID);
+  initializeSession() async {
+    final res = await contract.initializeSession();
     res.fold(
       (failure) => errorUpdater(failure),
       (status) {
@@ -165,9 +163,9 @@ abstract class _HomeLogicCoordinatorBase with Store, BaseMobxLogic {
   }
 
   @action
-  joinSession(String params) async {
+  joinSession(int sessionId) async {
     sessionJoined = false;
-    final res = await contract.joinSession(params);
+    final res = await contract.joinSession(sessionId);
     res.fold(
       (failure) => errorUpdater(failure),
       (status) {

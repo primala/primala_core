@@ -7,7 +7,7 @@ class GroupInformationModel extends GroupInformationEntity {
     required super.groupMembers,
     required super.groupName,
     required super.groupHandle,
-    required super.groupUID,
+    required super.groupId,
     required super.collaborators,
   });
 
@@ -26,23 +26,22 @@ class GroupInformationModel extends GroupInformationEntity {
       for (var group in sessionsResponse) {
         final List<CollaboratorModel> temp = [];
         for (var collaborator in collaborators) {
-          final isAMember =
-              group[GroupsQueries.GROUP_MEMBERS].contains(collaborator.uid);
+          // final isAMember =
+          //     group[GroupsQueries.GROUP_MEMBERS].contains(collaborator.uid);
           temp.add(
             CollaboratorModel.fromGroupInformation(
               collaborator,
-              isAMember,
+              false,
             ),
           );
         }
         groups.add(
           GroupInformationModel(
             collaborators: temp,
-            groupMembers: group[GroupsQueries.GROUP_MEMBERS],
+            groupMembers: [],
             groupName: formatTitleString(group[GroupsQueries.GROUP_NAME]),
-            groupHandle:
-                "@${formatTitleString(group[GroupsQueries.GROUP_HANDLE])}",
-            groupUID: group[GroupsQueries.UID],
+            groupHandle: "@",
+            groupId: group[GroupsQueries.ID],
           ),
         );
       }

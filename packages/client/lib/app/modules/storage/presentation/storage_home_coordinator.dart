@@ -60,17 +60,17 @@ abstract class _StorageHomeCoordinatorBase
     disposers.add(widgets.membershipRemovalReactor(onGroupMembershipUpdated));
     disposers.add(widgets.queueDeletionReactor(onSessionDeleted));
     disposers.add(widgets.sessionDeletionReactor(onSessionDeleted));
-    disposers.add(widgets.groupModalOpenStatusReactor(
-      onGroupModalOpened,
-      onGroupModalClosed,
-    ));
+    // disposers.add(widgets.groupModalOpenStatusReactor(
+    //   onGroupModalOpened,
+    //   onGroupModalClosed,
+    // ));
     disposers.add(widgets.sessionContentReactor(
       onAdd: sessionContentLogic.addContent,
       onUpdate: sessionContentLogic.updateContent,
     ));
-    disposers.add(widgets.contentDeletionReactor(
-      sessionContentLogic.deleteContent,
-    ));
+    // disposers.add(widgets.contentDeletionReactor(
+    //   sessionContentLogic.deleteContent,
+    // ));
     disposers.add(widgets.sessionOpenReactor(onSessionSelected));
     disposers.add(widgets.queueOpenReactor(onSessionSelected));
     disposers.add(sessionContentReactor());
@@ -139,11 +139,11 @@ abstract class _StorageHomeCoordinatorBase
 
   userTitleUpdatesReactor() =>
       reaction((p0) => widgets.queueCreationModal.queueTitle, (p0) async {
-        final params = UpdateSessionTitleParams(
-          sessionUID: storageLogic.queueUID,
-          title: p0,
-        );
-        await onSessionTitleUpdated(params);
+        // final params = UpdateSessionTitleParams(
+        //   sessionUID: storageLogic.queueUID,
+        //   title: p0,
+        // );
+        // await onSessionTitleUpdated(params);
       });
 
   externalTitleUpdatesReactor() =>
@@ -159,10 +159,10 @@ abstract class _StorageHomeCoordinatorBase
       });
 
   queueUIDReactor() => reaction((p0) => storageLogic.queueUID, (p0) async {
-        if (p0.isEmpty) return;
-        await sessionContentLogic.listenToSessionContent(
-          storageLogic.queueUID,
-        );
+        // if (p0.isEmpty) return;
+        // await sessionContentLogic.listenToSessionContent(
+        //   storageLogic.queueUID,
+        // );
       });
 
   @action
@@ -173,7 +173,7 @@ abstract class _StorageHomeCoordinatorBase
 
   @action
   onSessionSelected(String sessionUID) async {
-    await sessionContentLogic.listenToSessionContent(sessionUID);
+    // await sessionContentLogic.listenToSessionContent(sessionUID);
     storageLogic.setQueueUID(sessionUID);
     widgets.queueCreationModal
         .setTitle(storageLogic.currentlySelectedFinishedSession.title);
@@ -183,7 +183,7 @@ abstract class _StorageHomeCoordinatorBase
 
   @action
   onGroupModalOpened(String groupUID) async {
-    await storageLogic.listenToSessions(groupUID);
+    // await storageLogic.listenToSessions(groupUID);
   }
 
   @action
@@ -198,9 +198,9 @@ abstract class _StorageHomeCoordinatorBase
 
   @action
   onQueueCreated() async {
-    await storageLogic.createQueue(
-      widgets.groupDisplayModal.currentlySelectedGroup.groupUID,
-    );
+    // await storageLogic.createQueue(
+    //   widgets.groupDisplayModal.currentlySelectedGroup.groupUID,
+    // );
   }
 
   @action
@@ -219,13 +219,13 @@ abstract class _StorageHomeCoordinatorBase
 
   @action
   onGroupsDeleted(String params) async {
-    await storageLogic.deleteGroup(params);
+    // await storageLogic.deleteGroup(params);
     await storageLogic.getGroups();
   }
 
   @action
   onSessionDeleted(String params) async {
-    await storageLogic.deleteSession(params);
+    // await storageLogic.deleteSession(params);
     await storageLogic.getGroups();
   }
 

@@ -5,14 +5,14 @@ class GroupInformationEntity extends Equatable {
   final List groupMembers;
   final String groupName;
   final String groupHandle;
-  final String groupUID;
+  final int groupId;
   final List<CollaboratorEntity> collaborators;
 
   const GroupInformationEntity({
     required this.groupMembers,
     required this.groupName,
     required this.groupHandle,
-    required this.groupUID,
+    required this.groupId,
     required this.collaborators,
   });
 
@@ -20,7 +20,7 @@ class GroupInformationEntity extends Equatable {
         groupMembers: [],
         groupName: '',
         groupHandle: '',
-        groupUID: '',
+        groupId: -1,
         collaborators: [],
       );
 
@@ -29,7 +29,7 @@ class GroupInformationEntity extends Equatable {
         groupMembers,
         groupName,
         groupHandle,
-        groupUID,
+        groupId,
         collaborators,
       ];
 }

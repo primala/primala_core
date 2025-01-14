@@ -4,7 +4,6 @@ import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/session_content/session_content.dart';
 import 'package:nokhte_backend/tables/content_blocks.dart';
-import 'package:nokhte_backend/tables/sessions.dart';
 part 'session_content_logic_coordinator.g.dart';
 
 class SessionContentLogicCoordinator = _SessionContentLogicCoordinatorBase
@@ -32,19 +31,19 @@ abstract class _SessionContentLogicCoordinatorBase with Store, BaseMobxLogic {
   bool contentIsAdded = false;
 
   @observable
-  ObservableList<SessionContentEntity> sessionContentEntity =
-      ObservableList<SessionContentEntity>();
+  ObservableList<ContentBlockEntity> sessionContentEntity =
+      ObservableList<ContentBlockEntity>();
 
   StreamSubscription contentStreamSubscription =
       const Stream.empty().listen((event) {});
 
   @observable
-  ObservableStream<SessionContentList> sessionContent =
+  ObservableStream<ContentBlockList> sessionContent =
       ObservableStream(const Stream.empty());
 
   @action
-  listenToSessionContent(String sessionUID) async {
-    final result = await contract.listenToSessionContent(sessionUID);
+  listenToDocumentContent(int documentId) async {
+    final result = await contract.listenToDocumentContent(documentId);
 
     result.fold(
       (failure) {
@@ -70,8 +69,8 @@ abstract class _SessionContentLogicCoordinatorBase with Store, BaseMobxLogic {
   }
 
   @action
-  deleteContent(String params) async {
-    final res = await contract.deleteContent(params);
+  deleteContent(int contentId) async {
+    final res = await contract.deleteContent(contentId);
     res.fold(
       (failure) => errorUpdater(failure),
       (contentDeletionStatus) => contentIsDeleted = contentDeletionStatus,

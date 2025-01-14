@@ -19,6 +19,11 @@ class UsersQueries with UsersConstants {
         LAST_NAME: lastName,
       }).select();
 
+  Future<List> updateActiveGroup(int groupId) async =>
+      await supabase.from(TABLE).update({
+        ACTIVE_GROUP: groupId,
+      }).select();
+
   Future<List> getUserInfo({
     String queryUID = '',
   }) async =>
@@ -33,6 +38,15 @@ class UsersQueries with UsersConstants {
       return '${res.first[FIRST_NAME]} ${res.first[LAST_NAME]}';
     } else {
       return '';
+    }
+  }
+
+  Future<int> getActiveGroup() async {
+    final res = await getUserInfo();
+    if (res.isNotEmpty && res.first[ACTIVE_GROUP] != null) {
+      return res.first[ACTIVE_GROUP];
+    } else {
+      return -1;
     }
   }
 

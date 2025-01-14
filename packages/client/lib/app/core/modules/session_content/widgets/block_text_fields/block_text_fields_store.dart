@@ -36,10 +36,10 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   BlockTextFieldMode mode = BlockTextFieldMode.adding;
 
   @observable
-  String currentlySelectedParentUID = '';
+  int currentlySelectedParentId = -1;
 
   @observable
-  String currentlySelectedItemUID = '';
+  int currentlySelectedContentId = -1;
 
   @observable
   GlobalKey textFieldKey = GlobalKey();
@@ -90,11 +90,11 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   }
 
   @action
-  setCurrentlySelectedParentUID(String value) =>
-      currentlySelectedParentUID = value;
+  setCurrentlySelectedParentId(int value) => currentlySelectedParentId = value;
 
   @action
-  setCurrentlySelectedItemUID(String value) => currentlySelectedItemUID = value;
+  setCurrentlySelectedContentId(int value) =>
+      currentlySelectedContentId = value;
 
   @observable
   ContentBlockType blockType = ContentBlockType.purpose;
@@ -147,8 +147,8 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
     this.focusNode.addListener(() {
       setisFocused(focusNode.hasFocus);
       if (!focusNode.hasFocus) {
-        setCurrentlySelectedParentUID('');
-        setCurrentlySelectedItemUID('');
+        setCurrentlySelectedParentId(-1);
+        setCurrentlySelectedContentId(-1);
       } else {
         if (movieStatus == MovieStatus.finished) {
           setControl(Control.stop);
@@ -169,7 +169,7 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
           AddContentParams(
             content: currentTextContent,
             contentBlockType: blockType,
-            parentUID: currentlySelectedParentUID,
+            parentId: currentlySelectedParentId,
           ),
         );
       } else {
@@ -177,7 +177,7 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
           UpdateContentParams(
             content: currentTextContent,
             contentBlockType: blockType,
-            uid: currentlySelectedItemUID,
+            contentId: currentlySelectedContentId,
           ),
         );
       }

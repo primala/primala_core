@@ -62,7 +62,7 @@ class StorageContractImpl
   createQueue(groupUID) async {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.createQueue(groupUID);
-      return fromSupabaseProperty<String>(res, UID, '');
+      return fromSupabaseProperty<String>(res, '', '');
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }
@@ -84,7 +84,7 @@ class StorageContractImpl
   }
 
   @override
-  deleteSession(String params) async {
+  deleteSession(params) async {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.deleteSession(params);
       return fromSupabase(res);

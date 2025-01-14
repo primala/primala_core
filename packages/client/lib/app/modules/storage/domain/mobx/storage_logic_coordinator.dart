@@ -97,7 +97,7 @@ abstract class _StorageLogicCoordinatorBase with Store, BaseMobxLogic {
   }
 
   @action
-  deleteGroup(String params) async {
+  deleteGroup(int params) async {
     groupIsDeleted = false;
     final res = await contract.deleteGroup(params);
     res.fold(
@@ -121,7 +121,7 @@ abstract class _StorageLogicCoordinatorBase with Store, BaseMobxLogic {
   }
 
   @action
-  deleteSession(String params) async {
+  deleteSession(int params) async {
     sessionIsDeleted = false;
     final res = await contract.deleteSession(params);
     res.fold(
@@ -157,7 +157,7 @@ abstract class _StorageLogicCoordinatorBase with Store, BaseMobxLogic {
   }
 
   @action
-  listenToSessions(String groupUID) async {
+  listenToSessions(int groupUID) async {
     final result = await contract.listenToSessions(groupUID);
 
     result.fold(
@@ -185,11 +185,13 @@ abstract class _StorageLogicCoordinatorBase with Store, BaseMobxLogic {
 
   @computed
   int get currentlySelectedDormantSessionIndex =>
-      dormantSessions.indexWhere((element) => element.uid == queueUID);
+      // dormantSessions.indexWhere((element) => element.uid == queueUID);
+      -1;
 
   @computed
   int get currentlySelectedFinishedSessionIndex =>
-      finishedSessions.indexWhere((element) => element.uid == queueUID);
+      // finishedSessions.indexWhere((element) => element.uid == queueUID);
+      -1;
 
   @computed
   SessionEntity get currentlySelectedDormantSession {

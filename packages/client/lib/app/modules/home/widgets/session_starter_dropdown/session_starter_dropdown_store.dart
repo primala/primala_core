@@ -50,8 +50,8 @@ abstract class _SessionStarterDropdownStore extends BaseWidgetStore with Store {
   }
 
   @computed
-  String get groupUID => selectedGroup?.groupUID ?? '';
+  String get groupUID => '';
 
   @computed
-  String get queueUID => selectedQueue?.uid ?? '';
+  String get queueUID => '';
 }

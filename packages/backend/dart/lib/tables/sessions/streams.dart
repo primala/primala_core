@@ -144,7 +144,7 @@ class SessionsStreams extends SessionsQueries
 
         yield SessionMetadata(
           userUID: userUID,
-          sessionID: sessionID,
+          sessionId: sessionID,
           speakingTimerStart: speakingTimerStart,
           secondarySpotlightIsEmpty: secondarySpotlightIsEmpty,
           speakerUID: speakerUID,

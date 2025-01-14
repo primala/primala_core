@@ -128,7 +128,7 @@ void main() {
 
   test("should be able to delete a group", () async {
     final res = (await groupQueries.select());
-    await groupQueries.delete(id: res.first['id']);
+    await groupQueries.delete(res.first['id']);
 
     final res2 = (await groupQueries.select());
 

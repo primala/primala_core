@@ -16,16 +16,16 @@ abstract class _GroupDisplayCardStoreBase extends BaseWidgetStore with Store {
   String currentlySelectedMessage = '';
 
   @observable
-  String sessionUIDToOpen = " ";
+  int sessionIdToOpen = -1;
 
   @observable
-  String sessionUIDToDelete = '';
+  int sessionIdToDelete = -1;
 
   @action
-  setSessionUIDToOpen(String value) => sessionUIDToOpen = value;
+  setSessionIdToOpen(int value) => sessionIdToOpen = value;
 
   @action
-  setSessionUIDToDelete(String value) => sessionUIDToDelete = value;
+  setSessionIdToDelete(int value) => sessionIdToDelete = value;
 
   @action
   setSessions(List<SessionEntity> sessions) {

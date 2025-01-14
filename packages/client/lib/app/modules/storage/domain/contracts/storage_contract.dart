@@ -5,9 +5,7 @@ import 'package:nokhte/app/modules/storage/storage.dart';
 import 'package:nokhte_backend/tables/sessions.dart';
 
 abstract class StorageContract {
-  Future<Either<Failure, Stream<GroupSessions>>> listenToSessions(
-    String groupUID,
-  );
+  Future<Either<Failure, Stream<GroupSessions>>> listenToSessions(int groupId);
 
   Future<bool> cancelSessionsStream();
 
@@ -16,7 +14,7 @@ abstract class StorageContract {
   );
 
   Future<Either<Failure, bool>> deleteSession(
-    String sessionUID,
+    int sessionId,
   );
 
   Future<Either<Failure, bool>> updateSessionTitle(
@@ -36,6 +34,6 @@ abstract class StorageContract {
   );
 
   Future<Either<Failure, bool>> deleteGroup(
-    String params,
+    int params,
   );
 }

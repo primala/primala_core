@@ -30,7 +30,7 @@ abstract class _SessionMetadataStoreBase
   bool userIsSpeaking = false;
 
   @observable
-  String sessionUID = '';
+  int sessionId = -1;
 
   @observable
   ObservableList<SessionUserInfoEntity> collaboratorInformation =
@@ -105,8 +105,8 @@ abstract class _SessionMetadataStoreBase
           sessionHasBegun = value.sessionStatus == SessionStatus.started;
           userIsSpeaking = value.userIsSpeaking;
           userCanSpeak = value.userCanSpeak;
-          sessionUID = value.sessionUID;
-          await sessionContentLogic.listenToSessionContent(sessionUID);
+          sessionId = value.sessionId;
+          // await sessionContentLogic.listenToSessionContent(sessionUID);
 
           setState(StoreState.loaded);
         });

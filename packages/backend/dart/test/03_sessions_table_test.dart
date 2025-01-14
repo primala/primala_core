@@ -24,7 +24,7 @@ void main() {
   });
 
   test('initializeSession - initializes active session', () async {
-    final res = await regularQueries.initializeSession(tSetup.groupID);
+    final res = await regularQueries.initializeSession();
     regularSessionID = res.first['id'];
     expect(res, isNotEmpty);
     expect(res.first['collaborator_uids'], contains(tSetup.firstUserUID));
@@ -140,7 +140,7 @@ void main() {
       final stream = regularStreams.listenToPresenceMetadata();
       final result = await stream.first;
 
-      expect(result.sessionID, regularSessionID);
+      expect(result.sessionId, regularSessionID);
       expect(result.sessionStatus, SessionStatus.started);
       expect(result.collaborators, hasLength(2));
       expect(result.collaborators.first.uid, tSetup.firstUserUID);

@@ -7,11 +7,11 @@ abstract class SessionContentContract {
   Future<Either<Failure, bool>> updateContent(UpdateContentParams params);
   Future<Either<Failure, bool>> updateParent(UpdateParentParams params);
 
-  Future<Either<Failure, Stream<SessionContentList>>> listenToSessionContent(
-    String sessionUID,
+  Future<Either<Failure, Stream<ContentBlockList>>> listenToDocumentContent(
+    int documentId,
   );
 
-  Future<Either<Failure, bool>> deleteContent(String itemUID);
+  Future<Either<Failure, bool>> deleteContent(int contentId);
 
   Future<bool> cancelSessionContentStream();
 }

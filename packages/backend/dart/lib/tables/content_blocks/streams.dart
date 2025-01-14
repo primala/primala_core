@@ -3,12 +3,12 @@ import 'package:nokhte_backend/tables/content_blocks.dart';
 import 'package:nokhte_backend/tables/sessions/utilities/utilities.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class ContentBlockStream with SessionContentConstants, SessionsUtils {
+class ContentBlocksStreams with SessionContentConstants, SessionsUtils {
   bool contentListeningStatus = false;
   final SupabaseClient supabase;
   final ContentBlockList _contentList = [];
 
-  ContentBlockStream({
+  ContentBlocksStreams({
     required this.supabase,
   });
 
@@ -22,7 +22,8 @@ class ContentBlockStream with SessionContentConstants, SessionsUtils {
     return contentListeningStatus;
   }
 
-  Stream<List<ContentBlockEntity>> listenToContent(int documentId) async* {
+  Stream<List<ContentBlockEntity>> listenToDocumentContent(
+      int documentId) async* {
     contentListeningStatus = true;
     List<ContentBlockEntity> previousYield = [];
 

@@ -46,8 +46,8 @@ class GroupDisplayCard extends HookWidget {
                             SlidableAction(
                               spacing: 0,
                               padding: EdgeInsets.zero,
-                              onPressed: (_) => store.setSessionUIDToDelete(
-                                  store.sessions[index].uid),
+                              onPressed: (_) => store.setSessionIdToDelete(
+                                  store.sessions[index].id),
                               backgroundColor: Colors.transparent,
                               foregroundColor: Colors.white,
                               icon: Icons.delete_forever,
@@ -72,7 +72,7 @@ class GroupDisplayCard extends HookWidget {
       onTap: !showWidget
           ? null
           : () {
-              store.setSessionUIDToOpen(store.sessions[index].uid);
+              store.setSessionIdToOpen(store.sessions[index].id);
             },
       child: Container(
         decoration: BoxDecoration(

@@ -76,7 +76,7 @@ abstract class _GroupDisplayStoreBase extends BaseWidgetStore with Store {
   @action
   onDragAccepted(GroupInformationEntity group) {
     successfulDragsCount++;
-    groupUIDToDelete = group.groupUID;
+    // groupUIDToDelete = group.groupUID;
     setIsDragging(false);
   }
 

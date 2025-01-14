@@ -156,9 +156,9 @@ abstract class _SessionSoloHybridCoordinatorBase
       });
 
   contentDeletionReactor() =>
-      reaction((p0) => widgets.purposeBanner.blockTextDisplay.itemUIDToDelete,
+      reaction((p0) => widgets.purposeBanner.blockTextDisplay.contentIdToDelete,
           (p0) async {
-        if (p0.isEmpty) return;
+        if (p0 == -1) return;
         await sessionContent.deleteContent(p0);
       });
 

@@ -123,35 +123,35 @@ abstract class _StorageHomeWidgetsCoordinatorBase
       });
 
   sessionOpenReactor(Function(String sessionUID) onSelected) => reaction(
-          (p0) => groupDisplayModal.groupDisplaySessionCard.sessionUIDToOpen,
+          (p0) => groupDisplayModal.groupDisplaySessionCard.sessionIdToOpen,
           (p0) async {
-        if (p0.isEmpty) return;
-        await onSelected(p0);
-        queueCreationModal.setIsEditable(false);
-        queueCreationModal.showModal(buildContext);
-        groupDisplayModal.groupDisplaySessionCard.setSessionUIDToOpen('');
+        // if (p0.isEmpty) return;
+        // await onSelected(p0);
+        // queueCreationModal.setIsEditable(false);
+        // queueCreationModal.showModal(buildContext);
+        // groupDisplayModal.groupDisplaySessionCard.setSessionIdToOpen(-1);
       });
 
   queueOpenReactor(Function(String sessionUID) onSelected) =>
-      reaction((p0) => groupDisplayModal.groupDisplayQueueCard.sessionUIDToOpen,
+      reaction((p0) => groupDisplayModal.groupDisplayQueueCard.sessionIdToOpen,
           (p0) async {
-        if (p0.isEmpty) return;
-        await onSelected(p0);
-        queueCreationModal.setIsEditable(true);
-        queueCreationModal.showModal(buildContext);
-        groupDisplayModal.groupDisplayQueueCard.setSessionUIDToOpen('');
+        // if (p0.isEmpty) return;
+        // await onSelected(p0);
+        // queueCreationModal.setIsEditable(true);
+        // queueCreationModal.showModal(buildContext);
+        // groupDisplayModal.groupDisplayQueueCard.setSessionUIDToOpen('');
       });
 
-  groupModalOpenStatusReactor(
-          Function(String groupUID) onOpened, Function onClosed) =>
-      reaction((p0) => groupDisplayModal.currentlySelectedGroup.groupUID,
-          (p0) async {
-        if (p0.isNotEmpty) {
-          await onOpened(p0);
-        } else {
-          await onClosed();
-        }
-      });
+  // groupModalOpenStatusReactor(
+  //         Function(String groupUID) onOpened, Function onClosed) =>
+  //     reaction((p0) => groupDisplayModal.currentlySelectedGroup.groupId,
+  //         (p0) async {
+  //       if (p0 != -1) {
+  //         await onOpened(p0);
+  //       } else {
+  //         await onClosed();
+  //       }
+  //     });
 
   sessionContentReactor({
     required Function(AddContentParams params) onAdd,
@@ -171,54 +171,54 @@ abstract class _StorageHomeWidgetsCoordinatorBase
       });
 
   contentDeletionReactor(Function(String params) onDelete) =>
-      reaction((p0) => queueCreationModal.blockTextDisplay.itemUIDToDelete,
+      reaction((p0) => queueCreationModal.blockTextDisplay.contentIdToDelete,
           (p0) async {
-        if (p0.isEmpty) return;
-        await onDelete(p0);
+        if (p0 == -1) return;
+        // await onDelete(p0);
       });
 
   membershipAdditionReactor(
           Function(UpdateGroupMemberParams params) onSubmit) =>
       reaction((p0) => groupDisplayCollaboratorCard.membersToAdd, (p0) async {
-        final peopleToAdd = groupDisplayCollaboratorCard.membersToAdd;
-        final params = UpdateGroupMemberParams(
-          groupId: groupDisplayModal.currentlySelectedGroup.groupUID,
-          members: peopleToAdd,
-          isAdding: true,
-        );
-        if (peopleToAdd.isNotEmpty) {
-          await onSubmit(params);
-        }
+        // final peopleToAdd = groupDisplayCollaboratorCard.membersToAdd;
+        // final params = UpdateGroupMemberParams(
+        //   groupId: groupDisplayModal.currentlySelectedGroup.groupId,
+        //   members: peopleToAdd,
+        //   isAdding: true,
+        // );
+        // if (peopleToAdd.isNotEmpty) {
+        //   await onSubmit(params);
+        // }
       });
 
   queueDeletionReactor(Function(String params) onSubmit) => reaction(
-          (p0) => groupDisplayModal.groupDisplayQueueCard.sessionUIDToDelete,
+          (p0) => groupDisplayModal.groupDisplayQueueCard.sessionIdToDelete,
           (p0) async {
         // final params = groupDisplayModal.groupDisplayQueueCard.queueUIDToDelete;
-        await onSubmit(p0);
+        // await onSubmit(p0);
       });
 
   sessionDeletionReactor(Function(String params) onSubmit) => reaction(
-          (p0) => groupDisplayModal.groupDisplaySessionCard.sessionUIDToDelete,
+          (p0) => groupDisplayModal.groupDisplaySessionCard.sessionIdToDelete,
           (p0) async {
         // final params =
         //     groupDisplayModal.groupDisplaySessionCard.sessionUIDToDelete;
         // print('deleting session $params');
-        await onSubmit(p0);
+        // await onSubmit(p0);
       });
 
   membershipRemovalReactor(Function(UpdateGroupMemberParams params) onSubmit) =>
       reaction((p0) => groupDisplayCollaboratorCard.membersToRemove,
           (p0) async {
-        final peopleToRemove = groupDisplayCollaboratorCard.membersToRemove;
-        final params = UpdateGroupMemberParams(
-          groupId: groupDisplayModal.currentlySelectedGroup.groupUID,
-          members: peopleToRemove,
-          isAdding: false,
-        );
-        if (peopleToRemove.isNotEmpty) {
-          await onSubmit(params);
-        }
+        // final peopleToRemove = groupDisplayCollaboratorCard.membersToRemove;
+        // final params = UpdateGroupMemberParams(
+        //   groupId: groupDisplayModal.currentlySelectedGroup.groupUID,
+        //   members: peopleToRemove,
+        //   isAdding: false,
+        // );
+        // if (peopleToRemove.isNotEmpty) {
+        //   await onSubmit(params);
+        // }
       });
 
   groupDisplayDragReactor(Function(String params) onSubmit) =>

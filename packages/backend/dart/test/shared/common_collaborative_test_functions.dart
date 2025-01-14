@@ -1,6 +1,7 @@
 import 'package:nokhte_backend/constants/constants.dart';
 import 'package:nokhte_backend/tables/group_roles.dart';
 import 'package:nokhte_backend/tables/groups.dart';
+import 'package:nokhte_backend/tables/users.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CommonCollaborativeTestFunctions {
@@ -11,6 +12,7 @@ class CommonCollaborativeTestFunctions {
   late SupabaseClient supabaseAdmin;
   late GroupsQueries groupQueries;
   late GroupRolesQueries groupRolesQueries;
+  late UsersQueries usersQueries;
   late String firstUserUID;
   late String secondUserUID;
   late String thirdUserUID;
@@ -33,6 +35,7 @@ class CommonCollaborativeTestFunctions {
     await SignIn.user3(supabase: user3Supabase);
     await SignIn.user4(supabase: user4Supabase);
     groupQueries = GroupsQueries(supabase: user1Supabase);
+    usersQueries = UsersQueries(supabase: user1Supabase);
     groupRolesQueries = GroupRolesQueries(supabase: user1Supabase);
 
     final userIdResults = await UserSetupConstants.getUIDs();
@@ -46,6 +49,8 @@ class CommonCollaborativeTestFunctions {
         groupName: 'Test Group',
       ))
           .first[GroupsQueries.ID];
+
+      await usersQueries.updateActiveGroup(groupID);
 
       await groupRolesQueries.addUserRole(
         UserRoleParams(
@@ -66,6 +71,6 @@ class CommonCollaborativeTestFunctions {
   }
 
   teardown() async {
-    await groupQueries.delete(id: groupID);
+    await groupQueries.delete(groupID);
   }
 }

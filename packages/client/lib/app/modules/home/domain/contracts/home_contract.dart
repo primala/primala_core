@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:nokhte/app/core/error/failure.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/modules/home/home.dart';
-import 'package:nokhte_backend/tables/collaborator_requests.dart';
 import 'package:nokhte_backend/tables/sessions.dart';
 import 'package:nokhte_backend/types/types.dart';
 
@@ -10,15 +9,14 @@ abstract class HomeContract {
   Future<Either<Failure, UserInformationEntity>> getUserInformation(
       NoParams params);
 
-  Future<Either<Failure, Stream<List<CollaboratorRequests>>>>
-      listenToCollaboratorRequests(
+  Future<Either<Failure, Stream<List<dynamic>>>> listenToCollaboratorRequests(
     NoParams params,
   );
 
   Future<Either<Failure, Stream<List<SessionRequests>>>>
       listenToSessionRequests(NoParams params);
 
-  Future<Either<Failure, bool>> joinSession(String params);
+  Future<Either<Failure, bool>> joinSession(int sessionId);
 
   Future<Either<Failure, bool>> awakenSession(String params);
 
@@ -43,5 +41,5 @@ abstract class HomeContract {
     SendRequestParams params,
   );
 
-  Future<Either<Failure, bool>> initializeSession(String groupUID);
+  Future<Either<Failure, bool>> initializeSession();
 }
