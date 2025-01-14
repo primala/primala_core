@@ -1904,3 +1904,10 @@ alter table "public"."documents" validate constraint "documents_parent_document_
 alter table "public"."sessions" add constraint "sessions_current_document_fkey" FOREIGN KEY (current_document) REFERENCES documents(id) ON UPDATE CASCADE ON DELETE SET NULL not valid;
 
 alter table "public"."sessions" validate constraint "sessions_current_document_fkey";
+
+alter table "public"."users" add column "active_group" bigint;
+
+alter table "public"."users" add constraint "users_active_group_fkey" FOREIGN KEY (active_group) REFERENCES groups(id) ON UPDATE CASCADE ON DELETE SET NULL not valid;
+
+alter table "public"."users" validate constraint "users_active_group_fkey";
+
