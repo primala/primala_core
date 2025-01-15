@@ -5,7 +5,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class GroupsQueries {
   static const TABLE = 'groups';
   static const ID = 'id';
-  static const CREATOR_UID = 'creator_uid';
   static const GROUP_NAME = 'group_name';
 
   final SupabaseClient supabase;
@@ -17,12 +16,13 @@ class GroupsQueries {
   })  : userUID = supabase.auth.currentUser?.id ?? '',
         userInfoQueries = UsersQueries(supabase: supabase);
 
-  Future<List> insert({
+  Future<int> createGroup({
     required String groupName,
   }) async =>
-      await supabase.from(TABLE).insert({
-        GROUP_NAME: groupName,
-      }).select();
+      await supabase.rpc("create_group", params: {
+        'p_group_name': groupName,
+        'p_user_uid': userUID,
+      });
 
   Future<List> select({
     int groupID = -1,

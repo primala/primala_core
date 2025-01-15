@@ -6,10 +6,12 @@ mixin UsersConstants {
   final String LAST_NAME = S_LAST_NAME;
   final String UID = S_UID;
   final String ACTIVE_GROUP = S_ACTIVE_GROUP;
+  final String EMAIL = S_EMAIL;
 
   static const S_TABLE = 'users';
   static const S_FIRST_NAME = 'first_name';
   static const S_LAST_NAME = 'last_name';
   static const S_UID = 'uid';
   static const S_ACTIVE_GROUP = 'active_group';
+  static const S_EMAIL = 'email';
 }

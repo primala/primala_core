@@ -38,9 +38,9 @@ void main() {
       "✅ should be able to CREATE & READ a row in the table if their uid isn't present already",
       () async {
     final userNamesRes = await user1UserInfoQueries.insertUserInfo(
-      firstName: UserDataConstants.user1FirstName,
-      lastName: UserDataConstants.user1LastName,
-    );
+        firstName: UserDataConstants.user1FirstName,
+        lastName: UserDataConstants.user1LastName,
+        email: UserDataConstants.user1Email);
     expect(userNamesRes.first['first_name'], UserDataConstants.user1FirstName);
     expect(userNamesRes.first["last_name"], UserDataConstants.user1LastName);
     expect(userNamesRes.first["uid"], firstUserUID);
@@ -50,9 +50,9 @@ void main() {
       () async {
     try {
       await user1UserInfoQueries.insertUserInfo(
-        firstName: UserDataConstants.user1FirstName,
-        lastName: UserDataConstants.user1LastName,
-      );
+          firstName: UserDataConstants.user1FirstName,
+          lastName: UserDataConstants.user1LastName,
+          email: UserDataConstants.user1Email);
     } catch (e) {
       expect(e, isA<PostgrestException>());
     }
@@ -62,6 +62,7 @@ void main() {
       await user1UserInfoQueries.insertUserInfo(
         firstName: UserDataConstants.user1FirstName,
         lastName: UserDataConstants.user1LastName,
+        email: UserDataConstants.user1Email,
       );
     } catch (e) {
       expect(e, isA<PostgrestException>());

@@ -12,11 +12,13 @@ class UsersQueries with UsersConstants {
   Future<List> insertUserInfo({
     required String firstName,
     required String lastName,
+    required String email,
   }) async =>
       await supabase.from(TABLE).insert({
         UID: userUID,
         FIRST_NAME: firstName,
         LAST_NAME: lastName,
+        EMAIL: email,
       }).select();
 
   Future<List> updateActiveGroup(int groupId) async => await supabase

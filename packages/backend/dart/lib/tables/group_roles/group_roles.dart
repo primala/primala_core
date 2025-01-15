@@ -17,26 +17,38 @@ class GroupRolesQueries with GroupRolesUtils {
     required this.supabase,
   });
 
-  Future<List> addUserRole(UserRoleParams params) async =>
-      await supabase.from(TABLE).insert({
-        USER_UID: params.userUID,
-        ROLE: mapGroupRoleToString(params.role),
-        GROUP_ID: params.groupID,
-      }).select();
+  Future<List> select({
+    int groupId = -1,
+    String? userUid,
+  }) async {
+    var query = supabase.from(TABLE).select();
+
+    // Apply groupId filter if provided
+    if (groupId != -1) {
+      query = query.eq(GROUP_ID, groupId);
+    }
+
+    // Apply userUid filter if provided
+    if (userUid != null) {
+      query = query.eq(USER_UID, userUid);
+    }
+
+    return await query;
+  }
 
   Future<List> updateUserRole(UserRoleParams params) async => await supabase
       .from(TABLE)
       .update({
         ROLE: mapGroupRoleToString(params.role),
       })
-      .eq(USER_UID, params.userUID)
-      .eq(GROUP_ID, params.groupID)
+      .eq(USER_UID, params.userUid)
+      .eq(GROUP_ID, params.groupId)
       .select();
 
   Future<List> removeUserRole(UserRoleParams params) async => await supabase
       .from(TABLE)
       .delete()
-      .eq(USER_UID, params.userUID)
-      .eq(GROUP_ID, params.groupID)
+      .eq(USER_UID, params.userUid)
+      .eq(GROUP_ID, params.groupId)
       .select();
 }

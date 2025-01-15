@@ -24,7 +24,7 @@ void main() {
   test("should be able to create a document", () async {
     final res = await documentsQueries.insertDocument(
       InsertDocumentParams(
-        groupId: tSetup.groupID,
+        groupId: tSetup.groupId,
         type: DocumentType.evergreen,
       ),
     );
@@ -39,7 +39,7 @@ void main() {
       ),
     );
     expect(res.first['expiration_date'], isNull);
-    expect(res.first['group_id'], equals(tSetup.groupID));
+    expect(res.first['group_id'], equals(tSetup.groupId));
   });
 
   test("should be able to update the document type", () async {
@@ -60,7 +60,7 @@ void main() {
       ),
     );
     expect(res.first['expiration_date'], isNotNull);
-    expect(res.first['group_id'], equals(tSetup.groupID));
+    expect(res.first['group_id'], equals(tSetup.groupId));
   });
   test("should be able to update the title", () async {
     final res = await documentsQueries.updateTitle(
@@ -72,7 +72,7 @@ void main() {
 
     expect(res, isNotEmpty);
     expect(res.first['title'], equals('New Title'));
-    expect(res.first['group_id'], equals(tSetup.groupID));
+    expect(res.first['group_id'], equals(tSetup.groupId));
   });
 
   test("should be able to delete the document", () async {
@@ -80,8 +80,8 @@ void main() {
 
     expect(res, isNotEmpty);
     expect(res.first['id'], equals(documentId));
-    expect(res.first['group_id'], equals(tSetup.groupID));
-    final res2 = await documentsQueries.selectByGroup(tSetup.groupID);
+    expect(res.first['group_id'], equals(tSetup.groupId));
+    final res2 = await documentsQueries.selectByGroup(tSetup.groupId);
     expect(res2, isEmpty);
   });
 }

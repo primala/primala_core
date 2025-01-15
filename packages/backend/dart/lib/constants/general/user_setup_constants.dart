@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:nokhte_backend/constants/general/user_data_constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'supabase_client_constants.dart';
@@ -13,6 +15,7 @@ class UserSetupConstants {
           phone: number,
           password: UserDataConstants.universalPassword,
         );
+
         userUIDs.add(supabase.auth.currentUser?.id ?? '');
         await supabase.auth.signOut();
       }
@@ -23,6 +26,7 @@ class UserSetupConstants {
           phone: number,
           password: UserDataConstants.universalPassword,
         );
+
         userUIDs.add(supabase.auth.currentUser?.id ?? '');
         await supabase.auth.signOut();
       }
@@ -49,6 +53,7 @@ class UserSetupConstants {
       await supabase.from('users').insert(
         {
           "uid": userUIDs[i],
+          "email": 'test${i + 1}@test.com',
           "first_name": UserDataConstants.usersData[i]['firstName'],
           "last_name": UserDataConstants.usersData[i]['lastName'],
         },
