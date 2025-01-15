@@ -1,3 +1,3 @@
 flutter test test/01_user_information_table_test.dart
-flutter test test/02_groups_roles_and_requests_table_test.dart
+flutter test test/02_groups_roles_and_requests_tables_test.dart
 flutter test test/03_sessions_table_test.dart 
