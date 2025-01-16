@@ -30,7 +30,7 @@ class StorageContractImpl
   createNewGroup(params) async {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.createNewGroup(params);
-      return fromSupabase(res);
+      return Right(res != -1 ? true : false);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }
@@ -39,8 +39,8 @@ class StorageContractImpl
   @override
   deleteGroup(params) async {
     if (await networkInfo.isConnected) {
-      final res = await remoteSource.deleteGroup(params);
-      return fromSupabase(res);
+      await remoteSource.deleteGroup(params);
+      return const Right(true);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }

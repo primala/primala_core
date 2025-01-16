@@ -67,9 +67,12 @@ class LoginRemoteSourceImpl with HiveBoxUtils implements LoginRemoteSource {
       idToken: idToken,
       nonce: rawNonce,
     );
+
+    final email = authRes.user?.email ?? '';
     final queries = UsersQueries(supabase: supabase);
 
-    await queries.insertUserInfo(firstName: firstName, lastName: lastName);
+    await queries.insertUserInfo(
+        firstName: firstName, lastName: lastName, email: email);
     return AuthProviderModel.fromSupabase(
       AuthProvider.apple,
       authRes,
@@ -96,9 +99,12 @@ class LoginRemoteSourceImpl with HiveBoxUtils implements LoginRemoteSource {
       }
       final [firstName, lastName] = MiscAlgos.returnSplitName(fullName);
 
+      final email = supabase.auth.currentUser?.email ?? '';
+
       insertRes = await queries.insertUserInfo(
         firstName: firstName,
         lastName: lastName,
+        email: email,
       );
       return updateBox(
         data: insertRes.first,

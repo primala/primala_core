@@ -5,9 +5,9 @@ import 'package:nokhte_backend/tables/users.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class StorageRemoteSource {
-  Future<List> createNewGroup(CreateNewGroupParams params);
+  Future<int> createNewGroup(CreateNewGroupParams params);
   Future<List> getGroups();
-  Future<List> deleteGroup(int groupId);
+  Future<void> deleteGroup(int groupId);
   Stream<GroupSessions> listenToSessions(int groupId);
   Future<List> updateSessionTitle(UpdateSessionTitleParams params);
   Future<List> createQueue(String groupUID);
@@ -28,7 +28,7 @@ class StorageRemoteSourceImpl implements StorageRemoteSource {
         usersQueries = UsersQueries(supabase: supabase);
 
   @override
-  createNewGroup(params) async => await groupsQueries.insert(
+  createNewGroup(params) async => await groupsQueries.createGroup(
         groupName: params.groupName,
       );
 

@@ -1,13 +1,11 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/home/home.dart';
-import 'package:nokhte/app/modules/session/session.dart';
 part 'home_coordinator.g.dart';
 
 class HomeCoordinator = _HomeCoordinatorBase with _$HomeCoordinator;
