@@ -21,7 +21,7 @@ class GroupRequestsQueries with GroupRolesUtils {
   Future<List> sendRequest(SendRequestParams params) async =>
       await supabase.from(TABLE).insert({
         GROUP_ID: params.groupId,
-        USER_UID: userUID,
+        USER_UID: params.recipientUid,
         GROUP_ROLE: mapGroupRoleToString(params.role),
       }).select();
 
@@ -29,7 +29,7 @@ class GroupRequestsQueries with GroupRolesUtils {
       await supabase.from(TABLE).select().eq(USER_UID, userUID);
 
   Future<void> handleRequest(HandleRequestParams params) async =>
-      await supabase.rpc('handle_group_request', params: {
+      await supabase.rpc('handle_request', params: {
         'p_request_id': params.requestId,
         'p_accept': params.accept,
       });

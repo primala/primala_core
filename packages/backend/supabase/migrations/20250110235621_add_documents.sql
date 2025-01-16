@@ -2218,3 +2218,93 @@ select
 from auth.users
 on conflict (uid) do update
 set email = coalesce(excluded.email, '');
+
+drop policy "Can Update if Is Group Admin And Group Has More Than One Admin" on "public"."group_roles";
+
+drop policy "Can Delete if Is the Recipient" on "public"."group_requests";
+
+drop policy "Enable Delete if Not Last Admin or Own Row" on "public"."group_roles";
+
+alter table "public"."groups" drop constraint "groups_creator_uid_fkey";
+
+alter table "public"."groups" drop column "creator_uid";
+
+CREATE UNIQUE INDEX unique_user_group_request ON public.group_requests USING btree (user_uid, group_id);
+
+CREATE UNIQUE INDEX unique_user_group_role ON public.group_roles USING btree (user_uid, group_id);
+
+alter table "public"."group_requests" add constraint "unique_user_group_request" UNIQUE using index "unique_user_group_request";
+
+alter table "public"."group_roles" add constraint "unique_user_group_role" UNIQUE using index "unique_user_group_role";
+
+set check_function_bodies = off;
+
+CREATE OR REPLACE FUNCTION public.check_not_last_admin(p_group_id bigint, p_user_uid uuid)
+ RETURNS boolean
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$declare
+  v_admin_count integer;
+begin
+  -- Count number of admins in the group
+  select count(*)
+  into v_admin_count
+  from group_roles
+  where group_id = p_group_id
+  and role = 'admin';
+
+  -- Return true if there are other admins (count > 0)
+  -- Return false if this is the last admin (count = 0)
+  return v_admin_count > 0;
+end;$function$
+;
+
+create policy "Can Select if Is a Group Admin or Is the Recipient"
+on "public"."group_requests"
+as permissive
+for select
+to public
+using (((auth.uid() = user_uid) OR is_group_admin(auth.uid(), group_id)));
+
+
+create policy "Can Update if Is Group Admin And Group At Least One Admin"
+on "public"."group_roles"
+as permissive
+for update
+to authenticated
+using ((is_group_admin(auth.uid(), group_id) AND check_not_last_admin(group_id, auth.uid())));
+
+
+-- create policy "Can Delete if Is the Recipient"
+-- on "public"."group_requests"
+-- as permissive
+-- for delete
+-- to authenticated
+-- using (true);
+
+
+create policy "Enable Delete if Not Last Admin or Own Row"
+on "public"."group_roles"
+as permissive
+for delete
+to authenticated
+using ((((auth.uid() = user_uid) AND check_not_last_admin(group_id, auth.uid())) OR (is_group_admin(auth.uid(), group_id) AND (auth.uid() <> user_uid))));
+
+create policy "Enable delete for users based on user_id"
+on "public"."group_requests"
+as permissive
+for delete
+to public
+using ((auth.uid() = user_uid));
+
+drop policy "Can Update if Is Group Admin And Group At Least One Admin" on "public"."group_roles";
+
+create policy "Can Update if Is Group Admin And Is Not Their Row"
+on "public"."group_roles"
+as permissive
+for update
+to authenticated
+using ((is_group_admin(auth.uid(), group_id) AND (auth.uid() <> user_uid)));
+
+

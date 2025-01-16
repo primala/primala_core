@@ -22,7 +22,7 @@ void main() {
 
   final testGroupName = 'Test Group';
 
-  int requestId = 0;
+  int requestId = -1;
 
   setUpAll(() async {
     await tSetup.setUp();
@@ -50,8 +50,11 @@ void main() {
     tSetup.groupId = genRes['id'];
     final rolesRes = (await u1GroupRolesQueries.select(
       groupId: tSetup.groupId,
+      userUid: tSetup.firstUserUID,
     ))
         .first;
+
+    print('group id is ${tSetup.groupId}');
 
     expect(genRes['group_name'], equals(testGroupName));
     expect(rolesRes["user_uid"], equals(tSetup.firstUserUID));
@@ -90,21 +93,25 @@ void main() {
     requestId = (await u1GroupRequestsQueries.sendRequest(
       SendRequestParams(
         groupId: tSetup.groupId,
-        recipientUid: tSetup.firstUserUID,
+        recipientUid: tSetup.secondUserUID,
         role: GroupRole.collaborator,
       ),
     ))
         .first['id'];
+    print('requested id is $requestId');
+    try {
+      await u1GroupRequestsQueries.handleRequest(
+        HandleRequestParams(
+          requestId: requestId,
+          accept: true,
+        ),
+      );
+    } catch (e) {
+      expect(e, isA<Exception>());
+    }
 
-    await u1GroupRequestsQueries.handleRequest(
-      HandleRequestParams(
-        requestId: requestId,
-        accept: true,
-      ),
-    );
-
-    final res =
-        (await u2GroupRolesQueries.select(groupId: tSetup.groupId)).first;
+    final res = (await u2GroupRolesQueries.select(
+        groupId: tSetup.groupId, userUid: tSetup.secondUserUID));
 
     expect(res, isEmpty);
   });
@@ -124,9 +131,9 @@ void main() {
         .first;
 
     expect(res, isNotEmpty);
-    expect(res.first['user_uid'], equals(tSetup.secondUserUID));
-    expect(res.first['role'], equals('collaborator'));
-    expect(res.first['group_id'], equals(tSetup.groupId));
+    expect(res['user_uid'], equals(tSetup.secondUserUID));
+    expect(res['role'], equals('collaborator'));
+    expect(res['group_id'], equals(tSetup.groupId));
   });
 
   test('user 2 should be able to read user 1 information', () async {
@@ -188,7 +195,7 @@ void main() {
   });
 
   test("user 1 should be able to promote user 2 to an admin", () async {
-    await u1GroupRolesQueries.updateUserRole(
+    final rez = await u1GroupRolesQueries.updateUserRole(
       UserRoleParams(
         groupId: tSetup.groupId,
         userUid: tSetup.secondUserUID,
@@ -196,15 +203,18 @@ void main() {
       ),
     );
 
+    print('rez## $rez');
+
     final res = (await u1GroupRolesQueries.select(
       groupId: tSetup.groupId,
       userUid: tSetup.secondUserUID,
     ))
         .first;
+    print('res## $res');
 
-    expect(res.first['user_uid'], equals(tSetup.secondUserUID));
-    expect(res.first['role'], equals('admin'));
-    expect(res.first['group_id'], equals(tSetup.groupId));
+    expect(res['user_uid'], equals(tSetup.secondUserUID));
+    expect(res['role'], equals('admin'));
+    expect(res['group_id'], equals(tSetup.groupId));
   });
 
   test("user 2 should be able to remove user 1", () async {
@@ -218,16 +228,13 @@ void main() {
 
     final res = (await u2GroupRolesQueries.select(
       groupId: tSetup.groupId,
-      userUid: tSetup.secondUserUID,
-    ))
-        .first;
+      userUid: tSetup.firstUserUID,
+    ));
 
     expect(res, isEmpty);
   });
 
-  test(
-      "user 2 should not be able to remove themselves since they are the only admin left",
-      () async {
+  test("user 2 should not be able to demote themselves", () async {
     try {
       await u2GroupRolesQueries.updateUserRole(
         UserRoleParams(
@@ -253,8 +260,8 @@ void main() {
     // final res = (await u1GroupQueries.select());
     await u2GroupQueries.delete(tSetup.groupId);
 
-    final res2 = (await u2GroupQueries.select());
     final userResponse = (await u2UsersQueries.getUserInfo()).first;
+    final res2 = (await u2GroupQueries.select());
 
     expect(res2.isEmpty, true);
     expect(userResponse['active_group'], equals(null));

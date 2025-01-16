@@ -34,6 +34,6 @@ class GroupsQueries {
   Future<String> getGroupName(int id) async =>
       (await select(groupID: id)).first[GROUP_NAME];
 
-  Future<List> delete(int id) async =>
-      await supabase.from(TABLE).delete().eq(ID, id).select();
+  Future<void> delete(int id) async =>
+      await supabase.from(TABLE).delete().eq(ID, id);
 }

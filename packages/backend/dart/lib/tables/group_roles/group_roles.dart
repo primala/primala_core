@@ -18,22 +18,14 @@ class GroupRolesQueries with GroupRolesUtils {
   });
 
   Future<List> select({
-    int groupId = -1,
-    String? userUid,
+    required int groupId,
+    required String userUid,
   }) async {
-    var query = supabase.from(TABLE).select();
-
-    // Apply groupId filter if provided
-    if (groupId != -1) {
-      query = query.eq(GROUP_ID, groupId);
-    }
-
-    // Apply userUid filter if provided
-    if (userUid != null) {
-      query = query.eq(USER_UID, userUid);
-    }
-
-    return await query;
+    return supabase
+        .from(TABLE)
+        .select()
+        .eq(USER_UID, userUid)
+        .eq(GROUP_ID, groupId);
   }
 
   Future<List> updateUserRole(UserRoleParams params) async => await supabase
