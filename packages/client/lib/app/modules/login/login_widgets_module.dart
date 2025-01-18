@@ -12,11 +12,28 @@ class LoginWidgetsModule extends Module {
 
   @override
   exportedBinds(i) {
-    i.addSingleton<LoginScreenWidgetsCoordinator>(
-      () => LoginScreenWidgetsCoordinator(
+    i.add<LoginWidgetsCoordinator>(
+      () => LoginWidgetsCoordinator(
+        authTextFields: AuthTextFieldsStore(),
+        backButton: BackButtonStore(),
         wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
-        smartTextStore: SmartTextStore(),
-        beachWaves: BeachWavesStore(),
+        animatedScaffold: AnimatedScaffoldStore(),
+      ),
+    );
+
+    i.add<LoginGreeterWidgetsCoordinator>(
+      () => LoginGreeterWidgetsCoordinator(
+        wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
+        animatedScaffold: AnimatedScaffoldStore(),
+      ),
+    );
+
+    i.add<SignupWidgetsCoordinator>(
+      () => SignupWidgetsCoordinator(
+        authTextFields: AuthTextFieldsStore(),
+        backButton: BackButtonStore(),
+        wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
+        animatedScaffold: AnimatedScaffoldStore(),
       ),
     );
   }

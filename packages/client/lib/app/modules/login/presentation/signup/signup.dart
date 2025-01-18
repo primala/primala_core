@@ -1,5 +1,5 @@
-export 'login_coordinator.dart';
-export 'login_widgets_coordinator.dart';
+export 'signup_coordinator.dart';
+export 'signup_widgets_coordinator.dart';
 import 'package:flutter/material.dart' hide BackButton;
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
@@ -7,10 +7,10 @@ import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/login/login.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-class LoginScreen extends HookWidget {
-  final LoginCoordinator coordinator;
+class SignupScreen extends HookWidget {
+  final SignupCoordinator coordinator;
 
-  const LoginScreen({
+  const SignupScreen({
     super.key,
     required this.coordinator,
   });
@@ -21,7 +21,7 @@ class LoginScreen extends HookWidget {
       coordinator.constructor();
       return () => coordinator.deconstructor();
     }, []);
-//
+
     return AnimatedScaffold(
       store: coordinator.widgets.animatedScaffold,
       child: Observer(builder: (context) {
@@ -32,18 +32,18 @@ class LoginScreen extends HookWidget {
               showWidget: coordinator.widgets.showWidgets,
             ),
             SmartHeader(
-              content: "Log in",
-              showWidget: coordinator.widgets.showWidgets,
-            ),
-            AuthTextFields(
-              store: coordinator.widgets.authTextFields,
+              content: "Sign up",
               showWidget: coordinator.widgets.showWidgets,
             ),
             AuthButton(
               isEnabled: coordinator.widgets.authTextFields.allInputsAreValid,
               showWidget: coordinator.widgets.showWidgets,
               onPressed: () {},
-              label: "Log in",
+              label: "Sign up",
+            ),
+            AuthTextFields(
+              store: coordinator.widgets.authTextFields,
+              showWidget: coordinator.widgets.showWidgets,
             ),
             FullScreen(
               child: WifiDisconnectOverlay(

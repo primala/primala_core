@@ -12,11 +12,11 @@ import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/login/login.dart';
 import 'package:nokhte/app/modules/home/home.dart';
-part 'login_coordinator.g.dart';
+part 'signup_coordinator.g.dart';
 
-class LoginCoordinator = _LoginCoordinatorBase with _$LoginCoordinator;
+class SignupCoordinator = _SignupCoordinatorBase with _$SignupCoordinator;
 
-abstract class _LoginCoordinatorBase
+abstract class _SignupCoordinatorBase
     with
         Store,
         EnRoute,
@@ -24,7 +24,7 @@ abstract class _LoginCoordinatorBase
         HomeScreenRouter,
         BaseCoordinator,
         Reactions {
-  final LoginWidgetsCoordinator widgets;
+  final SignupWidgetsCoordinator widgets;
   final LoginContract contract;
   final TapDetector tap;
   final IdentifyUser identifyUser;
@@ -32,7 +32,7 @@ abstract class _LoginCoordinatorBase
   final UserInformationCoordinator userInfo;
   @override
   final CaptureScreen captureScreen;
-  _LoginCoordinatorBase({
+  _SignupCoordinatorBase({
     required this.contract,
     required this.widgets,
     required this.userInfo,
@@ -60,7 +60,7 @@ abstract class _LoginCoordinatorBase
     listenToAuthState();
     initReactors();
     await userInfo.checkIfVersionIsUpToDate();
-    await captureScreen(LoginConstants.login);
+    await captureScreen(LoginConstants.signup);
   }
 
   initReactors() {
@@ -73,8 +73,8 @@ abstract class _LoginCoordinatorBase
     }, onDisconnected: () {
       setDisableAllTouchFeedback(true);
     }));
-    disposers.add(backButtonReactor());
     disposers.add(widgets.animatedScaffoldReactor(onAnimationComplete));
+    disposers.add(backButtonReactor());
   }
 
   @action
@@ -93,13 +93,6 @@ abstract class _LoginCoordinatorBase
   }
 
   @action
-  onLogIn() {
-    if (disableAllTouchFeedback) return;
-    Modular.to.navigate(LoginConstants.login);
-    setDisableAllTouchFeedback(true);
-  }
-
-  @action
   onGoBack() {
     if (disableAllTouchFeedback) return;
     widgets.setShowWidgets(false);
@@ -114,13 +107,6 @@ abstract class _LoginCoordinatorBase
 
         onGoBack();
       });
-
-  @action
-  onSignUp() {
-    if (disableAllTouchFeedback) return;
-    Modular.to.navigate(LoginConstants.signup);
-    setDisableAllTouchFeedback(true);
-  }
 
   authStateReactor() => reaction((p0) => isLoggedIn, (p0) async {
         if (p0) {

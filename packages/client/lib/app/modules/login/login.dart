@@ -44,7 +44,29 @@ class LoginModule extends Module {
         captureScreen: Modular.get<CaptureScreen>(),
         userInfo: Modular.get<UserInformationCoordinator>(),
         tap: TapDetector(),
-        widgets: Modular.get<LoginScreenWidgetsCoordinator>(),
+        widgets: Modular.get<LoginWidgetsCoordinator>(),
+      ),
+    );
+
+    i.add<LoginGreeterCoordinator>(
+      () => LoginGreeterCoordinator(
+        contract: i.get<LoginContractImpl>(),
+        identifyUser: Modular.get<IdentifyUser>(),
+        captureScreen: Modular.get<CaptureScreen>(),
+        userInfo: Modular.get<UserInformationCoordinator>(),
+        tap: TapDetector(),
+        widgets: Modular.get<LoginGreeterWidgetsCoordinator>(),
+      ),
+    );
+
+    i.add<SignupCoordinator>(
+      () => SignupCoordinator(
+        contract: i.get<LoginContractImpl>(),
+        identifyUser: Modular.get<IdentifyUser>(),
+        captureScreen: Modular.get<CaptureScreen>(),
+        userInfo: Modular.get<UserInformationCoordinator>(),
+        tap: TapDetector(),
+        widgets: Modular.get<SignupWidgetsCoordinator>(),
       ),
     );
   }
@@ -52,7 +74,34 @@ class LoginModule extends Module {
   @override
   routes(r) {
     r.child(
-      LoginConstants.relativeRoot,
+      LoginConstants.relativeGreeter,
+      child: (context) => LoginGreeterScreen(
+        coordinator: Modular.get<LoginGreeterCoordinator>(),
+      ),
+      transition: TransitionType.noTransition,
+      guards: [
+        AuthGuard(
+          supabase: Modular.get<SupabaseClient>(),
+        ),
+      ],
+    );
+
+    r.child(
+      LoginConstants.relativeSignup,
+      transition: TransitionType.noTransition,
+      child: (context) => SignupScreen(
+        coordinator: Modular.get<SignupCoordinator>(),
+      ),
+      guards: [
+        AuthGuard(
+          supabase: Modular.get<SupabaseClient>(),
+        ),
+      ],
+    );
+
+    r.child(
+      LoginConstants.relativeLogin,
+      transition: TransitionType.noTransition,
       child: (context) => LoginScreen(
         coordinator: Modular.get<LoginCoordinator>(),
       ),

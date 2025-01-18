@@ -12,11 +12,13 @@ class BackButton extends HookWidget {
   final BackButtonStore store;
   final Color overridedColor;
   final double topPaddingScalar;
+  final bool showWidget;
   const BackButton({
     super.key,
     required this.store,
-    this.overridedColor = Colors.transparent,
-    this.topPaddingScalar = 0.06,
+    this.showWidget = true,
+    this.overridedColor = Colors.white,
+    this.topPaddingScalar = 0.07,
   });
 
   @override
@@ -31,8 +33,8 @@ class BackButton extends HookWidget {
     });
     return Observer(
       builder: (context) => AnimatedOpacity(
-        opacity: useWidgetOpacity(store.showWidget),
-        duration: Seconds.get(1),
+        opacity: useWidgetOpacity(showWidget),
+        duration: Seconds.get(0, milli: 500),
         child: Padding(
           padding: EdgeInsets.only(
             left: screenSize.width * .05,
@@ -48,7 +50,7 @@ class BackButton extends HookWidget {
             },
             child: CustomPaint(
               painter: BackButtonPainter(
-                overridedColor: overridedColor,
+                color: overridedColor,
               ),
               child: SizedBox(
                 height: screenSize.height * .06,

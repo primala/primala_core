@@ -7,33 +7,32 @@ import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/login/login.dart';
-import 'package:simple_animations/simple_animations.dart';
-part 'login_widgets_coordinator.g.dart';
+part 'signup_widgets_coordinator.g.dart';
 
-class LoginWidgetsCoordinator = _LoginWidgetsCoordinatorBase
-    with _$LoginWidgetsCoordinator;
+class SignupWidgetsCoordinator = _SignupWidgetsCoordinatorBase
+    with _$SignupWidgetsCoordinator;
 
-abstract class _LoginWidgetsCoordinatorBase
+abstract class _SignupWidgetsCoordinatorBase
     with Store, SmartTextPaddingAdjuster, BaseWidgetsCoordinator, Reactions {
   final AnimatedScaffoldStore animatedScaffold;
+  final BackButtonStore backButton;
+  final AuthTextFieldsStore authTextFields;
   @override
   final WifiDisconnectOverlayStore wifiDisconnectOverlay;
-  final AuthTextFieldsStore authTextFields;
-  final BackButtonStore backButton;
 
-  _LoginWidgetsCoordinatorBase({
+  _SignupWidgetsCoordinatorBase({
     required this.animatedScaffold,
-    required this.wifiDisconnectOverlay,
-    required this.backButton,
     required this.authTextFields,
+    required this.backButton,
+    required this.wifiDisconnectOverlay,
   }) {
     initBaseWidgetsCoordinatorActions();
-    initSmartTextActions();
   }
 
   @action
   initFadein() {
     authTextFields.setFieldsToShow([
+      FieldsToShow.fullName,
       FieldsToShow.email,
       FieldsToShow.password,
     ]);
@@ -54,7 +53,7 @@ abstract class _LoginWidgetsCoordinatorBase
 
   @action
   loggedInOnResumed() {
-    animatedScaffold.setControl(Control.play);
+    //
   }
 
   animatedScaffoldReactor(Function onComplete) =>

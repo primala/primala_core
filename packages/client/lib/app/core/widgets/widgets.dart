@@ -14,3 +14,5 @@ export 'touch_ripple/touch_ripple.dart';
 export 'navigation_menu/navigation_menu.dart';
 export 'navigation_carousels/navigation_carousels.dart';
 export 'modules.dart';
+export 'animated_scaffold/animated_scaffold.dart';
+export 'smart_header/smart_header.dart';

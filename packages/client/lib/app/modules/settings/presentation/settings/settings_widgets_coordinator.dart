@@ -102,7 +102,7 @@ abstract class _SettingsWidgetsCoordinatorBase
             Modular.to.navigate(HomeConstants.home);
           } else if (beachWaves.movieMode ==
               BeachWaveMovieModes.anyToBlackOut) {
-            Modular.to.navigate(LoginConstants.root);
+            Modular.to.navigate(LoginConstants.greeter);
           }
         }
       });
