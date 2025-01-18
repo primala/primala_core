@@ -7,7 +7,7 @@ import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/home/home.dart';
-import 'package:nokhte/app/modules/login/constants/constants.dart';
+import 'package:nokhte/app/modules/auth/constants/constants.dart';
 import 'package:nokhte/app/modules/settings/settings.dart';
 import 'package:nokhte_backend/types/types.dart';
 part 'settings_widgets_coordinator.g.dart';
@@ -102,7 +102,7 @@ abstract class _SettingsWidgetsCoordinatorBase
             Modular.to.navigate(HomeConstants.home);
           } else if (beachWaves.movieMode ==
               BeachWaveMovieModes.anyToBlackOut) {
-            Modular.to.navigate(LoginConstants.greeter);
+            Modular.to.navigate(AuthConstants.greeter);
           }
         }
       });
