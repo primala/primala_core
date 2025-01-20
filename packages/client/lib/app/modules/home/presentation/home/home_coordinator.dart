@@ -164,12 +164,12 @@ abstract class _HomeCoordinatorBase
   qrCodeScannerReactor() =>
       reaction((p0) => widgets.qrScanner.mostRecentScannedUID, (p0) async {
         if (p0.isNotEmpty) {
-          await logic.sendRequest(
-            SendRequestParams(
-              recipientUID: p0,
-              senderName: logic.userInformation.fullName,
-            ),
-          );
+          // await logic.sendRequest(
+          //   SendRequestParams(
+          //     recipientUID: p0,
+          //     senderName: logic.userInformation.fullName,
+          //   ),
+          // );
           widgets.qrScanner.resetMostRecentScannedUID();
         }
       });

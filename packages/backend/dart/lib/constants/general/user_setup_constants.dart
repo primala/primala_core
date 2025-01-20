@@ -54,8 +54,8 @@ class UserSetupConstants {
         {
           "uid": userUIDs[i],
           "email": 'test${i + 1}@test.com',
-          "first_name": UserDataConstants.usersData[i]['firstName'],
-          "last_name": UserDataConstants.usersData[i]['lastName'],
+          "full_name":
+              '${UserDataConstants.usersData[i]['firstName']} ${UserDataConstants.usersData[i]['lastName']}',
         },
       );
     }

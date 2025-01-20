@@ -2,6 +2,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nokhte_backend/tables/users.dart';
+import 'package:nokhte_backend/types/types.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:nokhte_backend/constants/constants.dart';
 
@@ -35,33 +36,45 @@ void main() {
   });
 
   test(
-      "✅ should be able to CREATE & READ a row in the table if their uid isn't present already",
+      "should be able to CREATE & READ a row in the table if their uid isn't present already",
       () async {
     final userNamesRes = await user1UserInfoQueries.insertUserInfo(
-        firstName: UserDataConstants.user1FirstName,
-        lastName: UserDataConstants.user1LastName,
+        fullName:
+            '${UserDataConstants.user1FirstName} ${UserDataConstants.user1LastName}',
         email: UserDataConstants.user1Email);
     expect(userNamesRes.first['first_name'], UserDataConstants.user1FirstName);
     expect(userNamesRes.first["last_name"], UserDataConstants.user1LastName);
     expect(userNamesRes.first["uid"], firstUserUID);
   });
 
-  test("❌ shouldn't be able to insert another row if they already have one",
+  test('should be able to update their profile gradient', () async {
+    await user1UserInfoQueries.updateProfileGradient(
+      ProfileGradient.glacier,
+    );
+
+    final res = await user1UserInfoQueries.updateProfileGradient(
+      ProfileGradient.amethyst,
+    );
+
+    expect(res.first['gradient'], 'amethyst');
+  });
+
+  test("shouldn't be able to insert another row if they already have one",
       () async {
     try {
       await user1UserInfoQueries.insertUserInfo(
-          firstName: UserDataConstants.user1FirstName,
-          lastName: UserDataConstants.user1LastName,
+          fullName:
+              '${UserDataConstants.user1FirstName} ${UserDataConstants.user1LastName}',
           email: UserDataConstants.user1Email);
     } catch (e) {
       expect(e, isA<PostgrestException>());
     }
   });
-  test("❌ SHOULDN'T be able to enter a UID that isn't theirs", () async {
+  test("SHOULDN'T be able to enter a UID that isn't theirs", () async {
     try {
       await user1UserInfoQueries.insertUserInfo(
-        firstName: UserDataConstants.user1FirstName,
-        lastName: UserDataConstants.user1LastName,
+        fullName:
+            '${UserDataConstants.user1FirstName} ${UserDataConstants.user1LastName}',
         email: UserDataConstants.user1Email,
       );
     } catch (e) {

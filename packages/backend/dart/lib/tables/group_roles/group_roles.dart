@@ -10,6 +10,7 @@ class GroupRolesQueries with GroupRolesUtils {
   static const USER_UID = 'user_uid';
   static const ROLE = 'role';
   static const GROUP_ID = 'group_id';
+  static const WITH_USER_ROWS = '*, users(*)';
 
   final SupabaseClient supabase;
 
@@ -17,16 +18,16 @@ class GroupRolesQueries with GroupRolesUtils {
     required this.supabase,
   });
 
-  Future<List> select({
+  Future<List> selectByMember({
     required int groupId,
     required String userUid,
-  }) async {
-    return supabase
-        .from(TABLE)
-        .select()
-        .eq(USER_UID, userUid)
-        .eq(GROUP_ID, groupId);
-  }
+  }) async =>
+      supabase.from(TABLE).select().eq(USER_UID, userUid).eq(GROUP_ID, groupId);
+
+  Future<List> selectByGroup(
+    int groupId,
+  ) async =>
+      supabase.from(TABLE).select(WITH_USER_ROWS).eq(GROUP_ID, groupId);
 
   Future<List> updateUserRole(UserRoleParams params) async => await supabase
       .from(TABLE)

@@ -35,11 +35,10 @@ class UserInformationModel extends UserInformationEntity {
       );
     } else {
       final uid = response.first[UsersConstants.S_UID];
-      final fName = response.first[UsersConstants.S_FIRST_NAME];
-      final lName = response.first[UsersConstants.S_LAST_NAME];
+      final name = response.first[UsersConstants.S_FULL_NAME];
       return UserInformationModel(
         uid: uid,
-        fullName: '$fName $lName',
+        fullName: name,
       );
     }
   }

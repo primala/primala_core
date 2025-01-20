@@ -1,12 +1,10 @@
 // ignore_for_file: constant_identifier_names
 import 'package:intl/intl.dart';
 import 'package:nokhte_backend/tables/sessions/queries.dart';
-import 'package:nokhte_backend/utils/utils.dart';
 import 'constants.dart';
 import 'types/types.dart';
 
-class DormantSessionsStreams extends SessionsQueries
-    with SessionsConstants, SessionUtils {
+class DormantSessionsStreams extends SessionsQueries with SessionsConstants {
   bool groupSessionsListeningStatus = false;
   final GroupSessions _groupSessions = GroupSessions.initial();
 

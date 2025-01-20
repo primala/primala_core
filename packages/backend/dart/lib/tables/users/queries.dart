@@ -1,7 +1,10 @@
+import 'package:nokhte_backend/types/types.dart';
+import 'package:nokhte_backend/utils/profile_gradients_utils.dart';
+
 import 'constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class UsersQueries with UsersConstants {
+class UsersQueries with UsersConstants, ProfileGradientUtils {
   final SupabaseClient supabase;
   String userUID;
 
@@ -10,14 +13,12 @@ class UsersQueries with UsersConstants {
   }) : userUID = supabase.auth.currentUser?.id ?? '';
 
   Future<List> insertUserInfo({
-    required String firstName,
-    required String lastName,
+    required String fullName,
     required String email,
   }) async =>
       await supabase.from(TABLE).insert({
         UID: userUID,
-        FIRST_NAME: firstName,
-        LAST_NAME: lastName,
+        FULL_NAME: fullName,
         EMAIL: email,
       }).select();
 
@@ -40,7 +41,7 @@ class UsersQueries with UsersConstants {
   Future<String> getFullName() async {
     final res = await getUserInfo();
     if (res.isNotEmpty) {
-      return '${res.first[FIRST_NAME]} ${res.first[LAST_NAME]}';
+      return res.first[FULL_NAME];
     } else {
       return '';
     }
@@ -54,6 +55,15 @@ class UsersQueries with UsersConstants {
       return -1;
     }
   }
+
+  Future<List> updateProfileGradient(ProfileGradient param) async =>
+      await supabase
+          .from(TABLE)
+          .update({
+            GRADIENT: mapProfileGradientToString(param),
+          })
+          .eq(UID, userUID)
+          .select();
 
   Future<List> deleteUserInfo() async =>
       await supabase.from(TABLE).delete().eq(UID, userUID).select();

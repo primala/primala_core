@@ -54,18 +54,12 @@ class AuthRemoteSourceImpl with HiveBoxUtils implements AuthRemoteSource {
       password: params.password,
     );
 
-    final firstName = params.fullName.split(' ')[0];
-    final lastName = params.fullName.split(' ')[1];
     final email = supabase.auth.currentUser?.email ?? '';
     final queries = UsersQueries(supabase: supabase);
     return await queries.insertUserInfo(
-        firstName: firstName, lastName: lastName, email: email);
-    // } catch (e) {
-    //   throw Left(SupabaseFailure(
-    //     message: e.toString(),
-    //     failureCode: e.toString(),
-    //   ));
-    // }
+      fullName: params.fullName,
+      email: email,
+    );
   }
 
   @override
@@ -94,7 +88,7 @@ class AuthRemoteSourceImpl with HiveBoxUtils implements AuthRemoteSource {
     final queries = UsersQueries(supabase: supabase);
 
     await queries.insertUserInfo(
-        firstName: firstName, lastName: lastName, email: email);
+        fullName: '$firstName $lastName', email: email);
     return authRes.user?.id.isNotEmpty ?? false;
   }
 
@@ -116,13 +110,11 @@ class AuthRemoteSourceImpl with HiveBoxUtils implements AuthRemoteSource {
       } else {
         fullName = theName;
       }
-      final [firstName, lastName] = MiscAlgos.returnSplitName(fullName);
 
       final email = supabase.auth.currentUser?.email ?? '';
 
       insertRes = await queries.insertUserInfo(
-        firstName: firstName,
-        lastName: lastName,
+        fullName: fullName,
         email: email,
       );
       return updateBox(

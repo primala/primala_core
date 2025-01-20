@@ -2307,4 +2307,87 @@ for update
 to authenticated
 using ((is_group_admin(auth.uid(), group_id) AND (auth.uid() <> user_uid)));
 
+alter table "public"."group_requests" add column "created_at" timestamp with time zone not null;
 
+alter table "public"."group_requests" add column "sender_full_name" text not null;
+
+
+alter table "public"."group_requests" add column "group_name" text not null;
+
+
+
+create type "public"."gradients" as enum ('glacier', 'lagoon', 'slate', 'cotton_candy', 'twilight_sky', 'amethyst', 'sandstorm', 'desert_dawn', 'ruby');
+
+
+set check_function_bodies = off;
+
+CREATE OR REPLACE FUNCTION public.random_gradient()
+ RETURNS gradients
+ LANGUAGE sql
+AS $function$
+    SELECT (
+        array['glacier', 'lagoon', 'slate', 'cotton_candy', 'twilight_sky', 'amethyst', 'sandstorm', 'desert_dawn', 'ruby']::public.gradients[]
+    )[floor(random() * 9 + 1)];
+$function$
+;
+
+alter table "public"."users" add column "gradient" gradients default random_gradient();
+
+UPDATE public.users
+SET gradient = public.random_gradient()
+WHERE gradient IS NULL;
+
+alter table "public"."users" alter column "gradient" set not null;
+
+alter table "public"."groups" add column "gradient" gradients default random_gradient();
+
+UPDATE public.groups
+SET gradient = public.random_gradient()
+WHERE gradient IS NULL;
+
+alter table "public"."groups" alter column "gradient" set not null;
+
+-- Add new full_name column with empty string default
+ALTER TABLE public.users
+ADD COLUMN full_name text NOT NULL DEFAULT '';
+
+-- Update the new column with concatenated names
+UPDATE public.users
+SET full_name = CASE
+    -- When both names are present
+    WHEN first_name IS NOT NULL AND last_name IS NOT NULL THEN
+        first_name || ' ' || last_name
+    -- When only first name is present
+    WHEN first_name IS NOT NULL THEN
+        first_name
+    -- When only last name is present
+    WHEN last_name IS NOT NULL THEN
+        last_name
+    -- When both are null
+    ELSE ''
+END;
+
+-- Drop the original name columns
+ALTER TABLE public.users
+DROP COLUMN first_name,
+DROP COLUMN last_name;
+
+-- Create indexes for full_name and email
+CREATE INDEX idx_users_uid ON public.users (uid);
+CREATE INDEX idx_users_email ON public.users (email);
+
+-- Create function to check if email exists
+CREATE OR REPLACE FUNCTION public.check_email_exists(email_to_check text)
+RETURNS boolean
+SECURITY DEFINER
+SET search_path = public
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN EXISTS (
+        SELECT 1 
+        FROM public.users 
+        WHERE email = email_to_check
+    );
+END;
+$$;

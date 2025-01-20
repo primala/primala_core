@@ -6,6 +6,7 @@ import 'package:nokhte_backend/tables/group_requests/group_requests.dart';
 import 'package:nokhte_backend/tables/group_roles.dart';
 import 'package:nokhte_backend/tables/groups.dart';
 import 'package:nokhte_backend/tables/users.dart';
+import 'package:nokhte_backend/types/types.dart';
 
 import 'shared/shared.dart';
 
@@ -48,7 +49,7 @@ void main() {
     final genRes = (await u1GroupQueries.select()).first;
 
     tSetup.groupId = genRes['id'];
-    final rolesRes = (await u1GroupRolesQueries.select(
+    final rolesRes = (await u1GroupRolesQueries.selectByMember(
       groupId: tSetup.groupId,
       userUid: tSetup.firstUserUID,
     ))
@@ -61,6 +62,35 @@ void main() {
 
     expect(rolesRes["role"], equals("admin"));
     expect(rolesRes["group_id"], equals(tSetup.groupId));
+  });
+
+  test('user one should be able to update the group name', () async {
+    final res = await u1GroupQueries.updateGroupName(
+      UpdateGroupNameParams(
+        groupId: tSetup.groupId,
+        name: 'Updated Group Name',
+      ),
+    );
+
+    expect(res.first['group_name'], equals('Updated Group Name'));
+  });
+
+  test('user one should be able to update the group gradient', () async {
+    await u1GroupQueries.updateProfileGradient(
+      UpdateGroupProfileGradientParams(
+        groupId: tSetup.groupId,
+        gradient: ProfileGradient.amethyst,
+      ),
+    );
+
+    final res = await u1GroupQueries.updateProfileGradient(
+      UpdateGroupProfileGradientParams(
+        groupId: tSetup.groupId,
+        gradient: ProfileGradient.lagoon,
+      ),
+    );
+
+    expect(res.first['gradient'], equals('lagoon'));
   });
 
   test("user two should not be able to send them a request from group one",
@@ -110,7 +140,7 @@ void main() {
       expect(e, isA<Exception>());
     }
 
-    final res = (await u2GroupRolesQueries.select(
+    final res = (await u2GroupRolesQueries.selectByMember(
         groupId: tSetup.groupId, userUid: tSetup.secondUserUID));
 
     expect(res, isEmpty);
@@ -124,7 +154,7 @@ void main() {
       ),
     );
 
-    final res = (await u2GroupRolesQueries.select(
+    final res = (await u2GroupRolesQueries.selectByMember(
       groupId: tSetup.groupId,
       userUid: tSetup.secondUserUID,
     ))
@@ -205,7 +235,7 @@ void main() {
 
     print('rez## $rez');
 
-    final res = (await u1GroupRolesQueries.select(
+    final res = (await u1GroupRolesQueries.selectByMember(
       groupId: tSetup.groupId,
       userUid: tSetup.secondUserUID,
     ))
@@ -226,7 +256,7 @@ void main() {
       ),
     );
 
-    final res = (await u2GroupRolesQueries.select(
+    final res = (await u2GroupRolesQueries.selectByMember(
       groupId: tSetup.groupId,
       userUid: tSetup.firstUserUID,
     ));
@@ -257,7 +287,7 @@ void main() {
   });
 
   test("should be able to delete a group", () async {
-    // final res = (await u1GroupQueries.select());
+    // final res = (await u1GroupQueries.selectByMember());
     await u2GroupQueries.delete(tSetup.groupId);
 
     final userResponse = (await u2UsersQueries.getUserInfo()).first;

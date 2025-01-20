@@ -12,6 +12,7 @@ class FailureConstants {
   static String get invalidDeepLinkMsg =>
       "Invalid invitation, try another invitation";
   static String get cancelledPurchaseFailureMsg => "Cancelled Purchase";
+  static String get groupCreationFailureMsg => "Group Creation Failure";
 
   static NetworkConnectionFailure get internetConnectionFailure =>
       const NetworkConnectionFailure(
@@ -33,6 +34,11 @@ class FailureConstants {
         message: invalidDeepLinkMsg,
         failureCode: "INVALID_DEEP_LINK",
       );
+  static UserInputFailure get groupCreationFailure => UserInputFailure(
+        message: groupCreationFailureMsg,
+        failureCode: "GROUP_CREATION_FAILURE",
+      );
+
   static UserInputFailure get cancelledPurchaseFailure => UserInputFailure(
         message: cancelledPurchaseFailureMsg,
         failureCode: "CANCELLED_PURCHASE",

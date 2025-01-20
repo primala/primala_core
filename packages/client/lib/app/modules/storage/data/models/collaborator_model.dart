@@ -17,8 +17,7 @@ class CollaboratorModel extends CollaboratorEntity {
         groups.add(
           CollaboratorModel(
             uid: group[UsersConstants.S_UID],
-            name:
-                '${group[UsersConstants.S_FIRST_NAME]} ${group[UsersConstants.S_LAST_NAME]}',
+            name: group[UsersConstants.S_FULL_NAME],
           ),
         );
       }
