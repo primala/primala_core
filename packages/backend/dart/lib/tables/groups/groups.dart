@@ -63,7 +63,8 @@ class GroupsQueries with ProfileGradientUtils {
       await supabase
           .from(TABLE)
           .update({
-            GRADIENT: mapProfileGradientToString(params.gradient),
+            GRADIENT: ProfileGradientUtils.mapProfileGradientToString(
+                params.gradient),
           })
           .eq(ID, params.groupId)
           .select();

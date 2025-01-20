@@ -1,7 +1,7 @@
 import 'package:nokhte_backend/types/types.dart';
 
 mixin ProfileGradientUtils {
-  ProfileGradient mapStringToProfileGradient(String gradient) {
+  static ProfileGradient mapStringToProfileGradient(String gradient) {
     switch (gradient) {
       case 'glacier':
         return ProfileGradient.glacier;
@@ -26,7 +26,7 @@ mixin ProfileGradientUtils {
     }
   }
 
-  String mapProfileGradientToString(ProfileGradient gradient) {
+  static String mapProfileGradientToString(ProfileGradient gradient) {
     switch (gradient) {
       case ProfileGradient.glacier:
         return 'glacier';

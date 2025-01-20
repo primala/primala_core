@@ -60,7 +60,7 @@ class UsersQueries with UsersConstants, ProfileGradientUtils {
       await supabase
           .from(TABLE)
           .update({
-            GRADIENT: mapProfileGradientToString(param),
+            GRADIENT: ProfileGradientUtils.mapProfileGradientToString(param),
           })
           .eq(UID, userUID)
           .select();
