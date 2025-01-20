@@ -2391,3 +2391,5 @@ BEGIN
     );
 END;
 $$;
+
+alter table "public"."group_requests" alter column "created_at" set default now();

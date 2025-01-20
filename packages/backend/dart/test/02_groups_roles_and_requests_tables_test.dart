@@ -104,7 +104,7 @@ void main() {
         ),
       );
     } catch (e) {
-      expect(e, isA<Exception>());
+      expect(e, isA<StateError>());
     }
   });
 

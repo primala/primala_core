@@ -42,8 +42,8 @@ void main() {
         fullName:
             '${UserDataConstants.user1FirstName} ${UserDataConstants.user1LastName}',
         email: UserDataConstants.user1Email);
-    expect(userNamesRes.first['first_name'], UserDataConstants.user1FirstName);
-    expect(userNamesRes.first["last_name"], UserDataConstants.user1LastName);
+    expect(userNamesRes.first['full_name'],
+        '${UserDataConstants.user1FirstName} ${UserDataConstants.user1LastName}');
     expect(userNamesRes.first["uid"], firstUserUID);
   });
 
