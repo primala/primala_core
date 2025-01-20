@@ -2393,3 +2393,84 @@ END;
 $$;
 
 alter table "public"."group_requests" alter column "created_at" set default now();
+
+set check_function_bodies = off;
+
+CREATE OR REPLACE FUNCTION public.join_session(_session_id bigint, _user_uid uuid)
+ RETURNS void
+ LANGUAGE plpgsql
+AS $function$DECLARE
+    _current_collaborator_uids uuid[];
+    _current_collaborator_names text[];
+    _current_collaborator_statuses session_user_status[];
+    _current_version int4;
+    _session_status session_status;
+    _user_name text;
+BEGIN
+    -- Begin transaction
+    BEGIN
+        -- Retrieve session details from the session_information table
+        SELECT 
+            version,
+            collaborator_uids,
+            collaborator_names,
+            collaborator_statuses,
+            status
+        INTO 
+            _current_version,
+            _current_collaborator_uids,
+            _current_collaborator_names,
+            _current_collaborator_statuses,
+            _session_status
+        FROM sessions
+        WHERE id IN (
+            SELECT id 
+            FROM sessions 
+            WHERE _session_id = id
+        );
+
+        IF _session_id IS NOT NULL THEN
+            IF _user_uid = ANY(_current_collaborator_uids) THEN
+                RETURN; -- Exit the function if user is already in the collaborator list
+            END IF;
+
+            IF _session_status = 'recruiting' THEN
+                -- Get the user's name from the users table
+                SELECT full_name
+                INTO _user_name
+                FROM users
+                WHERE uid = _user_uid;
+
+                -- Append values to arrays
+                _current_collaborator_uids := array_append(_current_collaborator_uids, _user_uid);
+                _current_collaborator_names := array_append(_current_collaborator_names, _user_name);
+                _current_collaborator_statuses := array_append(_current_collaborator_statuses, 'has_joined'::session_user_status);
+
+                -- Increment version
+                _current_version := _current_version + 1;
+
+                -- Update sessions
+                UPDATE public.sessions
+                SET 
+                    collaborator_uids = _current_collaborator_uids,
+                    collaborator_names = _current_collaborator_names,
+                    collaborator_statuses = _current_collaborator_statuses,
+                    version = _current_version
+                WHERE id = _session_id
+                AND version = _current_version - 1; -- Optimistic locking condition
+
+                -- Check if the update succeeded
+                IF NOT FOUND THEN
+                    RAISE EXCEPTION 'Update on sessions failed due to version mismatch';
+                END IF;
+            END IF;
+        END IF;
+
+    EXCEPTION
+        WHEN OTHERS THEN
+            -- Rollback the transaction if anything goes wrong
+            RAISE NOTICE 'Transaction failed: %', SQLERRM;
+            RAISE; -- Propagate the error
+    END;
+END;$function$
+;
