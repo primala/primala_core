@@ -33,7 +33,8 @@ abstract class _LoginGreeterWidgetsCoordinatorBase
   setShowWidgets(bool value) => showWidgets = value;
 
   @action
-  initFadein() {
+  constructor() {
+    animatedScaffold.setMovie(getMovie(Colors.black, const Color(0xFFFFFBEC)));
     setShowWidgets(false);
     Timer(Seconds.get(0, milli: 1), () {
       setShowWidgets(true);
@@ -43,7 +44,6 @@ abstract class _LoginGreeterWidgetsCoordinatorBase
   @action
   loggedInOnResumed() {
     setShowWidgets(false);
-    animatedScaffold.setMovie(getMovie(Colors.black, const Color(0xFFFFFBEC)));
     animatedScaffold.setControl(Control.playFromStart);
   }
 

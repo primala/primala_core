@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
@@ -38,7 +39,8 @@ abstract class _LoginWidgetsCoordinatorBase
   }
 
   @action
-  initFadein() {
+  constructor() {
+    animatedScaffold.setMovie(getMovie(Colors.black, const Color(0xFFFFFBEC)));
     authTextFields.setFieldsToShow([
       FieldsToShow.email,
       FieldsToShow.password,
@@ -61,8 +63,6 @@ abstract class _LoginWidgetsCoordinatorBase
   @action
   loggedInOnResumed() {
     setShowWidgets(false);
-    animatedScaffold
-        .setMovie(getMovie(const Color(0xFF000000), const Color(0xFFFFFBEC)));
     animatedScaffold.setControl(Control.playFromStart);
   }
 

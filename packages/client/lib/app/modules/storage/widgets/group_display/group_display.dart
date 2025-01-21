@@ -33,7 +33,6 @@ class GroupDisplay extends HookWidget {
           children: [
             GestureDetector(
               onTap: () {
-                print('he did this print ');
                 store.onUserButtonTapped();
               },
               child: Padding(

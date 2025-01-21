@@ -66,6 +66,8 @@ flutter:
     - assets/groups/add_remove_icon.png
     - assets/groups/trash_icon_white.png
     - assets/groups/user_icon.png
+    - assets/groups/settings_icon.png
+    - assets/groups/envelope_icon.png
 
     - assets/blocks/conclusion_icon.png
     - assets/blocks/conclusion_send_icon.png
@@ -83,6 +85,7 @@ flutter:
 
     - assets/login/apple_icon.png
     - assets/login/google_icon.png
+    - assets/login/header.png
 
     - assets/power_up/cook_button.png
     - assets/power_up/rally_button_blue.png

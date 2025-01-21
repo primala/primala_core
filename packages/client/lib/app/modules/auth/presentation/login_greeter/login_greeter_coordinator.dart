@@ -9,7 +9,6 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/core/types/types.dart';
-import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/auth/auth.dart';
 import 'package:nokhte/app/modules/home/home.dart';
 part 'login_greeter_coordinator.g.dart';
@@ -27,7 +26,6 @@ abstract class _LoginGreeterCoordinatorBase
         Reactions {
   final LoginGreeterWidgetsCoordinator widgets;
   final AuthContract contract;
-  final TapDetector tap;
   final IdentifyUser identifyUser;
   @override
   final UserInformationCoordinator userInfo;
@@ -39,7 +37,6 @@ abstract class _LoginGreeterCoordinatorBase
     required this.widgets,
     required this.userInfo,
     required this.identifyUser,
-    required this.tap,
     required this.captureScreen,
   }) {
     initEnRouteActions();
@@ -58,7 +55,7 @@ abstract class _LoginGreeterCoordinatorBase
 
   @action
   constructor() async {
-    widgets.initFadein();
+    widgets.constructor();
     listenToAuthState();
     initReactors();
     await userInfo.checkIfVersionIsUpToDate();

@@ -2378,19 +2378,25 @@ CREATE INDEX idx_users_email ON public.users (email);
 
 -- Create function to check if email exists
 CREATE OR REPLACE FUNCTION public.check_email_exists(email_to_check text)
-RETURNS boolean
-SECURITY DEFINER
-SET search_path = public
-LANGUAGE plpgsql
-AS $$
+ RETURNS text
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+DECLARE
+    found_uid text;
 BEGIN
-    RETURN EXISTS (
-        SELECT 1 
-        FROM public.users 
-        WHERE email = email_to_check
-    );
+    SELECT uid::text INTO found_uid
+    FROM public.users
+    WHERE email = email_to_check
+    LIMIT 1;
+    
+    RETURN COALESCE(found_uid, '');
 END;
-$$;
+$function$
+;
+
+
 
 alter table "public"."group_requests" alter column "created_at" set default now();
 
@@ -2474,3 +2480,5 @@ BEGIN
     END;
 END;$function$
 ;
+
+

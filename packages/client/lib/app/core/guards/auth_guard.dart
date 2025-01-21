@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:nokhte/app/modules/home/home.dart';
+import 'package:nokhte/app/modules/groups/groups.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthGuard extends RouteGuard {
@@ -19,5 +19,5 @@ class AuthGuard extends RouteGuard {
   }
 
   @override
-  String get redirectTo => HomeConstants.router;
+  String get redirectTo => GroupsConstants.groupPicker;
 }

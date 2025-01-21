@@ -37,7 +37,8 @@ abstract class _SignupWidgetsCoordinatorBase
   }
 
   @action
-  initFadein() {
+  constructor() {
+    animatedScaffold.setMovie(getMovie(Colors.black, const Color(0xFFFFFBEC)));
     authTextFields.setFieldsToShow([
       FieldsToShow.fullName,
       FieldsToShow.email,
@@ -61,8 +62,6 @@ abstract class _SignupWidgetsCoordinatorBase
   @action
   loggedInOnResumed() {
     setShowWidgets(false);
-    animatedScaffold
-        .setMovie(getMovie(const Color(0xFF000000), const Color(0xFFFFFBEC)));
     animatedScaffold.setControl(Control.playFromStart);
   }
 

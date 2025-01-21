@@ -11,6 +11,6 @@ class AnimatedScaffoldStore = _AnimatedScaffoldStoreBase
 abstract class _AnimatedScaffoldStoreBase extends BaseWidgetStore
     with Store, AnimatedScaffoldMovie {
   _AnimatedScaffoldStoreBase() {
-    setMovie(getMovie(Colors.black, const Color(0xFFFFFBEC)));
+    setMovie(getMovie(const Color(0xFFFFFBEC), const Color(0xFFFFFBEC)));
   }
 }

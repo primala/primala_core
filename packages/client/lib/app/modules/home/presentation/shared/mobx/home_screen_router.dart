@@ -3,7 +3,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mixins/mixin.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
-import 'package:nokhte/app/modules/home/home.dart';
+import 'package:nokhte/app/modules/groups/groups.dart';
 
 mixin HomeScreenRouter on EnRouteRouter {
   UserInformationCoordinator get userInfo;
@@ -17,11 +17,6 @@ mixin HomeScreenRouter on EnRouteRouter {
 
   @action
   onAnimationComplete() {
-    final args = getModularArgs(params);
-    if (userInfo.isOnMostRecentVersion) {
-      Modular.to.navigate(HomeConstants.home, arguments: args);
-    } else {
-      Modular.to.navigate(HomeConstants.needsToUpdate, arguments: args);
-    }
+    Modular.to.navigate(GroupsConstants.groupPicker);
   }
 }

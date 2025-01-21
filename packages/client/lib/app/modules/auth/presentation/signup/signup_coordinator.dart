@@ -1,6 +1,5 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
-
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
@@ -9,7 +8,6 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/core/types/types.dart';
-import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/auth/auth.dart';
 import 'package:nokhte/app/modules/home/home.dart';
 part 'signup_coordinator.g.dart';
@@ -26,7 +24,6 @@ abstract class _SignupCoordinatorBase
         Reactions {
   final SignupWidgetsCoordinator widgets;
   final AuthContract contract;
-  final TapDetector tap;
   final IdentifyUser identifyUser;
   @override
   final UserInformationCoordinator userInfo;
@@ -37,7 +34,6 @@ abstract class _SignupCoordinatorBase
     required this.widgets,
     required this.userInfo,
     required this.identifyUser,
-    required this.tap,
     required this.captureScreen,
   }) {
     initEnRouteActions();
@@ -56,7 +52,7 @@ abstract class _SignupCoordinatorBase
 
   @action
   constructor() async {
-    widgets.initFadein();
+    widgets.constructor();
     listenToAuthState();
     initReactors();
     await userInfo.checkIfVersionIsUpToDate();
