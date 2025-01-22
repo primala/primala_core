@@ -99,7 +99,9 @@ void main() {
       await u2GroupRequestsQueries.sendRequest(
         SendRequestParams(
           groupId: tSetup.groupId,
+          recipientProfileGradient: ProfileGradient.amethyst,
           recipientUid: tSetup.firstUserUID,
+          recipientFullName: 'User One',
           role: GroupRole.admin,
         ),
       );
@@ -124,7 +126,9 @@ void main() {
       SendRequestParams(
         groupId: tSetup.groupId,
         recipientUid: tSetup.secondUserUID,
+        recipientProfileGradient: ProfileGradient.amethyst,
         role: GroupRole.collaborator,
+        recipientFullName: 'User Two',
       ),
     ))
         .first['id'];
@@ -166,6 +170,22 @@ void main() {
     expect(res['group_id'], equals(tSetup.groupId));
   });
 
+  test('user one should be able to look up user twos information', () async {
+    final res =
+        await u1GroupRequestsQueries.getInviteeInformation('test2@test.com');
+    expect(res['uid'], equals(tSetup.secondUserUID));
+    expect(res['full_name'], equals('tester two'));
+    expect(res['email'], equals('test2@test.com'));
+  });
+
+  test("user one should get null if user doesn't exist", () async {
+    final res = await u1GroupRequestsQueries
+        .getInviteeInformation('test2@test234543.com');
+    expect(res['uid'], equals(null));
+    expect(res['full_name'], equals(null));
+    expect(res['email'], equals(null));
+  });
+
   test('user 2 should be able to read user 1 information', () async {
     final res = (await u2UsersQueries.getUserInfo(
       queryUID: tSetup.firstUserUID,
@@ -201,6 +221,8 @@ void main() {
       await u2GroupRequestsQueries.sendRequest(
         SendRequestParams(
           groupId: tSetup.groupId,
+          recipientFullName: 'Test User Three',
+          recipientProfileGradient: ProfileGradient.amethyst,
           recipientUid: tSetup.thirdUserUID,
           role: GroupRole.collaborator,
         ),

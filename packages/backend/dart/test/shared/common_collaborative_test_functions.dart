@@ -3,6 +3,7 @@ import 'package:nokhte_backend/tables/group_requests.dart';
 import 'package:nokhte_backend/tables/group_roles.dart';
 import 'package:nokhte_backend/tables/groups.dart';
 import 'package:nokhte_backend/tables/users.dart';
+import 'package:nokhte_backend/types/types.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CommonCollaborativeTestFunctions {
@@ -55,6 +56,8 @@ class CommonCollaborativeTestFunctions {
 
       final requestId = (await u1GroupRequestsQueries.sendRequest(
         SendRequestParams(
+          recipientFullName: 'Test User Three',
+          recipientProfileGradient: ProfileGradient.amethyst,
           groupId: groupId,
           recipientUid: secondUserUID,
           role: GroupRole.collaborator,

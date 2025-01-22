@@ -4,10 +4,11 @@ import 'package:nokhte_backend/tables/group_requests.dart';
 import 'package:nokhte_backend/tables/group_roles.dart';
 import 'package:nokhte_backend/tables/groups.dart';
 import 'package:nokhte_backend/tables/users.dart';
+import 'package:nokhte_backend/utils/profile_gradients_utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 export 'types/types.dart';
 
-class GroupRequestsQueries with GroupRolesUtils {
+class GroupRequestsQueries with GroupRolesUtils, ProfileGradientUtils {
   static const TABLE = 'group_requests';
   static const ID = 'id';
   static const GROUP_ID = 'group_id';
@@ -16,6 +17,9 @@ class GroupRequestsQueries with GroupRolesUtils {
   static const CREATED_AT = 'created_at';
   static const GROUP_NAME = 'group_name';
   static const GROUP_ROLE = 'group_role';
+  static const RECIPIENT_FULL_NAME = 'recipient_full_name';
+  static const SENDER_PROFILE_GRADIENT = 'sender_profile_gradient';
+  static const RECIPIENT_PROFILE_GRADIENT = 'recipient_profile_gradient';
 
   final SupabaseClient supabase;
   final UsersQueries usersQueries;
@@ -28,16 +32,29 @@ class GroupRequestsQueries with GroupRolesUtils {
         userUID = supabase.auth.currentUser?.id ?? '';
 
   Future<List> sendRequest(SendRequestParams params) async {
-    final fullName = await usersQueries.getFullName();
+    final res = await usersQueries.getUserInfo();
+    final fullName = res.first[UsersConstants.S_FULL_NAME];
+    final profileGradient = res.first[UsersConstants.S_GRADIENT];
     final groupName = await groupsQueries.getGroupName(params.groupId);
     return await supabase.from(TABLE).insert({
       GROUP_ID: params.groupId,
       USER_UID: params.recipientUid,
+      RECIPIENT_FULL_NAME: params.recipientFullName,
       SENDER_FULL_NAME: fullName,
       GROUP_NAME: groupName,
+      RECIPIENT_PROFILE_GRADIENT:
+          ProfileGradientUtils.mapProfileGradientToString(
+        params.recipientProfileGradient,
+      ),
+      SENDER_PROFILE_GRADIENT: profileGradient,
       GROUP_ROLE: mapGroupRoleToString(params.role),
     }).select();
   }
+
+  Future<Map> getInviteeInformation(String email) async =>
+      await supabase.rpc('get_user_by_email', params: {
+        'email_to_check': email,
+      });
 
   Future<List> select() async =>
       await supabase.from(TABLE).select().eq(USER_UID, userUID);

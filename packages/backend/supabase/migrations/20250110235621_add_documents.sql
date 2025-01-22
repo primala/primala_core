@@ -2482,3 +2482,32 @@ END;$function$
 ;
 
 
+drop function if exists "public"."check_email_exists"(email_to_check text);
+
+alter table "public"."group_requests" add column "recipient_full_name" text not null;
+
+set check_function_bodies = off;
+
+CREATE OR REPLACE FUNCTION public.get_user_by_email(email_to_check text)
+ RETURNS users
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+DECLARE
+    user_record public.users;
+BEGIN
+    SELECT * INTO user_record
+    FROM public.users
+    WHERE email = email_to_check
+    LIMIT 1;
+    
+    RETURN user_record;
+END;
+$function$
+;
+
+
+alter table "public"."group_requests" add column "recipient_profile_gradient" gradients not null;
+
+alter table "public"."group_requests" add column "sender_profile_gradient" gradients not null;
