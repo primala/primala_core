@@ -1,7 +1,7 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
-import 'dart:ui';
-
+import 'dart:async';
 import 'package:mobx/mobx.dart';
+import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 part 'group_picker_widgets_coordinator.g.dart';
 
@@ -16,13 +16,16 @@ abstract class _GroupPickerWidgetsCoordinatorBase
     required this.animatedScaffold,
   });
 
+  @observable
+  bool showWidgets = false;
+
+  @action
+  setShowWidgets(bool value) => showWidgets = value;
+
   @action
   constructor() {
-    animatedScaffold.setMovie(
-      getMovie(
-        const Color(0xFFFFFBEC),
-        const Color(0xFFFFFBEC),
-      ),
-    );
+    Timer(Seconds.get(0, milli: 1), () {
+      setShowWidgets(true);
+    });
   }
 }
