@@ -3,12 +3,10 @@ import 'package:nokhte/app/core/modules/legacy_connectivity/legacy_connectivity.
 import 'package:nokhte/app/core/modules/session_content/session_content.dart';
 import 'package:nokhte/app/core/modules/supabase/supabase.dart';
 import 'package:nokhte/app/core/network/network_info.dart';
-import 'package:nokhte/app/modules/storage/storage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'session_logic.dart';
 export 'data/data.dart';
 export 'types/types.dart';
-export 'widgets/widgets.dart';
 export 'domain/domain.dart';
 export 'mobx/mobx.dart';
 
@@ -17,7 +15,6 @@ class SessionLogicModule extends Module {
   List<Module> get imports => [
         SupabaseModule(),
         LegacyConnectivityModule(),
-        StorageLogicModule(),
         SessionContentModule(),
       ];
   @override

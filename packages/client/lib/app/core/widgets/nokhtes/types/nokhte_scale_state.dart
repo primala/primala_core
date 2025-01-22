@@ -1,1 +1,0 @@
-enum NokhteScaleState { enlarge, shrink }

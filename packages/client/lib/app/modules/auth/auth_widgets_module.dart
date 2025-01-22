@@ -7,7 +7,6 @@ class AuthWidgetsModule extends Module {
   @override
   List<Module> get imports => [
         ConnectivityModule(),
-        GestureCrossModule(),
       ];
 
   @override

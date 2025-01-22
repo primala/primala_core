@@ -10,6 +10,7 @@ class GroupsWidgetsModule extends Module {
     i.add<GroupPickerWidgetsCoordinator>(
       () => GroupPickerWidgetsCoordinator(
         animatedScaffold: AnimatedScaffoldStore(),
+        groupDisplay: GroupDisplayStore(),
       ),
     );
   }

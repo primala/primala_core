@@ -87,15 +87,15 @@ class LetEmCook extends HookWidget {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 3),
-                          child: NokhteGradientText(
-                            store: NokhteGradientTextStore(),
-                            content: 'Sent',
-                            gradient: LetEmCookConstants.greenGrad(
-                                value.get('opacity')),
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(top: 3),
+                        //   child: NokhteGradientText(
+                        //     store: NokhteGradientTextStore(),
+                        //     content: 'Sent',
+                        //     gradient: LetEmCookConstants.greenGrad(
+                        //         value.get('opacity')),
+                        //   ),
+                        // ),
                       ],
                     );
                   }),

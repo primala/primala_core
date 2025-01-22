@@ -1,32 +1,21 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
-
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
-import 'package:nokhte/app/core/mixins/mixin.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/auth/auth.dart';
-import 'package:nokhte/app/modules/home/home.dart';
 part 'login_coordinator.g.dart';
 
 class LoginCoordinator = _LoginCoordinatorBase with _$LoginCoordinator;
 
-abstract class _LoginCoordinatorBase
-    with
-        Store,
-        EnRoute,
-        EnRouteRouter,
-        HomeScreenRouter,
-        BaseCoordinator,
-        Reactions {
+abstract class _LoginCoordinatorBase with Store, BaseCoordinator, Reactions {
   final LoginWidgetsCoordinator widgets;
   final AuthContract contract;
   final IdentifyUser identifyUser;
-  @override
   final UserInformationCoordinator userInfo;
   @override
   final CaptureScreen captureScreen;
@@ -37,7 +26,6 @@ abstract class _LoginCoordinatorBase
     required this.identifyUser,
     required this.captureScreen,
   }) {
-    initEnRouteActions();
     initBaseCoordinatorActions();
   }
 
@@ -71,7 +59,7 @@ abstract class _LoginCoordinatorBase
       setDisableAllTouchFeedback(true);
     }));
     disposers.add(backButtonReactor());
-    disposers.add(widgets.animatedScaffoldReactor(onAnimationComplete));
+    disposers.add(widgets.animatedScaffoldReactor());
   }
 
   @action

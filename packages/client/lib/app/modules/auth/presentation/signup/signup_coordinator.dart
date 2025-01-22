@@ -3,29 +3,19 @@ import 'dart:async';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
-import 'package:nokhte/app/core/mixins/mixin.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/auth/auth.dart';
-import 'package:nokhte/app/modules/home/home.dart';
 part 'signup_coordinator.g.dart';
 
 class SignupCoordinator = _SignupCoordinatorBase with _$SignupCoordinator;
 
-abstract class _SignupCoordinatorBase
-    with
-        Store,
-        EnRoute,
-        EnRouteRouter,
-        HomeScreenRouter,
-        BaseCoordinator,
-        Reactions {
+abstract class _SignupCoordinatorBase with Store, BaseCoordinator, Reactions {
   final SignupWidgetsCoordinator widgets;
   final AuthContract contract;
   final IdentifyUser identifyUser;
-  @override
   final UserInformationCoordinator userInfo;
   @override
   final CaptureScreen captureScreen;
@@ -36,7 +26,6 @@ abstract class _SignupCoordinatorBase
     required this.identifyUser,
     required this.captureScreen,
   }) {
-    initEnRouteActions();
     initBaseCoordinatorActions();
   }
 
@@ -69,7 +58,7 @@ abstract class _SignupCoordinatorBase
     }, onDisconnected: () {
       setDisableAllTouchFeedback(true);
     }));
-    disposers.add(widgets.animatedScaffoldReactor(onAnimationComplete));
+    disposers.add(widgets.animatedScaffoldReactor());
     disposers.add(backButtonReactor());
   }
 

@@ -1,4 +1,0 @@
-enum GestureCrossNokhteTypes {
-  stroke,
-  gradient,
-}

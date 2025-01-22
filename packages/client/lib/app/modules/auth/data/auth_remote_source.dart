@@ -1,7 +1,5 @@
 import 'dart:io';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:nokhte/app/core/modules/hive/mixin/mixin.dart';
-import 'package:nokhte/app/core/modules/hive/types/boxes.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/modules/auth/domain/domain.dart';
 import 'package:nokhte_backend/tables/users.dart';
@@ -24,7 +22,7 @@ abstract class AuthRemoteSource {
   Future<bool> versionIsUpToDate();
 }
 
-class AuthRemoteSourceImpl with HiveBoxUtils implements AuthRemoteSource {
+class AuthRemoteSourceImpl implements AuthRemoteSource {
   final SupabaseClient supabase;
   late UserInformationRemoteSourceImpl userInfoRemoteSource;
 
@@ -100,7 +98,6 @@ class AuthRemoteSourceImpl with HiveBoxUtils implements AuthRemoteSource {
   addName({String theName = ""}) async {
     final queries = UsersQueries(supabase: supabase);
     final List nameCheck = await queries.getUserInfo();
-    List insertRes;
     String fullName;
     if (nameCheck.isEmpty) {
       if (theName.isEmpty) {
@@ -113,13 +110,9 @@ class AuthRemoteSourceImpl with HiveBoxUtils implements AuthRemoteSource {
 
       final email = supabase.auth.currentUser?.email ?? '';
 
-      insertRes = await queries.insertUserInfo(
+      return await queries.insertUserInfo(
         fullName: fullName,
         email: email,
-      );
-      return updateBox(
-        data: insertRes.first,
-        name: HiveBoxes.userInformation.toString(),
       );
     } else {
       return [];
