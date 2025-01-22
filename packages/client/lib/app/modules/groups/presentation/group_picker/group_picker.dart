@@ -20,25 +20,30 @@ class GroupPickerScreen extends HookWidget {
     return AnimatedScaffold(
       store: coordinator.widgets.animatedScaffold,
       child: Observer(builder: (context) {
-        return MultiHitStack(
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SmartHeader(
-              content: "Groups",
-              showWidget: coordinator.widgets.showWidgets,
+            HeaderRow(
+              children: [
+                InboxIcon(
+                  showWidget: coordinator.widgets.showWidgets,
+                  onTap: () {
+                    print('inbox on top ');
+                  },
+                  badgeCount: 90,
+                ),
+                SmartHeader(
+                  content: "Groups",
+                  showWidget: coordinator.widgets.showWidgets,
+                ),
+                SettingsIcon(
+                  showWidget: coordinator.widgets.showWidgets,
+                  onTap: () {
+                    print('settings on top ');
+                  },
+                ),
+              ],
             ),
-            SettingsIcon(
-              showWidget: coordinator.widgets.showWidgets,
-              onTap: () {
-                print('settings on top ');
-              },
-            ),
-            InboxIcon(
-              showWidget: coordinator.widgets.showWidgets,
-              onTap: () {
-                print('inbox on top ');
-              },
-              badgeCount: 90,
-            )
           ],
         );
       }),

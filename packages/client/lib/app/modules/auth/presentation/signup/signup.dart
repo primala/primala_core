@@ -2,7 +2,6 @@ export 'signup_coordinator.dart';
 export 'signup_widgets_coordinator.dart';
 import 'package:flutter/material.dart' hide BackButton;
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/auth/auth.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -25,15 +24,28 @@ class SignupScreen extends HookWidget {
     return AnimatedScaffold(
       store: coordinator.widgets.animatedScaffold,
       child: Observer(builder: (context) {
-        return MultiHitStack(
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            BackButton(
-              store: coordinator.widgets.backButton,
-              showWidget: coordinator.widgets.showWidgets,
+            HeaderRow(
+              children: [
+                BackButton(
+                  store: coordinator.widgets.backButton,
+                  showWidget: coordinator.widgets.showWidgets,
+                ),
+                SmartHeader(
+                  content: "Sign up",
+                  color: Colors.white,
+                  showWidget: coordinator.widgets.showWidgets,
+                ),
+                BackButton(
+                  store: coordinator.widgets.backButton,
+                  showWidget: false,
+                ),
+              ],
             ),
-            SmartHeader(
-              content: "Sign up",
-              color: Colors.white,
+            AuthTextFields(
+              store: coordinator.widgets.authTextFields,
               showWidget: coordinator.widgets.showWidgets,
             ),
             AuthButton(
@@ -41,15 +53,6 @@ class SignupScreen extends HookWidget {
               showWidget: coordinator.widgets.showWidgets,
               onPressed: () => coordinator.signUp(),
               label: "Sign up",
-            ),
-            AuthTextFields(
-              store: coordinator.widgets.authTextFields,
-              showWidget: coordinator.widgets.showWidgets,
-            ),
-            FullScreen(
-              child: WifiDisconnectOverlay(
-                store: coordinator.widgets.wifiDisconnectOverlay,
-              ),
             ),
           ],
         );

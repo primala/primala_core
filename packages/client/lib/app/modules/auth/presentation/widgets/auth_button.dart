@@ -31,7 +31,7 @@ class AuthButton extends HookWidget {
             children: [
               Padding(
                 padding: EdgeInsets.only(
-                  bottom: screenSize.height * .12,
+                  bottom: screenSize.height * .08,
                   left: width * .15,
                   right: width * .15,
                 ),

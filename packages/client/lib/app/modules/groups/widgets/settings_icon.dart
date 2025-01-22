@@ -19,26 +19,18 @@ class SettingsIcon extends HookWidget {
     return AnimatedOpacity(
       opacity: useWidgetOpacity(showWidget),
       duration: Seconds.get(0, milli: 500),
-      child: Container(
-        alignment: Alignment.topRight,
-        child: Padding(
-          padding: EdgeInsets.only(
-            right: screenSize.width * .10,
-            top: useScaledSize(
-              baseValue: .081,
-              screenSize: screenSize,
-              bumpPerHundredth: -.0003,
-            ),
-          ),
-          child: GestureDetector(
-            onTap: () {
-              onTap();
-            },
-            child: Image.asset(
-              'assets/groups/settings_icon.png',
-              height: 40,
-              width: 40,
-            ),
+      child: Padding(
+        padding: EdgeInsets.only(
+          right: screenSize.width * .10,
+        ),
+        child: GestureDetector(
+          onTap: () {
+            onTap();
+          },
+          child: Image.asset(
+            'assets/groups/settings_icon.png',
+            height: 40,
+            width: 40,
           ),
         ),
       ),

@@ -26,7 +26,7 @@ class AnimatedScaffold extends HookWidget {
               onCompleted: () => store.onCompleted(),
               builder: (context, value, _) => Scaffold(
                 backgroundColor: value.get('color'),
-                // backgroundColor: Colors.white,
+                // backgroundColor: Colors.red,
                 resizeToAvoidBottomInset: false,
                 body: child,
               ),

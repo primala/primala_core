@@ -3,7 +3,6 @@ export 'login_greeter_widgets_coordinator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
-import 'package:nokhte/app/core/modules/connectivity/connectivity.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/auth/auth.dart';
@@ -29,13 +28,14 @@ class LoginGreeterScreen extends HookWidget {
     return AnimatedScaffold(
       store: coordinator.widgets.animatedScaffold,
       child: Observer(builder: (context) {
-        return MultiHitStack(
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            AnimatedOpacity(
-              duration: Seconds.get(0, milli: 500),
-              opacity: useWidgetOpacity(coordinator.widgets.showWidgets),
-              child: Padding(
-                padding: EdgeInsets.only(bottom: screenHeight * .7),
+            Padding(
+              padding: EdgeInsets.only(top: screenHeight * .1),
+              child: AnimatedOpacity(
+                duration: Seconds.get(0, milli: 500),
+                opacity: useWidgetOpacity(coordinator.widgets.showWidgets),
                 child: Center(
                   child: Image.asset(
                     "assets/login/header.png",
@@ -44,10 +44,6 @@ class LoginGreeterScreen extends HookWidget {
                 ),
               ),
             ),
-            // SmartHeader(
-            //   content: "NOKHTE",
-            //   showWidget: coordinator.widgets.showWidgets,
-            // ),
             LoginButtons(
               showWidget: coordinator.widgets.showWidgets,
               onSignInWithApple: () async =>
@@ -57,11 +53,11 @@ class LoginGreeterScreen extends HookWidget {
               onLogIn: () => coordinator.onLogIn(),
               onSignUp: () => coordinator.onSignUp(),
             ),
-            FullScreen(
-              child: WifiDisconnectOverlay(
-                store: coordinator.widgets.wifiDisconnectOverlay,
-              ),
-            ),
+            // FullScreen(
+            //   child: WifiDisconnectOverlay(
+            //     store: coordinator.widgets.wifiDisconnectOverlay,
+            //   ),
+            // ),
           ],
         );
       }),

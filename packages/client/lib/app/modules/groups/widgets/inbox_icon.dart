@@ -27,11 +27,6 @@ class InboxIcon extends HookWidget {
         child: Padding(
           padding: EdgeInsets.only(
             left: screenSize.width * .10,
-            top: useScaledSize(
-              baseValue: .078,
-              screenSize: screenSize,
-              bumpPerHundredth: -.0003,
-            ),
           ),
           child: MultiHitStack(
             clipBehavior: Clip.none,

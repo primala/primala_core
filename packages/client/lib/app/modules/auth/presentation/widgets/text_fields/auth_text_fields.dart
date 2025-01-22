@@ -31,6 +31,8 @@ class AuthTextFields extends HookWidget {
     return Padding(
       padding: const EdgeInsets.only(
         bottom: 20.0,
+        left: 16.0,
+        right: 16.0,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,7 +97,10 @@ class AuthTextFields extends HookWidget {
         opacity: useWidgetOpacity(showWidget),
         duration: Seconds.get(0, milli: 500),
         child: Padding(
-          padding: EdgeInsets.only(top: screenSize.height * .3),
+          padding: EdgeInsets.only(
+            top: screenSize.height * .0,
+            bottom: screenSize.height * .15,
+          ),
           child: Column(
             children: List.generate(store.fieldsToShow.length, (index) {
               final field = store.fieldsToShow[index];

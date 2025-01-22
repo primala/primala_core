@@ -19,23 +19,15 @@ class SmartHeader extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = useFullScreenSize();
     return Observer(
-      builder: (context) => FullScreen(
-        child: AnimatedOpacity(
-          opacity: useWidgetOpacity(showWidget),
-          duration: Seconds.get(0, milli: 500),
-          child: Padding(
-            padding: EdgeInsets.only(bottom: screenSize.height * .8),
-            child: Center(
-              child: Jost(
-                content,
-                fontSize: 40,
-                shouldCenter: true,
-                fontColor: color,
-              ),
-            ),
-          ),
+      builder: (context) => AnimatedOpacity(
+        opacity: useWidgetOpacity(showWidget),
+        duration: Seconds.get(0, milli: 500),
+        child: Jost(
+          content,
+          fontSize: 40,
+          shouldCenter: true,
+          fontColor: color,
         ),
       ),
     );
