@@ -9,10 +9,12 @@ import 'package:nokhte/app/core/widgets/widgets.dart';
 class SmartHeader extends HookWidget {
   final bool showWidget;
   final String content;
+  final Color color;
   const SmartHeader({
     super.key,
     required this.showWidget,
     required this.content,
+    this.color = Colors.black,
   });
 
   @override
@@ -30,6 +32,7 @@ class SmartHeader extends HookWidget {
                 content,
                 fontSize: 40,
                 shouldCenter: true,
+                fontColor: color,
               ),
             ),
           ),

@@ -21,7 +21,7 @@ class LoginScreen extends HookWidget {
       coordinator.constructor();
       return () => coordinator.deconstructor();
     }, []);
-//
+
     return AnimatedScaffold(
       store: coordinator.widgets.animatedScaffold,
       child: Observer(builder: (context) {
@@ -33,6 +33,7 @@ class LoginScreen extends HookWidget {
             ),
             SmartHeader(
               content: "Log in",
+              color: Colors.white,
               showWidget: coordinator.widgets.showWidgets,
             ),
             AuthTextFields(

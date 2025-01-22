@@ -33,6 +33,7 @@ class SignupScreen extends HookWidget {
             ),
             SmartHeader(
               content: "Sign up",
+              color: Colors.white,
               showWidget: coordinator.widgets.showWidgets,
             ),
             AuthButton(
