@@ -68,6 +68,8 @@ flutter:
     - assets/groups/user_icon.png
     - assets/groups/settings_icon.png
     - assets/groups/envelope_icon.png
+    - assets/groups/plus_icon.png
+    - assets/groups/pencil_icon_white.png
 
     - assets/blocks/conclusion_icon.png
     - assets/blocks/conclusion_send_icon.png

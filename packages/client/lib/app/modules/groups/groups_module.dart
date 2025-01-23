@@ -48,6 +48,7 @@ class GroupsModule extends Module {
     i.add<GroupPickerCoordinator>(
       () => GroupPickerCoordinator(
         widgets: Modular.get<GroupPickerWidgetsCoordinator>(),
+        contract: Modular.get<GroupsContractImpl>(),
       ),
     );
 

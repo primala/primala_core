@@ -27,7 +27,8 @@ abstract class _GroupPickerWidgetsCoordinatorBase
 
   @action
   constructor() {
-    Timer(Seconds.get(0, milli: 1), () {
+    setShowWidgets(false);
+    Timer(Seconds.get(1), () {
       setShowWidgets(true);
     });
   }

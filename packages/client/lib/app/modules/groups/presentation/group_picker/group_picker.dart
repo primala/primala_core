@@ -20,31 +20,36 @@ class GroupPickerScreen extends HookWidget {
     return AnimatedScaffold(
       store: coordinator.widgets.animatedScaffold,
       child: Observer(builder: (context) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            HeaderRow(
-              children: [
-                InboxIcon(
-                  showWidget: coordinator.widgets.showWidgets,
-                  onTap: () {
-                    print('inbox on top ');
-                  },
-                  badgeCount: 90,
-                ),
-                SmartHeader(
-                  content: "Groups",
-                  showWidget: coordinator.widgets.showWidgets,
-                ),
-                SettingsIcon(
-                  showWidget: coordinator.widgets.showWidgets,
-                  onTap: () {
-                    print('settings on top ');
-                  },
-                ),
-              ],
-            ),
-          ],
+        return SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              HeaderRow(
+                children: [
+                  InboxIcon(
+                    showWidget: coordinator.widgets.showWidgets,
+                    onTap: () {
+                      print('inbox on top ');
+                    },
+                    badgeCount: 90,
+                  ),
+                  SmartHeader(
+                    content: "Groups",
+                    showWidget: coordinator.widgets.showWidgets,
+                  ),
+                  SettingsIcon(
+                    showWidget: coordinator.widgets.showWidgets,
+                    onTap: () {
+                      print('settings on top ');
+                    },
+                  ),
+                ],
+              ),
+              GroupDisplay(
+                store: coordinator.widgets.groupDisplay,
+              ),
+            ],
+          ),
         );
       }),
       //
