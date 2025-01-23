@@ -18,15 +18,12 @@ class SignupWidgetsCoordinator = _SignupWidgetsCoordinatorBase
 abstract class _SignupWidgetsCoordinatorBase
     with Store, BaseWidgetsCoordinator, Reactions, AnimatedScaffoldMovie {
   final AnimatedScaffoldStore animatedScaffold;
-  final BackButtonStore backButton;
   final AuthTextFieldsStore authTextFields;
-  @override
   final WifiDisconnectOverlayStore wifiDisconnectOverlay;
 
   _SignupWidgetsCoordinatorBase({
     required this.animatedScaffold,
     required this.authTextFields,
-    required this.backButton,
     required this.wifiDisconnectOverlay,
   }) {
     initBaseWidgetsCoordinatorActions();
@@ -47,15 +44,6 @@ abstract class _SignupWidgetsCoordinatorBase
     Timer(Seconds.get(0, milli: 1), () {
       setShowWidgets(true);
     });
-  }
-
-  @observable
-  bool showWidgets = true;
-
-  @action
-  setShowWidgets(bool value) {
-    backButton.setWidgetVisibility(value);
-    showWidgets = value;
   }
 
   @action

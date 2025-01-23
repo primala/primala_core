@@ -17,7 +17,6 @@ class LoginGreeterWidgetsCoordinator = _LoginGreeterWidgetsCoordinatorBase
 abstract class _LoginGreeterWidgetsCoordinatorBase
     with Store, BaseWidgetsCoordinator, Reactions, AnimatedScaffoldMovie {
   final AnimatedScaffoldStore animatedScaffold;
-  @override
   final WifiDisconnectOverlayStore wifiDisconnectOverlay;
 
   _LoginGreeterWidgetsCoordinatorBase({
@@ -26,12 +25,6 @@ abstract class _LoginGreeterWidgetsCoordinatorBase
   }) {
     initBaseWidgetsCoordinatorActions();
   }
-
-  @observable
-  bool showWidgets = true;
-
-  @action
-  setShowWidgets(bool value) => showWidgets = value;
 
   @action
   constructor() {

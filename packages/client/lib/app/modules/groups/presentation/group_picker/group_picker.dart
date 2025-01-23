@@ -17,42 +17,43 @@ class GroupPickerScreen extends HookWidget {
       return null;
       // return () => coordinator.deconstructor();
     }, []);
-    return AnimatedScaffold(
-      store: coordinator.widgets.animatedScaffold,
-      child: Observer(builder: (context) {
-        return SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              HeaderRow(
-                children: [
-                  InboxIcon(
-                    showWidget: coordinator.widgets.showWidgets,
-                    onTap: () {
-                      print('inbox on top ');
-                    },
-                    badgeCount: 90,
-                  ),
-                  SmartHeader(
-                    content: "Groups",
-                    showWidget: coordinator.widgets.showWidgets,
-                  ),
-                  SettingsIcon(
-                    showWidget: coordinator.widgets.showWidgets,
-                    onTap: () {
-                      print('settings on top ');
-                    },
-                  ),
-                ],
-              ),
-              GroupDisplay(
-                store: coordinator.widgets.groupDisplay,
-              ),
-            ],
-          ),
-        );
-      }),
-      //
-    );
+    return Observer(builder: (context) {
+      return AnimatedScaffold(
+        showWidgets: coordinator.widgets.showWidgets,
+        store: coordinator.widgets.animatedScaffold,
+        child: Observer(builder: (context) {
+          return SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                HeaderRow(
+                  children: [
+                    InboxIcon(
+                      onTap: () {
+                        print('inbox on top ');
+                      },
+                      badgeCount: 90,
+                    ),
+                    const SmartHeader(
+                      content: "Groups",
+                    ),
+                    SettingsIcon(
+                      showWidget: true,
+                      onTap: () {
+                        print('settings on top ');
+                      },
+                    ),
+                  ],
+                ),
+                GroupDisplay(
+                  store: coordinator.widgets.groupDisplay,
+                ),
+              ],
+            ),
+          );
+        }),
+        //
+      );
+    });
   }
 }

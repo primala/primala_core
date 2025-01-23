@@ -14,7 +14,6 @@ class AuthWidgetsModule extends Module {
     i.add<LoginWidgetsCoordinator>(
       () => LoginWidgetsCoordinator(
         authTextFields: AuthTextFieldsStore(),
-        backButton: BackButtonStore(),
         wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
         animatedScaffold: AnimatedScaffoldStore(),
       ),
@@ -30,7 +29,6 @@ class AuthWidgetsModule extends Module {
     i.add<SignupWidgetsCoordinator>(
       () => SignupWidgetsCoordinator(
         authTextFields: AuthTextFieldsStore(),
-        backButton: BackButtonStore(),
         wifiDisconnectOverlay: Modular.get<WifiDisconnectOverlayStore>(),
         animatedScaffold: AnimatedScaffoldStore(),
       ),

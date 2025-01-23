@@ -59,7 +59,6 @@ abstract class _SignupCoordinatorBase with Store, BaseCoordinator, Reactions {
       setDisableAllTouchFeedback(true);
     }));
     disposers.add(widgets.animatedScaffoldReactor());
-    disposers.add(backButtonReactor());
   }
 
   @action
@@ -95,12 +94,6 @@ abstract class _SignupCoordinatorBase with Store, BaseCoordinator, Reactions {
     });
     setDisableAllTouchFeedback(true);
   }
-
-  backButtonReactor() => reaction((p0) => widgets.backButton.tapCount, (p0) {
-        if (disableAllTouchFeedback || !widgets.backButton.showWidget) return;
-
-        onGoBack();
-      });
 
   authStateReactor() => reaction((p0) => isLoggedIn, (p0) async {
         if (p0) {

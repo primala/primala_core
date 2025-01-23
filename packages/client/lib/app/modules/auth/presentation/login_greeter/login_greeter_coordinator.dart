@@ -76,11 +76,13 @@ abstract class _LoginGreeterCoordinatorBase
 
   @action
   signInWithApple() async {
+    if (disableAllTouchFeedback) return;
     await contract.signInWithApple();
   }
 
   @action
   signInWithGoogle() async {
+    if (disableAllTouchFeedback) return;
     await contract.signInWithGoogle();
   }
 
@@ -106,6 +108,7 @@ abstract class _LoginGreeterCoordinatorBase
 
   authStateReactor() => reaction((p0) => isLoggedIn, (p0) async {
         if (p0) {
+          setDisableAllTouchFeedback(true);
           widgets.loggedInOnResumed();
           await contract.addName();
           await identifyUser(const NoParams());

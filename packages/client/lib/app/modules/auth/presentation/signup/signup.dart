@@ -21,27 +21,25 @@ class SignupScreen extends HookWidget {
       return () => coordinator.deconstructor();
     }, []);
 
-    return AnimatedScaffold(
-      store: coordinator.widgets.animatedScaffold,
-      child: Observer(builder: (context) {
-        return Column(
+    return Observer(builder: (context) {
+      return AnimatedScaffold(
+        showWidgets: coordinator.widgets.showWidgets,
+        store: coordinator.widgets.animatedScaffold,
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             HeaderRow(
               children: [
                 BackButton(
-                  store: coordinator.widgets.backButton,
-                  showWidget: coordinator.widgets.showWidgets,
+                  onTap: coordinator.onGoBack,
                 ),
-                SmartHeader(
+                const SmartHeader(
                   content: "Sign up",
                   color: Colors.white,
-                  showWidget: coordinator.widgets.showWidgets,
                 ),
-                BackButton(
-                  store: coordinator.widgets.backButton,
-                  showWidget: false,
-                ),
+                const BackButton(
+                  color: Colors.black,
+                )
               ],
             ),
             AuthTextFields(
@@ -50,14 +48,13 @@ class SignupScreen extends HookWidget {
             ),
             AuthButton(
               isEnabled: coordinator.widgets.authTextFields.allInputsAreValid,
-              showWidget: coordinator.widgets.showWidgets,
               onPressed: () => coordinator.signUp(),
               label: "Sign up",
             ),
           ],
-        );
-      }),
-      //   ),
-    );
+        ),
+        //   ),
+      );
+    });
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
-import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/auth/auth.dart';
 export 'auth_text_fields_store.dart';
 export 'fields_to_show.dart';
@@ -93,56 +92,52 @@ class AuthTextFields extends HookWidget {
   Widget build(BuildContext context) {
     final screenSize = useFullScreenSize();
     return Observer(
-      builder: (_) => AnimatedOpacity(
-        opacity: useWidgetOpacity(showWidget),
-        duration: Seconds.get(0, milli: 500),
-        child: Padding(
-          padding: EdgeInsets.only(
-            top: screenSize.height * .0,
-            bottom: screenSize.height * .15,
-          ),
-          child: Column(
-            children: List.generate(store.fieldsToShow.length, (index) {
-              final field = store.fieldsToShow[index];
-              final controller = store.controllers[index];
-              switch (field) {
-                case FieldsToShow.email:
-                  return _buildTextField(
-                    controller: controller,
-                    hint: 'Email',
-                    isPassword: false,
-                    errorText: store.emailErrorText,
-                    hasError: store.emailHasError,
-                    enabled: showWidget,
-                    validator: store.validateEmail,
-                  );
-                case FieldsToShow.password:
-                  return _buildTextField(
-                    controller: controller,
-                    hint: 'Password',
-                    isPassword: true,
-                    errorText: store.passwordErrorText,
-                    hasError: store.passwordHasError,
-                    onToggleObscured: () => store.toggleIsObscured(),
-                    isObscured: store.isObscured,
-                    enabled: showWidget,
-                    validator: store.validatePassword,
-                  );
-                case FieldsToShow.fullName:
-                  return _buildTextField(
-                    controller: controller,
-                    hint: 'Full Name',
-                    isPassword: false,
-                    errorText: store.fullNameErrorText,
-                    hasError: store.fullNameHasError,
-                    enabled: showWidget,
-                    validator: store.validateFullName,
-                  );
-                default:
-                  return const SizedBox.shrink();
-              }
-            }),
-          ),
+      builder: (_) => Padding(
+        padding: EdgeInsets.only(
+          top: screenSize.height * .0,
+          bottom: screenSize.height * .15,
+        ),
+        child: Column(
+          children: List.generate(store.fieldsToShow.length, (index) {
+            final field = store.fieldsToShow[index];
+            final controller = store.controllers[index];
+            switch (field) {
+              case FieldsToShow.email:
+                return _buildTextField(
+                  controller: controller,
+                  hint: 'Email',
+                  isPassword: false,
+                  errorText: store.emailErrorText,
+                  hasError: store.emailHasError,
+                  enabled: showWidget,
+                  validator: store.validateEmail,
+                );
+              case FieldsToShow.password:
+                return _buildTextField(
+                  controller: controller,
+                  hint: 'Password',
+                  isPassword: true,
+                  errorText: store.passwordErrorText,
+                  hasError: store.passwordHasError,
+                  onToggleObscured: () => store.toggleIsObscured(),
+                  isObscured: store.isObscured,
+                  enabled: showWidget,
+                  validator: store.validatePassword,
+                );
+              case FieldsToShow.fullName:
+                return _buildTextField(
+                  controller: controller,
+                  hint: 'Full Name',
+                  isPassword: false,
+                  errorText: store.fullNameErrorText,
+                  hasError: store.fullNameHasError,
+                  enabled: showWidget,
+                  validator: store.validateFullName,
+                );
+              default:
+                return const SizedBox.shrink();
+            }
+          }),
         ),
       ),
     );

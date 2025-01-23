@@ -63,11 +63,11 @@ class Rally extends HookWidget with RallyConstants {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    BackButton(
-                      store: store.backButton,
-                      overridedColor: white,
-                      topPaddingScalar: 0.1,
-                    ),
+                    BackButton(onTap: () {
+                      if (phase == RallyPhase.selection) {
+                        store.setRallyPhase(RallyPhase.initial);
+                      }
+                    }),
                     const Padding(
                       padding: EdgeInsets.only(top: 70.0, left: 25),
                       child: Chivo(

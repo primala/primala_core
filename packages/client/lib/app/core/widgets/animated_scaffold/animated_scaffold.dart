@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:nokhte/app/core/hooks/hooks.dart';
+import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:simple_animations/simple_animations.dart';
 export 'movies.dart';
@@ -10,10 +12,12 @@ export 'animated_scaffold_store.dart';
 class AnimatedScaffold extends HookWidget {
   final AnimatedScaffoldStore store;
   final Widget child;
+  final bool showWidgets;
   const AnimatedScaffold({
     super.key,
     required this.store,
     required this.child,
+    this.showWidgets = true,
   });
 
   @override
@@ -28,7 +32,12 @@ class AnimatedScaffold extends HookWidget {
                 backgroundColor: value.get('color'),
                 // backgroundColor: Colors.red,
                 resizeToAvoidBottomInset: false,
-                body: child,
+                body: Observer(builder: (context) {
+                  return AnimatedOpacity(
+                      opacity: useWidgetOpacity(showWidgets),
+                      duration: Seconds.get(0, milli: 500),
+                      child: child);
+                }),
               ),
             ));
   }

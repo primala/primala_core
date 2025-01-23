@@ -19,7 +19,7 @@ mixin BaseCoordinator {
   }
 
   _toggleDisableAllTouchFeedback() =>
-      _disableAllTouchFeedback.value = !_disableAllTouchFeedback.value;
+      _disableAllTouchFeedback.value = _disableAllTouchFeedback.value;
 
   _setDisableAllTouchFeedback(bool value) =>
       _disableAllTouchFeedback.value = value;

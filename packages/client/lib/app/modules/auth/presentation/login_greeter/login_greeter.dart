@@ -25,10 +25,11 @@ class LoginGreeterScreen extends HookWidget {
     final screenSize = useFullScreenSize();
     final screenWidth = screenSize.width;
     final screenHeight = screenSize.height;
-    return AnimatedScaffold(
-      store: coordinator.widgets.animatedScaffold,
-      child: Observer(builder: (context) {
-        return Column(
+    return Observer(builder: (context) {
+      return AnimatedScaffold(
+        showWidgets: coordinator.widgets.showWidgets,
+        store: coordinator.widgets.animatedScaffold,
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
@@ -45,7 +46,6 @@ class LoginGreeterScreen extends HookWidget {
               ),
             ),
             LoginButtons(
-              showWidget: coordinator.widgets.showWidgets,
               onSignInWithApple: () async =>
                   await coordinator.signInWithApple(),
               onSignInWithGoogle: () async =>
@@ -59,9 +59,9 @@ class LoginGreeterScreen extends HookWidget {
             //   ),
             // ),
           ],
-        );
-      }),
-      //   ),
-    );
+        ),
+        //   ),
+      );
+    });
   }
 }

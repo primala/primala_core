@@ -13,11 +13,11 @@ class RallyStore = _RallyStoreBase with _$RallyStore;
 
 abstract class _RallyStoreBase extends BaseWidgetStore with Store, Reactions {
   final TintStore tint;
-  final BackButtonStore backButton;
+  // final BackButtonStore backButton;
 
   _RallyStoreBase({
     required this.tint,
-    required this.backButton,
+    // required this.backButton,
   }) {
     setWidgetVisibility(false);
   }
@@ -25,7 +25,7 @@ abstract class _RallyStoreBase extends BaseWidgetStore with Store, Reactions {
   @action
   constructor() {
     tint.startAtEnd();
-    disposers.add(backButtonTapReactor());
+    // disposers.add(backButtonTapReactor());
     disposers.add(glowColorReactor());
   }
 
@@ -100,11 +100,11 @@ abstract class _RallyStoreBase extends BaseWidgetStore with Store, Reactions {
     });
   }
 
-  backButtonTapReactor() => reaction((p0) => backButton.tapCount, (p0) {
-        if (phase == RallyPhase.selection) {
-          setRallyPhase(RallyPhase.initial);
-        }
-      });
+  // backButtonTapReactor() => reaction((p0) => backButton.tapCount, (p0) {
+  //       if (phase == RallyPhase.selection) {
+  //         setRallyPhase(RallyPhase.initial);
+  //       }
+  //     });
 
   glowColorReactor() => reaction((p0) => glowColor, (p0) {
         if (p0 == GlowColor.inflectionRed) {

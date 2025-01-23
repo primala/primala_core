@@ -58,7 +58,6 @@ abstract class _LoginCoordinatorBase with Store, BaseCoordinator, Reactions {
     }, onDisconnected: () {
       setDisableAllTouchFeedback(true);
     }));
-    disposers.add(backButtonReactor());
     disposers.add(widgets.animatedScaffoldReactor());
   }
 
@@ -94,12 +93,6 @@ abstract class _LoginCoordinatorBase with Store, BaseCoordinator, Reactions {
     });
     setDisableAllTouchFeedback(true);
   }
-
-  backButtonReactor() => reaction((p0) => widgets.backButton.tapCount, (p0) {
-        if (disableAllTouchFeedback || !widgets.backButton.showWidget) return;
-
-        onGoBack();
-      });
 
   authStateReactor() => reaction((p0) => isLoggedIn, (p0) async {
         if (p0) {
