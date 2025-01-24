@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
-import 'back_button_painter.dart';
+import 'left_chevron_painter.dart';
 
-class BackButton extends HookWidget {
+class LeftChevron extends HookWidget {
   final Color color;
   final Function? onTap;
-  const BackButton({
+  const LeftChevron({
     super.key,
-    this.color = Colors.white,
+    this.color = Colors.black,
     this.onTap,
   });
 
@@ -26,7 +26,7 @@ class BackButton extends HookWidget {
             onTap?.call();
           },
           child: CustomPaint(
-            painter: BackButtonPainter(
+            painter: LeftChevronPainter(
               color: color,
             ),
             child: SizedBox(

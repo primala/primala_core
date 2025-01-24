@@ -63,7 +63,7 @@ class Rally extends HookWidget with RallyConstants {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    BackButton(onTap: () {
+                    LeftChevron(onTap: () {
                       if (phase == RallyPhase.selection) {
                         store.setRallyPhase(RallyPhase.initial);
                       }

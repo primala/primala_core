@@ -14,44 +14,41 @@ class GroupPickerScreen extends HookWidget {
   Widget build(BuildContext context) {
     useEffect(() {
       coordinator.constructor();
-      return null;
-      // return () => coordinator.deconstructor();
+      return () => coordinator.dispose();
     }, []);
     return Observer(builder: (context) {
       return AnimatedScaffold(
         showWidgets: coordinator.widgets.showWidgets,
         store: coordinator.widgets.animatedScaffold,
-        child: Observer(builder: (context) {
-          return SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                HeaderRow(
-                  children: [
-                    InboxIcon(
-                      onTap: () {
-                        print('inbox on top ');
-                      },
-                      badgeCount: 90,
-                    ),
-                    const SmartHeader(
-                      content: "Groups",
-                    ),
-                    SettingsIcon(
-                      showWidget: true,
-                      onTap: () {
-                        print('settings on top ');
-                      },
-                    ),
-                  ],
-                ),
-                GroupDisplay(
-                  store: coordinator.widgets.groupDisplay,
-                ),
-              ],
-            ),
-          );
-        }),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              HeaderRow(
+                children: [
+                  InboxIcon(
+                    onTap: () {
+                      print('inbox on top ');
+                    },
+                    badgeCount: 90,
+                  ),
+                  const SmartHeader(
+                    content: "Groups",
+                  ),
+                  SettingsIcon(
+                    showWidget: true,
+                    onTap: () {
+                      print('settings on top ');
+                    },
+                  ),
+                ],
+              ),
+              GroupDisplay(
+                store: coordinator.widgets.groupDisplay,
+              ),
+            ],
+          ),
+        ),
         //
       );
     });

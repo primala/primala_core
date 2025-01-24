@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:nokhte/app/core/constants/colors.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
@@ -13,17 +14,36 @@ class CreateGroupScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     useEffect(() {
-      //  coordinator.constructor();
-      return null;
-      // return () => coordinator.deconstructor();
+      coordinator.constructor();
+      return () => coordinator.dispose();
     }, []);
-    return AnimatedScaffold(
-      store: coordinator.widgets.animatedScaffold,
-      child: Observer(builder: (context) {
-        return MultiHitStack(
-          children: [],
-        );
-      }),
-    );
+    return Observer(builder: (context) {
+      return AnimatedScaffold(
+        store: coordinator.widgets.animatedScaffold,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              children: [
+                HeaderRow(
+                  includeDivider: true,
+                  children: [
+                    LeftChevron(
+                      onTap: coordinator.onGoBack,
+                    ),
+                    const SmartHeader(
+                      content: "Create Group",
+                    ),
+                    const LeftChevron(
+                      color: NokhteColors.eggshell,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    });
   }
 }

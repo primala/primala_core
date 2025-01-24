@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class BackButtonPainter extends CustomPainter {
+class LeftChevronPainter extends CustomPainter {
   final Color color;
 
-  BackButtonPainter({
+  LeftChevronPainter({
     this.color = Colors.white,
     super.repaint,
   });
@@ -34,9 +34,9 @@ class BackButtonPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(BackButtonPainter oldDelegate) =>
+  bool shouldRepaint(LeftChevronPainter oldDelegate) =>
       oldDelegate.color != color;
 
   @override
-  bool shouldRebuildSemantics(BackButtonPainter oldDelegate) => false;
+  bool shouldRebuildSemantics(LeftChevronPainter oldDelegate) => false;
 }

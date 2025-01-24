@@ -1,6 +1,6 @@
 export 'signup_coordinator.dart';
 export 'signup_widgets_coordinator.dart';
-import 'package:flutter/material.dart' hide BackButton;
+import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/auth/auth.dart';
@@ -30,16 +30,15 @@ class SignupScreen extends HookWidget {
           children: [
             HeaderRow(
               children: [
-                BackButton(
+                LeftChevron(
                   onTap: coordinator.onGoBack,
+                  color: Colors.white,
                 ),
                 const SmartHeader(
                   content: "Sign up",
                   color: Colors.white,
                 ),
-                const BackButton(
-                  color: Colors.black,
-                )
+                const LeftChevron()
               ],
             ),
             AuthTextFields(

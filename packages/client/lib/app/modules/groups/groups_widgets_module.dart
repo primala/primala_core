@@ -13,5 +13,10 @@ class GroupsWidgetsModule extends Module {
         groupDisplay: GroupDisplayStore(),
       ),
     );
+    i.add<CreateGroupWidgetsCoordinator>(
+      () => CreateGroupWidgetsCoordinator(
+        animatedScaffold: AnimatedScaffoldStore(),
+      ),
+    );
   }
 }
