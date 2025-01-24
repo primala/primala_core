@@ -30,7 +30,7 @@ class HeaderRow extends HookWidget {
             const Divider(
               color: NokhteColors.black,
               thickness: 1,
-              height: 32,
+              height: 36,
             ),
         ],
       ),
