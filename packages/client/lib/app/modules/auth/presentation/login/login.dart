@@ -45,7 +45,9 @@ class LoginScreen extends HookWidget {
               store: coordinator.widgets.authTextFields,
               showWidget: coordinator.widgets.showWidgets,
             ),
-            AuthButton(
+            GenericButton(
+              color: Colors.white,
+              useFixedSize: true,
               isEnabled: coordinator.widgets.authTextFields.allInputsAreValid,
               onPressed: () => coordinator.logIn(),
               label: "Log in",

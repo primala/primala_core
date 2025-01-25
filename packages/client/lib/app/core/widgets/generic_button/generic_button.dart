@@ -4,21 +4,37 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 
-class AuthButton extends HookWidget {
+class GenericButton extends HookWidget {
   final bool isEnabled;
   final Function onPressed;
   final String label;
-  const AuthButton({
+  final bool useFixedSize;
+  final double borderRadius;
+
+  final Color color;
+
+  const GenericButton({
     super.key,
     required this.isEnabled,
     required this.onPressed,
     required this.label,
+    this.color = Colors.black,
+    this.useFixedSize = false,
+    this.borderRadius = 7.0,
   });
 
   @override
   Widget build(BuildContext context) {
     final screenSize = useFullScreenSize();
     final width = screenSize.width;
+
+    // Determine text color based on background color's brightness
+    Color determineTextColor(Color backgroundColor) {
+      return backgroundColor.computeLuminance() > 0.5
+          ? Colors.black
+          : Colors.white;
+    }
+
     return Observer(builder: (context) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -32,26 +48,23 @@ class AuthButton extends HookWidget {
             child: ElevatedButton(
               onPressed: isEnabled ? () => onPressed() : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                disabledBackgroundColor: Colors.white.withOpacity(.5),
+                backgroundColor: color,
+                disabledBackgroundColor: color.withOpacity(.5),
                 alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(
+                padding: EdgeInsets.symmetric(
                   vertical: 12.0,
+                  horizontal: useFixedSize ? 0 : 35,
                 ),
-                fixedSize: Size(width * 0.7, 50),
+                fixedSize: useFixedSize ? Size(width * 0.7, 50) : null,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(7),
+                  borderRadius: BorderRadius.circular(borderRadius),
                 ),
               ),
               child: Jost(
                 label,
-                fontColor: Colors.black,
+                fontColor: determineTextColor(color),
                 fontWeight: FontWeight.w400,
                 fontSize: 16,
-                // style: TextStyle(
-                //   color: Colors.black,
-                //   fontWeight: FontWeight.w300,
-                // ),
               ),
             ),
           ),
