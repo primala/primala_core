@@ -40,12 +40,14 @@ abstract class _CreateGroupCoordinatorBase
     if (widgets.showWidgets) return;
     widgets.setShowWidgets(false);
     final profileGradient = widgets.groupNameTextField.profileGradient;
+    final groupName = widgets.groupNameTextField.groupName;
 
     Timer(Seconds.get(0, milli: 500), () {
       Modular.to.navigate(
         GroupsConstants.groupIconPicker,
         arguments: {
           GroupsConstants.PROFILE_GRADIENT: profileGradient,
+          GroupsConstants.GROUP_NAME: groupName,
         },
       );
     });

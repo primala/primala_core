@@ -25,5 +25,6 @@ mixin GroupsConstants {
   static const inbox = '$module$relativeInbox';
 
   static const PROFILE_GRADIENT = 'profileGradient';
+  static const GROUP_NAME = 'groupName';
   static const GROUP_ID = 'groupId';
 }
