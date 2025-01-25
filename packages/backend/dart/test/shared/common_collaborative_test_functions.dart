@@ -50,7 +50,10 @@ class CommonCollaborativeTestFunctions {
 
     if (createGroup) {
       groupId = (await groupQueries.createGroup(
-        groupName: 'Test Group',
+        CreateGroupParams(
+          groupName: 'Test Group',
+          profileGradient: ProfileGradient.lagoon,
+        ),
       ));
       await usersQueries.updateActiveGroup(groupId);
 

@@ -1,1 +1,1 @@
-export 'groups/groups.dart';
+export 'groups/groups_queries.dart';

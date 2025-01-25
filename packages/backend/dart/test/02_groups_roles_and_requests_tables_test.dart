@@ -43,7 +43,10 @@ void main() {
   test("user one should be able to create a group and get added as an admin",
       () async {
     await u1GroupQueries.createGroup(
-      groupName: testGroupName,
+      CreateGroupParams(
+        groupName: testGroupName,
+        profileGradient: ProfileGradient.lagoon,
+      ),
     );
 
     final genRes = (await u1GroupQueries.select()).first;

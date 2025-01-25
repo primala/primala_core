@@ -1,5 +1,5 @@
 // ignore_for_file: constant_identifier_names
-import 'package:nokhte_backend/tables/groups/groups.dart';
+import 'package:nokhte_backend/tables/groups/groups_queries.dart';
 import 'package:nokhte_backend/tables/users.dart';
 import 'package:nokhte_backend/utils/profile_gradients_utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -21,11 +21,12 @@ class GroupsQueries with ProfileGradientUtils {
   })  : userUID = supabase.auth.currentUser?.id ?? '',
         userInfoQueries = UsersQueries(supabase: supabase);
 
-  Future<int> createGroup({
-    required String groupName,
-  }) async =>
+  Future<int> createGroup(CreateGroupParams params) async =>
       await supabase.rpc("create_group", params: {
-        'p_group_name': groupName,
+        'p_profile_gradient': ProfileGradientUtils.mapProfileGradientToString(
+          params.profileGradient,
+        ),
+        'p_group_name': params.groupName,
         'p_user_uid': userUID,
       });
 

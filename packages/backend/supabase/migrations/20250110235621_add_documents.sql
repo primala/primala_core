@@ -2511,3 +2511,37 @@ $function$
 alter table "public"."group_requests" add column "recipient_profile_gradient" gradients not null;
 
 alter table "public"."group_requests" add column "sender_profile_gradient" gradients not null;
+
+
+drop function if exists "public"."create_group"(p_group_name text, p_user_uid uuid);
+
+set check_function_bodies = off;
+
+CREATE OR REPLACE FUNCTION public.create_group(p_group_name text, p_user_uid uuid, p_profile_gradient gradients)
+ RETURNS bigint
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+declare
+  v_group_id bigint;
+begin
+  -- Input validation
+  if p_group_name is null or trim(p_group_name) = '' then
+    raise exception 'Group name cannot be null or empty';
+  end if;
+
+  -- Create the group and get the new group ID
+  insert into groups (group_name,gradient)
+  values (p_group_name, p_profile_gradient)
+  returning id into v_group_id;
+
+  -- Create the admin role for the user
+  insert into group_roles (user_uid, role, group_id)
+  values (p_user_uid, 'admin', v_group_id);
+
+  return v_group_id;
+end;
+$function$
+;
+
