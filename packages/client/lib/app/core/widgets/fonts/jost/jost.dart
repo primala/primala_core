@@ -7,6 +7,7 @@ class Jost extends StatelessWidget {
   final String content;
   final bool shouldCenter;
   final bool shouldItalicize;
+  final bool addShadow;
   final FontWeight fontWeight;
   final bool useEllipsis;
   const Jost(
@@ -14,6 +15,7 @@ class Jost extends StatelessWidget {
     super.key,
     this.fontWeight = FontWeight.w400,
     this.fontSize = 30.0,
+    this.addShadow = false,
     this.fontColor = Colors.white,
     this.shouldItalicize = false,
     this.shouldCenter = false,
@@ -31,6 +33,15 @@ class Jost extends StatelessWidget {
         color: fontColor,
         textStyle: TextStyle(
           fontWeight: fontWeight,
+          shadows: addShadow
+              ? [
+                  Shadow(
+                    color: Colors.black.withOpacity(.5),
+                    offset: Offset(0, 4),
+                    blurRadius: 4,
+                  )
+                ]
+              : [],
           fontStyle: shouldItalicize ? FontStyle.italic : FontStyle.normal,
           overflow: useEllipsis ? TextOverflow.ellipsis : TextOverflow.visible,
         ),

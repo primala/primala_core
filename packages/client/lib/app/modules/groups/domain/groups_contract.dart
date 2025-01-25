@@ -7,7 +7,7 @@ import 'package:nokhte_backend/tables/groups.dart';
 import 'package:nokhte_backend/types/types.dart';
 
 abstract class GroupsContract {
-  Future<Either<Failure, bool>> createGroup(String groupName);
+  Future<Either<Failure, int>> createGroup(CreateGroupParams params);
   Future<Either<Failure, List<GroupEntity>>> getGroups();
   Future<Either<Failure, bool>> deleteGroup(int groupId);
   Future<Either<Failure, bool>> updateGroupName(UpdateGroupNameParams params);

@@ -70,6 +70,7 @@ flutter:
     - assets/groups/envelope_icon.png
     - assets/groups/plus_icon.png
     - assets/groups/pencil_icon_white.png
+    - assets/groups/pencil_icon_black.png
 
     - assets/blocks/conclusion_icon.png
     - assets/blocks/conclusion_send_icon.png

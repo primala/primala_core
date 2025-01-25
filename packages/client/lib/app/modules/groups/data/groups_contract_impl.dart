@@ -12,11 +12,11 @@ class GroupsContractImpl with ResponseToStatus implements GroupsContract {
   GroupsContractImpl({required this.remoteSource, required this.networkInfo});
 
   @override
-  createGroup(groupName) async {
+  createGroup(params) async {
     if (await networkInfo.isConnected) {
-      final res = await remoteSource.createGroup(groupName);
+      final res = await remoteSource.createGroup(params);
       return res != -1
-          ? const Right(true)
+          ? Right(res)
           : Left(FailureConstants.groupCreationFailure);
     } else {
       return Left(FailureConstants.internetConnectionFailure);

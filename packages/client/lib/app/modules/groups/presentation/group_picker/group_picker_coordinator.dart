@@ -44,7 +44,7 @@ abstract class _GroupPickerCoordinatorBase
   }
 
   groupsReactor() => reaction((p0) => groups, (p0) {
-        widgets.groupDisplay.setGroups(p0);
+        // widgets.groupDisplay.setGroups(p0);
         widgets.groupDisplay.setWidgetVisibility(true);
       });
 }

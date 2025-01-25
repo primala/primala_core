@@ -16,6 +16,7 @@ class GroupsWidgetsModule extends Module {
     i.add<CreateGroupWidgetsCoordinator>(
       () => CreateGroupWidgetsCoordinator(
         animatedScaffold: AnimatedScaffoldStore(),
+        groupNameTextField: GroupNameTextFieldStore(),
       ),
     );
   }

@@ -6,7 +6,7 @@ import 'package:nokhte_backend/types/types.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class GroupsRemoteSource {
-  Future<int> createGroup(String groupName);
+  Future<int> createGroup(CreateGroupParams params);
   Future<List> getGroups();
   Future<void> deleteGroup(int groupId);
   Future<List> updateGroupName(UpdateGroupNameParams params);
@@ -45,8 +45,7 @@ class GroupsRemoteSourceImpl implements GroupsRemoteSource {
   deactivateAccount() async => await supabase.auth.signOut();
 
   @override
-  createGroup(groupName) async =>
-      await groupsQueries.createGroup(groupName: groupName);
+  createGroup(params) async => await groupsQueries.createGroup(params);
 
   @override
   deleteGroup(groupId) async => await groupsQueries.delete(groupId);

@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:nokhte/app/core/constants/gradients.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/types/types.dart';
+import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 export 'group_display_store.dart';
 
@@ -168,16 +169,11 @@ class GroupDisplay extends HookWidget with NokhteGradients {
                     child: AnimatedOpacity(
                       opacity: store.isManagingGroups ? 0.0 : 1.0,
                       duration: const Duration(milliseconds: 300),
-                      child: Text(
+                      child: Jost(
                         group.groupName.characters.first,
-                        style: GoogleFonts.jost(
-                          fontSize: 30,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.center,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w400,
+                        shouldCenter: true,
                       ),
                     ),
                   ),

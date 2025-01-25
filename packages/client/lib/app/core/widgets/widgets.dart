@@ -5,3 +5,4 @@ export './tint/tint.dart';
 export 'animated_scaffold/animated_scaffold.dart';
 export 'smart_header/smart_header.dart';
 export 'header_row/header_row.dart';
+export 'generic_button/generic_button.dart';

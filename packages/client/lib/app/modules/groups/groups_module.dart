@@ -23,6 +23,7 @@ class GroupsModule extends Module {
 
     i.add<CreateGroupCoordinator>(
       () => CreateGroupCoordinator(
+        contract: Modular.get<GroupsContractImpl>(),
         widgets: Modular.get<CreateGroupWidgetsCoordinator>(),
       ),
     );

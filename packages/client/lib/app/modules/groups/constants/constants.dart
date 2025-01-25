@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 mixin GroupsConstants {
   static const module = '/group';
   static const relativeGroupPicker = '/group_picker';
@@ -21,4 +23,7 @@ mixin GroupsConstants {
   static const inviteToGroup = '$module$relativeInviteToGroup';
   static const selectRole = '$module$relativeSelectRole';
   static const inbox = '$module$relativeInbox';
+
+  static const PROFILE_GRADIENT = 'profileGradient';
+  static const GROUP_ID = 'groupId';
 }

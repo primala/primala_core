@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:nokhte_backend/types/types.dart';
 
@@ -115,5 +117,11 @@ mixin NokhteGradients {
       case ProfileGradient.none:
         return twilightSky;
     }
+  }
+
+  static ProfileGradient getRandomGradient() {
+    final randomGradient =
+        ProfileGradient.values.where((g) => g != ProfileGradient.none).toList();
+    return randomGradient[Random().nextInt(randomGradient.length)];
   }
 }
