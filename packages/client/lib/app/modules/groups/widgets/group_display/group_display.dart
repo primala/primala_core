@@ -36,16 +36,14 @@ class GroupDisplay extends HookWidget with NokhteGradients {
                 shrinkWrap: true,
                 padding: EdgeInsets.zero,
                 physics: const NeverScrollableScrollPhysics(),
-
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                   childAspectRatio: 1,
                 ),
-                itemCount: store.groups.length + 1, // Add 1 for the add button
+                itemCount: store.groups.length + 1,
                 itemBuilder: (context, index) {
-                  // If it's the last item, show the add button
                   if (index == store.groups.length) {
                     return GestureDetector(
                       onTap: () => store.onCreateGroupTapped(),
@@ -60,7 +58,6 @@ class GroupDisplay extends HookWidget with NokhteGradients {
                                 color: Colors.black,
                               ),
                               shape: BoxShape.circle,
-                              // color: Colors.white,
                             ),
                             child: Center(
                                 child: Image.asset(
@@ -85,7 +82,6 @@ class GroupDisplay extends HookWidget with NokhteGradients {
                       ),
                     );
                   }
-                  // Otherwise show the regular group item
                   return Observer(builder: (context) {
                     final group = store.groups[index];
                     return _buildGroupItem(index, group);
@@ -156,7 +152,6 @@ class GroupDisplay extends HookWidget with NokhteGradients {
           children: [
             Stack(
               children: [
-                // Original container with gradient and first letter
                 Container(
                   height: 70,
                   width: 70,
@@ -167,8 +162,8 @@ class GroupDisplay extends HookWidget with NokhteGradients {
                   ),
                   child: Center(
                     child: AnimatedOpacity(
-                      opacity: store.isManagingGroups ? 0.0 : 1.0,
-                      duration: const Duration(milliseconds: 300),
+                      opacity: store.showMonogram ? 1 : 0,
+                      duration: const Duration(milliseconds: 500),
                       child: Jost(
                         group.groupName.characters.first,
                         fontSize: 30,
@@ -178,28 +173,27 @@ class GroupDisplay extends HookWidget with NokhteGradients {
                     ),
                   ),
                 ),
-
-                // Tint overlay that appears when managing groups
-                if (store.isManagingGroups && store.groups[index].isAdmin)
-                  AnimatedOpacity(
-                    opacity: 0.5,
-                    duration: const Duration(milliseconds: 300),
-                    child: Container(
-                      height: 70,
-                      width: 70,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.black,
-                      ),
-                      child: Center(
-                        child: Image.asset(
-                          'assets/groups/pencil_icon_white.png',
-                          height: 35,
-                          width: 35,
-                        ),
+                AnimatedOpacity(
+                  opacity: store.showPencilIcon && store.groups[index].isAdmin
+                      ? 0.5
+                      : 0,
+                  duration: const Duration(milliseconds: 500),
+                  child: Container(
+                    height: 70,
+                    width: 70,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.black,
+                    ),
+                    child: Center(
+                      child: Image.asset(
+                        'assets/groups/pencil_icon_white.png',
+                        height: 35,
+                        width: 35,
                       ),
                     ),
                   ),
+                ),
               ],
             ),
             const SizedBox(height: 10),

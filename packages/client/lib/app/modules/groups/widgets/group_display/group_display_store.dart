@@ -1,6 +1,9 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
+import 'dart:async';
+
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
+import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 import 'package:nokhte_backend/types/types.dart';
 part 'group_display_store.g.dart';
@@ -31,8 +34,28 @@ abstract class _GroupDisplayStoreBase extends BaseWidgetStore with Store {
   @observable
   bool isManagingGroups = false;
 
+  @observable
+  bool showPencilIcon = false;
+
+  @observable
+  bool showMonogram = true;
+
   @action
-  toggleIsManagingGroups(bool value) => isManagingGroups = value;
+  toggleIsManagingGroups(bool value) {
+    isManagingGroups = value;
+
+    if (isManagingGroups) {
+      showMonogram = false;
+      Timer(Seconds.get(0, milli: 500), () {
+        showPencilIcon = true;
+      });
+    } else {
+      showPencilIcon = false;
+      Timer(Seconds.get(0, milli: 500), () {
+        showMonogram = true;
+      });
+    }
+  }
 
   @action
   onCreateGroupTapped() => createGroupTapCount++;
