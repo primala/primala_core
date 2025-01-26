@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nokhte/app/core/constants/colors.dart';
-import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'dart:io';
 
@@ -21,105 +20,36 @@ class GroupEditMenu extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fullScreen = useFullScreenSize();
-    final width = fullScreen.width;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildMenuItem(
-          width: width,
+        GenericMenuItem(
           onTap: onInviteTapped,
-          text: 'Invite',
-          subtext: 'Invite someone new to join the group',
+          title: 'Invite',
+          subtitle: 'Invite someone new to join the group',
+          borderColor: Colors.black,
           showChevron: true,
         ),
         const SizedBox(height: 25),
-        _buildMenuItem(
-          width: width,
+        GenericMenuItem(
           onTap: onManageCollaboratorsTapped,
-          text: 'Manage Collaborators',
-          subtext: 'Add, edit, or remove collaborators',
+          title: 'Manage Collaborators',
+          subtitle: 'Add, edit, or remove collaborators',
+          borderColor: Colors.black,
           showChevron: true,
         ),
         const SizedBox(height: 25),
-        _buildMenuItem(
-          width: width,
+        GenericMenuItem(
           onTap: () {
             _showDeleteGroupConfirmationDialog(context);
           },
-          text: 'Delete Group',
-          subtext: 'Delete this group permanently',
+          title: 'Delete Group',
+          subtitle: 'Delete this group permanently',
+          borderColor: Colors.black,
           textColor: Colors.red,
           showChevron: false,
         ),
       ],
-    );
-  }
-
-  Widget _buildMenuItem({
-    required double width,
-    required Function onTap,
-    required String text,
-    required String subtext,
-    Color? textColor,
-    bool showChevron = false,
-  }) {
-    return Container(
-      width: width,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          top: BorderSide(
-            color: Colors.black,
-            width: 1.0,
-          ),
-          bottom: BorderSide(
-            color: Colors.black,
-            width: 1.0,
-          ),
-        ),
-      ),
-      child: GestureDetector(
-        onTap: () => onTap(),
-        child: Padding(
-          padding: const EdgeInsets.only(
-            left: 16,
-            bottom: 4.0,
-            top: 4.0,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Jost(
-                    text,
-                    fontSize: 16.0,
-                    fontColor: textColor ?? Colors.black87,
-                  ),
-                  Jost(
-                    subtext,
-                    fontSize: 12,
-                    fontColor: Colors.black.withOpacity(.6),
-                  ),
-                ],
-              ),
-              if (showChevron)
-                const Padding(
-                  padding: EdgeInsets.only(right: 12),
-                  child: Icon(
-                    CupertinoIcons.chevron_right,
-                    size: 20,
-                    // weight: 100,
-                    color: Colors.black,
-                  ),
-                )
-            ],
-          ),
-        ),
-      ),
     );
   }
 
