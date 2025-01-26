@@ -110,7 +110,7 @@ class AuthTextFields extends HookWidget {
                   errorText: store.emailErrorText,
                   hasError: store.emailHasError,
                   enabled: showWidget,
-                  validator: store.validateEmail,
+                  validator: store.onEmailChanged,
                 );
               case FieldsToShow.password:
                 return _buildTextField(
@@ -122,7 +122,7 @@ class AuthTextFields extends HookWidget {
                   onToggleObscured: () => store.toggleIsObscured(),
                   isObscured: store.isObscured,
                   enabled: showWidget,
-                  validator: store.validatePassword,
+                  validator: store.onPasswordChanged,
                 );
               case FieldsToShow.fullName:
                 return _buildTextField(
@@ -132,7 +132,7 @@ class AuthTextFields extends HookWidget {
                   errorText: store.fullNameErrorText,
                   hasError: store.fullNameHasError,
                   enabled: showWidget,
-                  validator: store.validateFullName,
+                  validator: store.onFullNameChanged,
                 );
               default:
                 return const SizedBox.shrink();
