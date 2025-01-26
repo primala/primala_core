@@ -165,7 +165,7 @@ class GroupDisplay extends HookWidget with NokhteGradients {
                       opacity: store.showMonogram ? 1 : 0,
                       duration: const Duration(milliseconds: 500),
                       child: Jost(
-                        group.groupName.characters.first,
+                        group.name.characters.first,
                         fontSize: 30,
                         fontWeight: FontWeight.w400,
                         shouldCenter: true,
@@ -200,7 +200,7 @@ class GroupDisplay extends HookWidget with NokhteGradients {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Text(
-                group.groupName,
+                group.name,
                 style: GoogleFonts.jost(
                   fontSize: 16,
                   fontWeight: FontWeight.w400,

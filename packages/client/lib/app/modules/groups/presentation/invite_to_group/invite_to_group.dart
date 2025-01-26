@@ -13,17 +13,18 @@ class InviteToGroupScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     useEffect(() {
-      //  coordinator.constructor();
+      coordinator.constructor();
       return null;
       // return () => coordinator.deconstructor();
     }, []);
-    return AnimatedScaffold(
-      store: coordinator.widgets.animatedScaffold,
-      child: Observer(builder: (context) {
-        return MultiHitStack(
+    return Observer(builder: (context) {
+      return AnimatedScaffold(
+        store: coordinator.widgets.animatedScaffold,
+        child: const Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [],
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 }

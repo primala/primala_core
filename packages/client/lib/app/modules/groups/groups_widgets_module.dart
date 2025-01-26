@@ -19,5 +19,21 @@ class GroupsWidgetsModule extends Module {
         groupNameTextField: GroupNameTextFieldStore(),
       ),
     );
+    i.add<EditGroupWidgetsCoordinator>(
+      () => EditGroupWidgetsCoordinator(
+        animatedScaffold: AnimatedScaffoldStore(),
+        groupNameTextField: GroupNameTextFieldStore(),
+      ),
+    );
+    i.add<InviteToGroupWidgetsCoordinator>(
+      () => InviteToGroupWidgetsCoordinator(
+        animatedScaffold: AnimatedScaffoldStore(),
+      ),
+    );
+    i.add<GroupMembersWidgetsCoordinator>(
+      () => GroupMembersWidgetsCoordinator(
+        animatedScaffold: AnimatedScaffoldStore(),
+      ),
+    );
   }
 }

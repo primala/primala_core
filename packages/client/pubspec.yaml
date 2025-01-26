@@ -14,6 +14,7 @@ dependencies:
   carousel_slider: ^5.0.0
   connectivity_plus: ^5.0.1
   crypto: ^3.0.3
+  cupertino_icons: ^1.0.8
   dartz: ^0.10.1
   equatable: ^2.0.5
   flutter:

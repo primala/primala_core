@@ -30,6 +30,7 @@ class GroupNameTextField extends StatelessWidget {
             ),
             child: TextField(
               controller: store.controller,
+              enabled: store.isEnabled,
               onChanged: store.validateGroupName,
               style: GoogleFonts.jost(color: Colors.white),
               cursorColor: Colors.white,

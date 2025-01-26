@@ -68,6 +68,9 @@ abstract class _CreateGroupCoordinatorBase
         GroupsConstants.editGroup,
         arguments: {
           GroupsConstants.GROUP_ID: groupId,
+          GroupsConstants.PROFILE_GRADIENT:
+              widgets.groupNameTextField.profileGradient,
+          GroupsConstants.GROUP_NAME: widgets.groupNameTextField.groupName,
         },
       );
     });

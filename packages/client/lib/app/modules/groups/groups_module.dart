@@ -30,6 +30,7 @@ class GroupsModule extends Module {
 
     i.add<EditGroupCoordinator>(
       () => EditGroupCoordinator(
+        contract: Modular.get<GroupsContractImpl>(),
         widgets: Modular.get<EditGroupWidgetsCoordinator>(),
       ),
     );
@@ -42,6 +43,7 @@ class GroupsModule extends Module {
 
     i.add<GroupMembersCoordinator>(
       () => GroupMembersCoordinator(
+        contract: Modular.get<GroupsContractImpl>(),
         widgets: Modular.get<GroupMembersWidgetsCoordinator>(),
       ),
     );
@@ -61,6 +63,7 @@ class GroupsModule extends Module {
 
     i.add<InviteToGroupCoordinator>(
       () => InviteToGroupCoordinator(
+        contract: Modular.get<GroupsContractImpl>(),
         widgets: Modular.get<InviteToGroupWidgetsCoordinator>(),
       ),
     );

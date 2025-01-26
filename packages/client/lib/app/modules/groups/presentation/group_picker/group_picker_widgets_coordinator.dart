@@ -29,6 +29,33 @@ abstract class _GroupPickerWidgetsCoordinatorBase
     fadeInWidgets();
   }
 
+  editGroupReactor() => reaction((p0) => groupDisplay.groupIndexToEdit, (p0) {
+        if (!showWidgets) return;
+        setShowWidgets(false);
+        Timer(Seconds.get(0, milli: 500), () {
+          final group = groupDisplay.groups[p0];
+          Modular.to.navigate(
+            GroupsConstants.editGroup,
+            arguments: {
+              GroupsConstants.GROUP_ENTITY: group,
+            },
+          );
+        });
+      });
+
+  activeGroupReactor(Function(int groupId) onSelected) =>
+      reaction((p0) => groupDisplay.activeGroupIndex, (p0) async {
+        if (!showWidgets) return;
+        setShowWidgets(false);
+        final group = groupDisplay.groups[p0];
+        await onSelected(group.id);
+        Timer(Seconds.get(0, milli: 500), () {
+          // Modular.to.navigate(
+          //   HomeConstants.home,
+          // );
+        });
+      });
+
   createGroupReactor() =>
       reaction((p0) => groupDisplay.createGroupTapCount, (p0) {
         if (!showWidgets) return;

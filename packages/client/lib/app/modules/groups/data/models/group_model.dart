@@ -4,8 +4,8 @@ import 'package:nokhte_backend/utils/profile_gradients_utils.dart';
 
 class GroupModel extends GroupEntity {
   const GroupModel({
-    required super.groupId,
-    required super.groupName,
+    required super.id,
+    required super.name,
     required super.isAdmin,
     required super.profileGradient,
   });
@@ -18,8 +18,8 @@ class GroupModel extends GroupEntity {
       for (var group in groupResponse) {
         groups.add(
           GroupModel(
-            groupId: group[GroupsQueries.ID],
-            groupName: group[GroupsQueries.GROUP_NAME],
+            id: group[GroupsQueries.ID],
+            name: group[GroupsQueries.GROUP_NAME],
             isAdmin: group[GroupsQueries.IS_ADMIN],
             profileGradient: ProfileGradientUtils.mapStringToProfileGradient(
               group[GroupsQueries.GRADIENT],

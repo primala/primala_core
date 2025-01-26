@@ -5,31 +5,22 @@ import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
-import 'package:nokhte_backend/types/types.dart';
 part 'group_display_store.g.dart';
 
 class GroupDisplayStore = _GroupDisplayStoreBase with _$GroupDisplayStore;
 
 abstract class _GroupDisplayStoreBase extends BaseWidgetStore with Store {
   @observable
-  ObservableList<GroupEntity> groups = ObservableList.of([
-    const GroupEntity(
-      groupId: 1,
-      groupName:
-          'Group Name Something Super Super Long This Is Really Really Long',
-      isAdmin: true,
-      profileGradient: ProfileGradient.twilightSky,
-    ),
-  ]);
+  ObservableList<GroupEntity> groups = ObservableList.of([]);
 
   @observable
-  int activeGroupId = 0;
+  int activeGroupIndex = -1;
 
   @observable
-  int groupIdToEdit = 0;
+  int groupIndexToEdit = -1;
 
   @observable
-  int createGroupTapCount = 0;
+  int createGroupTapCount = -1;
 
   @observable
   bool isManagingGroups = false;
@@ -62,11 +53,12 @@ abstract class _GroupDisplayStoreBase extends BaseWidgetStore with Store {
 
   @action
   onGroupTap(int index) {
+    print('are they an admin? ${groups[index].isAdmin}');
     if (isManagingGroups) {
       if (!groups[index].isAdmin) return;
-      groupIdToEdit = index;
+      groupIndexToEdit = index;
     } else {
-      activeGroupId = index;
+      activeGroupIndex = index;
     }
   }
 

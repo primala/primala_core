@@ -29,6 +29,8 @@ abstract class _GroupPickerCoordinatorBase
   initReactors() {
     disposers.add(groupsReactor());
     disposers.add(widgets.createGroupReactor());
+    disposers.add(widgets.editGroupReactor());
+    disposers.add(widgets.activeGroupReactor(updateActiveGroup));
   }
 
   @observable
@@ -43,8 +45,13 @@ abstract class _GroupPickerCoordinatorBase
     );
   }
 
+  @action
+  updateActiveGroup(int groupId) async {
+    await contract.updateActiveGroup(groupId);
+  }
+
   groupsReactor() => reaction((p0) => groups, (p0) {
-        // widgets.groupDisplay.setGroups(p0);
+        widgets.groupDisplay.setGroups(p0);
         widgets.groupDisplay.setWidgetVisibility(true);
       });
 }

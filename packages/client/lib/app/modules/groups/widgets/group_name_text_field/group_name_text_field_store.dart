@@ -24,10 +24,16 @@ abstract class _GroupNameTextFieldStoreBase with Store, NokhteGradients {
   String groupName = '';
 
   @observable
+  bool isEnabled = true;
+
+  @observable
   ProfileGradient profileGradient = NokhteGradients.getRandomGradient();
 
   @action
   setProfileGradient(ProfileGradient value) => profileGradient = value;
+
+  @action
+  setIsEnabled(bool value) => isEnabled = value;
 
   @action
   validateGroupName(String groupName) {
