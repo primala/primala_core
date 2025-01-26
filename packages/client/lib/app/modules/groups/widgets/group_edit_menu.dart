@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nokhte/app/core/constants/colors.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'dart:io';
@@ -149,7 +150,7 @@ class GroupEditMenu extends HookWidget {
             child: Text(
               'Cancel',
               style: GoogleFonts.inter(
-                color: const Color(0xFF007AFF),
+                color: NokhteColors.blue,
                 fontWeight: FontWeight.w500,
               ),
             ),
