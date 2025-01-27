@@ -17,6 +17,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   dartz: ^0.10.1
   equatable: ^2.0.5
+  extended_text_field: ^14.0.1
   flutter:
     sdk: flutter
   flutter_dotenv: ^5.1.0
@@ -72,6 +73,8 @@ flutter:
     - assets/groups/plus_icon.png
     - assets/groups/pencil_icon_white.png
     - assets/groups/pencil_icon_black.png
+    - assets/groups/envelope_icon_transparent.png
+    - assets/groups/magnifying_glass_icon.png
 
     - assets/blocks/conclusion_icon.png
     - assets/blocks/conclusion_send_icon.png

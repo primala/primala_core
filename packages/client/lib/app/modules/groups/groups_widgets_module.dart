@@ -27,6 +27,7 @@ class GroupsWidgetsModule extends Module {
     );
     i.add<InviteToGroupWidgetsCoordinator>(
       () => InviteToGroupWidgetsCoordinator(
+        invitationBody: InvitationBodyStore(),
         animatedScaffold: AnimatedScaffoldStore(),
       ),
     );

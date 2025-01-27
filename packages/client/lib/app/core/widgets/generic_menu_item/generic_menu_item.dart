@@ -11,12 +11,14 @@ class GenericMenuItem extends HookWidget {
   final Color textColor;
   final bool showChevron;
   final Color borderColor;
+  final EdgeInsets padding;
 
   const GenericMenuItem({
     super.key,
     required this.onTap,
     required this.title,
-    required this.subtitle,
+    this.subtitle = '',
+    this.padding = const EdgeInsets.only(left: 16, bottom: 4, top: 4),
     this.textColor = Colors.black,
     this.borderColor = Colors.transparent,
     required this.showChevron,
@@ -25,29 +27,25 @@ class GenericMenuItem extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final width = useFullScreenSize().width;
-    return Container(
-      width: width,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          top: BorderSide(
-            color: borderColor,
-            width: 1.0,
-          ),
-          bottom: BorderSide(
-            color: borderColor,
-            width: 1.0,
+    return GestureDetector(
+      onTap: () => onTap(),
+      child: Container(
+        width: width,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            top: BorderSide(
+              color: borderColor,
+              width: 1.0,
+            ),
+            bottom: BorderSide(
+              color: borderColor,
+              width: 1.0,
+            ),
           ),
         ),
-      ),
-      child: GestureDetector(
-        onTap: () => onTap(),
         child: Padding(
-          padding: const EdgeInsets.only(
-            left: 16,
-            bottom: 4.0,
-            top: 4.0,
-          ),
+          padding: padding,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -59,11 +57,13 @@ class GenericMenuItem extends HookWidget {
                     fontSize: 16.0,
                     fontColor: textColor,
                   ),
-                  Jost(
-                    subtitle,
-                    fontSize: 12,
-                    fontColor: Colors.black.withOpacity(.6),
-                  ),
+                  subtitle.isNotEmpty
+                      ? Jost(
+                          subtitle,
+                          fontSize: 12,
+                          fontColor: Colors.black.withOpacity(.6),
+                        )
+                      : Container(),
                 ],
               ),
               if (showChevron)

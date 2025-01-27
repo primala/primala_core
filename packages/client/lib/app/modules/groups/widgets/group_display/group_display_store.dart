@@ -32,6 +32,9 @@ abstract class _GroupDisplayStoreBase extends BaseWidgetStore with Store {
   bool showMonogram = true;
 
   @action
+  setGroupIndexToEdit(int index) => groupIndexToEdit = index;
+
+  @action
   toggleIsManagingGroups(bool value) {
     isManagingGroups = value;
 

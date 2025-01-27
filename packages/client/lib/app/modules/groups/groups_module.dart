@@ -102,26 +102,10 @@ class GroupsModule extends Module {
     );
 
     r.child(
-      GroupsConstants.relativeEditGroup,
-      transition: TransitionType.noTransition,
-      child: (context) => EditGroupScreen(
-        coordinator: Modular.get<EditGroupCoordinator>(),
-      ),
-    );
-
-    r.child(
       GroupsConstants.relativeGroupIconPicker,
       transition: TransitionType.noTransition,
       child: (context) => GroupIconPickerScreen(
         coordinator: Modular.get<GroupIconPickerCoordinator>(),
-      ),
-    );
-
-    r.child(
-      GroupsConstants.relativeGroupMembers,
-      transition: TransitionType.noTransition,
-      child: (context) => GroupMembersScreen(
-        coordinator: Modular.get<GroupMembersCoordinator>(),
       ),
     );
 
@@ -138,22 +122,6 @@ class GroupsModule extends Module {
       transition: TransitionType.noTransition,
       child: (context) => InboxScreen(
         coordinator: Modular.get<InboxCoordinator>(),
-      ),
-    );
-
-    r.child(
-      GroupsConstants.relativeInviteToGroup,
-      transition: TransitionType.noTransition,
-      child: (context) => InviteToGroupScreen(
-        coordinator: Modular.get<InviteToGroupCoordinator>(),
-      ),
-    );
-
-    r.child(
-      GroupsConstants.relativeSelectRole,
-      transition: TransitionType.noTransition,
-      child: (context) => SelectRoleScreen(
-        coordinator: Modular.get<SelectRoleCoordinator>(),
       ),
     );
   }
