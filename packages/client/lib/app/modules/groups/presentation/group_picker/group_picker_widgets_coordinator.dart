@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
@@ -30,17 +31,16 @@ abstract class _GroupPickerWidgetsCoordinatorBase
   }
 
   editGroupReactor() => reaction((p0) => groupDisplay.groupIndexToEdit, (p0) {
-        if (!showWidgets) return;
-        setShowWidgets(false);
-        Timer(Seconds.get(0, milli: 500), () {
-          final group = groupDisplay.groups[p0];
-          Modular.to.navigate(
-            GroupsConstants.editGroup,
-            arguments: {
-              GroupsConstants.GROUP_ENTITY: group,
-            },
+        if (p0 == -1) return;
+        final group = groupDisplay.groups[p0];
+        Modular.to.push(MaterialPageRoute(builder: (BuildContext context) {
+          return EditGroupScreen(
+            group: group,
+            coordinator: Modular.get<EditGroupCoordinator>(),
           );
-        });
+        }));
+        groupDisplay.setGroupIndexToEdit(-1);
+        groupDisplay.toggleIsManagingGroups(false);
       });
 
   activeGroupReactor(Function(int groupId) onSelected) =>

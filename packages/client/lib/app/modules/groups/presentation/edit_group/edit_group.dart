@@ -10,18 +10,22 @@ export 'edit_group_widgets_coordinator.dart';
 
 class EditGroupScreen extends HookWidget {
   final EditGroupCoordinator coordinator;
-  const EditGroupScreen({super.key, required this.coordinator});
+  final GroupEntity group;
+  const EditGroupScreen({
+    super.key,
+    required this.coordinator,
+    required this.group,
+  });
 
   @override
   Widget build(BuildContext context) {
     useEffect(() {
-      coordinator.constructor();
+      coordinator.constructor(group);
       return null;
     }, []);
     final screenHeight = useFullScreenSize().height;
     return Observer(builder: (context) {
       return AnimatedScaffold(
-        showWidgets: coordinator.widgets.showWidgets,
         store: coordinator.widgets.animatedScaffold,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -30,7 +34,7 @@ class EditGroupScreen extends HookWidget {
               includeDivider: false,
               children: [
                 LeftChevron(
-                  onTap: coordinator.onGoBack,
+                  onTap: () => coordinator.onGoBack,
                 ),
                 const SmartHeader(
                   content: "Edit Group",

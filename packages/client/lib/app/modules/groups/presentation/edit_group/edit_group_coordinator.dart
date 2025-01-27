@@ -1,9 +1,8 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
-
+import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
-import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 part 'edit_group_coordinator.g.dart';
 
@@ -23,54 +22,41 @@ abstract class _EditGroupCoordinatorBase with Store {
   GroupEntity group = GroupEntity.initial();
 
   @action
-  constructor() async {
-    group = Modular.args.data[GroupsConstants.GROUP_ENTITY];
+  constructor(GroupEntity group) async {
+    this.group = group;
     widgets.constructor(group);
   }
 
   @action
-  onGoBack() {
-    if (!widgets.showWidgets) return;
-    widgets.setShowWidgets(false);
-    Timer(Seconds.get(0, milli: 500), () {
-      Modular.to.navigate(GroupsConstants.groupPicker);
-    });
-  }
+  onGoBack() => Modular.to.pop();
 
   @action
   goToInvite() {
-    if (!widgets.showWidgets) return;
-    widgets.setShowWidgets(false);
-    Timer(Seconds.get(0, milli: 500), () {
-      Modular.to.navigate(
-        GroupsConstants.inviteToGroup,
-        arguments: {
-          GroupsConstants.GROUP_ENTITY: group,
-        },
-      );
-    });
+    Modular.to.push(
+      MaterialPageRoute(
+        builder: (BuildContext context) => InviteToGroupScreen(
+          group: group,
+          coordinator: Modular.get<InviteToGroupCoordinator>(),
+        ),
+      ),
+    );
   }
 
   @action
   goToGroupMembers() {
-    if (!widgets.showWidgets) return;
-    widgets.setShowWidgets(false);
-    Timer(Seconds.get(0, milli: 500), () {
-      Modular.to.navigate(
-        GroupsConstants.groupMembers,
-        arguments: {
-          GroupsConstants.GROUP_ENTITY: group,
-        },
-      );
-    });
+    Modular.to.push(
+      MaterialPageRoute(
+        builder: (BuildContext context) => GroupMembersScreen(
+          group: group,
+          coordinator: Modular.get<GroupMembersCoordinator>(),
+        ),
+      ),
+    );
   }
 
   @action
   deleteGroup() async {
-    if (!widgets.showWidgets) return;
     await contract.deleteGroup(group.id);
-    Timer(Seconds.get(0, milli: 500), () {
-      Modular.to.navigate(GroupsConstants.groupPicker);
-    });
+    Modular.to.pop();
   }
 }

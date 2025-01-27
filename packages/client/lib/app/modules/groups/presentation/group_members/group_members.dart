@@ -9,12 +9,17 @@ export 'group_members_widgets_coordinator.dart';
 
 class GroupMembersScreen extends HookWidget {
   final GroupMembersCoordinator coordinator;
-  const GroupMembersScreen({super.key, required this.coordinator});
+  final GroupEntity group;
+  const GroupMembersScreen({
+    super.key,
+    required this.coordinator,
+    required this.group,
+  });
 
   @override
   Widget build(BuildContext context) {
     useEffect(() {
-      coordinator.constructor();
+      coordinator.constructor(group);
       return null;
       // return () => coordinator.deconstructor();
     }, []);

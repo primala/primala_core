@@ -23,8 +23,8 @@ abstract class _GroupMembersCoordinatorBase with Store {
   GroupEntity group = GroupEntity.initial();
 
   @action
-  constructor() async {
-    group = Modular.args.data[GroupsConstants.GROUP_ENTITY];
+  constructor(GroupEntity group) async {
+    this.group = group;
     widgets.constructor();
   }
 

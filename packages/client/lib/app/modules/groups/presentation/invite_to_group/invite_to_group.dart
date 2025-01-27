@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
@@ -8,12 +9,17 @@ export 'invite_to_group_widgets_coordinator.dart';
 
 class InviteToGroupScreen extends HookWidget {
   final InviteToGroupCoordinator coordinator;
-  const InviteToGroupScreen({super.key, required this.coordinator});
+  final GroupEntity group;
+  const InviteToGroupScreen({
+    super.key,
+    required this.coordinator,
+    required this.group,
+  });
 
   @override
   Widget build(BuildContext context) {
     useEffect(() {
-      coordinator.constructor();
+      coordinator.constructor(group);
       return null;
       // return () => coordinator.deconstructor();
     }, []);
@@ -26,9 +32,12 @@ class InviteToGroupScreen extends HookWidget {
             TitleBar(
               centerTextLabel: 'Invite to Group',
               rightTextLabel: 'Invite',
-              onCancelTapped: () {},
+              onCancelTapped: () => Modular.to.pop(),
               onConfirmTapped: () {},
-            )
+            ),
+            InvitationBody(
+              store: coordinator.widgets.invitationBody,
+            ),
           ],
         ),
       );
