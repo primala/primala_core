@@ -4,11 +4,12 @@ import 'package:nokhte_backend/tables/users.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class GroupRolesRemoteSource {
-  Future<List> getGroupRoles(int groupId);
+  Future<List> getGroupMembers(int groupId);
   Future<List> updateUserRole(UserRoleParams params);
   Future<List> removeUserRole(UserRoleParams params);
   Future<List> sendRequests(List<SendRequestParams> params);
   Future<Map> getUserByEmail(String email);
+  Future<List> getPendingMembers(int groupId);
   String getUserUid();
 }
 
@@ -25,7 +26,7 @@ class GroupRolesRemoteSourceImpl implements GroupRolesRemoteSource {
         groupRolesQueries = GroupRolesQueries(supabase: supabase);
 
   @override
-  getGroupRoles(groupId) async =>
+  getGroupMembers(groupId) async =>
       await groupRolesQueries.selectByGroup(groupId);
 
   @override
@@ -43,6 +44,10 @@ class GroupRolesRemoteSourceImpl implements GroupRolesRemoteSource {
   getUserUid() => supabase.auth.currentUser?.id ?? '';
 
   @override
-  Future<Map> getUserByEmail(String email) async =>
+  getUserByEmail(String email) async =>
       await groupRequestsQueries.getUserByEmail(email);
+
+  @override
+  getPendingMembers(groupId) async =>
+      await groupRequestsQueries.getPendingMembers(groupId);
 }

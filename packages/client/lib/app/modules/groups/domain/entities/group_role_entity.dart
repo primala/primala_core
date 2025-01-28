@@ -7,12 +7,16 @@ class GroupRoleEntity extends Equatable {
   final GroupRole role;
   final String fullName;
   final ProfileGradient profileGradient;
+  final bool isPending;
+  final bool isUser;
 
   const GroupRoleEntity({
     required this.userUid,
     required this.role,
     required this.fullName,
     required this.profileGradient,
+    required this.isPending,
+    required this.isUser,
   });
 
   @override
@@ -21,5 +25,7 @@ class GroupRoleEntity extends Equatable {
         role,
         fullName,
         profileGradient,
+        isPending,
+        isUser,
       ];
 }

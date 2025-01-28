@@ -2545,3 +2545,32 @@ end;
 $function$
 ;
 
+
+
+drop policy "Enable delete for users based on user_id" on "public"."group_requests";
+
+set check_function_bodies = off;
+
+CREATE OR REPLACE FUNCTION public.get_user_by_email(email_to_check text)
+ RETURNS users
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$DECLARE
+    user_record public.users;
+BEGIN
+    SELECT * INTO user_record
+    FROM public.users
+    WHERE email = email_to_check
+    LIMIT 1;
+    
+    RETURN user_record;
+END;$function$
+;
+
+create policy "Allow Delete if Request Sent by Group Admin or Recipient"
+on "public"."group_requests"
+as permissive
+for delete
+to public
+using (((auth.uid() = user_uid) OR is_group_admin(auth.uid(), group_id)));

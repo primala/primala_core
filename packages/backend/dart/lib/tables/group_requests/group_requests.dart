@@ -61,8 +61,11 @@ class GroupRequestsQueries with GroupRolesUtils, ProfileGradientUtils {
         'email_to_check': email,
       });
 
-  Future<List> select() async =>
+  Future<List> getUserRequests() async =>
       await supabase.from(TABLE).select().eq(USER_UID, userUID);
+
+  Future<List> getPendingMembers(int groupId) async =>
+      await supabase.from(TABLE).select().eq(GROUP_ID, groupId);
 
   Future<void> handleRequest(HandleRequestParams params) async =>
       await supabase.rpc('handle_request', params: {

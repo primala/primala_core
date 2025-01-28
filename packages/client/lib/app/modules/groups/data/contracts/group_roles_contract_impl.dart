@@ -16,10 +16,21 @@ class GroupRolesContractImpl
       {required this.remoteSource, required this.networkInfo});
 
   @override
-  getGroupRoles(groupId) async {
+  getGroupMembers(groupId) async {
     if (await networkInfo.isConnected) {
-      final res = await remoteSource.getGroupRoles(groupId);
-      return Right(GroupRoleModel.fromSupabase(res));
+      final groupMembersRes = await remoteSource.getGroupMembers(groupId);
+      final pendingGroupMembersRes = await remoteSource.getPendingMembers(
+        groupId,
+      );
+      final userUid = remoteSource.getUserUid();
+
+      return Right(
+        GroupRoleModel.fromSupabase(
+          groupMembersRes,
+          pendingGroupMembersRes,
+          userUid,
+        ),
+      );
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }

@@ -6,7 +6,7 @@ import 'package:nokhte_backend/tables/group_roles.dart';
 import 'package:nokhte_backend/types/user_information_entity.dart';
 
 abstract class GroupRolesContract {
-  Future<Either<Failure, List<GroupRoleEntity>>> getGroupRoles(int groupId);
+  Future<Either<Failure, List<GroupRoleEntity>>> getGroupMembers(int groupId);
   Future<Either<Failure, bool>> updateUserRole(UserRoleParams params);
   Future<Either<Failure, bool>> removeUserRole(UserRoleParams params);
   Future<Either<Failure, UserInformationEntity>> getUserByEmail(

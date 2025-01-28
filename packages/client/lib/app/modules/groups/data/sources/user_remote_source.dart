@@ -26,7 +26,7 @@ class UserRemoteSourceImpl implements UserRemoteSource {
   deactivateAccount() async => await supabase.auth.signOut();
 
   @override
-  getRequests() async => await groupRequestsQueries.select();
+  getRequests() async => await groupRequestsQueries.getUserRequests();
 
   @override
   handleRequest(params) async =>

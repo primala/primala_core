@@ -12,7 +12,7 @@ class GroupMembersCoordinator = _GroupMembersCoordinatorBase
 
 abstract class _GroupMembersCoordinatorBase with Store {
   final GroupMembersWidgetsCoordinator widgets;
-  final GroupsContractImpl contract;
+  final GroupRolesContract contract;
 
   _GroupMembersCoordinatorBase({
     required this.widgets,
