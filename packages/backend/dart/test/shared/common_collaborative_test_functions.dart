@@ -57,15 +57,16 @@ class CommonCollaborativeTestFunctions {
       ));
       await usersQueries.updateActiveGroup(groupId);
 
-      final requestId = (await u1GroupRequestsQueries.sendRequest(
+      final requestId = (await u1GroupRequestsQueries.sendRequests([
         SendRequestParams(
+          recipientEmail: '',
           recipientFullName: 'Test User Three',
           recipientProfileGradient: ProfileGradient.amethyst,
           groupId: groupId,
           recipientUid: secondUserUID,
           role: GroupRole.collaborator,
         ),
-      ))
+      ]))
           .first['id'];
 
       await u2GroupRequestsQueries.handleRequest(

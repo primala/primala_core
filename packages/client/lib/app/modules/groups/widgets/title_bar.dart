@@ -45,7 +45,7 @@ class TitleBar extends HookWidget {
             ),
           ),
           GestureDetector(
-            onTap: () async => await onConfirmTapped(),
+            onTap: () => onConfirmTapped(),
             child: Padding(
               padding: const EdgeInsets.only(right: 20, top: 5),
               child: Jost(

@@ -10,11 +10,13 @@ class GroupPickerCoordinator = _GroupPickerCoordinatorBase
 abstract class _GroupPickerCoordinatorBase
     with Store, BaseMobxLogic, Reactions {
   final GroupPickerWidgetsCoordinator widgets;
-  final GroupsContractImpl contract;
+  final GroupsContractImpl groupsContract;
+  final UserContractImpl userContract;
 
   _GroupPickerCoordinatorBase({
     required this.widgets,
-    required this.contract,
+    required this.groupsContract,
+    required this.userContract,
   }) {
     initBaseLogicActions();
   }
@@ -38,7 +40,7 @@ abstract class _GroupPickerCoordinatorBase
 
   @action
   getGroups() async {
-    final res = await contract.getGroups();
+    final res = await groupsContract.getGroups();
     res.fold(
       (failure) => errorUpdater(failure),
       (incomingGroups) => groups = ObservableList.of(incomingGroups),
@@ -47,7 +49,7 @@ abstract class _GroupPickerCoordinatorBase
 
   @action
   updateActiveGroup(int groupId) async {
-    await contract.updateActiveGroup(groupId);
+    await userContract.updateActiveGroup(groupId);
   }
 
   groupsReactor() => reaction((p0) => groups, (p0) {

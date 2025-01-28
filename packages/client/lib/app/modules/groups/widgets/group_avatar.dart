@@ -16,9 +16,7 @@ class GroupAvatar extends HookWidget with NokhteGradients {
     this.onPencilTap,
     this.size = 123,
     required this.profileGradient,
-  }) {
-    assert(profileGradient != ProfileGradient.none);
-  }
+  });
 
   @override
   Widget build(BuildContext context) {

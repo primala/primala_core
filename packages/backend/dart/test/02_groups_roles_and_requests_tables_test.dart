@@ -99,15 +99,16 @@ void main() {
   test("user two should not be able to send them a request from group one",
       () async {
     try {
-      await u2GroupRequestsQueries.sendRequest(
+      await u2GroupRequestsQueries.sendRequests([
         SendRequestParams(
+          recipientEmail: '',
           groupId: tSetup.groupId,
           recipientProfileGradient: ProfileGradient.amethyst,
           recipientUid: tSetup.firstUserUID,
           recipientFullName: 'User One',
           role: GroupRole.admin,
         ),
-      );
+      ]);
     } catch (e) {
       expect(e, isA<StateError>());
     }
@@ -125,15 +126,16 @@ void main() {
 
   test("user one should not be able to forcefully add user two to their group",
       () async {
-    requestId = (await u1GroupRequestsQueries.sendRequest(
+    requestId = (await u1GroupRequestsQueries.sendRequests([
       SendRequestParams(
+        recipientEmail: '',
         groupId: tSetup.groupId,
         recipientUid: tSetup.secondUserUID,
         recipientProfileGradient: ProfileGradient.amethyst,
         role: GroupRole.collaborator,
         recipientFullName: 'User Two',
       ),
-    ))
+    ]))
         .first['id'];
     print('requested id is $requestId');
     try {
@@ -174,16 +176,15 @@ void main() {
   });
 
   test('user one should be able to look up user twos information', () async {
-    final res =
-        await u1GroupRequestsQueries.getInviteeInformation('test2@test.com');
+    final res = await u1GroupRequestsQueries.getUserByEmail('test2@test.com');
     expect(res['uid'], equals(tSetup.secondUserUID));
     expect(res['full_name'], equals('tester two'));
     expect(res['email'], equals('test2@test.com'));
   });
 
   test("user one should get null if user doesn't exist", () async {
-    final res = await u1GroupRequestsQueries
-        .getInviteeInformation('test2@test234543.com');
+    final res =
+        await u1GroupRequestsQueries.getUserByEmail('test2@test234543.com');
     expect(res['uid'], equals(null));
     expect(res['full_name'], equals(null));
     expect(res['email'], equals(null));
@@ -221,15 +222,16 @@ void main() {
 
   test("user 2 should not be able to send requests", () async {
     try {
-      await u2GroupRequestsQueries.sendRequest(
+      await u2GroupRequestsQueries.sendRequests([
         SendRequestParams(
+          recipientEmail: '',
           groupId: tSetup.groupId,
           recipientFullName: 'Test User Three',
           recipientProfileGradient: ProfileGradient.amethyst,
           recipientUid: tSetup.thirdUserUID,
           role: GroupRole.collaborator,
         ),
-      );
+      ]);
     } catch (e) {
       expect(e, isA<Exception>());
     }

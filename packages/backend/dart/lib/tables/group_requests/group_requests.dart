@@ -31,27 +31,32 @@ class GroupRequestsQueries with GroupRolesUtils, ProfileGradientUtils {
         groupsQueries = GroupsQueries(supabase: supabase),
         userUID = supabase.auth.currentUser?.id ?? '';
 
-  Future<List> sendRequest(SendRequestParams params) async {
+  Future<List> sendRequests(List<SendRequestParams> params) async {
     final res = await usersQueries.getUserInfo();
     final fullName = res.first[UsersConstants.S_FULL_NAME];
     final profileGradient = res.first[UsersConstants.S_GRADIENT];
-    final groupName = await groupsQueries.getGroupName(params.groupId);
-    return await supabase.from(TABLE).insert({
-      GROUP_ID: params.groupId,
-      USER_UID: params.recipientUid,
-      RECIPIENT_FULL_NAME: params.recipientFullName,
-      SENDER_FULL_NAME: fullName,
-      GROUP_NAME: groupName,
-      RECIPIENT_PROFILE_GRADIENT:
-          ProfileGradientUtils.mapProfileGradientToString(
-        params.recipientProfileGradient,
-      ),
-      SENDER_PROFILE_GRADIENT: profileGradient,
-      GROUP_ROLE: mapGroupRoleToString(params.role),
-    }).select();
+    final groupName = await groupsQueries.getGroupName(params.first.groupId);
+    final responses = [];
+    for (var param in params) {
+      final res = await supabase.from(TABLE).insert({
+        GROUP_ID: param.groupId,
+        USER_UID: param.recipientUid,
+        RECIPIENT_FULL_NAME: param.recipientFullName,
+        SENDER_FULL_NAME: fullName,
+        GROUP_NAME: groupName,
+        RECIPIENT_PROFILE_GRADIENT:
+            ProfileGradientUtils.mapProfileGradientToString(
+          param.recipientProfileGradient,
+        ),
+        SENDER_PROFILE_GRADIENT: profileGradient,
+        GROUP_ROLE: mapGroupRoleToString(param.role),
+      }).select();
+      responses.add(res);
+    }
+    return responses;
   }
 
-  Future<Map> getInviteeInformation(String email) async =>
+  Future<Map> getUserByEmail(String email) async =>
       await supabase.rpc('get_user_by_email', params: {
         'email_to_check': email,
       });

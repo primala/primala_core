@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
@@ -20,8 +19,7 @@ class InviteToGroupScreen extends HookWidget {
   Widget build(BuildContext context) {
     useEffect(() {
       coordinator.constructor(group);
-      return null;
-      // return () => coordinator.deconstructor();
+      return () => coordinator.dispose();
     }, []);
     return Observer(builder: (context) {
       return AnimatedScaffold(
@@ -32,8 +30,8 @@ class InviteToGroupScreen extends HookWidget {
             TitleBar(
               centerTextLabel: 'Invite to Group',
               rightTextLabel: 'Invite',
-              onCancelTapped: () => Modular.to.pop(),
-              onConfirmTapped: () {},
+              onCancelTapped: coordinator.onGoBack,
+              onConfirmTapped: () async => await coordinator.sendInvitations(),
             ),
             InvitationBody(
               store: coordinator.widgets.invitationBody,

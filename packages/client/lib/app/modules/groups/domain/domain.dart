@@ -1,2 +1,2 @@
-export 'groups_contract.dart';
+export 'contracts/contracts.dart';
 export 'entities/entities.dart';

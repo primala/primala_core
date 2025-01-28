@@ -9,15 +9,15 @@ mixin ProfileGradientUtils {
         return ProfileGradient.lagoon;
       case 'slate':
         return ProfileGradient.slate;
-      case 'cottonCandy':
+      case 'cotton_candy':
         return ProfileGradient.cottonCandy;
-      case 'twilightSky':
+      case 'twilight_sky':
         return ProfileGradient.twilightSky;
       case 'amethyst':
         return ProfileGradient.amethyst;
       case 'sandstorm':
         return ProfileGradient.sandstorm;
-      case 'desertDawn':
+      case 'desert_dawn':
         return ProfileGradient.desertDawn;
       case 'ruby':
         return ProfileGradient.ruby;
@@ -35,15 +35,15 @@ mixin ProfileGradientUtils {
       case ProfileGradient.slate:
         return 'slate';
       case ProfileGradient.cottonCandy:
-        return 'cottonCandy';
+        return 'cotton_candy';
       case ProfileGradient.twilightSky:
-        return 'twilightSky';
+        return 'twilight_sky';
       case ProfileGradient.amethyst:
         return 'amethyst';
       case ProfileGradient.sandstorm:
         return 'sandstorm';
       case ProfileGradient.desertDawn:
-        return 'desertDawn';
+        return 'desert_dawn';
       case ProfileGradient.ruby:
         return 'ruby';
       default:

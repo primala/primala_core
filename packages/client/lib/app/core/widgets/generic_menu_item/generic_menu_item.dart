@@ -12,6 +12,7 @@ class GenericMenuItem extends HookWidget {
   final bool showChevron;
   final Color borderColor;
   final EdgeInsets padding;
+  final Widget prefixWidget;
 
   const GenericMenuItem({
     super.key,
@@ -22,6 +23,7 @@ class GenericMenuItem extends HookWidget {
     this.textColor = Colors.black,
     this.borderColor = Colors.transparent,
     required this.showChevron,
+    this.prefixWidget = const SizedBox.shrink(),
   });
 
   @override
@@ -47,8 +49,9 @@ class GenericMenuItem extends HookWidget {
         child: Padding(
           padding: padding,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              prefixWidget,
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -66,6 +69,7 @@ class GenericMenuItem extends HookWidget {
                       : Container(),
                 ],
               ),
+              Spacer(),
               if (showChevron)
                 const Padding(
                   padding: EdgeInsets.only(right: 12),

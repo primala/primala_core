@@ -1,0 +1,1 @@
+enum InvitationSelectAreaIconType { envelope, profileGradient }

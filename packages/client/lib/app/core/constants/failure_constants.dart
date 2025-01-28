@@ -11,6 +11,8 @@ class FailureConstants {
   static String get genericFailureMsg => "Unexpected Error, Try Again.";
   static String get invalidDeepLinkMsg =>
       "Invalid invitation, try another invitation";
+  static String get lookedThemselvesUpMsg =>
+      "You can't invite yourself to the group again";
   static String get cancelledPurchaseFailureMsg => "Cancelled Purchase";
   static String get groupCreationFailureMsg => "Group Creation Failure";
 
@@ -33,6 +35,11 @@ class FailureConstants {
   static UserInputFailure get invalidDeepLinkFailure => UserInputFailure(
         message: invalidDeepLinkMsg,
         failureCode: "INVALID_DEEP_LINK",
+      );
+
+  static UserInputFailure get lookedThemselvesUpFailure => UserInputFailure(
+        message: lookedThemselvesUpMsg,
+        failureCode: "LOOKED_THEMSELVES_UP",
       );
   static UserInputFailure get groupCreationFailure => UserInputFailure(
         message: groupCreationFailureMsg,

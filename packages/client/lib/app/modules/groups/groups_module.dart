@@ -51,7 +51,8 @@ class GroupsModule extends Module {
     i.add<GroupPickerCoordinator>(
       () => GroupPickerCoordinator(
         widgets: Modular.get<GroupPickerWidgetsCoordinator>(),
-        contract: Modular.get<GroupsContractImpl>(),
+        groupsContract: Modular.get<GroupsContractImpl>(),
+        userContract: Modular.get<UserContractImpl>(),
       ),
     );
 
@@ -63,7 +64,7 @@ class GroupsModule extends Module {
 
     i.add<InviteToGroupCoordinator>(
       () => InviteToGroupCoordinator(
-        contract: Modular.get<GroupsContractImpl>(),
+        contract: Modular.get<GroupRolesContractImpl>(),
         widgets: Modular.get<InviteToGroupWidgetsCoordinator>(),
       ),
     );

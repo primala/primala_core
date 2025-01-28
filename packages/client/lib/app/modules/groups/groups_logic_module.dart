@@ -19,10 +19,36 @@ class GroupsLogicModule extends Module {
       ),
     );
 
+    i.add<UserRemoteSourceImpl>(
+      () => UserRemoteSourceImpl(
+        supabase: Modular.get<SupabaseClient>(),
+      ),
+    );
+
+    i.add<GroupRolesRemoteSourceImpl>(
+      () => GroupRolesRemoteSourceImpl(
+        supabase: Modular.get<SupabaseClient>(),
+      ),
+    );
+
     i.add<GroupsContractImpl>(
       () => GroupsContractImpl(
         networkInfo: Modular.get<NetworkInfoImpl>(),
         remoteSource: Modular.get<GroupsRemoteSourceImpl>(),
+      ),
+    );
+
+    i.add<GroupRolesContractImpl>(
+      () => GroupRolesContractImpl(
+        networkInfo: Modular.get<NetworkInfoImpl>(),
+        remoteSource: Modular.get<GroupRolesRemoteSourceImpl>(),
+      ),
+    );
+
+    i.add<UserContractImpl>(
+      () => UserContractImpl(
+        networkInfo: Modular.get<NetworkInfoImpl>(),
+        remoteSource: Modular.get<UserRemoteSourceImpl>(),
       ),
     );
   }

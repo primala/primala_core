@@ -3,7 +3,7 @@ import 'package:nokhte/app/core/constants/failure_constants.dart';
 import 'package:nokhte/app/core/mixins/response_to_status.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/core/network/network_info.dart';
-import 'package:nokhte_backend/types/user_information_entity.dart';
+import 'package:nokhte_backend/types/types.dart';
 
 class UserInformationContractImpl
     with ResponseToStatus
@@ -33,8 +33,10 @@ class UserInformationContractImpl
       final uid = remoteSource.getUserUID();
       return Right(
         UserInformationModel(
+          email: '',
           fullName: fullName,
           uid: uid,
+          profileGradient: ProfileGradient.none,
         ),
       );
     } else {

@@ -2499,7 +2499,7 @@ DECLARE
 BEGIN
     SELECT * INTO user_record
     FROM public.users
-    WHERE email = email_to_check
+    WHERE email = email_to_check 
     LIMIT 1;
     
     RETURN user_record;
