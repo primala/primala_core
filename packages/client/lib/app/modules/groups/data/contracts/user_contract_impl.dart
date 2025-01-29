@@ -19,10 +19,10 @@ class UserContractImpl with ResponseToStatus implements UserContract {
   }
 
   @override
-  getGroupRequests() async {
+  listenToRequests() async {
     if (await networkInfo.isConnected) {
-      final res = await remoteSource.getRequests();
-      return Right(GroupRequestModel.fromSupabase(res));
+      final res = remoteSource.listenToRequests();
+      return Right(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }
@@ -67,4 +67,7 @@ class UserContractImpl with ResponseToStatus implements UserContract {
       return Left(FailureConstants.internetConnectionFailure);
     }
   }
+
+  @override
+  cancelRequestsStream() async => await remoteSource.cancelRequestsStream();
 }

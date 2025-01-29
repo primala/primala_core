@@ -1,11 +1,11 @@
 import 'package:dartz/dartz.dart';
 import 'package:nokhte/app/core/error/failure.dart';
-import 'package:nokhte/app/modules/groups/domain/domain.dart';
 import 'package:nokhte_backend/tables/group_requests.dart';
 import 'package:nokhte_backend/types/types.dart';
 
 abstract class UserContract {
-  Future<Either<Failure, List<GroupRequestEntity>>> getGroupRequests();
+  Future<bool> cancelRequestsStream();
+  Future<Either<Failure, Stream<GroupRequests>>> listenToRequests();
   Future<Either<Failure, UserInformationEntity>> getUserInformation();
   Future<Either<Failure, bool>> handleRequest(HandleRequestParams params);
   Future<Either<Failure, bool>> deactivateAccount();

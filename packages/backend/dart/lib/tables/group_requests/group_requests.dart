@@ -21,6 +21,8 @@ class GroupRequestsQueries with ProfileGradientUtils {
   static const SENDER_PROFILE_GRADIENT = 'sender_profile_gradient';
   static const RECIPIENT_PROFILE_GRADIENT = 'recipient_profile_gradient';
 
+  bool requestsListeningStatus = false;
+
   final SupabaseClient supabase;
   final UsersQueries usersQueries;
   final GroupsQueries groupsQueries;
@@ -56,13 +58,50 @@ class GroupRequestsQueries with ProfileGradientUtils {
     return responses;
   }
 
+  Future<bool> cancelRequestsStream() async {
+    final res = supabase.realtime.getChannels();
+    if (res.isNotEmpty) {
+      await res.first.unsubscribe();
+    }
+    requestsListeningStatus = false;
+    return requestsListeningStatus;
+  }
+
+  Stream<GroupRequests> listenToRequests() async* {
+    requestsListeningStatus = true;
+
+    final events = supabase
+        .from(TABLE)
+        .stream(primaryKey: ['id'])
+        .eq(
+          USER_UID,
+          userUID,
+        )
+        .order(
+          CREATED_AT,
+          ascending: false,
+        );
+    await for (var event in events) {
+      if (!requestsListeningStatus) {
+        break;
+      }
+      final temp = <GroupRequestEntity>[];
+
+      if (event.isNotEmpty) {
+        for (var event in event) {
+          temp.add(GroupRequestEntity.fromSupabase(event));
+        }
+        yield temp;
+      } else {
+        yield [];
+      }
+    }
+  }
+
   Future<Map> getUserByEmail(String email) async =>
       await supabase.rpc('get_user_by_email', params: {
         'email_to_check': email,
       });
-
-  Future<List> getUserRequests() async =>
-      await supabase.from(TABLE).select().eq(USER_UID, userUID);
 
   Future<List> getPendingMembers(int groupId) async =>
       await supabase.from(TABLE).select().eq(GROUP_ID, groupId);

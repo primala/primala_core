@@ -6,9 +6,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 abstract class UserRemoteSource {
   Future<List> getUserInformation();
   Future<void> handleRequest(HandleRequestParams params);
-  Future<List> getRequests();
-
+  Stream<GroupRequests> listenToRequests();
   Future<void> deactivateAccount();
+  Future<bool> cancelRequestsStream();
   Future<List> updateUserProfileGradient(ProfileGradient param);
   Future<List> updateActiveGroup(int groupId);
 }
@@ -27,7 +27,7 @@ class UserRemoteSourceImpl implements UserRemoteSource {
   deactivateAccount() async => await supabase.auth.signOut();
 
   @override
-  getRequests() async => await groupRequestsQueries.getUserRequests();
+  listenToRequests() => groupRequestsQueries.listenToRequests();
 
   @override
   handleRequest(params) async =>
@@ -43,4 +43,8 @@ class UserRemoteSourceImpl implements UserRemoteSource {
 
   @override
   getUserInformation() async => await usersQueries.getUserInfo();
+
+  @override
+  cancelRequestsStream() async =>
+      await groupRequestsQueries.cancelRequestsStream();
 }
