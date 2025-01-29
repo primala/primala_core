@@ -90,7 +90,6 @@ abstract class _InvitationBodyStoreBase with Store, TextFieldValidators {
       isSelectable = false;
       selectAreaTitleText = 'Keep typing to search email.';
     }
-    print('requests $requests');
   }
 
   @action
@@ -107,7 +106,6 @@ abstract class _InvitationBodyStoreBase with Store, TextFieldValidators {
           recipientFullName: userInformationEntity.fullName,
         ),
       );
-      print('userInformationEntity $userInformationEntity');
       controller.text += ' ';
       selectAreaBodyText = '';
       userInformationEntity = UserInformationEntity.initial();

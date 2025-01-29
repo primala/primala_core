@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
@@ -19,11 +18,7 @@ class GroupIconPickerScreen extends HookWidget {
     }, []);
     return AnimatedScaffold(
       store: coordinator.widgets.animatedScaffold,
-      child: Observer(builder: (context) {
-        return MultiHitStack(
-          children: [],
-        );
-      }),
+      child: Container(),
     );
   }
 }

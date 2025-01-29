@@ -64,8 +64,6 @@ class GroupsContractImpl with ResponseToStatus implements GroupsContract {
   }
 
   @override
-  Future<bool> cancelGroupsStream() {
-    // TODO: implement cancelGroupsStream
-    throw UnimplementedError();
-  }
+  Future<bool> cancelGroupsStream() async =>
+      await remoteSource.cancelGroupsStream();
 }

@@ -20,7 +20,7 @@ class AccountIconPickerScreen extends HookWidget {
     return AnimatedScaffold(
       store: coordinator.widgets.animatedScaffold,
       child: Observer(builder: (context) {
-        return MultiHitStack(
+        return const MultiHitStack(
           children: [],
         );
       }),

@@ -69,7 +69,7 @@ class GenericMenuItem extends HookWidget {
                       : Container(),
                 ],
               ),
-              Spacer(),
+              const Spacer(),
               if (showChevron)
                 const Padding(
                   padding: EdgeInsets.only(right: 12),

@@ -3,42 +3,25 @@ import 'package:flutter/widgets.dart';
 import '../core/models/context_menu.dart';
 import '../core/models/context_menu_entry.dart';
 import '../core/models/context_menu_item.dart';
-import '../core/utils/extensions.dart';
 import '../core/utils/utils.dart';
 import 'context_menu_provider.dart';
 import 'context_menu_widget.dart';
 
-/// Manages the state of the context menu.
-///
-/// This class is used to manage the state of the context menu. It provides methods to
-/// show and hide the context menu, and to update the position of the context menu.
 class ContextMenuState extends ChangeNotifier {
   final focusScopeNode = FocusScopeNode();
 
   final overlayController = OverlayPortalController(debugLabel: 'ContextMenu');
 
-  /// The entry that is currently focused in the context menu.
   ContextMenuEntry? _focusedEntry;
 
-  /// The submenu entry that is currently opened in the context menu.
   ContextMenuItem? _selectedItem;
 
-  /// Whether the position of the context menu has been verified.
   bool _isPositionVerified = false;
 
-  // /// Whether the context menu is a submenu or not.
-  // bool _isSubmenuOpen = false;
-
-  /// The direction in which the context menu should be spawned.
-  /// Used internally by the [ContextMenuState]
-  ///
-  /// Defaults to [SpawnAlignment.topEnd].
   AlignmentGeometry _spawnAlignment = AlignmentDirectional.topEnd;
 
-  /// The rectangle representing the parent item, used for submenu positioning.
   final Rect? _parentItemRect;
 
-  /// Whether the context menu is a submenu or not.
   final bool _isSubmenu;
 
   final ContextMenu menu;
@@ -108,10 +91,8 @@ class ContextMenuState extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Determines whether the entry is focused.
   bool isFocused(ContextMenuEntry entry) => entry == focusedEntry;
 
-  /// Determines whether the entry is opened as a submenu.
   bool isOpened(ContextMenuItem item) => item == selectedItem;
 
   Offset _calculateSubmenuPosition(
@@ -127,7 +108,6 @@ class ContextMenuState extends ChangeNotifier {
     return Offset(left, top);
   }
 
-  /// Shows the submenu at the specified position.
   void showSubmenu({
     required BuildContext context,
     required ContextMenuItem parent,
@@ -160,7 +140,6 @@ class ContextMenuState extends ChangeNotifier {
     setSelectedItem(parent);
   }
 
-  /// Verifies the position of the context menu and updates it if necessary.
   void verifyPosition(BuildContext context) {
     if (isPositionVerified) return;
 
@@ -184,7 +163,6 @@ class ContextMenuState extends ChangeNotifier {
     });
   }
 
-  /// Closes the current submenu and removes the overlay.
   void closeSubmenu() {
     if (!isSubmenuOpen) return;
     _selectedItem = null;
@@ -192,7 +170,6 @@ class ContextMenuState extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Closes the context menu and removes the overlay.
   void close() {
     closeSubmenu();
     focusScopeNode.dispose();

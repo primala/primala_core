@@ -82,6 +82,7 @@ class SettingsLayout extends HookWidget {
               ),
             ),
             Padding(
+              // ignore: prefer_const_constructors
               padding: EdgeInsets.only(left: 16),
               child: Container(
                 alignment: Alignment.centerLeft,

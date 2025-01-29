@@ -80,7 +80,7 @@ class InboxBody extends HookWidget {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.only(left: 8, top: 8),
+                padding: const EdgeInsets.only(left: 8, top: 8),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,7 +95,7 @@ class InboxBody extends HookWidget {
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.only(left: 8),
+                      padding: const EdgeInsets.only(left: 8),
                       width: width - 150,
                       child: Jost(
                         '${request.senderFullName} invited you to ${request.groupName}',
@@ -104,7 +104,7 @@ class InboxBody extends HookWidget {
                         fontSize: 22,
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Padding(
                       padding: const EdgeInsets.only(right: 16),
                       child: Jost(

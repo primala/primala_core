@@ -8,7 +8,6 @@ import 'package:gradient_borders/gradient_borders.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/modules/session_content/session_content.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
-import 'package:nokhte/app/core/modules/session_content/widgets/block_text_display/context_menu/widgets/swipable_tiles/swipable_tiles.dart';
 
 class BlockTextDisplay extends HookWidget {
   final BlockTextDisplayStore store;
