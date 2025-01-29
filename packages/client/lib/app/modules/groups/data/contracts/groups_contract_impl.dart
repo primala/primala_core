@@ -34,10 +34,10 @@ class GroupsContractImpl with ResponseToStatus implements GroupsContract {
   }
 
   @override
-  getGroups() async {
+  listenToGroups() async {
     if (await networkInfo.isConnected) {
-      final res = await remoteSource.getGroups();
-      return Right(GroupModel.fromSupabase(res));
+      final res = remoteSource.listenToGroups();
+      return Right(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }
@@ -61,5 +61,11 @@ class GroupsContractImpl with ResponseToStatus implements GroupsContract {
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }
+  }
+
+  @override
+  Future<bool> cancelGroupsStream() {
+    // TODO: implement cancelGroupsStream
+    throw UnimplementedError();
   }
 }

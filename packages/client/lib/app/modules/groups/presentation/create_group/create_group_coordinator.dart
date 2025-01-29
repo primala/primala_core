@@ -1,6 +1,5 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
-
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
@@ -31,27 +30,24 @@ abstract class _CreateGroupCoordinatorBase
 
   @action
   onGoBack() {
-    if (!widgets.showWidgets) return;
-    Timer(Seconds.get(0, milli: 500), () {
-      Modular.to.navigate(GroupsConstants.groupPicker);
-    });
+    Modular.to.pop();
   }
 
   @action
   onPencilIconTap() {
     if (widgets.showWidgets) return;
     widgets.setShowWidgets(false);
-    final profileGradient = widgets.groupNameTextField.profileGradient;
-    final groupName = widgets.groupNameTextField.groupName;
+    // final profileGradient = widgets.groupNameTextField.profileGradient;
+    // final groupName = widgets.groupNameTextField.groupName;
 
     Timer(Seconds.get(0, milli: 500), () {
-      Modular.to.navigate(
-        GroupsConstants.groupIconPicker,
-        arguments: {
-          GroupsConstants.PROFILE_GRADIENT: profileGradient,
-          GroupsConstants.GROUP_NAME: groupName,
-        },
-      );
+      // Modular.to.navigate(
+      //   GroupsConstants.groupIconPicker,
+      //   arguments: {
+      //     GroupsConstants.PROFILE_GRADIENT: profileGradient,
+      //     GroupsConstants.GROUP_NAME: groupName,
+      //   },
+      // );
     });
   }
 
@@ -65,16 +61,7 @@ abstract class _CreateGroupCoordinatorBase
     res.fold((error) {
       errorUpdater(error);
     }, (groupId) {
-      widgets.setShowWidgets(false);
-      Modular.to.navigate(
-        GroupsConstants.editGroup,
-        arguments: {
-          GroupsConstants.GROUP_ID: groupId,
-          GroupsConstants.PROFILE_GRADIENT:
-              widgets.groupNameTextField.profileGradient,
-          GroupsConstants.GROUP_NAME: widgets.groupNameTextField.groupName,
-        },
-      );
+      Modular.to.pop();
     });
   }
 }

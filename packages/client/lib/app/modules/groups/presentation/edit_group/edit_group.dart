@@ -5,6 +5,7 @@ import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
+import 'package:nokhte_backend/tables/groups.dart';
 export 'edit_group_coordinator.dart';
 export 'edit_group_widgets_coordinator.dart';
 

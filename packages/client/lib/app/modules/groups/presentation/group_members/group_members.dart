@@ -4,6 +4,7 @@ import 'package:nokhte/app/core/constants/colors.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
+import 'package:nokhte_backend/tables/groups.dart';
 export 'group_members_coordinator.dart';
 export 'group_members_widgets_coordinator.dart';
 

@@ -6,6 +6,7 @@ import 'package:nokhte/app/core/constants/text_field_validators.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 import 'package:nokhte_backend/tables/group_requests.dart';
 import 'package:nokhte_backend/tables/group_roles.dart';
+import 'package:nokhte_backend/tables/groups.dart';
 import 'package:nokhte_backend/types/types.dart';
 part 'invitation_body_store.g.dart';
 

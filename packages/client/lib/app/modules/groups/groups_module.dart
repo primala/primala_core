@@ -81,22 +81,6 @@ class GroupsModule extends Module {
   @override
   routes(r) {
     r.child(
-      GroupsConstants.relativeAccountIconPicker,
-      transition: TransitionType.noTransition,
-      child: (context) => AccountIconPickerScreen(
-        coordinator: Modular.get<AccountIconPickerCoordinator>(),
-      ),
-    );
-
-    r.child(
-      GroupsConstants.relativeAccountSettings,
-      transition: TransitionType.noTransition,
-      child: (context) => AccountSettingsScreen(
-        coordinator: Modular.get<AccountSettingsCoordinator>(),
-      ),
-    );
-
-    r.child(
       GroupsConstants.relativeCreateGroup,
       transition: TransitionType.noTransition,
       child: (context) => CreateGroupScreen(
@@ -105,10 +89,10 @@ class GroupsModule extends Module {
     );
 
     r.child(
-      GroupsConstants.relativeGroupIconPicker,
+      GroupsConstants.accountSettings,
       transition: TransitionType.noTransition,
-      child: (context) => GroupIconPickerScreen(
-        coordinator: Modular.get<GroupIconPickerCoordinator>(),
+      child: (context) => AccountSettingsScreen(
+        coordinator: Modular.get<AccountSettingsCoordinator>(),
       ),
     );
 

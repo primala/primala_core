@@ -6,7 +6,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class GroupsRemoteSource {
   Future<int> createGroup(CreateGroupParams params);
-  Future<List> getGroups();
+  Future<bool> cancelGroupsStream();
+  Stream<GroupEntities> listenToGroups();
   Future<void> deleteGroup(int groupId);
   Future<List> updateGroupName(UpdateGroupNameParams params);
   Future<List> updateGroupProfileGradient(
@@ -35,7 +36,7 @@ class GroupsRemoteSourceImpl implements GroupsRemoteSource {
   deleteGroup(groupId) async => await groupsQueries.delete(groupId);
 
   @override
-  getGroups() async => await groupsQueries.selectWithStatus();
+  listenToGroups() => groupsQueries.listenToGroups();
 
   @override
   updateGroupName(params) async => await groupsQueries.updateGroupName(params);
@@ -43,4 +44,9 @@ class GroupsRemoteSourceImpl implements GroupsRemoteSource {
   @override
   updateGroupProfileGradient(params) async =>
       await groupsQueries.updateProfileGradient(params);
+
+  @override
+  cancelGroupsStream() async {
+    return await groupsQueries.cancelGroupsStream();
+  }
 }

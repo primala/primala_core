@@ -2579,3 +2579,9 @@ alter
   publication supabase_realtime add table public.group_requests;
 
 alter table "public"."group_requests" replica identity full;
+
+
+alter
+  publication supabase_realtime add table public.groups;
+
+alter table "public"."groups" replica identity full;

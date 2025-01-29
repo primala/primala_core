@@ -4,6 +4,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
+import 'package:nokhte_backend/tables/groups.dart';
 part 'invite_to_group_coordinator.g.dart';
 
 class InviteToGroupCoordinator = _InviteToGroupCoordinatorBase

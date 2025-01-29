@@ -16,6 +16,8 @@ class GroupsQueries with ProfileGradientUtils {
   final String userUID;
   final UsersQueries userInfoQueries;
 
+  bool groupsListeningStatus = false;
+
   GroupsQueries({
     required this.supabase,
   })  : userUID = supabase.auth.currentUser?.id ?? '',
@@ -48,6 +50,44 @@ class GroupsQueries with ProfileGradientUtils {
       res[i][IS_ADMIN] = isAdmin;
     }
     return res;
+  }
+
+  Future<bool> cancelGroupsStream() async {
+    final res = supabase.realtime.getChannels();
+    if (res.isNotEmpty) {
+      await res.first.unsubscribe();
+    }
+    groupsListeningStatus = false;
+    return groupsListeningStatus;
+  }
+
+  Stream<GroupEntities> listenToGroups() async* {
+    groupsListeningStatus = true;
+
+    final events = supabase.from(TABLE).stream(primaryKey: ['id']);
+    await for (var event in events) {
+      if (!groupsListeningStatus) {
+        break;
+      }
+      final temp = <GroupEntity>[];
+
+      if (event.isNotEmpty) {
+        for (var row in event) {
+          final isAdmin = await supabase.rpc(
+            'is_group_admin',
+            params: {
+              '_user_uid': userUID,
+              '_group_id': row[ID],
+            },
+          );
+          row[IS_ADMIN] = isAdmin;
+          temp.add(GroupEntity.fromSupabase(row));
+        }
+        yield temp;
+      } else {
+        yield [];
+      }
+    }
   }
 
 // test this

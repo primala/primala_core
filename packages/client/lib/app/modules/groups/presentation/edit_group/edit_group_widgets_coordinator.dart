@@ -2,6 +2,7 @@
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
+import 'package:nokhte_backend/tables/groups/types/group_entity.dart';
 part 'edit_group_widgets_coordinator.g.dart';
 
 class EditGroupWidgetsCoordinator = _EditGroupWidgetsCoordinatorBase

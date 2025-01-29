@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/types/types.dart';
-import 'package:nokhte/app/modules/groups/groups.dart';
+import 'package:nokhte_backend/tables/groups.dart';
 part 'group_display_store.g.dart';
 
 class GroupDisplayStore = _GroupDisplayStoreBase with _$GroupDisplayStore;

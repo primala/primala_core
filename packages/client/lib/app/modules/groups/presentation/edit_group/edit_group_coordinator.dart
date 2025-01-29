@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
+import 'package:nokhte_backend/tables/groups.dart';
 part 'edit_group_coordinator.g.dart';
 
 class EditGroupCoordinator = _EditGroupCoordinatorBase

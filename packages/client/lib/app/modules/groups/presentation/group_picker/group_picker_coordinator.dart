@@ -9,6 +9,7 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 import 'package:nokhte_backend/tables/group_requests.dart';
+import 'package:nokhte_backend/tables/groups.dart';
 part 'group_picker_coordinator.g.dart';
 
 class GroupPickerCoordinator = _GroupPickerCoordinatorBase
@@ -17,8 +18,8 @@ class GroupPickerCoordinator = _GroupPickerCoordinatorBase
 abstract class _GroupPickerCoordinatorBase
     with Store, BaseMobxLogic, Reactions {
   final GroupPickerWidgetsCoordinator widgets;
-  final GroupsContractImpl groupsContract;
-  final UserContractImpl userContract;
+  final GroupsContract groupsContract;
+  final UserContract userContract;
 
   _GroupPickerCoordinatorBase({
     required this.widgets,
@@ -32,7 +33,7 @@ abstract class _GroupPickerCoordinatorBase
   constructor() async {
     widgets.constructor();
     initReactors();
-    await getGroups();
+    await listenToGroups();
     await listenToRequests();
   }
 
@@ -57,12 +58,24 @@ abstract class _GroupPickerCoordinatorBase
   StreamSubscription requestsStreamSubscription =
       const Stream.empty().listen((event) {});
 
+  @observable
+  ObservableStream<GroupEntities> groupsStream =
+      ObservableStream(const Stream.empty());
+
+  StreamSubscription groupsStreamSubscription =
+      const Stream.empty().listen((event) {});
+
   @action
-  getGroups() async {
-    final res = await groupsContract.getGroups();
+  listenToGroups() async {
+    final res = await groupsContract.listenToGroups();
     res.fold(
       (failure) => errorUpdater(failure),
-      (incomingGroups) => groups = ObservableList.of(incomingGroups),
+      (incomingGroups) {
+        groupsStream = ObservableStream(incomingGroups);
+        groupsStreamSubscription = groupsStream.listen((value) {
+          groups = ObservableList.of(value);
+        });
+      },
     );
   }
 
@@ -105,9 +118,9 @@ abstract class _GroupPickerCoordinatorBase
   @action
   handleRequest(HandleRequestParams params) async {
     await userContract.handleRequest(params);
-    if (params.accept) {
-      await getGroups();
-    }
+    // if (params.accept) {
+    //   await getGroups();
+    // }
     Modular.to.pop();
   }
 
@@ -125,7 +138,9 @@ abstract class _GroupPickerCoordinatorBase
   @action
   dispose() async {
     super.dispose();
+    await groupsContract.cancelGroupsStream();
     await userContract.cancelRequestsStream();
+    groupsStreamSubscription.cancel();
     requestsStreamSubscription.cancel();
   }
 

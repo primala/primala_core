@@ -6,6 +6,7 @@ import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 import 'package:nokhte_backend/tables/group_roles.dart';
+import 'package:nokhte_backend/tables/groups.dart';
 part 'group_members_coordinator.g.dart';
 
 class GroupMembersCoordinator = _GroupMembersCoordinatorBase

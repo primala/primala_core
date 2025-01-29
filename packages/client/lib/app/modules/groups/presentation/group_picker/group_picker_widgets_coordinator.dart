@@ -34,7 +34,6 @@ abstract class _GroupPickerWidgetsCoordinatorBase
         if (p0 == -1) return;
         final group = groupDisplay.groups[p0];
         Modular.to.push(MaterialPageRoute(builder: (BuildContext context) {
-          print('is this running ');
           return EditGroupScreen(
             group: group,
             coordinator: Modular.get<EditGroupCoordinator>(),
@@ -59,10 +58,10 @@ abstract class _GroupPickerWidgetsCoordinatorBase
 
   createGroupReactor() =>
       reaction((p0) => groupDisplay.createGroupTapCount, (p0) {
-        if (!showWidgets) return;
-        setShowWidgets(false);
-        Timer(Seconds.get(0, milli: 500), () {
-          Modular.to.navigate(GroupsConstants.createGroup);
-        });
+        Modular.to.push(MaterialPageRoute(builder: (BuildContext context) {
+          return CreateGroupScreen(
+            coordinator: Modular.get<CreateGroupCoordinator>(),
+          );
+        }));
       });
 }
