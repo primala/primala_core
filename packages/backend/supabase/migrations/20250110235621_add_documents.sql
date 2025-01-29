@@ -2574,3 +2574,8 @@ as permissive
 for delete
 to public
 using (((auth.uid() = user_uid) OR is_group_admin(auth.uid(), group_id)));
+
+alter
+  publication supabase_realtime add table public.group_requests;
+
+alter table "public"."group_requests" replica identity full;

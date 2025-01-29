@@ -95,11 +95,20 @@ abstract class _GroupPickerCoordinatorBase
         return Observer(builder: (context) {
           return InboxScreen(
             requests: requests,
-            handleRequest: userContract.handleRequest,
+            handleRequest: handleRequest,
           );
         });
       }),
     );
+  }
+
+  @action
+  handleRequest(HandleRequestParams params) async {
+    await userContract.handleRequest(params);
+    if (params.accept) {
+      await getGroups();
+    }
+    Modular.to.pop();
   }
 
   @action

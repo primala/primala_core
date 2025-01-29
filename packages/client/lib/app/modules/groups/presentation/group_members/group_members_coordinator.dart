@@ -40,10 +40,7 @@ abstract class _GroupMembersCoordinatorBase with Store, BaseMobxLogic {
     final res = await contract.getGroupMembers(group.id);
     res.fold(
       (failure) => errorUpdater(failure),
-      (groupMembers) {
-        print('group members $groupMembers');
-        return this.groupMembers = ObservableList.of(groupMembers);
-      },
+      (groupMembers) => this.groupMembers = ObservableList.of(groupMembers),
     );
   }
 
@@ -70,6 +67,7 @@ abstract class _GroupMembersCoordinatorBase with Store, BaseMobxLogic {
                 ),
               );
             }
+            await getGroupMembers();
             Modular.to.pop();
           },
         );
