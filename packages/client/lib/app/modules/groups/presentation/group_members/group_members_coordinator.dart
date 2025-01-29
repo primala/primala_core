@@ -1,16 +1,17 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
-
+import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
-import 'package:nokhte/app/core/types/types.dart';
+import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
+import 'package:nokhte_backend/tables/group_roles.dart';
 part 'group_members_coordinator.g.dart';
 
 class GroupMembersCoordinator = _GroupMembersCoordinatorBase
     with _$GroupMembersCoordinator;
 
-abstract class _GroupMembersCoordinatorBase with Store {
+abstract class _GroupMembersCoordinatorBase with Store, BaseMobxLogic {
   final GroupMembersWidgetsCoordinator widgets;
   final GroupRolesContract contract;
 
@@ -22,23 +23,49 @@ abstract class _GroupMembersCoordinatorBase with Store {
   @observable
   GroupEntity group = GroupEntity.initial();
 
+  @observable
+  ObservableList<GroupRoleEntity> groupMembers =
+      ObservableList<GroupRoleEntity>();
+
   @action
   constructor(GroupEntity group) async {
     this.group = group;
-    widgets.constructor();
+    await getGroupMembers();
   }
 
   @action
-  onGoBack() {
-    if (!widgets.showWidgets) return;
-    widgets.setShowWidgets(false);
-    Timer(Seconds.get(0, milli: 500), () {
-      Modular.to.navigate(
-        GroupsConstants.editGroup,
-        arguments: {
-          GroupsConstants.GROUP_ENTITY: group,
-        },
-      );
-    });
+  getGroupMembers() async {
+    final res = await contract.getGroupMembers(group.id);
+    res.fold(
+      (failure) => errorUpdater(failure),
+      (groupMembers) {
+        print('group members $groupMembers');
+        return this.groupMembers = ObservableList.of(groupMembers);
+      },
+    );
   }
+
+  @action
+  onMemberTapped(GroupRoleEntity member) {
+    Modular.to.push(
+      MaterialPageRoute(builder: (BuildContext context) {
+        return SelectRoleScreen(
+          showRemoveItem: false,
+          onRoleSelected: (role) async {
+            await contract.updateUserRole(
+              UserRoleParams(
+                userUid: member.userUid,
+                groupId: group.id,
+                role: role,
+              ),
+            );
+            Modular.to.pop();
+          },
+        );
+      }),
+    );
+  }
+
+  @action
+  onGoBack() => Modular.to.pop();
 }

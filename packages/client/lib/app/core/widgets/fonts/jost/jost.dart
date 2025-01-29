@@ -8,6 +8,7 @@ class Jost extends StatelessWidget {
   final bool shouldCenter;
   final bool shouldItalicize;
   final bool addShadow;
+  final bool shouldAlignRight;
   final FontWeight fontWeight;
   final bool useEllipsis;
   const Jost(
@@ -19,6 +20,7 @@ class Jost extends StatelessWidget {
     this.fontColor = Colors.white,
     this.shouldItalicize = false,
     this.shouldCenter = false,
+    this.shouldAlignRight = false,
     this.useEllipsis = false,
   });
 
@@ -26,7 +28,11 @@ class Jost extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       content,
-      textAlign: shouldCenter ? TextAlign.center : null,
+      textAlign: shouldCenter
+          ? TextAlign.center
+          : shouldAlignRight
+              ? TextAlign.right
+              : null,
       // softWrap: true,
       style: GoogleFonts.jost(
         fontSize: fontSize,

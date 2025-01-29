@@ -7,9 +7,11 @@ import 'left_chevron_painter.dart';
 class LeftChevron extends HookWidget {
   final Color color;
   final Function? onTap;
+  final double leftPadding;
   const LeftChevron({
     super.key,
     this.color = Colors.black,
+    this.leftPadding = 0.05,
     this.onTap,
   });
 
@@ -19,7 +21,7 @@ class LeftChevron extends HookWidget {
     return Observer(
       builder: (context) => Padding(
         padding: EdgeInsets.only(
-          left: screenSize.width * .05,
+          left: screenSize.width * leftPadding,
         ),
         child: GestureDetector(
           onTap: () {

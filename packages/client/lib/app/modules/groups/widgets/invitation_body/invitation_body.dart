@@ -45,26 +45,10 @@ class InvitationBody extends HookWidget with NokhteGradients {
               prefixWidget: Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: store.isSelectable
-                    ? Container(
-                        width: 30,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: mapProfileGradientToLinearGradient(
-                            store.userInformationEntity.profileGradient,
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 2),
-                          child: Center(
-                            child: Jost(
-                              store.currentInitials,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              shouldCenter: true,
-                            ),
-                          ),
-                        ),
+                    ? UserAvatar(
+                        fullName: store.userInformationEntity.fullName,
+                        gradient: store.userInformationEntity.profileGradient,
+                        size: 30,
                       )
                     : Image.asset(
                         'assets/groups/envelope_icon_transparent.png',

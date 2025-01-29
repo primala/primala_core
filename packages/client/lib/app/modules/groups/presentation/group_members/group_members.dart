@@ -26,23 +26,31 @@ class GroupMembersScreen extends HookWidget {
     return Observer(builder: (context) {
       return AnimatedScaffold(
         store: coordinator.widgets.animatedScaffold,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            HeaderRow(children: [
-              LeftChevron(
-                onTap: coordinator.onGoBack,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              HeaderRow(
+                children: [
+                  LeftChevron(
+                    onTap: coordinator.onGoBack,
+                  ),
+                  const SmartHeader(
+                    content: "Group Members",
+                  ),
+                  const Expanded(
+                    child: LeftChevron(
+                      color: NokhteColors.eggshell,
+                    ),
+                  ),
+                ],
               ),
-              const SmartHeader(
-                content: "Group Members",
+              GroupMembersList(
+                coordinator.groupMembers,
+                onMemberTapped: coordinator.onMemberTapped,
               ),
-              const Expanded(
-                child: LeftChevron(
-                  color: NokhteColors.eggshell,
-                ),
-              ),
-            ])
-          ],
+            ],
+          ),
         ),
       );
     });

@@ -6,6 +6,7 @@ import 'package:nokhte_backend/utils/profile_gradients_utils.dart';
 
 class GroupRoleModel extends GroupRoleEntity with ProfileGradientUtils {
   const GroupRoleModel({
+    required super.groupId,
     required super.userUid,
     required super.role,
     required super.profileGradient,
@@ -28,10 +29,15 @@ class GroupRoleModel extends GroupRoleEntity with ProfileGradientUtils {
         final fullName = usersRes[UsersConstants.S_FULL_NAME];
         final profileGradient = ProfileGradientUtils.mapStringToProfileGradient(
             usersRes[UsersConstants.S_GRADIENT]);
+        final groupRole = GroupRolesUtils.mapStringToGroupRole(
+          group[GroupRolesQueries.ROLE],
+        );
+        final groupId = group[GroupRolesQueries.GROUP_ID];
         groups.add(
           GroupRoleModel(
             userUid: group[GroupRolesQueries.USER_UID],
-            role: group[GroupRolesQueries.ROLE],
+            groupId: groupId,
+            role: groupRole,
             fullName: fullName,
             profileGradient: profileGradient,
             isPending: false,
@@ -45,10 +51,14 @@ class GroupRoleModel extends GroupRoleEntity with ProfileGradientUtils {
         final profileGradient = ProfileGradientUtils.mapStringToProfileGradient(
           request[GroupRequestsQueries.RECIPIENT_PROFILE_GRADIENT],
         );
+        final groupRole = GroupRolesUtils.mapStringToGroupRole(
+          request[GroupRequestsQueries.GROUP_ROLE],
+        );
         groups.add(
           GroupRoleModel(
             userUid: request[GroupRequestsQueries.USER_UID],
-            role: request[GroupRequestsQueries.GROUP_ROLE],
+            role: groupRole,
+            groupId: request[GroupRequestsQueries.GROUP_ID],
             fullName: fullName,
             profileGradient: profileGradient,
             isPending: true,

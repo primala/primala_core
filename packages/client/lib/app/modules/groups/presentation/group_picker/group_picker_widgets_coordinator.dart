@@ -34,6 +34,7 @@ abstract class _GroupPickerWidgetsCoordinatorBase
         if (p0 == -1) return;
         final group = groupDisplay.groups[p0];
         Modular.to.push(MaterialPageRoute(builder: (BuildContext context) {
+          print('is this running ');
           return EditGroupScreen(
             group: group,
             coordinator: Modular.get<EditGroupCoordinator>(),

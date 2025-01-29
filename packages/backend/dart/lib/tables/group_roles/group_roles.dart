@@ -5,7 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 export 'types/types.dart';
 export 'utils.dart';
 
-class GroupRolesQueries with GroupRolesUtils {
+class GroupRolesQueries {
   static const TABLE = 'group_roles';
   static const USER_UID = 'user_uid';
   static const ROLE = 'role';
@@ -32,7 +32,7 @@ class GroupRolesQueries with GroupRolesUtils {
   Future<List> updateUserRole(UserRoleParams params) async => await supabase
       .from(TABLE)
       .update({
-        ROLE: mapGroupRoleToString(params.role),
+        ROLE: GroupRolesUtils.mapGroupRoleToString(params.role),
       })
       .eq(USER_UID, params.userUid)
       .eq(GROUP_ID, params.groupId)

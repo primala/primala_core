@@ -21,11 +21,6 @@ class SelectRoleScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    useEffect(() {
-      //  coordinator.constructor();
-      return null;
-      // return () => coordinator.deconstructor();
-    }, []);
     return AnimatedScaffold(
       store: AnimatedScaffoldStore(),
       child: Observer(builder: (context) {

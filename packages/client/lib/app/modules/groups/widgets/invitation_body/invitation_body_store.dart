@@ -181,15 +181,4 @@ abstract class _InvitationBodyStoreBase with Store, TextFieldValidators {
   @computed
   String get currentRole =>
       '${currentGroupRole.name[0].toUpperCase()}${currentGroupRole.name.substring(1)}';
-
-  @computed
-  String get currentInitials {
-    if (userInformationEntity.fullName.isNotEmpty) {
-      final names = userInformationEntity.fullName.split(' ');
-      final initials = names.map((name) => name[0]).join('');
-      return initials.toUpperCase();
-    } else {
-      return '';
-    }
-  }
 }

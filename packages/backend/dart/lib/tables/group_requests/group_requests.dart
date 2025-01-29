@@ -8,7 +8,7 @@ import 'package:nokhte_backend/utils/profile_gradients_utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 export 'types/types.dart';
 
-class GroupRequestsQueries with GroupRolesUtils, ProfileGradientUtils {
+class GroupRequestsQueries with ProfileGradientUtils {
   static const TABLE = 'group_requests';
   static const ID = 'id';
   static const GROUP_ID = 'group_id';
@@ -49,7 +49,7 @@ class GroupRequestsQueries with GroupRolesUtils, ProfileGradientUtils {
           param.recipientProfileGradient,
         ),
         SENDER_PROFILE_GRADIENT: profileGradient,
-        GROUP_ROLE: mapGroupRoleToString(param.role),
+        GROUP_ROLE: GroupRolesUtils.mapGroupRoleToString(param.role),
       }).select();
       responses.add(res);
     }
