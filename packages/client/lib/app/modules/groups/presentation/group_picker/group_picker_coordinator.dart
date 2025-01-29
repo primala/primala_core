@@ -2,11 +2,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
+import 'package:nokhte_backend/tables/group_requests.dart';
 part 'group_picker_coordinator.g.dart';
 
 class GroupPickerCoordinator = _GroupPickerCoordinatorBase
@@ -31,6 +33,7 @@ abstract class _GroupPickerCoordinatorBase
     widgets.constructor();
     initReactors();
     await getGroups();
+    await listenToRequests();
   }
 
   initReactors() {
@@ -43,12 +46,37 @@ abstract class _GroupPickerCoordinatorBase
   @observable
   ObservableList<GroupEntity> groups = ObservableList<GroupEntity>();
 
+  @observable
+  ObservableList<GroupRequestEntity> requests =
+      ObservableList<GroupRequestEntity>();
+
+  @observable
+  ObservableStream<GroupRequests> requestsStream =
+      ObservableStream(const Stream.empty());
+
+  StreamSubscription requestsStreamSubscription =
+      const Stream.empty().listen((event) {});
+
   @action
   getGroups() async {
     final res = await groupsContract.getGroups();
     res.fold(
       (failure) => errorUpdater(failure),
       (incomingGroups) => groups = ObservableList.of(incomingGroups),
+    );
+  }
+
+  @action
+  listenToRequests() async {
+    final res = await userContract.listenToRequests();
+    res.fold(
+      (failure) => errorUpdater(failure),
+      (incomingRequests) {
+        requestsStream = ObservableStream(incomingRequests);
+        requestsStreamSubscription = requestsStream.listen((value) {
+          requests = ObservableList.of(value);
+        });
+      },
     );
   }
 
@@ -64,9 +92,12 @@ abstract class _GroupPickerCoordinatorBase
   onInboxTapped() {
     Modular.to.push(
       MaterialPageRoute(builder: (BuildContext context) {
-        return InboxScreen(
-          coordinator: Modular.get<InboxCoordinator>(),
-        );
+        return Observer(builder: (context) {
+          return InboxScreen(
+            requests: requests,
+            handleRequest: userContract.handleRequest,
+          );
+        });
       }),
     );
   }
@@ -80,4 +111,15 @@ abstract class _GroupPickerCoordinatorBase
         widgets.groupDisplay.setGroups(p0);
         widgets.groupDisplay.setWidgetVisibility(true);
       });
+
+  @override
+  @action
+  dispose() async {
+    super.dispose();
+    await userContract.cancelRequestsStream();
+    requestsStreamSubscription.cancel();
+  }
+
+  @computed
+  int get inboxBadgeCount => requests.length;
 }

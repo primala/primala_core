@@ -1,4 +1,5 @@
 export 'group_members_list.dart';
+export 'inbox_body.dart';
 export 'inbox_icon.dart';
 export 'user_avatar.dart';
 export 'settings_icon.dart';

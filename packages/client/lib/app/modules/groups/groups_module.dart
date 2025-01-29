@@ -119,13 +119,5 @@ class GroupsModule extends Module {
         coordinator: Modular.get<GroupPickerCoordinator>(),
       ),
     );
-
-    r.child(
-      GroupsConstants.relativeInbox,
-      transition: TransitionType.noTransition,
-      child: (context) => InboxScreen(
-        coordinator: Modular.get<InboxCoordinator>(),
-      ),
-    );
   }
 }

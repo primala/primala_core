@@ -15,7 +15,7 @@ class GroupMembersList extends HookWidget {
     required this.onMemberTapped,
   });
 
-  List<Widget> getsMembers(double width) {
+  List<Widget> getMembers(double width) {
     final temp = <Widget>[];
     for (int i = 0; i < members.length; i++) {
       final member = members[i];
@@ -102,7 +102,7 @@ class GroupMembersList extends HookWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 30),
       child: Column(
-        children: getsMembers(width),
+        children: getMembers(width),
       ),
     );
   }

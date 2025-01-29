@@ -28,7 +28,7 @@ class GroupPickerScreen extends HookWidget {
                 children: [
                   InboxIcon(
                     onTap: coordinator.onInboxTapped,
-                    badgeCount: 90,
+                    badgeCount: coordinator.inboxBadgeCount,
                   ),
                   const SmartHeader(
                     content: "Groups",

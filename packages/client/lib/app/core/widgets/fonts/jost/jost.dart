@@ -11,6 +11,7 @@ class Jost extends StatelessWidget {
   final bool shouldAlignRight;
   final FontWeight fontWeight;
   final bool useEllipsis;
+  final bool softWrap;
   const Jost(
     this.content, {
     super.key,
@@ -22,6 +23,7 @@ class Jost extends StatelessWidget {
     this.shouldCenter = false,
     this.shouldAlignRight = false,
     this.useEllipsis = false,
+    this.softWrap = false,
   });
 
   @override
@@ -34,6 +36,8 @@ class Jost extends StatelessWidget {
               ? TextAlign.right
               : null,
       // softWrap: true,
+      softWrap: softWrap,
+      overflow: useEllipsis ? TextOverflow.ellipsis : TextOverflow.visible,
       style: GoogleFonts.jost(
         fontSize: fontSize,
         color: fontColor,
