@@ -136,6 +136,7 @@ void main() {
         recipientFullName: 'User Two',
       ),
     ]))
+        .first
         .first['id'];
     print('requested id is $requestId');
     try {
@@ -314,7 +315,6 @@ void main() {
   });
 
   test("should be able to delete a group", () async {
-    // final res = (await u1GroupQueries.selectByMember());
     await u2GroupQueries.delete(tSetup.groupId);
 
     final userResponse = (await u2UsersQueries.getUserInfo()).first;

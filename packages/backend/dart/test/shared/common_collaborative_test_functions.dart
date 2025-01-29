@@ -67,6 +67,7 @@ class CommonCollaborativeTestFunctions {
           role: GroupRole.collaborator,
         ),
       ]))
+          .first
           .first['id'];
 
       await u2GroupRequestsQueries.handleRequest(
