@@ -111,6 +111,7 @@ class GroupDisplay extends HookWidget with NokhteGradients {
                       elevation: 0,
                       backgroundColor: Colors.transparent,
                       shadowColor: Colors.transparent,
+                      splashFactory: NoSplash.splashFactory,
                       padding: const EdgeInsets.symmetric(vertical: 12.0),
                     ),
                     child: AnimatedSwitcher(
