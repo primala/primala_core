@@ -13,17 +13,39 @@ class AccountSettingsScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     useEffect(() {
-      //  coordinator.constructor();
-      return null;
-      // return () => coordinator.deconstructor();
+      coordinator.constructor();
+      return () => coordinator.dispose();
     }, []);
-    return AnimatedScaffold(
-      store: coordinator.widgets.animatedScaffold,
-      child: Observer(builder: (context) {
-        return MultiHitStack(
-          children: [],
-        );
-      }),
-    );
+    return Observer(builder: (context) {
+      return AnimatedScaffold(
+        store: coordinator.animatedScaffold,
+        showWidgets: coordinator.showWidgets,
+        child: Column(
+          children: [
+            HeaderRow(
+              includeDivider: false,
+              children: [
+                LeftChevron(
+                  onTap: coordinator.onGoBack,
+                ),
+                const SmartHeader(
+                  content: "Settings",
+                ),
+                const LeftChevron(
+                  color: Colors.transparent,
+                ),
+              ],
+            ),
+            SettingsLayout(
+              onDeactivate: coordinator.onDeactivate,
+              user: coordinator.user,
+            ),
+            // GroupNameTextField(
+            //   store: coordinator.widgets.groupNameTextField,
+            // ),
+          ],
+        ),
+      );
+    });
   }
 }

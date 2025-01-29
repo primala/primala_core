@@ -20,7 +20,9 @@ abstract class _CreateGroupCoordinatorBase
   _CreateGroupCoordinatorBase({
     required this.widgets,
     required this.contract,
-  });
+  }) {
+    initBaseLogicActions();
+  }
 
   @action
   constructor() {

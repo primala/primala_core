@@ -4,6 +4,7 @@ import 'package:nokhte/app/modules/groups/domain/domain.dart';
 import 'package:nokhte/app/modules/groups/data/data.dart';
 import 'package:nokhte/app/core/network/network_info.dart';
 import 'package:nokhte/app/core/constants/failure_constants.dart';
+import 'package:nokhte_backend/types/user_information_entity.dart';
 
 class UserContractImpl with ResponseToStatus implements UserContract {
   final UserRemoteSource remoteSource;
@@ -52,6 +53,16 @@ class UserContractImpl with ResponseToStatus implements UserContract {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.updateUserProfileGradient(profileGradient);
       return fromSupabase(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  @override
+  getUserInformation() async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.getUserInformation();
+      return Right(UserInformationModel.fromSupabase(res));
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }

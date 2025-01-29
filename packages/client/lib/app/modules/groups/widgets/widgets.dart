@@ -8,3 +8,4 @@ export 'group_name_text_field/group_name_text_field.dart';
 export 'group_edit_menu.dart';
 export 'title_bar.dart';
 export 'invitation_body/invitation_body.dart';
+export 'settings_layout.dart';

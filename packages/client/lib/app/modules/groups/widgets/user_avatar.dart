@@ -8,12 +8,14 @@ class UserAvatar extends HookWidget with NokhteGradients {
   final String fullName;
   final ProfileGradient gradient;
   final double size;
+  final double fontSize;
 
   const UserAvatar({
     super.key,
     required this.fullName,
     required this.gradient,
     required this.size,
+    this.fontSize = 16,
   });
 
   getInitials(String fullName) {
@@ -42,7 +44,7 @@ class UserAvatar extends HookWidget with NokhteGradients {
         child: Center(
           child: Jost(
             getInitials(fullName),
-            fontSize: 16,
+            fontSize: fontSize,
             fontWeight: FontWeight.w400,
             shouldCenter: true,
           ),

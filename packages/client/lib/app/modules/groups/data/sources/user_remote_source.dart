@@ -4,6 +4,7 @@ import 'package:nokhte_backend/types/types.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class UserRemoteSource {
+  Future<List> getUserInformation();
   Future<void> handleRequest(HandleRequestParams params);
   Future<List> getRequests();
 
@@ -39,4 +40,7 @@ class UserRemoteSourceImpl implements UserRemoteSource {
   @override
   updateUserProfileGradient(param) async =>
       await usersQueries.updateProfileGradient(param);
+
+  @override
+  getUserInformation() async => await usersQueries.getUserInfo();
 }

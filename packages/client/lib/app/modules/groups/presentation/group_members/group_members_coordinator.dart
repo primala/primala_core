@@ -18,7 +18,9 @@ abstract class _GroupMembersCoordinatorBase with Store, BaseMobxLogic {
   _GroupMembersCoordinatorBase({
     required this.widgets,
     required this.contract,
-  });
+  }) {
+    initBaseLogicActions();
+  }
 
   @observable
   GroupEntity group = GroupEntity.initial();
@@ -50,15 +52,24 @@ abstract class _GroupMembersCoordinatorBase with Store, BaseMobxLogic {
     Modular.to.push(
       MaterialPageRoute(builder: (BuildContext context) {
         return SelectRoleScreen(
-          showRemoveItem: false,
           onRoleSelected: (role) async {
-            await contract.updateUserRole(
-              UserRoleParams(
-                userUid: member.userUid,
-                groupId: group.id,
-                role: role,
-              ),
-            );
+            if (role != GroupRole.none) {
+              await contract.updateUserRole(
+                UserRoleParams(
+                  userUid: member.userUid,
+                  groupId: group.id,
+                  role: role,
+                ),
+              );
+            } else {
+              await contract.removeUserRole(
+                UserRoleParams(
+                  userUid: member.userUid,
+                  groupId: group.id,
+                  role: member.role,
+                ),
+              );
+            }
             Modular.to.pop();
           },
         );

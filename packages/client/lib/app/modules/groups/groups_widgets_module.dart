@@ -36,5 +36,16 @@ class GroupsWidgetsModule extends Module {
         animatedScaffold: AnimatedScaffoldStore(),
       ),
     );
+    i.add<AccountSettingsWidgetsCoordinator>(
+      () => AccountSettingsWidgetsCoordinator(
+        animatedScaffold: AnimatedScaffoldStore(),
+      ),
+    );
+
+    i.add<InboxWidgetsCoordinator>(
+      () => InboxWidgetsCoordinator(
+        animatedScaffold: AnimatedScaffoldStore(),
+      ),
+    );
   }
 }

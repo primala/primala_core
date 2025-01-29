@@ -1,6 +1,11 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
+import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 part 'group_picker_coordinator.g.dart';
 
@@ -44,6 +49,25 @@ abstract class _GroupPickerCoordinatorBase
     res.fold(
       (failure) => errorUpdater(failure),
       (incomingGroups) => groups = ObservableList.of(incomingGroups),
+    );
+  }
+
+  @action
+  onSettingsTapped() {
+    widgets.setShowWidgets(false);
+    Timer(Seconds.get(0, milli: 500), () {
+      Modular.to.navigate(GroupsConstants.accountSettings);
+    });
+  }
+
+  @action
+  onInboxTapped() {
+    Modular.to.push(
+      MaterialPageRoute(builder: (BuildContext context) {
+        return InboxScreen(
+          coordinator: Modular.get<InboxCoordinator>(),
+        );
+      }),
     );
   }
 

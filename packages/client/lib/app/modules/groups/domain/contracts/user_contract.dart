@@ -6,6 +6,7 @@ import 'package:nokhte_backend/types/types.dart';
 
 abstract class UserContract {
   Future<Either<Failure, List<GroupRequestEntity>>> getGroupRequests();
+  Future<Either<Failure, UserInformationEntity>> getUserInformation();
   Future<Either<Failure, bool>> handleRequest(HandleRequestParams params);
   Future<Either<Failure, bool>> deactivateAccount();
   Future<Either<Failure, bool>> updateUserProfileGradient(

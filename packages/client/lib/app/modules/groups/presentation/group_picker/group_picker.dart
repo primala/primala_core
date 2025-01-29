@@ -27,9 +27,7 @@ class GroupPickerScreen extends HookWidget {
               HeaderRow(
                 children: [
                   InboxIcon(
-                    onTap: () {
-                      print('inbox on top ');
-                    },
+                    onTap: coordinator.onInboxTapped,
                     badgeCount: 90,
                   ),
                   const SmartHeader(
@@ -37,9 +35,7 @@ class GroupPickerScreen extends HookWidget {
                   ),
                   SettingsIcon(
                     showWidget: true,
-                    onTap: () {
-                      print('settings on top ');
-                    },
+                    onTap: coordinator.onSettingsTapped,
                   ),
                 ],
               ),

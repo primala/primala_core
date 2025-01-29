@@ -1,4 +1,5 @@
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 
 class GroupsModule extends Module {
@@ -17,7 +18,8 @@ class GroupsModule extends Module {
 
     i.add<AccountSettingsCoordinator>(
       () => AccountSettingsCoordinator(
-        widgets: Modular.get<AccountSettingsWidgetsCoordinator>(),
+        contract: Modular.get<UserContractImpl>(),
+        animatedScaffold: AnimatedScaffoldStore(),
       ),
     );
 

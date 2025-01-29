@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-class AppWidget extends HookWidget {
+class AppWidget extends StatelessWidget {
   const AppWidget({super.key});
 
   @override
@@ -11,7 +10,7 @@ class AppWidget extends HookWidget {
     return MaterialApp.router(
       theme: ThemeData(
           dividerColor: Colors.transparent, // Removes the border
-
+          splashColor: Colors.transparent,
           canvasColor: Colors.transparent,
           bottomSheetTheme: BottomSheetThemeData(
             showDragHandle: true,
