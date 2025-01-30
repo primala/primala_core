@@ -14,9 +14,9 @@ class HomeContractImpl with ResponseToStatus implements HomeContract {
   });
 
   @override
-  listenToSessionRequests() async {
+  listenToSessionRequests(groupId) async {
     if (await networkInfo.isConnected) {
-      final res = remoteSource.listenToSessionRequests();
+      final res = remoteSource.listenToSessionRequests(groupId);
       return Right(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
@@ -62,6 +62,16 @@ class HomeContractImpl with ResponseToStatus implements HomeContract {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.clearActiveGroup();
       return fromSupabase(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  @override
+  deleteStaleSessions() async {
+    if (await networkInfo.isConnected) {
+      await remoteSource.deleteStaleSessions();
+      return const Right(true);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }

@@ -25,6 +25,22 @@ class SessionsQueries with SessionsConstants, SessionsUtils {
     }
   }
 
+  Future<void> deleteStaleSessions() async {
+    final currentActiveGroup = await usersQueries.getActiveGroup();
+    final res =
+        await supabase.from(TABLE).select().eq(GROUP_ID, currentActiveGroup);
+
+    for (var row in res) {
+      if (row[STATUS] != mapSessionStatusToString(SessionStatus.recruiting)) {
+        await supabase.from(TABLE).delete().eq(ID, row[ID]);
+      }
+
+      if (row[COLLABORATOR_UIDS].first == userUID) {
+        await supabase.from(TABLE).delete().eq(ID, row[ID]);
+      }
+    }
+  }
+
   findCurrentSession() async {
     await getUserInformation();
     if (userIndex == -1 || sessionID == -1) {

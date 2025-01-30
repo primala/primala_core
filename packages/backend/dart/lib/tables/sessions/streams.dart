@@ -24,14 +24,12 @@ class SessionsStreams extends SessionsQueries with SessionsConstants {
     return requestsListeningStatus;
   }
 
-  Stream<SessionRequest> listenToSessionRequests() async* {
+  Stream<SessionRequest> listenToSessionRequests(int groupId) async* {
     requestsListeningStatus = true;
 
     final events = supabase.from(TABLE).stream(primaryKey: ['id']).eq(
-      STATUS,
-      mapSessionStatusToString(
-        SessionStatus.recruiting,
-      ),
+      GROUP_ID,
+      groupId,
     );
 
     await for (var event in events) {
@@ -39,13 +37,20 @@ class SessionsStreams extends SessionsQueries with SessionsConstants {
         break;
       }
 
-      if (event.isNotEmpty) {
-        final selectedEvent = event.first;
+      final filteredEvent = event.where((e) =>
+          e[STATUS] ==
+          mapSessionStatusToString(
+            SessionStatus.recruiting,
+          ));
+      event = List.from(filteredEvent);
+
+      if (filteredEvent.isNotEmpty) {
+        final selectedEvent = filteredEvent.first;
         final sessionID = selectedEvent[ID];
         final sessionHost = selectedEvent[COLLABORATOR_NAMES].first;
-        yield SessionRequest(sessionID: sessionID, sessionHost: sessionHost);
+        yield SessionRequest(id: sessionID, sessionHost: sessionHost);
       } else {
-        yield SessionRequest(sessionID: -1, sessionHost: '');
+        yield SessionRequest(id: -1, sessionHost: '');
       }
     }
   }

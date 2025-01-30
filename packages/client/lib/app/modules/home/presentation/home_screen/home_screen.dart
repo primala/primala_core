@@ -17,8 +17,8 @@ class HomeScreen extends HookWidget {
   Widget build(BuildContext context) {
     useEffect(() {
       coordinator.constructor();
-      return null;
-      // return () => coordinator.deconstructor();
+
+      return () => coordinator.dispose();
     }, []);
     return Observer(builder: (context) {
       return AnimatedScaffold(

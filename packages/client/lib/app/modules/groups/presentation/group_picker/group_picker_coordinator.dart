@@ -214,8 +214,8 @@ abstract class _GroupPickerCoordinatorBase
     super.dispose();
     await groupsContract.cancelGroupsStream();
     await userContract.cancelRequestsStream();
-    groupsStreamSubscription.cancel();
-    requestsStreamSubscription.cancel();
+    await groupsStreamSubscription.cancel();
+    await requestsStreamSubscription.cancel();
   }
 
   @computed
