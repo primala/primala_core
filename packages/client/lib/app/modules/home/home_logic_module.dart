@@ -25,11 +25,5 @@ class HomeLogicModule extends Module {
         remoteSource: Modular.get<HomeRemoteSourceImpl>(),
       ),
     );
-
-    i.add<HomeLogicCoordinator>(
-      () => HomeLogicCoordinator(
-        contract: Modular.get<HomeContractImpl>(),
-      ),
-    );
   }
 }

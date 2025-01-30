@@ -32,8 +32,7 @@ class GroupEntity extends Equatable {
       return GroupEntity(
         id: groupResponse[GroupsQueries.ID],
         name: groupResponse[GroupsQueries.GROUP_NAME],
-        // isAdmin: groupResponse[GroupsQueries.IS_ADMIN],
-        isAdmin: true,
+        isAdmin: groupResponse[GroupsQueries.IS_ADMIN],
         profileGradient: ProfileGradientUtils.mapStringToProfileGradient(
           groupResponse[GroupsQueries.GRADIENT],
         ),

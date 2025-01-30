@@ -49,7 +49,7 @@ void main() {
       ),
     );
 
-    final genRes = (await u1GroupQueries.select()).first;
+    final genRes = await u1GroupQueries.select();
 
     tSetup.groupId = genRes['id'];
     final rolesRes = (await u1GroupRolesQueries.selectByMember(

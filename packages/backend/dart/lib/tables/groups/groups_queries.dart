@@ -32,15 +32,32 @@ class GroupsQueries with ProfileGradientUtils {
         'p_user_uid': userUID,
       });
 
-  Future<List> select({
-    int groupID = -1,
-  }) async =>
-      groupID != -1
-          ? await supabase.from(TABLE).select().eq(ID, groupID)
-          : await supabase.from(TABLE).select();
+  Future<Map> select({
+    int groupId = -1,
+  }) async {
+    if (groupId == -1) {
+      final res = await supabase.from(TABLE).select().single();
+      final groupID = res[ID];
+      final isAdmin = await supabase.rpc('is_group_admin', params: {
+        '_user_uid': userUID,
+        '_group_id': groupID,
+      });
+      res[IS_ADMIN] = isAdmin;
+      return res;
+    } else {
+      final res = await supabase.from(TABLE).select().eq(ID, groupId).single();
+      final groupID = res[ID];
+      final isAdmin = await supabase.rpc('is_group_admin', params: {
+        '_user_uid': userUID,
+        '_group_id': groupID,
+      });
+      res[IS_ADMIN] = isAdmin;
+      return res;
+    }
+  }
 
   Future<List> selectWithStatus() async {
-    final res = await select();
+    final res = await supabase.from(TABLE).select();
     for (var i = 0; i < res.length; i++) {
       final groupID = res[i][ID];
       final isAdmin = await supabase.rpc('is_group_admin', params: {
@@ -111,7 +128,7 @@ class GroupsQueries with ProfileGradientUtils {
           .select();
 
   Future<String> getGroupName(int id) async =>
-      (await select(groupID: id)).first[GROUP_NAME];
+      (await select(groupId: id))[GROUP_NAME];
 
   Future<void> delete(int id) async =>
       await supabase.from(TABLE).delete().eq(ID, id);

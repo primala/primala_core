@@ -22,7 +22,7 @@ class UsersQueries with UsersConstants, ProfileGradientUtils {
         EMAIL: email,
       }).select();
 
-  Future<List> updateActiveGroup(int groupId) async => await supabase
+  Future<List> updateActiveGroup(int? groupId) async => await supabase
       .from(TABLE)
       .update({
         ACTIVE_GROUP: groupId,

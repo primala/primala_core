@@ -8,7 +8,6 @@ class SessionsStreams extends SessionsQueries with SessionsConstants {
   bool requestsListeningStatus = false;
   bool metadataListeningStatus = false;
   bool groupSessionsListeningStatus = false;
-  final Map<String, SessionRequests> _requestsCache = {};
   final GroupsQueries groupsQueries;
 
   SessionsStreams({
@@ -21,14 +20,12 @@ class SessionsStreams extends SessionsQueries with SessionsConstants {
     if (res.isNotEmpty) {
       await res.first.unsubscribe();
     }
-    _requestsCache.clear();
     requestsListeningStatus = false;
     return requestsListeningStatus;
   }
 
-  Stream<List<SessionRequests>> listenToSessionRequests() async* {
+  Stream<SessionRequest> listenToSessionRequests() async* {
     requestsListeningStatus = true;
-    List<SessionRequests> previousYield = [];
 
     final events = supabase.from(TABLE).stream(primaryKey: ['id']).eq(
       STATUS,
@@ -42,34 +39,13 @@ class SessionsStreams extends SessionsQueries with SessionsConstants {
         break;
       }
 
-      final temp = <SessionRequests>[];
       if (event.isNotEmpty) {
-        for (var event in event) {
-          final sessionUid = event[ID];
-          if (!_requestsCache.containsKey(sessionUid)) {
-            final groupName = await groupsQueries.getGroupName(
-              event[GROUP_ID],
-            );
-            final res = SessionRequests(
-              sessionID: event[ID],
-              groupName: groupName,
-            );
-            _requestsCache[sessionUid] = res;
-          }
-          temp.add(_requestsCache[sessionUid]!);
-        }
-
-        if (temp.isNotEmpty &&
-            !areListsEqual<SessionRequests>(temp, previousYield)) {
-          previousYield = List.from(temp); // Create a copy of temp
-          yield temp;
-        }
+        final selectedEvent = event.first;
+        final sessionID = selectedEvent[ID];
+        final sessionHost = selectedEvent[COLLABORATOR_NAMES].first;
+        yield SessionRequest(sessionID: sessionID, sessionHost: sessionHost);
       } else {
-        if (previousYield.isNotEmpty) {
-          previousYield = [];
-          _requestsCache.clear();
-          yield [];
-        }
+        yield SessionRequest(sessionID: -1, sessionHost: '');
       }
     }
   }

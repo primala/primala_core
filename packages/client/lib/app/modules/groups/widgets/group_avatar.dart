@@ -10,11 +10,13 @@ class GroupAvatar extends HookWidget with NokhteGradients {
   final String groupName;
   final ProfileGradient profileGradient;
   final double size;
+  final double fontSize;
   GroupAvatar({
     super.key,
     required this.groupName,
     this.onPencilTap,
     this.size = 123,
+    this.fontSize = 54,
     required this.profileGradient,
   });
 
@@ -39,10 +41,8 @@ class GroupAvatar extends HookWidget with NokhteGradients {
                 groupName.isEmpty
                     ? ""
                     : groupName.characters.first.toUpperCase(),
-                fontSize: 54,
-                // fontWeight: FontWeight.w300,
+                fontSize: fontSize,
                 shouldCenter: true,
-                // addShadow: true,
               ),
             ),
             if (onPencilTap != null)

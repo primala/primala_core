@@ -6,12 +6,15 @@ class HomeModule extends Module {
   @override
   List<Module> get imports => [
         PosthogModule(),
+        HomeLogicModule(),
       ];
 
   @override
   binds(i) {
     i.add<HomeScreenCoordinator>(
-      () => HomeScreenCoordinator(),
+      () => HomeScreenCoordinator(
+        contract: Modular.get<HomeContractImpl>(),
+      ),
     );
   }
 

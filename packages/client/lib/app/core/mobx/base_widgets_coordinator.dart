@@ -23,7 +23,7 @@ mixin BaseWidgetsCoordinator {
 
   fadeInWidgets() {
     setShowWidgets(false);
-    Timer(Seconds.get(1), () {
+    Timer(Seconds.get(0, milli: 1), () {
       setShowWidgets(true);
     });
   }

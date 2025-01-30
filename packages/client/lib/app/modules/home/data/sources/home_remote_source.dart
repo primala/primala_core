@@ -1,67 +1,46 @@
-import 'package:nokhte/app/modules/home/home.dart';
-import 'package:nokhte_backend/tables/group_requests.dart';
+import 'package:nokhte_backend/tables/groups.dart';
 import 'package:nokhte_backend/tables/sessions.dart';
 import 'package:nokhte_backend/tables/users.dart';
-import 'package:nokhte_backend/types/types.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class HomeRemoteSource {
-  Stream<List<UserInformationEntity>> listenToCollaboratorRelationships();
-  Stream<List<dynamic>> listenToCollaboratorRequests();
-  Future<bool> cancelCollaboratorRequestsStream();
-  Future<bool> cancelCollaboratorRelationshipsStream();
-  Future<List> updateRequestStatus(UpdateRequestStatusParams params);
-  Future<List> sendRequest(SendRequestParams params);
-  Future<List> getUserInformation();
-  Future<List> awakenSession(String params);
-  Future<List> initializeSession();
-  Stream<List<SessionRequests>> listenToSessionRequests();
+  Stream<SessionRequest> listenToSessionRequests();
+  Future<bool> cancelSessionRequestsStream();
   Future<List> joinSession(int sessionID);
+  Future<List> initializeSession();
+  Future<Map> getGroup(int groupId);
+  Future<List> clearActiveGroup();
 }
 
 class HomeRemoteSourceImpl implements HomeRemoteSource {
   final SupabaseClient supabase;
-  final UsersQueries userInfoQueries;
-  final SessionsStreams sessionInformationStreams;
-  final SessionsQueries sessionInformationQueries;
+  final SessionsStreams sessionStreams;
+  final SessionsQueries sessionQueries;
+  final GroupsQueries groupsQueries;
+  final UsersQueries usersQueries;
 
   HomeRemoteSourceImpl({required this.supabase})
-      : sessionInformationStreams = SessionsStreams(supabase: supabase),
-        sessionInformationQueries = SessionsQueries(supabase: supabase),
-        userInfoQueries = UsersQueries(supabase: supabase);
+      : sessionStreams = SessionsStreams(supabase: supabase),
+        sessionQueries = SessionsQueries(supabase: supabase),
+        usersQueries = UsersQueries(supabase: supabase),
+        groupsQueries = GroupsQueries(supabase: supabase);
 
   @override
-  cancelCollaboratorRelationshipsStream() async => false;
+  cancelSessionRequestsStream() async =>
+      sessionStreams.cancelSessionRequestsStream();
 
   @override
-  cancelCollaboratorRequestsStream() async => false;
+  initializeSession() async => await sessionQueries.initializeSession();
 
   @override
-  listenToCollaboratorRelationships() => const Stream.empty();
+  joinSession(sessionId) async => await sessionQueries.joinSession(sessionId);
 
   @override
-  sendRequest(params) async => [];
+  listenToSessionRequests() => sessionStreams.listenToSessionRequests();
 
   @override
-  updateRequestStatus(params) async => [];
+  getGroup(groupId) async => await groupsQueries.select(groupId: groupId);
 
   @override
-  listenToCollaboratorRequests() => const Stream.empty();
-
-  @override
-  getUserInformation() async => await userInfoQueries.getUserInfo();
-
-  @override
-  Future<List> initializeSession() async =>
-      await sessionInformationQueries.initializeSession();
-  @override
-  joinSession(sessionId) async =>
-      await sessionInformationQueries.joinSession(sessionId);
-
-  @override
-  listenToSessionRequests() =>
-      sessionInformationStreams.listenToSessionRequests().distinct();
-
-  @override
-  awakenSession(params) async => [];
+  clearActiveGroup() async => await usersQueries.updateActiveGroup(null);
 }

@@ -3,7 +3,7 @@ import 'package:nokhte/app/core/constants/constants.dart';
 import 'package:nokhte/app/core/mixins/mixin.dart';
 import 'package:nokhte/app/core/network/network_info.dart';
 import 'package:nokhte/app/modules/home/home.dart';
-import 'package:nokhte_backend/types/types.dart';
+import 'package:nokhte_backend/tables/groups.dart';
 
 class HomeContractImpl with ResponseToStatus implements HomeContract {
   final HomeRemoteSource remoteSource;
@@ -12,18 +12,11 @@ class HomeContractImpl with ResponseToStatus implements HomeContract {
     required this.remoteSource,
     required this.networkInfo,
   });
-  @override
-  cancelCollaboratorRelationshipsStream(params) async =>
-      await remoteSource.cancelCollaboratorRelationshipsStream();
 
   @override
-  cancelCollaboratorRequestsStream(params) async =>
-      await remoteSource.cancelCollaboratorRequestsStream();
-
-  @override
-  listenToCollaboratorRelationships(params) async {
+  listenToSessionRequests() async {
     if (await networkInfo.isConnected) {
-      final res = remoteSource.listenToCollaboratorRelationships();
+      final res = remoteSource.listenToSessionRequests();
       return Right(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
@@ -31,40 +24,14 @@ class HomeContractImpl with ResponseToStatus implements HomeContract {
   }
 
   @override
-  listenToCollaboratorRequests(params) async {
-    if (await networkInfo.isConnected) {
-      final res = remoteSource.listenToCollaboratorRequests();
-      return Right(res);
-    } else {
-      return Left(FailureConstants.internetConnectionFailure);
-    }
-  }
+  cancelSessionRequestsStream() async =>
+      await remoteSource.cancelSessionRequestsStream();
 
   @override
-  sendRequest(params) async {
+  joinSession(sessionId) async {
     if (await networkInfo.isConnected) {
-      final res = await remoteSource.sendRequest(params);
+      final res = await remoteSource.joinSession(sessionId);
       return fromSupabase(res);
-    } else {
-      return Left(FailureConstants.internetConnectionFailure);
-    }
-  }
-
-  @override
-  updateRequestStatus(params) async {
-    if (await networkInfo.isConnected) {
-      final res = await remoteSource.updateRequestStatus(params);
-      return fromSupabase(res);
-    } else {
-      return Left(FailureConstants.internetConnectionFailure);
-    }
-  }
-
-  @override
-  getUserInformation(params) async {
-    if (await networkInfo.isConnected) {
-      final res = await remoteSource.getUserInformation();
-      return Right(UserInformationEntity.fromSupabase(res));
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }
@@ -81,29 +48,19 @@ class HomeContractImpl with ResponseToStatus implements HomeContract {
   }
 
   @override
-  joinSession(params) async {
+  getGroup(groupId) async {
     if (await networkInfo.isConnected) {
-      final res = await remoteSource.joinSession(params);
-      return fromSupabase(res);
+      final res = await remoteSource.getGroup(groupId);
+      return Right(GroupEntity.fromSupabase(res));
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }
   }
 
   @override
-  listenToSessionRequests(params) async {
+  clearActiveGroup() async {
     if (await networkInfo.isConnected) {
-      final res = remoteSource.listenToSessionRequests();
-      return Right(res);
-    } else {
-      return Left(FailureConstants.internetConnectionFailure);
-    }
-  }
-
-  @override
-  awakenSession(params) async {
-    if (await networkInfo.isConnected) {
-      final res = await remoteSource.awakenSession(params);
+      final res = await remoteSource.clearActiveGroup();
       return fromSupabase(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
