@@ -1,4 +1,5 @@
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 
@@ -6,18 +7,13 @@ class GroupsModule extends Module {
   @override
   List<Module> get imports => [
         GroupsLogicModule(),
-        GroupsWidgetsModule(),
+        PosthogModule(),
       ];
   @override
   binds(i) {
-    i.add<AccountIconPickerCoordinator>(
-      () => AccountIconPickerCoordinator(
-        widgets: Modular.get<AccountIconPickerWidgetsCoordinator>(),
-      ),
-    );
-
     i.add<AccountSettingsCoordinator>(
       () => AccountSettingsCoordinator(
+        captureScreen: Modular.get<CaptureScreen>(),
         contract: Modular.get<UserContractImpl>(),
         animatedScaffold: AnimatedScaffoldStore(),
       ),
@@ -26,54 +22,40 @@ class GroupsModule extends Module {
     i.add<CreateGroupCoordinator>(
       () => CreateGroupCoordinator(
         contract: Modular.get<GroupsContractImpl>(),
-        widgets: Modular.get<CreateGroupWidgetsCoordinator>(),
+        captureScreen: Modular.get<CaptureScreen>(),
+        groupNameTextField: GroupNameTextFieldStore(),
       ),
     );
 
     i.add<EditGroupCoordinator>(
       () => EditGroupCoordinator(
+        captureScreen: Modular.get<CaptureScreen>(),
         contract: Modular.get<GroupsContractImpl>(),
-        widgets: Modular.get<EditGroupWidgetsCoordinator>(),
-      ),
-    );
-
-    i.add<GroupIconPickerCoordinator>(
-      () => GroupIconPickerCoordinator(
-        widgets: Modular.get<GroupIconPickerWidgetsCoordinator>(),
+        groupNameTextField: GroupNameTextFieldStore(),
       ),
     );
 
     i.add<GroupMembersCoordinator>(
       () => GroupMembersCoordinator(
         contract: Modular.get<GroupRolesContractImpl>(),
-        widgets: Modular.get<GroupMembersWidgetsCoordinator>(),
+        captureScreen: Modular.get<CaptureScreen>(),
       ),
     );
 
     i.add<GroupPickerCoordinator>(
       () => GroupPickerCoordinator(
-        widgets: Modular.get<GroupPickerWidgetsCoordinator>(),
         groupsContract: Modular.get<GroupsContractImpl>(),
+        captureScreen: Modular.get<CaptureScreen>(),
         userContract: Modular.get<UserContractImpl>(),
-      ),
-    );
-
-    i.add<InboxCoordinator>(
-      () => InboxCoordinator(
-        widgets: Modular.get<InboxWidgetsCoordinator>(),
+        groupDisplay: GroupDisplayStore(),
       ),
     );
 
     i.add<InviteToGroupCoordinator>(
       () => InviteToGroupCoordinator(
         contract: Modular.get<GroupRolesContractImpl>(),
-        widgets: Modular.get<InviteToGroupWidgetsCoordinator>(),
-      ),
-    );
-
-    i.add<SelectRoleCoordinator>(
-      () => SelectRoleCoordinator(
-        widgets: Modular.get<SelectRoleWidgetsCoordinator>(),
+        captureScreen: Modular.get<CaptureScreen>(),
+        invitationBody: InvitationBodyStore(),
       ),
     );
   }

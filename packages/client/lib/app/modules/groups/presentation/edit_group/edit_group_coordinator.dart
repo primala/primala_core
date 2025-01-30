@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
+import 'package:nokhte/app/core/mobx/mobx.dart';
+import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 import 'package:nokhte_backend/tables/groups.dart';
 part 'edit_group_coordinator.g.dart';
@@ -10,13 +12,16 @@ part 'edit_group_coordinator.g.dart';
 class EditGroupCoordinator = _EditGroupCoordinatorBase
     with _$EditGroupCoordinator;
 
-abstract class _EditGroupCoordinatorBase with Store {
-  final EditGroupWidgetsCoordinator widgets;
+abstract class _EditGroupCoordinatorBase with Store, BaseCoordinator {
+  final GroupNameTextFieldStore groupNameTextField;
   final GroupsContractImpl contract;
+  @override
+  final CaptureScreen captureScreen;
 
   _EditGroupCoordinatorBase({
-    required this.widgets,
+    required this.groupNameTextField,
     required this.contract,
+    required this.captureScreen,
   });
 
   @observable
@@ -25,7 +30,9 @@ abstract class _EditGroupCoordinatorBase with Store {
   @action
   constructor(GroupEntity group) async {
     this.group = group;
-    widgets.constructor(group);
+    groupNameTextField.controller.text = group.name;
+    groupNameTextField.setIsEnabled(false);
+    await captureScreen(GroupsConstants.editGroup);
   }
 
   @action

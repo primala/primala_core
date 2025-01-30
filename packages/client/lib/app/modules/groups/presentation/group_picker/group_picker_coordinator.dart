@@ -6,6 +6,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
+import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 import 'package:nokhte_backend/tables/group_requests.dart';
@@ -16,32 +17,43 @@ class GroupPickerCoordinator = _GroupPickerCoordinatorBase
     with _$GroupPickerCoordinator;
 
 abstract class _GroupPickerCoordinatorBase
-    with Store, BaseMobxLogic, Reactions {
-  final GroupPickerWidgetsCoordinator widgets;
+    with
+        Store,
+        BaseMobxLogic,
+        Reactions,
+        BaseCoordinator,
+        BaseWidgetsCoordinator {
   final GroupsContract groupsContract;
   final UserContract userContract;
+  final GroupDisplayStore groupDisplay;
+  @override
+  final CaptureScreen captureScreen;
 
   _GroupPickerCoordinatorBase({
-    required this.widgets,
     required this.groupsContract,
     required this.userContract,
+    required this.captureScreen,
+    required this.groupDisplay,
   }) {
     initBaseLogicActions();
+    initBaseCoordinatorActions();
+    initBaseWidgetsCoordinatorActions();
   }
 
   @action
   constructor() async {
-    widgets.constructor();
+    fadeInWidgets();
     initReactors();
     await listenToGroups();
     await listenToRequests();
+    await captureScreen(GroupsConstants.groupPicker);
   }
 
   initReactors() {
     disposers.add(groupsReactor());
-    disposers.add(widgets.createGroupReactor());
-    disposers.add(widgets.editGroupReactor());
-    disposers.add(widgets.activeGroupReactor(updateActiveGroup));
+    disposers.add(createGroupReactor());
+    disposers.add(editGroupReactor());
+    disposers.add(activeGroupReactor(updateActiveGroup));
   }
 
   @observable
@@ -95,7 +107,7 @@ abstract class _GroupPickerCoordinatorBase
 
   @action
   onSettingsTapped() {
-    widgets.setShowWidgets(false);
+    setShowWidgets(false);
     Timer(Seconds.get(0, milli: 500), () {
       Modular.to.navigate(GroupsConstants.accountSettings);
     });
@@ -118,9 +130,6 @@ abstract class _GroupPickerCoordinatorBase
   @action
   handleRequest(HandleRequestParams params) async {
     await userContract.handleRequest(params);
-    // if (params.accept) {
-    //   await getGroups();
-    // }
     Modular.to.pop();
   }
 
@@ -130,8 +139,42 @@ abstract class _GroupPickerCoordinatorBase
   }
 
   groupsReactor() => reaction((p0) => groups, (p0) {
-        widgets.groupDisplay.setGroups(p0);
-        widgets.groupDisplay.setWidgetVisibility(true);
+        groupDisplay.setGroups(p0);
+      });
+
+  editGroupReactor() => reaction((p0) => groupDisplay.groupIndexToEdit, (p0) {
+        if (p0 == -1) return;
+        final group = groupDisplay.groups[p0];
+        Modular.to.push(MaterialPageRoute(builder: (BuildContext context) {
+          return EditGroupScreen(
+            group: group,
+            coordinator: Modular.get<EditGroupCoordinator>(),
+          );
+        }));
+        groupDisplay.setGroupIndexToEdit(-1);
+        groupDisplay.toggleIsManagingGroups(false);
+      });
+
+  activeGroupReactor(Function(int groupId) onSelected) =>
+      reaction((p0) => groupDisplay.activeGroupIndex, (p0) async {
+        if (!showWidgets) return;
+        setShowWidgets(false);
+        final group = groupDisplay.groups[p0];
+        await onSelected(group.id);
+        Timer(Seconds.get(0, milli: 500), () {
+          // Modular.to.navigate(
+          //   HomeConstants.home,
+          // );
+        });
+      });
+
+  createGroupReactor() =>
+      reaction((p0) => groupDisplay.createGroupTapCount, (p0) {
+        Modular.to.push(MaterialPageRoute(builder: (BuildContext context) {
+          return CreateGroupScreen(
+            coordinator: Modular.get<CreateGroupCoordinator>(),
+          );
+        }));
       });
 
   @override

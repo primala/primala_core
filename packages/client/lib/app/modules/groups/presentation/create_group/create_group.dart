@@ -6,7 +6,6 @@ import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 export 'create_group_coordinator.dart';
-export 'create_group_widgets_coordinator.dart';
 
 class CreateGroupScreen extends HookWidget {
   final CreateGroupCoordinator coordinator;
@@ -14,14 +13,15 @@ class CreateGroupScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = useFullScreenSize().height;
     useEffect(() {
       coordinator.constructor();
-      return () => coordinator.dispose();
+      return null;
     }, []);
+
+    final screenHeight = useFullScreenSize().height;
+
     return Observer(builder: (context) {
       return AnimatedScaffold(
-        store: coordinator.widgets.animatedScaffold,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -47,21 +47,20 @@ class CreateGroupScreen extends HookWidget {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20),
                     child: GroupAvatar(
-                      groupName:
-                          coordinator.widgets.groupNameTextField.groupName,
-                      profileGradient: coordinator
-                          .widgets.groupNameTextField.profileGradient,
+                      groupName: coordinator.groupNameTextField.groupName,
+                      profileGradient:
+                          coordinator.groupNameTextField.profileGradient,
                       // onPencilTap: () {},
                     ),
                   ),
                   GroupNameTextField(
-                    store: coordinator.widgets.groupNameTextField,
+                    store: coordinator.groupNameTextField,
                   ),
                 ],
               ),
             ),
             GenericButton(
-              isEnabled: coordinator.widgets.groupNameTextField.isValidInput,
+              isEnabled: coordinator.groupNameTextField.isValidInput,
               label: "Create Group",
               onPressed: coordinator.createGroup,
               borderRadius: 10,

@@ -5,6 +5,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/constants/colors.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
+import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/auth/auth.dart';
@@ -22,13 +23,17 @@ abstract class _AccountSettingsCoordinatorBase
         BaseMobxLogic,
         BaseWidgetsCoordinator,
         AnimatedScaffoldMovie,
+        BaseCoordinator,
         Reactions {
   final UserContract contract;
   final AnimatedScaffoldStore animatedScaffold;
+  @override
+  final CaptureScreen captureScreen;
 
   _AccountSettingsCoordinatorBase({
     required this.animatedScaffold,
     required this.contract,
+    required this.captureScreen,
   }) {
     initBaseWidgetsCoordinatorActions();
     initBaseLogicActions();
@@ -39,8 +44,9 @@ abstract class _AccountSettingsCoordinatorBase
       NokhteColors.eggshell,
       NokhteColors.black,
     ));
-    await getUserInformation();
     disposers.add(animatedScaffoldReactor());
+    await getUserInformation();
+    await captureScreen(GroupsConstants.accountSettings);
   }
 
   @observable

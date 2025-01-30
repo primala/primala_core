@@ -7,7 +7,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 import 'package:nokhte_backend/tables/groups.dart';
 export 'edit_group_coordinator.dart';
-export 'edit_group_widgets_coordinator.dart';
 
 class EditGroupScreen extends HookWidget {
   final EditGroupCoordinator coordinator;
@@ -27,7 +26,6 @@ class EditGroupScreen extends HookWidget {
     final screenHeight = useFullScreenSize().height;
     return Observer(builder: (context) {
       return AnimatedScaffold(
-        store: coordinator.widgets.animatedScaffold,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -61,7 +59,7 @@ class EditGroupScreen extends HookWidget {
                     ),
                   ),
                   GroupNameTextField(
-                    store: coordinator.widgets.groupNameTextField,
+                    store: coordinator.groupNameTextField,
                   ),
                 ],
               ),

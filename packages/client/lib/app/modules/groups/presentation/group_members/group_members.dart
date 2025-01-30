@@ -6,7 +6,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 import 'package:nokhte_backend/tables/groups.dart';
 export 'group_members_coordinator.dart';
-export 'group_members_widgets_coordinator.dart';
 
 class GroupMembersScreen extends HookWidget {
   final GroupMembersCoordinator coordinator;
@@ -26,7 +25,6 @@ class GroupMembersScreen extends HookWidget {
     }, []);
     return Observer(builder: (context) {
       return AnimatedScaffold(
-        store: coordinator.widgets.animatedScaffold,
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,

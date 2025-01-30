@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:nokhte/app/core/constants/colors.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
@@ -10,12 +11,12 @@ export 'movies.dart';
 export 'animated_scaffold_store.dart';
 
 class AnimatedScaffold extends HookWidget {
-  final AnimatedScaffoldStore store;
+  final AnimatedScaffoldStore? store;
   final Widget child;
   final bool showWidgets;
   const AnimatedScaffold({
     super.key,
-    required this.store,
+    this.store,
     required this.child,
     this.showWidgets = true,
   });
@@ -24,12 +25,13 @@ class AnimatedScaffold extends HookWidget {
   Widget build(BuildContext context) {
     return Observer(
         builder: (context) => CustomAnimationBuilder(
-              tween: store.movie,
-              duration: store.movie.duration,
-              control: store.control,
-              onCompleted: () => store.onCompleted(),
+              tween: store?.movie ?? MovieTween(),
+              duration: store?.movie.duration ?? Duration.zero,
+              control: store?.control ?? Control.stop,
+              onCompleted: () => store?.onCompleted(),
               builder: (context, value, _) => Scaffold(
-                backgroundColor: value.get('color'),
+                backgroundColor:
+                    store == null ? NokhteColors.eggshell : value.get('color'),
                 // backgroundColor: Colors.red,
                 resizeToAvoidBottomInset: false,
                 body: Observer(builder: (context) {

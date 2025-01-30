@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
+import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 import 'package:nokhte_backend/tables/group_roles.dart';
 import 'package:nokhte_backend/tables/groups.dart';
@@ -12,13 +13,15 @@ part 'group_members_coordinator.g.dart';
 class GroupMembersCoordinator = _GroupMembersCoordinatorBase
     with _$GroupMembersCoordinator;
 
-abstract class _GroupMembersCoordinatorBase with Store, BaseMobxLogic {
-  final GroupMembersWidgetsCoordinator widgets;
+abstract class _GroupMembersCoordinatorBase
+    with Store, BaseCoordinator, BaseMobxLogic {
   final GroupRolesContract contract;
+  @override
+  final CaptureScreen captureScreen;
 
   _GroupMembersCoordinatorBase({
-    required this.widgets,
     required this.contract,
+    required this.captureScreen,
   }) {
     initBaseLogicActions();
   }
@@ -34,6 +37,7 @@ abstract class _GroupMembersCoordinatorBase with Store, BaseMobxLogic {
   constructor(GroupEntity group) async {
     this.group = group;
     await getGroupMembers();
+    await captureScreen(GroupsConstants.groupMembers);
   }
 
   @action

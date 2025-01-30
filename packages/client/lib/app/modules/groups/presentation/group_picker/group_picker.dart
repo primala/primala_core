@@ -4,7 +4,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 export 'group_picker_coordinator.dart';
-export 'group_picker_widgets_coordinator.dart';
 
 class GroupPickerScreen extends HookWidget {
   final GroupPickerCoordinator coordinator;
@@ -18,8 +17,7 @@ class GroupPickerScreen extends HookWidget {
     }, []);
     return Observer(builder: (context) {
       return AnimatedScaffold(
-        showWidgets: coordinator.widgets.showWidgets,
-        store: coordinator.widgets.animatedScaffold,
+        showWidgets: coordinator.showWidgets,
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -40,7 +38,7 @@ class GroupPickerScreen extends HookWidget {
                 ],
               ),
               GroupDisplay(
-                store: coordinator.widgets.groupDisplay,
+                store: coordinator.groupDisplay,
               ),
             ],
           ),

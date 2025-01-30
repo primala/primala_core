@@ -5,7 +5,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 import 'package:nokhte_backend/tables/groups.dart';
 export 'invite_to_group_coordinator.dart';
-export 'invite_to_group_widgets_coordinator.dart';
 
 class InviteToGroupScreen extends HookWidget {
   final InviteToGroupCoordinator coordinator;
@@ -24,7 +23,6 @@ class InviteToGroupScreen extends HookWidget {
     }, []);
     return Observer(builder: (context) {
       return AnimatedScaffold(
-        store: coordinator.widgets.animatedScaffold,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -35,7 +33,7 @@ class InviteToGroupScreen extends HookWidget {
               onConfirmTapped: () async => await coordinator.sendInvitations(),
             ),
             InvitationBody(
-              store: coordinator.widgets.invitationBody,
+              store: coordinator.invitationBody,
             ),
           ],
         ),

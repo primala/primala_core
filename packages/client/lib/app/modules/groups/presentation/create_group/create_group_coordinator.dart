@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
-import 'package:nokhte/app/core/types/types.dart';
+import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 import 'package:nokhte_backend/tables/groups.dart';
 part 'create_group_coordinator.g.dart';
@@ -12,21 +12,23 @@ class CreateGroupCoordinator = _CreateGroupCoordinatorBase
     with _$CreateGroupCoordinator;
 
 abstract class _CreateGroupCoordinatorBase
-    with Store, Reactions, BaseMobxLogic {
-  final CreateGroupWidgetsCoordinator widgets;
+    with Store, BaseMobxLogic, BaseCoordinator {
   final GroupsContractImpl contract;
+  final GroupNameTextFieldStore groupNameTextField;
+  @override
+  final CaptureScreen captureScreen;
 
   _CreateGroupCoordinatorBase({
-    required this.widgets,
+    required this.groupNameTextField,
     required this.contract,
+    required this.captureScreen,
   }) {
     initBaseLogicActions();
+    initBaseCoordinatorActions();
   }
 
   @action
-  constructor() {
-    widgets.constructor();
-  }
+  constructor() async => await captureScreen(GroupsConstants.createGroup);
 
   @action
   onGoBack() {
@@ -34,28 +36,13 @@ abstract class _CreateGroupCoordinatorBase
   }
 
   @action
-  onPencilIconTap() {
-    if (widgets.showWidgets) return;
-    widgets.setShowWidgets(false);
-    // final profileGradient = widgets.groupNameTextField.profileGradient;
-    // final groupName = widgets.groupNameTextField.groupName;
-
-    Timer(Seconds.get(0, milli: 500), () {
-      // Modular.to.navigate(
-      //   GroupsConstants.groupIconPicker,
-      //   arguments: {
-      //     GroupsConstants.PROFILE_GRADIENT: profileGradient,
-      //     GroupsConstants.GROUP_NAME: groupName,
-      //   },
-      // );
-    });
-  }
+  onPencilIconTap() {}
 
   @action
   createGroup() async {
     final params = CreateGroupParams(
-      groupName: widgets.groupNameTextField.groupName,
-      profileGradient: widgets.groupNameTextField.profileGradient,
+      groupName: groupNameTextField.groupName,
+      profileGradient: groupNameTextField.profileGradient,
     );
     final res = await contract.createGroup(params);
     res.fold((error) {
