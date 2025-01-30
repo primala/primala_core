@@ -16,6 +16,14 @@ class HomeModule extends Module {
         contract: Modular.get<HomeContractImpl>(),
       ),
     );
+
+    i.add<DocumentsCoordinator>(
+      () => DocumentsCoordinator(),
+    );
+
+    i.add<InformationCoordinator>(
+      () => InformationCoordinator(),
+    );
   }
 
   @override
@@ -25,6 +33,22 @@ class HomeModule extends Module {
       transition: TransitionType.noTransition,
       child: (context) => HomeScreen(
         coordinator: Modular.get<HomeScreenCoordinator>(),
+      ),
+    );
+
+    r.child(
+      HomeConstants.relativeDocuments,
+      transition: TransitionType.noTransition,
+      child: (context) => DocumentsScreen(
+        coordinator: Modular.get<DocumentsCoordinator>(),
+      ),
+    );
+
+    r.child(
+      HomeConstants.relativeInformation,
+      transition: TransitionType.noTransition,
+      child: (context) => InformationScreen(
+        coordinator: Modular.get<InformationCoordinator>(),
       ),
     );
   }

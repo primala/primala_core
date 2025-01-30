@@ -18,7 +18,7 @@ class Jost extends StatelessWidget {
     this.fontWeight = FontWeight.w400,
     this.fontSize = 30.0,
     this.addShadow = false,
-    this.fontColor = Colors.white,
+    this.fontColor = Colors.black,
     this.shouldItalicize = false,
     this.shouldCenter = false,
     this.shouldAlignRight = false,

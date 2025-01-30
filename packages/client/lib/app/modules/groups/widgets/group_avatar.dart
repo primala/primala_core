@@ -42,6 +42,7 @@ class GroupAvatar extends HookWidget with NokhteGradients {
                     ? ""
                     : groupName.characters.first.toUpperCase(),
                 fontSize: fontSize,
+                fontColor: Colors.white,
                 shouldCenter: true,
               ),
             ),

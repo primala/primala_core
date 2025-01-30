@@ -45,6 +45,7 @@ class UserAvatar extends HookWidget with NokhteGradients {
           child: Jost(
             getInitials(fullName),
             fontSize: fontSize,
+            fontColor: Colors.white,
             fontWeight: FontWeight.w400,
             shouldCenter: true,
           ),

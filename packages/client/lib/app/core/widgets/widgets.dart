@@ -1,4 +1,5 @@
 export 'left_chevron/left_chevron.dart';
+export 'navigation_carousel/navigation_carousel.dart';
 export 'generic_menu_item/generic_menu_item.dart';
 export 'utilities/utilities.dart';
 export "fonts/fonts.dart";

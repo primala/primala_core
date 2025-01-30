@@ -71,7 +71,7 @@ class GroupsModule extends Module {
     );
 
     r.child(
-      GroupsConstants.accountSettings,
+      GroupsConstants.relativeAccountSettings,
       transition: TransitionType.noTransition,
       child: (context) => AccountSettingsScreen(
         coordinator: Modular.get<AccountSettingsCoordinator>(),

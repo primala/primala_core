@@ -100,7 +100,6 @@ class InboxBody extends HookWidget {
                       child: Jost(
                         '${request.senderFullName} invited you to ${request.groupName}',
                         softWrap: true,
-                        fontColor: Colors.black,
                         fontSize: 22,
                       ),
                     ),

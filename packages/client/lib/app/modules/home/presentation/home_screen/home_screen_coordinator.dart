@@ -102,5 +102,9 @@ abstract class _HomeScreenCoordinatorBase
   }
 
   @computed
-  bool get sessionIsHappening => sessionRequest.id != -1 ? true : false;
+  bool get sessionIsActive => sessionRequest.id != -1 ? true : false;
+
+  @computed
+  String get sessionHost =>
+      sessionRequest.id != -1 ? sessionRequest.sessionHost : '';
 }

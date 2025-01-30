@@ -4,7 +4,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nokhte/app/core/constants/gradients.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
-import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 import 'package:nokhte_backend/tables/groups.dart';
 export 'group_display_store.dart';
@@ -149,26 +148,11 @@ class GroupDisplay extends HookWidget with NokhteGradients {
           children: [
             Stack(
               children: [
-                Container(
-                  height: 70,
-                  width: 70,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: mapProfileGradientToLinearGradient(
-                        group.profileGradient),
-                  ),
-                  child: Center(
-                    child: AnimatedOpacity(
-                      opacity: store.showMonogram ? 1 : 0,
-                      duration: const Duration(milliseconds: 500),
-                      child: Jost(
-                        group.name.characters.first,
-                        fontSize: 30,
-                        fontWeight: FontWeight.w400,
-                        shouldCenter: true,
-                      ),
-                    ),
-                  ),
+                GroupAvatar(
+                  groupName: group.name,
+                  size: 70,
+                  profileGradient: group.profileGradient,
+                  fontSize: 30,
                 ),
                 AnimatedOpacity(
                   opacity: store.showPencilIcon && store.groups[index].isAdmin
