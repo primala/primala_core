@@ -9,8 +9,10 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
+import 'package:nokhte/app/modules/home/home.dart';
 import 'package:nokhte_backend/tables/group_requests.dart';
 import 'package:nokhte_backend/tables/groups.dart';
+import 'package:nokhte_backend/types/user_information_entity.dart';
 part 'group_picker_coordinator.g.dart';
 
 class GroupPickerCoordinator = _GroupPickerCoordinatorBase
@@ -42,22 +44,21 @@ abstract class _GroupPickerCoordinatorBase
 
   @action
   constructor() async {
-    fadeInWidgets();
-    initReactors();
-    await listenToGroups();
-    await listenToRequests();
-    await captureScreen(GroupsConstants.groupPicker);
+    await getUserInformation();
   }
 
   initReactors() {
     disposers.add(groupsReactor());
     disposers.add(createGroupReactor());
     disposers.add(editGroupReactor());
-    disposers.add(activeGroupReactor(updateActiveGroup));
+    disposers.add(activeGroupReactor());
   }
 
   @observable
   ObservableList<GroupEntity> groups = ObservableList<GroupEntity>();
+
+  @observable
+  UserInformationEntity user = UserInformationEntity.initial();
 
   @observable
   ObservableList<GroupRequestEntity> requests =
@@ -87,6 +88,33 @@ abstract class _GroupPickerCoordinatorBase
         groupsStreamSubscription = groupsStream.listen((value) {
           groups = ObservableList.of(value);
         });
+      },
+    );
+  }
+
+  @action
+  getUserInformation() async {
+    final res = await userContract.getUserInformation();
+    res.fold(
+      (failure) {
+        errorUpdater(failure);
+      },
+      (value) async {
+        user = value;
+        if (user.activeGroupId != -1) {
+          Modular.to.navigate(
+            HomeConstants.homeScreen,
+            arguments: {
+              HomeConstants.groupId: user.activeGroupId,
+            },
+          );
+        } else {
+          initReactors();
+          await listenToGroups();
+          await listenToRequests();
+          await captureScreen(GroupsConstants.groupPicker);
+          fadeInWidgets();
+        }
       },
     );
   }
@@ -155,16 +183,19 @@ abstract class _GroupPickerCoordinatorBase
         groupDisplay.toggleIsManagingGroups(false);
       });
 
-  activeGroupReactor(Function(int groupId) onSelected) =>
+  activeGroupReactor() =>
       reaction((p0) => groupDisplay.activeGroupIndex, (p0) async {
         if (!showWidgets) return;
         setShowWidgets(false);
         final group = groupDisplay.groups[p0];
-        await onSelected(group.id);
+        await updateActiveGroup(group.id);
         Timer(Seconds.get(0, milli: 500), () {
-          // Modular.to.navigate(
-          //   HomeConstants.home,
-          // );
+          Modular.to.navigate(
+            HomeConstants.homeScreen,
+            arguments: {
+              HomeConstants.groupId: group.id,
+            },
+          );
         });
       });
 

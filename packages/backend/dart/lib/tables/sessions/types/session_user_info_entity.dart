@@ -5,6 +5,7 @@ import 'session_user_status.dart';
 class SessionUserInfoEntity extends UserInformationEntity {
   final SessionUserStatus sessionUserStatus;
   SessionUserInfoEntity({
+    super.activeGroupId = -1,
     super.email = '',
     super.profileGradient = ProfileGradient.none,
     required super.uid,

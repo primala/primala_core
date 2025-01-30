@@ -64,7 +64,7 @@ class HomeContractImpl with ResponseToStatus implements HomeContract {
   getUserInformation(params) async {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.getUserInformation();
-      return Right(UserInformationModel.fromSupabase(res));
+      return Right(UserInformationEntity.fromSupabase(res));
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }

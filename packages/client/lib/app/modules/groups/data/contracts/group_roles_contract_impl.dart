@@ -71,9 +71,9 @@ class GroupRolesContractImpl
     if (await networkInfo.isConnected) {
       final res = await remoteSource.getUserByEmail(email);
       final userUid = remoteSource.getUserUid();
-      final model = UserInformationModel.fromDatabaseFunction(res);
+      final model = UserInformationEntity.fromDatabaseFunction(res);
       if (model.uid != userUid) {
-        return Right(UserInformationModel.fromDatabaseFunction(res));
+        return Right(UserInformationEntity.fromDatabaseFunction(res));
       } else {
         return Left(FailureConstants.lookedThemselvesUpFailure);
       }

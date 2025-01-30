@@ -62,7 +62,7 @@ class UserContractImpl with ResponseToStatus implements UserContract {
   getUserInformation() async {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.getUserInformation();
-      return Right(UserInformationModel.fromSupabase(res));
+      return Right(UserInformationEntity.fromSupabase(res));
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }

@@ -2,7 +2,9 @@
 
 mixin HomeConstants {
   static const module = '/home';
-  static const relativeHome = "/home_screen";
+  static const relativeHomeScreen = "/home_screen";
 
-  static const home = "$module$relativeHome";
+  static const homeScreen = "$module$relativeHomeScreen";
+
+  static const groupId = 'groupId';
 }
