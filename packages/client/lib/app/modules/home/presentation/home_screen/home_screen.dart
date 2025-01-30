@@ -52,7 +52,7 @@ class HomeScreen extends HookWidget {
               joinSession: coordinator.joinSession,
             ),
             NavigationCarousel(
-              carouselItems: ['info', 'home', 'docs'],
+              carouselItems: const ['info', 'home', 'docs'],
               callbacks: [
                 () => Modular.to.navigate(HomeConstants.information),
                 () => null,
