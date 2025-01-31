@@ -149,6 +149,8 @@ class GroupDisplay extends HookWidget with NokhteGradients {
             Stack(
               children: [
                 GroupAvatar(
+                  showText:
+                      !store.showPencilIcon && store.groups[index].isAdmin,
                   groupName: group.name,
                   size: 70,
                   profileGradient: group.profileGradient,

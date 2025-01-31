@@ -1,4 +1,4 @@
-mixin OpacityUtilities {
+mixin OpacityUtils {
   double interpolate({
     required double currentValue,
     required double targetValue,

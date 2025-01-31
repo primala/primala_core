@@ -24,54 +24,51 @@ class EditGroupScreen extends HookWidget {
       return null;
     }, []);
     final screenHeight = useFullScreenSize().height;
-    return Observer(builder: (context) {
-      return AnimatedScaffold(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            HeaderRow(
-              includeDivider: false,
+    return Observer(
+      builder: (context) => AnimatedScaffold(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          HeaderRow(
+            children: [
+              LeftChevron(
+                onTap: () => coordinator.onGoBack(),
+              ),
+              const SmartHeader(
+                content: "Edit Group",
+              ),
+              const LeftChevron(
+                color: NokhteColors.eggshell,
+              ),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              bottom: screenHeight * .04,
+              top: screenHeight * .04,
+            ),
+            child: Column(
               children: [
-                LeftChevron(
-                  onTap: () => coordinator.onGoBack,
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: GroupAvatar(
+                    groupName: coordinator.group.name,
+                    profileGradient: coordinator.group.profileGradient,
+                    // onPencilTap: () {},
+                  ),
                 ),
-                const SmartHeader(
-                  content: "Edit Group",
-                ),
-                const LeftChevron(
-                  color: NokhteColors.eggshell,
+                GroupNameTextField(
+                  store: coordinator.groupNameTextField,
                 ),
               ],
             ),
-            Padding(
-              padding: EdgeInsets.only(
-                bottom: screenHeight * .04,
-                top: screenHeight * .04,
-              ),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: GroupAvatar(
-                      groupName: coordinator.group.name,
-                      profileGradient: coordinator.group.profileGradient,
-                      // onPencilTap: () {},
-                    ),
-                  ),
-                  GroupNameTextField(
-                    store: coordinator.groupNameTextField,
-                  ),
-                ],
-              ),
-            ),
-            GroupEditMenu(
-              onInviteTapped: coordinator.goToInvite,
-              onManageCollaboratorsTapped: coordinator.goToGroupMembers,
-              onDeleteGroupTapped: coordinator.deleteGroup,
-            )
-          ],
-        ),
-      );
-    });
+          ),
+          GroupEditMenu(
+            onInviteTapped: coordinator.goToInvite,
+            onManageCollaboratorsTapped: coordinator.goToGroupMembers,
+            onDeleteGroupTapped: coordinator.deleteGroup,
+          )
+        ],
+      ),
+    );
   }
 }

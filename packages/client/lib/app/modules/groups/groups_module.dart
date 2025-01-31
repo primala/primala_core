@@ -1,4 +1,5 @@
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:nokhte/app/core/modules/active_group/active_group.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
@@ -8,6 +9,7 @@ class GroupsModule extends Module {
   List<Module> get imports => [
         GroupsLogicModule(),
         PosthogModule(),
+        ActiveGroupModule(),
       ];
   @override
   binds(i) {
@@ -47,6 +49,7 @@ class GroupsModule extends Module {
         groupsContract: Modular.get<GroupsContractImpl>(),
         captureScreen: Modular.get<CaptureScreen>(),
         userContract: Modular.get<UserContractImpl>(),
+        activeGroup: Modular.get<ActiveGroup>(),
         groupDisplay: GroupDisplayStore(),
       ),
     );

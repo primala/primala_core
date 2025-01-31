@@ -15,6 +15,9 @@ abstract class _SessionStarterCoordinatorBase with Store, BaseMobxLogic {
   });
 
   @action
+  constructor() {}
+
+  @action
   initializeSession() async {
     // final res = await contract.initializeSession();
     // res.fold((failure) => errorUpdater(failure), (success) {

@@ -25,36 +25,33 @@ class SignupScreen extends HookWidget {
       return AnimatedScaffold(
         showWidgets: coordinator.widgets.showWidgets,
         store: coordinator.widgets.animatedScaffold,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            HeaderRow(
-              children: [
-                LeftChevron(
-                  onTap: coordinator.onGoBack,
-                  color: Colors.white,
-                ),
-                const SmartHeader(
-                  content: "Sign up",
-                  color: Colors.white,
-                ),
-                const LeftChevron()
-              ],
-            ),
-            AuthTextFields(
-              store: coordinator.widgets.authTextFields,
-              showWidget: coordinator.widgets.showWidgets,
-            ),
-            GenericButton(
-              color: Colors.white,
-              useFixedSize: true,
-              isEnabled: coordinator.widgets.authTextFields.allInputsAreValid,
-              onPressed: () => coordinator.signUp(),
-              label: "Sign up",
-            ),
-          ],
-        ),
-        //   ),
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          HeaderRow(
+            children: [
+              LeftChevron(
+                onTap: coordinator.onGoBack,
+                color: Colors.white,
+              ),
+              const SmartHeader(
+                content: "Sign up",
+                color: Colors.white,
+              ),
+              const LeftChevron()
+            ],
+          ),
+          AuthTextFields(
+            store: coordinator.widgets.authTextFields,
+            showWidget: coordinator.widgets.showWidgets,
+          ),
+          GenericButton(
+            color: Colors.white,
+            useFixedSize: true,
+            isEnabled: coordinator.widgets.authTextFields.allInputsAreValid,
+            onPressed: () => coordinator.signUp(),
+            label: "Sign up",
+          ),
+        ],
       );
     });
   }

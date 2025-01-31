@@ -5,29 +5,31 @@ import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 export 'carousel_placement_indicator.dart';
 
-class NavigationCarousel extends HookWidget {
+class NavCarousel extends HookWidget {
   final List<String> carouselItems;
   final List<Function> callbacks;
   final int initialPosition;
+  final double currentPosition;
+  final Function(double) onPositionChanged;
 
-  const NavigationCarousel({
+  const NavCarousel({
     super.key,
     required this.carouselItems,
     required this.callbacks,
     required this.initialPosition,
+    required this.currentPosition,
+    required this.onPositionChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     final containerSize = useFullScreenSize().height * .2;
-    final currentPosition = useState(initialPosition.toDouble());
     useEffect(() {
-      if (currentPosition.value != initialPosition &&
-          currentPosition.value % 1 == 0) {
-        callbacks[currentPosition.value.toInt()]();
+      if (currentPosition != initialPosition && currentPosition % 1 == 0) {
+        callbacks[currentPosition.toInt()]();
       }
       return null;
-    }, [currentPosition.value]);
+    }, [currentPosition]);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
@@ -39,7 +41,7 @@ class NavigationCarousel extends HookWidget {
             viewportFraction: .28,
             initialPage: initialPosition.toInt(),
             enableInfiniteScroll: false,
-            onScrolled: (value) => currentPosition.value = value ?? 0,
+            onScrolled: (value) => onPositionChanged(value ?? 0),
           ),
           items: List.generate(carouselItems.length, (index) {
             return Container(
@@ -69,7 +71,7 @@ class NavigationCarousel extends HookWidget {
           ),
           child: CarouselPlacementIndicator(
             length: carouselItems.length,
-            currentPosition: currentPosition.value,
+            currentPosition: currentPosition,
             containerSize: containerSize,
           ),
         ),

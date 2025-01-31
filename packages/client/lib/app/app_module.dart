@@ -6,7 +6,9 @@ import 'modules/home/home.dart';
 
 class AppModule extends Module {
   @override
-  List<Module> get imports => [SupabaseModule()];
+  List<Module> get imports => [
+        SupabaseModule(),
+      ];
 
   @override
   void routes(r) {

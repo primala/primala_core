@@ -14,18 +14,26 @@ class DocumentsScreen extends HookWidget {
   });
   @override
   Widget build(BuildContext context) {
+    useEffect(() {
+      coordinator.constructor();
+      return null;
+    }, []);
+
     return Observer(builder: (context) {
-      return AnimatedScaffold(
+      return CarouselScaffold(
+        initialPosition: 2,
         showWidgets: coordinator.showWidgets,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            HeaderRow(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [],
-            ),
-          ],
-        ),
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: const [
+          HeaderRow(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SmartHeader(
+                content: "Documents",
+              ),
+            ],
+          ),
+        ],
       );
     });
   }

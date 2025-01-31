@@ -29,38 +29,29 @@ class LoginGreeterScreen extends HookWidget {
       return AnimatedScaffold(
         showWidgets: coordinator.widgets.showWidgets,
         store: coordinator.widgets.animatedScaffold,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: screenHeight * .1),
-              child: AnimatedOpacity(
-                duration: Seconds.get(0, milli: 500),
-                opacity: useWidgetOpacity(coordinator.widgets.showWidgets),
-                child: Center(
-                  child: Image.asset(
-                    "assets/login/header.png",
-                    width: screenWidth * .5,
-                  ),
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: screenHeight * .1),
+            child: AnimatedOpacity(
+              duration: Seconds.get(0, milli: 500),
+              opacity: useWidgetOpacity(coordinator.widgets.showWidgets),
+              child: Center(
+                child: Image.asset(
+                  "assets/login/header.png",
+                  width: screenWidth * .5,
                 ),
               ),
             ),
-            LoginButtons(
-              onSignInWithApple: () async =>
-                  await coordinator.signInWithApple(),
-              onSignInWithGoogle: () async =>
-                  await coordinator.signInWithGoogle(),
-              onLogIn: () => coordinator.onLogIn(),
-              onSignUp: () => coordinator.onSignUp(),
-            ),
-            // FullScreen(
-            //   child: WifiDisconnectOverlay(
-            //     store: coordinator.widgets.wifiDisconnectOverlay,
-            //   ),
-            // ),
-          ],
-        ),
-        //   ),
+          ),
+          LoginButtons(
+            onSignInWithApple: () async => await coordinator.signInWithApple(),
+            onSignInWithGoogle: () async =>
+                await coordinator.signInWithGoogle(),
+            onLogIn: () => coordinator.onLogIn(),
+            onSignUp: () => coordinator.onSignUp(),
+          ),
+        ],
       );
     });
   }

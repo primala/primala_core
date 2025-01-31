@@ -1,9 +1,11 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
+import 'package:nokhte/app/core/modules/active_group/active_group.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 import 'package:nokhte/app/modules/home/home.dart';
@@ -17,11 +19,18 @@ class HomeScreenCoordinator = _HomeScreenCoordinatorBase
 abstract class _HomeScreenCoordinatorBase
     with Store, BaseWidgetsCoordinator, BaseMobxLogic {
   final HomeContract contract;
+  final ActiveGroup activeGroup;
 
-  _HomeScreenCoordinatorBase({required this.contract}) {
+  _HomeScreenCoordinatorBase({
+    required this.contract,
+    required this.activeGroup,
+  }) {
     initBaseLogicActions();
     initBaseWidgetsCoordinatorActions();
   }
+
+  @observable
+  bool showCarousel = false;
 
   @observable
   GroupEntity selectedGroup = GroupEntity.initial();
@@ -38,18 +47,32 @@ abstract class _HomeScreenCoordinatorBase
       const Stream.empty().listen((event) {});
 
   @action
+  setShowCarousel(bool value) => showCarousel = value;
+
+  @action
   constructor() async {
-    final activeGroupId = Modular.args.data[HomeConstants.groupId] ?? -1;
-    if (activeGroupId == -1) {
-      Modular.to.navigate(GroupsConstants.groupPicker);
-    } else {
+    final activeGroupId = activeGroup.groupId;
+    if (activeGroup.groupEntity.name.isEmpty) {
       await contract.deleteStaleSessions();
       await getGroup(activeGroupId);
+    } else {
+      selectedGroup = activeGroup.groupEntity;
+      fadeInWidgets();
+      setShowCarousel(true);
+      await contract.deleteStaleSessions();
     }
   }
 
   @action
-  goToSessionStarter() {}
+  goToSessionStarter() {
+    Modular.to.push(
+      MaterialPageRoute(
+        builder: (context) => SessionStarterScreen(
+          coordinator: Modular.get<SessionStarterCoordinator>(),
+        ),
+      ),
+    );
+  }
 
   @action
   listenToSessionRequests() async {
@@ -75,6 +98,8 @@ abstract class _HomeScreenCoordinatorBase
     final res = await contract.clearActiveGroup();
     res.fold((failure) => errorUpdater(failure), (success) {
       setShowWidgets(false);
+      setShowCarousel(false);
+      activeGroup.reset();
       Timer(Seconds.get(0, milli: 500), () {
         Modular.to.navigate(GroupsConstants.groupPicker);
       });
@@ -86,7 +111,10 @@ abstract class _HomeScreenCoordinatorBase
     final res = await contract.getGroup(groupId);
     res.fold((failure) => errorUpdater(failure), (group) {
       selectedGroup = group;
-      fadeInWidgets();
+      activeGroup.setGroupEntity(group);
+      fadeInWidgets(onFadein: () {
+        setShowCarousel(true);
+      });
     });
   }
 

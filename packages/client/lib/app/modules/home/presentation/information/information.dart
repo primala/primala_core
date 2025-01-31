@@ -17,17 +17,15 @@ class InformationScreen extends HookWidget {
     return Observer(builder: (context) {
       return AnimatedScaffold(
         showWidgets: coordinator.showWidgets,
-        child: const Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            HeaderRow(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                //
-              ],
-            ),
-          ],
-        ),
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          HeaderRow(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              //
+            ],
+          ),
+        ],
       );
     });
   }

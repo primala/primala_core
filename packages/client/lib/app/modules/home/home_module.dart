@@ -1,4 +1,5 @@
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:nokhte/app/core/modules/active_group/active_group.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/modules/home/home.dart';
 
@@ -7,12 +8,20 @@ class HomeModule extends Module {
   List<Module> get imports => [
         PosthogModule(),
         HomeLogicModule(),
+        ActiveGroupModule(),
       ];
 
   @override
   binds(i) {
     i.add<HomeScreenCoordinator>(
       () => HomeScreenCoordinator(
+        contract: Modular.get<HomeContractImpl>(),
+        activeGroup: Modular.get<ActiveGroup>(),
+      ),
+    );
+
+    i.add<SessionStarterCoordinator>(
+      () => SessionStarterCoordinator(
         contract: Modular.get<HomeContractImpl>(),
       ),
     );

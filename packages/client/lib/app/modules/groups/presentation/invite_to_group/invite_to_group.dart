@@ -23,20 +23,18 @@ class InviteToGroupScreen extends HookWidget {
     }, []);
     return Observer(builder: (context) {
       return AnimatedScaffold(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            TitleBar(
-              centerTextLabel: 'Invite to Group',
-              rightTextLabel: 'Invite',
-              onCancelTapped: coordinator.onGoBack,
-              onConfirmTapped: () async => await coordinator.sendInvitations(),
-            ),
-            InvitationBody(
-              store: coordinator.invitationBody,
-            ),
-          ],
-        ),
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          TitleBar(
+            centerTextLabel: 'Invite to Group',
+            rightTextLabel: 'Invite',
+            onCancelTapped: coordinator.onGoBack,
+            onConfirmTapped: () async => await coordinator.sendInvitations(),
+          ),
+          InvitationBody(
+            store: coordinator.invitationBody,
+          ),
+        ],
       );
     });
   }

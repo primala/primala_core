@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_modular/flutter_modular.dart';
+import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 import 'package:nokhte/app/modules/home/home.dart';
@@ -21,47 +21,41 @@ class HomeScreen extends HookWidget {
 
       return () => coordinator.dispose();
     }, []);
+    final screenSize = useFullScreenSize().height;
     return Observer(builder: (context) {
-      return AnimatedScaffold(
+      return CarouselScaffold(
         showWidgets: coordinator.showWidgets,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            HeaderRow(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 24),
-                  child: GestureDetector(
-                    onTap: () async => await coordinator.clearActiveGroup(),
-                    child: GroupAvatar(
-                      groupName: coordinator.selectedGroup.name,
-                      profileGradient:
-                          coordinator.selectedGroup.profileGradient,
-                      size: 60,
-                      fontSize: 28,
-                    ),
+        showCarousel: coordinator.showCarousel,
+        mainAxisAlignment: MainAxisAlignment.start,
+        initialPosition: 1,
+        children: [
+          HeaderRow(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 24),
+                child: GestureDetector(
+                  onTap: () async => await coordinator.clearActiveGroup(),
+                  child: GroupAvatar(
+                    groupName: coordinator.selectedGroup.name,
+                    profileGradient: coordinator.selectedGroup.profileGradient,
+                    size: 60,
+                    fontSize: 28,
                   ),
                 ),
-              ],
-            ),
-            HomeScreenBody(
-              sessionIsActive: coordinator.sessionIsActive,
-              sessionHost: coordinator.sessionHost,
-              startSession: coordinator.goToSessionStarter,
-              joinSession: coordinator.joinSession,
-            ),
-            NavigationCarousel(
-              carouselItems: const ['info', 'home', 'docs'],
-              callbacks: [
-                () => Modular.to.navigate(HomeConstants.information),
-                () => null,
-                () => Modular.to.navigate(HomeConstants.documents)
-              ],
-              initialPosition: 1,
-            )
-          ],
-        ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: screenSize * .18,
+          ),
+          HomeScreenBody(
+            sessionIsActive: coordinator.sessionIsActive,
+            sessionHost: coordinator.sessionHost,
+            startSession: coordinator.goToSessionStarter,
+            joinSession: coordinator.joinSession,
+          ),
+        ],
       );
     });
   }

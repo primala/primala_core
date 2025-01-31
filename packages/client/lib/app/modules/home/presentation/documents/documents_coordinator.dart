@@ -12,4 +12,9 @@ abstract class _DocumentsCoordinatorBase
     initBaseLogicActions();
     initBaseWidgetsCoordinatorActions();
   }
+
+  @action
+  constructor() {
+    fadeInWidgets();
+  }
 }

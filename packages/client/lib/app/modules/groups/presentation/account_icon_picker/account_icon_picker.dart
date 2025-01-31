@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 export 'account_icon_picker_coordinator.dart';
@@ -19,11 +18,7 @@ class AccountIconPickerScreen extends HookWidget {
     }, []);
     return AnimatedScaffold(
       store: coordinator.widgets.animatedScaffold,
-      child: Observer(builder: (context) {
-        return const MultiHitStack(
-          children: [],
-        );
-      }),
+      children: const [],
     );
   }
 }

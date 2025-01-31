@@ -22,51 +22,49 @@ class CreateGroupScreen extends HookWidget {
 
     return Observer(builder: (context) {
       return AnimatedScaffold(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            children: [
+              HeaderRow(includeDivider: true, children: [
+                LeftChevron(
+                  onTap: coordinator.onGoBack,
+                ),
+                const SmartHeader(
+                  content: "Create Group",
+                ),
+                const LeftChevron(
+                  color: NokhteColors.eggshell,
+                ),
+              ]),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: screenHeight * .13),
+            child: Column(
               children: [
-                HeaderRow(includeDivider: true, children: [
-                  LeftChevron(
-                    onTap: coordinator.onGoBack,
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: GroupAvatar(
+                    groupName: coordinator.groupNameTextField.groupName,
+                    profileGradient:
+                        coordinator.groupNameTextField.profileGradient,
+                    // onPencilTap: () {},
                   ),
-                  const SmartHeader(
-                    content: "Create Group",
-                  ),
-                  const LeftChevron(
-                    color: NokhteColors.eggshell,
-                  ),
-                ]),
+                ),
+                GroupNameTextField(
+                  store: coordinator.groupNameTextField,
+                ),
               ],
             ),
-            Padding(
-              padding: EdgeInsets.only(bottom: screenHeight * .13),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: GroupAvatar(
-                      groupName: coordinator.groupNameTextField.groupName,
-                      profileGradient:
-                          coordinator.groupNameTextField.profileGradient,
-                      // onPencilTap: () {},
-                    ),
-                  ),
-                  GroupNameTextField(
-                    store: coordinator.groupNameTextField,
-                  ),
-                ],
-              ),
-            ),
-            GenericButton(
-              isEnabled: coordinator.groupNameTextField.isValidInput,
-              label: "Create Group",
-              onPressed: coordinator.createGroup,
-              borderRadius: 10,
-            )
-          ],
-        ),
+          ),
+          GenericButton(
+            isEnabled: coordinator.groupNameTextField.isValidInput,
+            label: "Create Group",
+            onPressed: coordinator.createGroup,
+            borderRadius: 10,
+          )
+        ],
       );
     });
   }

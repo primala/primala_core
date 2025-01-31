@@ -18,7 +18,7 @@ class GroupIconPickerScreen extends HookWidget {
     }, []);
     return AnimatedScaffold(
       store: coordinator.widgets.animatedScaffold,
-      child: Container(),
+      children: [Container()],
     );
   }
 }

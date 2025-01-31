@@ -6,6 +6,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
+import 'package:nokhte/app/core/modules/active_group/active_group.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
@@ -28,6 +29,7 @@ abstract class _GroupPickerCoordinatorBase
   final GroupsContract groupsContract;
   final UserContract userContract;
   final GroupDisplayStore groupDisplay;
+  final ActiveGroup activeGroup;
   @override
   final CaptureScreen captureScreen;
 
@@ -36,6 +38,7 @@ abstract class _GroupPickerCoordinatorBase
     required this.userContract,
     required this.captureScreen,
     required this.groupDisplay,
+    required this.activeGroup,
   }) {
     initBaseLogicActions();
     initBaseCoordinatorActions();
@@ -102,12 +105,9 @@ abstract class _GroupPickerCoordinatorBase
       (value) async {
         user = value;
         if (user.activeGroupId != -1) {
-          Modular.to.navigate(
-            HomeConstants.homeScreen,
-            arguments: {
-              HomeConstants.groupId: user.activeGroupId,
-            },
-          );
+          activeGroup.setGroupId(user.activeGroupId);
+          print('active group id ${user.activeGroupId}');
+          Modular.to.navigate(HomeConstants.homeScreen, arguments: {});
         } else {
           initReactors();
           await listenToGroups();

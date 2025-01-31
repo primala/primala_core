@@ -19,31 +19,29 @@ class AccountSettingsScreen extends HookWidget {
       return AnimatedScaffold(
         store: coordinator.animatedScaffold,
         showWidgets: coordinator.showWidgets,
-        child: Column(
-          children: [
-            HeaderRow(
-              includeDivider: false,
-              children: [
-                LeftChevron(
-                  onTap: coordinator.onGoBack,
-                ),
-                const SmartHeader(
-                  content: "Settings",
-                ),
-                const LeftChevron(
-                  color: Colors.transparent,
-                ),
-              ],
-            ),
-            SettingsLayout(
-              onDeactivate: coordinator.onDeactivate,
-              user: coordinator.user,
-            ),
-            // GroupNameTextField(
-            //   store: coordinator.widgets.groupNameTextField,
-            // ),
-          ],
-        ),
+        children: [
+          HeaderRow(
+            includeDivider: false,
+            children: [
+              LeftChevron(
+                onTap: coordinator.onGoBack,
+              ),
+              const SmartHeader(
+                content: "Settings",
+              ),
+              const LeftChevron(
+                color: Colors.transparent,
+              ),
+            ],
+          ),
+          SettingsLayout(
+            onDeactivate: coordinator.onDeactivate,
+            user: coordinator.user,
+          ),
+          // GroupNameTextField(
+          //   store: coordinator.widgets.groupNameTextField,
+          // ),
+        ],
       );
     });
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 
-class CarouselPlacementIndicator extends StatelessWidget with OpacityUtilities {
+class CarouselPlacementIndicator extends StatelessWidget with OpacityUtils {
   final double containerSize;
   final double currentPosition;
   final int length;

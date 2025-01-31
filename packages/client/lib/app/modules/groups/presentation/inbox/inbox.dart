@@ -18,30 +18,27 @@ class InboxScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedScaffold(
-      child: SingleChildScrollView(
-        child: Column(
+      isScrollable: true,
+      children: [
+        HeaderRow(
+          includeDivider: false,
           children: [
-            HeaderRow(
-              includeDivider: false,
-              children: [
-                LeftChevron(
-                  onTap: () => Modular.to.pop(),
-                ),
-                const SmartHeader(
-                  content: "Inbox",
-                ),
-                const LeftChevron(
-                  color: Colors.transparent,
-                ),
-              ],
+            LeftChevron(
+              onTap: () => Modular.to.pop(),
             ),
-            InboxBody(
-              handleRequest: handleRequest,
-              requests: requests,
+            const SmartHeader(
+              content: "Inbox",
+            ),
+            const LeftChevron(
+              color: Colors.transparent,
             ),
           ],
         ),
-      ),
+        InboxBody(
+          handleRequest: handleRequest,
+          requests: requests,
+        ),
+      ],
     );
   }
 }

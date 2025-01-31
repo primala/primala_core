@@ -18,32 +18,28 @@ class GroupPickerScreen extends HookWidget {
     return Observer(builder: (context) {
       return AnimatedScaffold(
         showWidgets: coordinator.showWidgets,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+        isScrollable: true,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          HeaderRow(
             children: [
-              HeaderRow(
-                children: [
-                  InboxIcon(
-                    onTap: coordinator.onInboxTapped,
-                    badgeCount: coordinator.inboxBadgeCount,
-                  ),
-                  const SmartHeader(
-                    content: "Groups",
-                  ),
-                  SettingsIcon(
-                    showWidget: true,
-                    onTap: coordinator.onSettingsTapped,
-                  ),
-                ],
+              InboxIcon(
+                onTap: coordinator.onInboxTapped,
+                badgeCount: coordinator.inboxBadgeCount,
               ),
-              GroupDisplay(
-                store: coordinator.groupDisplay,
+              const SmartHeader(
+                content: "Groups",
+              ),
+              SettingsIcon(
+                showWidget: true,
+                onTap: coordinator.onSettingsTapped,
               ),
             ],
           ),
-        ),
-        //
+          GroupDisplay(
+            store: coordinator.groupDisplay,
+          ),
+        ],
       );
     });
   }

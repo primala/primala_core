@@ -21,9 +21,10 @@ mixin BaseWidgetsCoordinator {
     actionSetShowWidgets = Action(_setShowWidgets);
   }
 
-  fadeInWidgets() {
+  fadeInWidgets({Function? onFadein}) {
     setShowWidgets(false);
     Timer(Seconds.get(0, milli: 1), () {
+      onFadein?.call();
       setShowWidgets(true);
     });
   }
