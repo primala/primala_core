@@ -32,7 +32,7 @@ abstract class _InvitationBodyStoreBase with Store, TextFieldValidators {
   int searchEmailCount = 0;
 
   @observable
-  UserInformationEntity userInformationEntity = UserInformationEntity.initial();
+  UserEntity userInformationEntity = UserEntity.initial();
 
   @observable
   GroupRole currentGroupRole = GroupRole.collaborator;
@@ -108,7 +108,7 @@ abstract class _InvitationBodyStoreBase with Store, TextFieldValidators {
       );
       controller.text += ' ';
       selectAreaBodyText = '';
-      userInformationEntity = UserInformationEntity.initial();
+      userInformationEntity = UserEntity.initial();
       selectAreaTitleText = 'Keep typing to search email.';
       isSelectable = false;
     }
@@ -148,7 +148,7 @@ abstract class _InvitationBodyStoreBase with Store, TextFieldValidators {
   }
 
   @action
-  onEmailFound(UserInformationEntity entity) {
+  onEmailFound(UserEntity entity) {
     userInformationEntity = entity;
     isSelectable = true;
     selectAreaTitleText = 'Select a person';

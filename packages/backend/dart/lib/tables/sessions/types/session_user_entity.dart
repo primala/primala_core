@@ -2,12 +2,12 @@ import 'package:nokhte_backend/types/types.dart';
 
 import 'session_user_status.dart';
 
-class SessionUserInfoEntity extends UserInformationEntity {
+class SessionUserEntity extends UserEntity {
   final SessionUserStatus sessionUserStatus;
-  SessionUserInfoEntity({
+  SessionUserEntity({
     super.activeGroupId = -1,
     super.email = '',
-    super.profileGradient = ProfileGradient.none,
+    required super.profileGradient,
     required super.uid,
     required super.fullName,
     required this.sessionUserStatus,

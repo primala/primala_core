@@ -50,7 +50,7 @@ abstract class _AccountSettingsCoordinatorBase
   }
 
   @observable
-  UserInformationEntity user = UserInformationEntity.initial();
+  UserEntity user = UserEntity.initial();
 
   @action
   getUserInformation() async {

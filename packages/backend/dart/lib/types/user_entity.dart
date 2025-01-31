@@ -3,14 +3,14 @@ import 'package:nokhte_backend/tables/users.dart';
 import 'package:nokhte_backend/types/types.dart';
 import 'package:nokhte_backend/utils/profile_gradients_utils.dart';
 
-class UserInformationEntity extends Equatable {
+class UserEntity extends Equatable {
   final String uid;
   final ProfileGradient profileGradient;
   final String fullName;
   final String email;
   final int activeGroupId;
 
-  UserInformationEntity({
+  UserEntity({
     required this.uid,
     required this.fullName,
     required this.email,
@@ -18,8 +18,8 @@ class UserInformationEntity extends Equatable {
     required this.activeGroupId,
   });
 
-  factory UserInformationEntity.initial() {
-    return UserInformationEntity(
+  factory UserEntity.initial() {
+    return UserEntity(
       uid: '',
       fullName: '',
       email: '',
@@ -27,9 +27,9 @@ class UserInformationEntity extends Equatable {
       activeGroupId: -1,
     );
   }
-  factory UserInformationEntity.fromSupabase(List res) {
+  factory UserEntity.fromSupabase(List res) {
     if (res.isEmpty) {
-      return UserInformationEntity(
+      return UserEntity(
         uid: '',
         email: '',
         fullName: '',
@@ -43,7 +43,7 @@ class UserInformationEntity extends Equatable {
       final profileGradient = ProfileGradientUtils.mapStringToProfileGradient(
           res.first[UsersConstants.S_GRADIENT]);
       final activeGroupId = res.first[UsersConstants.S_ACTIVE_GROUP] ?? -1;
-      return UserInformationEntity(
+      return UserEntity(
         uid: uid,
         fullName: name,
         email: email,
@@ -53,9 +53,9 @@ class UserInformationEntity extends Equatable {
     }
   }
 
-  factory UserInformationEntity.fromDatabaseFunction(Map res) {
+  factory UserEntity.fromDatabaseFunction(Map res) {
     if (res[UsersConstants.S_UID] == null) {
-      return UserInformationEntity(
+      return UserEntity(
         uid: '',
         fullName: '',
         email: '',
@@ -70,7 +70,7 @@ class UserInformationEntity extends Equatable {
       );
       final email = res[UsersConstants.S_EMAIL];
       final activeGroupId = res[UsersConstants.S_ACTIVE_GROUP] ?? -1;
-      return UserInformationEntity(
+      return UserEntity(
         uid: uid,
         fullName: name,
         email: email,

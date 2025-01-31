@@ -49,6 +49,9 @@ abstract class _HomeScreenCoordinatorBase
   }
 
   @action
+  goToSessionStarter() {}
+
+  @action
   listenToSessionRequests() async {
     final res = await contract.listenToSessionRequests(selectedGroup.id);
     res.fold((failure) => errorUpdater(failure), (stream) {
@@ -62,14 +65,6 @@ abstract class _HomeScreenCoordinatorBase
   joinSession() async {
     if (sessionRequest.id == -1) return;
     final res = await contract.joinSession(sessionRequest.id);
-    res.fold((failure) => errorUpdater(failure), (success) {
-      // TODO navigate inside session
-    });
-  }
-
-  @action
-  initializeSession() async {
-    final res = await contract.initializeSession();
     res.fold((failure) => errorUpdater(failure), (success) {
       // TODO navigate inside session
     });

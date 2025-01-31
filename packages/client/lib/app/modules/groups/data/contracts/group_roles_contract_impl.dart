@@ -4,7 +4,7 @@ import 'package:nokhte/app/modules/groups/domain/domain.dart';
 import 'package:nokhte/app/modules/groups/data/data.dart';
 import 'package:nokhte/app/core/network/network_info.dart';
 import 'package:nokhte/app/core/constants/failure_constants.dart';
-import 'package:nokhte_backend/types/user_information_entity.dart';
+import 'package:nokhte_backend/types/types.dart';
 
 class GroupRolesContractImpl
     with ResponseToStatus
@@ -71,9 +71,9 @@ class GroupRolesContractImpl
     if (await networkInfo.isConnected) {
       final res = await remoteSource.getUserByEmail(email);
       final userUid = remoteSource.getUserUid();
-      final model = UserInformationEntity.fromDatabaseFunction(res);
+      final model = UserEntity.fromDatabaseFunction(res);
       if (model.uid != userUid) {
-        return Right(UserInformationEntity.fromDatabaseFunction(res));
+        return Right(UserEntity.fromDatabaseFunction(res));
       } else {
         return Left(FailureConstants.lookedThemselvesUpFailure);
       }

@@ -42,7 +42,7 @@ abstract class _RallyStoreBase extends BaseWidgetStore with Store, Reactions {
   bool cancelButtonVisibility = true;
 
   @observable
-  ObservableList<SessionUserInfoEntity> collaborators = ObservableList.of([]);
+  ObservableList<SessionUserEntity> collaborators = ObservableList.of([]);
 
   @observable
   ObservableList<bool> canRally = ObservableList.of([]);
@@ -71,7 +71,7 @@ abstract class _RallyStoreBase extends BaseWidgetStore with Store, Reactions {
   }
 
   @action
-  setCollaborators(List<SessionUserInfoEntity> value) =>
+  setCollaborators(List<SessionUserEntity> value) =>
       collaborators = ObservableList.of(value);
 
   @action

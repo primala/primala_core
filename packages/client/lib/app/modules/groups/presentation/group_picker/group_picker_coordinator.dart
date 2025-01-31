@@ -12,7 +12,7 @@ import 'package:nokhte/app/modules/groups/groups.dart';
 import 'package:nokhte/app/modules/home/home.dart';
 import 'package:nokhte_backend/tables/group_requests.dart';
 import 'package:nokhte_backend/tables/groups.dart';
-import 'package:nokhte_backend/types/user_information_entity.dart';
+import 'package:nokhte_backend/types/types.dart';
 part 'group_picker_coordinator.g.dart';
 
 class GroupPickerCoordinator = _GroupPickerCoordinatorBase
@@ -58,7 +58,7 @@ abstract class _GroupPickerCoordinatorBase
   ObservableList<GroupEntity> groups = ObservableList<GroupEntity>();
 
   @observable
-  UserInformationEntity user = UserInformationEntity.initial();
+  UserEntity user = UserEntity.initial();
 
   @observable
   ObservableList<GroupRequestEntity> requests =

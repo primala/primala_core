@@ -302,17 +302,23 @@ class SessionsQueries with SessionsConstants, SessionsUtils {
     return activeResponse;
   }
 
-  Future<List> initializeSession() async {
-    await getUserInformation();
+  Future<List> initializeSession(InitializeSessionParams params) async {
+    final collaboratorUids = params.collaborators.map((e) => e.uid).toList();
+    final collaboratorNames =
+        params.collaborators.map((e) => e.fullName).toList();
+    final profileGradients =
+        params.collaborators.map((e) => e.profileGradient).toList();
     return await supabase.from(TABLE).insert({
-      COLLABORATOR_UIDS: [userUID],
-      COLLABORATOR_NAMES: [userFullName],
-      COLLABORATOR_STATUSES: [
+      COLLABORATOR_UIDS: collaboratorUids,
+      PROFILE_GRADIENTS: profileGradients,
+      COLLABORATOR_NAMES: collaboratorNames,
+      COLLABORATOR_STATUSES: List.filled(
+        collaboratorUids.length,
         mapSessionUserStatusToString(
-          SessionUserStatus.hasJoined,
+          SessionUserStatus.offline,
         ),
-      ],
-      GROUP_ID: groupId,
+      ),
+      GROUP_ID: params.groupId,
     }).select();
   }
 

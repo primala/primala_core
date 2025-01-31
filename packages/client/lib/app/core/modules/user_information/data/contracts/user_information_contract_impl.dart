@@ -32,7 +32,7 @@ class UserInformationContractImpl
       final fullName = await remoteSource.getFullName();
       final uid = remoteSource.getUserUID();
       return Right(
-        UserInformationEntity(
+        UserEntity(
           activeGroupId: -1,
           email: '',
           fullName: fullName,

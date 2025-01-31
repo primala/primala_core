@@ -10,6 +10,8 @@ abstract class HomeContract {
   Future<Either<Failure, bool>> joinSession(int sessionId);
   Future<Either<Failure, bool>> deleteStaleSessions();
   Future<Either<Failure, bool>> clearActiveGroup();
-  Future<Either<Failure, bool>> initializeSession();
+  Future<Either<Failure, bool>> initializeSession(
+    InitializeSessionParams params,
+  );
   Future<Either<Failure, GroupEntity>> getGroup(int groupId);
 }

@@ -10,7 +10,7 @@ import 'package:nokhte_backend/types/types.dart';
 
 class SettingsLayout extends HookWidget {
   final Function onDeactivate;
-  final UserInformationEntity user;
+  final UserEntity user;
   const SettingsLayout({
     super.key,
     required this.onDeactivate,

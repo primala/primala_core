@@ -2585,3 +2585,7 @@ alter
   publication supabase_realtime add table public.groups;
 
 alter table "public"."groups" replica identity full;
+
+
+alter table "public"."sessions" add column "profile_gradients" gradients[] not null;
+

@@ -33,7 +33,7 @@ abstract class _SessionMetadataStoreBase
   int sessionId = -1;
 
   @observable
-  ObservableList<SessionUserInfoEntity> collaboratorInformation =
+  ObservableList<SessionUserEntity> collaboratorInformation =
       ObservableList.of([]);
 
   @observable
@@ -211,8 +211,8 @@ abstract class _SessionMetadataStoreBase
   }
 
   @computed
-  List<SessionUserInfoEntity> get collaboratorsMinusUser {
-    final temp = <SessionUserInfoEntity>[];
+  List<SessionUserEntity> get collaboratorsMinusUser {
+    final temp = <SessionUserEntity>[];
     for (int i = 0; i < collaboratorInformation.length; i++) {
       if (collaboratorInformation[i].uid != userUID) {
         temp.add(collaboratorInformation[i]);

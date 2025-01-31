@@ -38,9 +38,9 @@ class HomeContractImpl with ResponseToStatus implements HomeContract {
   }
 
   @override
-  initializeSession() async {
+  initializeSession(params) async {
     if (await networkInfo.isConnected) {
-      final res = await remoteSource.initializeSession();
+      final res = await remoteSource.initializeSession(params);
       return fromSupabase(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);

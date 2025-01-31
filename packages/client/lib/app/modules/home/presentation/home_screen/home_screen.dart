@@ -48,7 +48,7 @@ class HomeScreen extends HookWidget {
             HomeScreenBody(
               sessionIsActive: coordinator.sessionIsActive,
               sessionHost: coordinator.sessionHost,
-              startSession: coordinator.initializeSession,
+              startSession: coordinator.goToSessionStarter,
               joinSession: coordinator.joinSession,
             ),
             NavigationCarousel(

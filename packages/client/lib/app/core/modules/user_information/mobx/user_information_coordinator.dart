@@ -24,7 +24,7 @@ abstract class _UserInformationCoordinatorBase with Store, BaseMobxLogic {
   bool presetIsUpdated = false;
 
   @observable
-  UserInformationEntity userInformation = UserInformationEntity.initial();
+  UserEntity userInformation = UserEntity.initial();
 
   @action
   getUserInformation() async {

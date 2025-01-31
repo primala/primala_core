@@ -82,7 +82,7 @@ class SessionsStreams extends SessionsQueries with SessionsConstants {
         final List<SessionUserStatus> collaboratorStatuses = [];
         final List<String> collaboratorNames = [];
         final List<String> collaboratorUIDs = [];
-        final List<SessionUserInfoEntity> collaboratorInformation = [];
+        final List<SessionUserEntity> collaboratorInformation = [];
 
         for (var status in selectedEvent[COLLABORATOR_STATUSES]) {
           collaboratorStatuses.add(mapStringToSessionUserStatus(status));
@@ -95,7 +95,8 @@ class SessionsStreams extends SessionsQueries with SessionsConstants {
         }
 
         for (int i = 0; i < collaboratorNames.length; i++) {
-          collaboratorInformation.add(SessionUserInfoEntity(
+          collaboratorInformation.add(SessionUserEntity(
+            profileGradient: selectedEvent[PROFILE_GRADIENTS][i],
             fullName: collaboratorNames[i],
             uid: collaboratorUIDs[i],
             sessionUserStatus: collaboratorStatuses[i],
