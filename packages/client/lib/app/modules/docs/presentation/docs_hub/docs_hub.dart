@@ -16,7 +16,7 @@ class DocsHubScreen extends HookWidget {
   Widget build(BuildContext context) {
     useEffect(() {
       coordinator.constructor();
-      return null;
+      return () async => await coordinator.dispose();
     }, []);
 
     return Observer(builder: (context) {

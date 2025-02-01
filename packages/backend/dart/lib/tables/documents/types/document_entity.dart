@@ -3,6 +3,8 @@ import 'package:nokhte_backend/tables/content_blocks.dart';
 import 'package:nokhte_backend/tables/documents/documents.dart';
 import 'package:nokhte_backend/types/types.dart';
 
+typedef DocumentEntities = List<DocumentEntity>;
+
 class DocumentEntity extends Equatable {
   final int documentId;
   final int? parentDocumentId;

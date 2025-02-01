@@ -84,7 +84,7 @@ class DocumentsStreams with DocumentUtils, DocumentConstants, SessionsUtils {
     }
   }
 
-  Stream<List<DocumentEntity>> listenToDocumentPreview(int groupId) async* {
+  Stream<DocumentEntities> listenToDocuments(int groupId) async* {
     documentsStreamListeningStatus = true;
 
     final events =
