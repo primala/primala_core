@@ -1,8 +1,8 @@
 // ignore_for_file: file_names
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nokhte_backend/tables/content_blocks.dart';
 import 'package:nokhte_backend/tables/documents.dart';
-import 'package:nokhte_backend/tables/documents/queries.dart';
 
 import 'shared/shared.dart';
 
@@ -26,20 +26,24 @@ void main() {
       InsertDocumentParams(
         groupId: tSetup.groupId,
         type: DocumentType.evergreen,
+        documentTitle: 'oh my god is that a black card?',
+        contentBlockType: ContentBlockType.question,
+        spotlightMessage:
+            'I turned and replied why yes but I prefer the term african american express',
       ),
     );
-    documentId = res.first['id'];
+    documentId = res['id'];
     expect(res, isNotEmpty);
     expect(
-      res.first['type'],
+      res['type'],
       equals(
         documentsQueries.mapDocumentTypeToString(
           DocumentType.evergreen,
         ),
       ),
     );
-    expect(res.first['expiration_date'], isNull);
-    expect(res.first['group_id'], equals(tSetup.groupId));
+    expect(res['expiration_date'], isNull);
+    expect(res['group_id'], equals(tSetup.groupId));
   });
 
   test("should be able to update the document type", () async {

@@ -3,7 +3,7 @@ import 'package:nokhte_backend/tables/content_blocks.dart';
 import 'package:nokhte_backend/tables/sessions/utilities/utilities.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class ContentBlocksStreams with SessionContentConstants, SessionsUtils {
+class ContentBlocksStreams with ContentBlocksConstants, SessionsUtils {
   bool contentListeningStatus = false;
   final SupabaseClient supabase;
   final ContentBlockList _contentList = [];

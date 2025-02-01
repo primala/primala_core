@@ -1,6 +1,6 @@
 // ignore_for_file: constant_identifier_names, non_constant_identifier_names
 
-mixin SessionContentConstants {
+mixin ContentBlocksConstants {
   static const S_TABLE = "content_blocks";
   static const S_ID = "id";
   static const S_GROUP_ID = "group_id";

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:nokhte_backend/tables/content_blocks.dart';
 
-class ContentBlock extends Equatable with SessionContentConstants {
+class ContentBlock extends Equatable {
   final String content;
   final int id;
   final ContentBlockType contentBlockType;
@@ -18,12 +18,12 @@ class ContentBlock extends Equatable with SessionContentConstants {
     List<ContentBlock> temp = [];
     for (var block in res) {
       temp.add(ContentBlock(
-        content: block[SessionContentConstants.S_CONTENT],
-        id: block[SessionContentConstants.S_ID],
+        content: block[ContentBlocksConstants.S_CONTENT],
+        id: block[ContentBlocksConstants.S_ID],
         contentBlockType: SessionContentUtils.mapStringToContentBlockType(
-          block[SessionContentConstants.S_TYPE],
+          block[ContentBlocksConstants.S_TYPE],
         ),
-        parentID: block[SessionContentConstants.S_PARENT_ID],
+        parentID: block[ContentBlocksConstants.S_PARENT_ID],
       ));
     }
     return temp;

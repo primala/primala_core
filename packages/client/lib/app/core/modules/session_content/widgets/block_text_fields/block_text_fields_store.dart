@@ -167,6 +167,7 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
       if (mode == BlockTextFieldMode.adding) {
         setCurrentAddContentParams(
           AddContentParams(
+            documentId: 1,
             content: currentTextContent,
             contentBlockType: blockType,
             parentId: currentlySelectedParentId,

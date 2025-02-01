@@ -5,16 +5,19 @@ class AddContentParams extends Equatable {
   final String content;
   final int parentId;
   final ContentBlockType contentBlockType;
+  final int documentId;
 
   AddContentParams({
     required this.content,
-    required this.parentId,
     required this.contentBlockType,
+    required this.documentId,
+    this.parentId = -1,
   });
 
   factory AddContentParams.initial() => AddContentParams(
         content: '',
         parentId: -1,
+        documentId: -1,
         contentBlockType: ContentBlockType.none,
       );
 
@@ -23,5 +26,6 @@ class AddContentParams extends Equatable {
         content,
         parentId,
         contentBlockType,
+        documentId,
       ];
 }

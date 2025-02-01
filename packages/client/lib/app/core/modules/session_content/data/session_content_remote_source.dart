@@ -4,7 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 abstract class SessionContentRemoteSource {
   Stream<ContentBlockList> listenToDocumentContent(int documentId);
   Future<bool> cancelContentStream();
-  Future<List> addContent(AddContentParams params);
+  Future<Map> addContent(AddContentParams params);
   Future<List> updateContent(UpdateContentParams params);
   Future<List> updateParent(UpdateParentParams params);
   Future<List> deleteContent(int contentId);
