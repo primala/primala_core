@@ -26,65 +26,62 @@ class CarouselScaffold extends HookWidget with OpacityUtils {
 
   @override
   Widget build(BuildContext context) {
-    return HookBuilder(builder: (context) {
-      final currentPosition = useState(initialPosition.toDouble());
-
-      return Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: NokhteColors.eggshell,
-        body: MultiHitStack(
-          children: [
-            AnimatedOpacity(
-              opacity: useWidgetOpacity(showWidgets),
-              duration: const Duration(milliseconds: 500),
-              child: Opacity(
-                opacity: interpolate(
-                  currentValue: currentPosition.value,
-                  targetValue: initialPosition.toDouble(),
-                  minOutput: 0.0,
-                  maxOutput: 1.0,
-                ),
-                child: Column(
-                  mainAxisAlignment: mainAxisAlignment,
-                  children: [
-                    ...children,
-                    NavCarousel(
-                      currentPosition: currentPosition.value,
-                      onPositionChanged: (value) =>
-                          currentPosition.value = value,
-                      carouselItems: const [],
-                      callbacks: const [],
-                      initialPosition: initialPosition,
-                      isEnabled: false,
-                    ),
-                  ],
-                ),
+    final currentPosition = useState(initialPosition.toDouble());
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: NokhteColors.eggshell,
+      body: MultiHitStack(
+        children: [
+          AnimatedOpacity(
+            opacity: useWidgetOpacity(showWidgets),
+            duration: const Duration(milliseconds: 500),
+            child: Opacity(
+              opacity: interpolate(
+                currentValue: currentPosition.value,
+                targetValue: initialPosition.toDouble(),
+                minOutput: 0.0,
+                maxOutput: 1.0,
               ),
-            ),
-            AnimatedOpacity(
-              opacity: useWidgetOpacity(showCarousel),
-              duration: const Duration(milliseconds: 500),
               child: Column(
                 mainAxisAlignment: mainAxisAlignment,
                 children: [
+                  ...children,
                   const Spacer(),
                   NavCarousel(
                     currentPosition: currentPosition.value,
                     onPositionChanged: (value) => currentPosition.value = value,
-                    carouselItems: const ['info', 'home', 'docs'],
-                    callbacks: [
-                      () => Modular.to.navigate(HomeConstants.information),
-                      () => Modular.to.navigate(HomeConstants.homeScreen),
-                      () => Modular.to.navigate(DocsConstants.docsHub)
-                    ],
+                    carouselItems: const ['', '', ''],
+                    callbacks: [() {}, () {}, () {}],
                     initialPosition: initialPosition,
+                    isEnabled: false,
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-      );
-    });
+          ),
+          AnimatedOpacity(
+            opacity: useWidgetOpacity(showCarousel),
+            duration: const Duration(milliseconds: 500),
+            child: Column(
+              mainAxisAlignment: mainAxisAlignment,
+              children: [
+                const Spacer(),
+                NavCarousel(
+                  currentPosition: currentPosition.value,
+                  onPositionChanged: (value) => currentPosition.value = value,
+                  carouselItems: const ['info', 'home', 'docs'],
+                  callbacks: [
+                    () => Modular.to.navigate(HomeConstants.information),
+                    () => Modular.to.navigate(HomeConstants.homeScreen),
+                    () => Modular.to.navigate(DocsConstants.docsHub)
+                  ],
+                  initialPosition: initialPosition,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

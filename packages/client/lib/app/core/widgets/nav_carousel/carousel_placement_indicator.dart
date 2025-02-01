@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 
 class CarouselPlacementIndicator extends StatelessWidget with OpacityUtils {
   final double containerSize;
   final double currentPosition;
   final int length;
+  final Color color;
 
   const CarouselPlacementIndicator({
     super.key,
     required this.containerSize,
     required this.currentPosition,
     required this.length,
+    this.color = Colors.black,
   });
 
   Widget buildCircle({
@@ -29,9 +32,9 @@ class CarouselPlacementIndicator extends StatelessWidget with OpacityUtils {
         child: Container(
           width: containerSize * .06,
           height: containerSize * .06,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.black,
+            color: color,
           ),
         ),
       ),

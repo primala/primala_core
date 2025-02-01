@@ -73,6 +73,7 @@ class NavCarousel extends HookWidget {
             top: 10,
           ),
           child: CarouselPlacementIndicator(
+            color: isEnabled ? Colors.black : Colors.transparent,
             length: carouselItems.length,
             currentPosition: currentPosition,
             containerSize: containerSize,
