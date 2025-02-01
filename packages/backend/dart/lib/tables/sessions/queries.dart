@@ -1,11 +1,13 @@
 import 'package:nokhte_backend/tables/sessions.dart';
 import 'package:nokhte_backend/tables/users.dart';
 import 'package:nokhte_backend/types/types.dart';
+import 'package:nokhte_backend/utils/profile_gradients_utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'utilities/utilities.dart';
 
-class SessionsQueries with SessionsConstants, SessionsUtils {
+class SessionsQueries
+    with SessionsConstants, SessionsUtils, ProfileGradientUtils {
   final SupabaseClient supabase;
   final String userUID;
   int sessionID = -1;
@@ -306,8 +308,10 @@ class SessionsQueries with SessionsConstants, SessionsUtils {
     final collaboratorUids = params.collaborators.map((e) => e.uid).toList();
     final collaboratorNames =
         params.collaborators.map((e) => e.fullName).toList();
-    final profileGradients =
-        params.collaborators.map((e) => e.profileGradient).toList();
+    final profileGradients = params.collaborators
+        .map((e) =>
+            ProfileGradientUtils.mapProfileGradientToString(e.profileGradient))
+        .toList();
     return await supabase.from(TABLE).insert({
       COLLABORATOR_UIDS: collaboratorUids,
       PROFILE_GRADIENTS: profileGradients,

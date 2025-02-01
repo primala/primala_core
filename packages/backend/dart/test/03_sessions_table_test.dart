@@ -2,6 +2,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nokhte_backend/tables/sessions.dart';
+import 'package:nokhte_backend/types/types.dart';
 import 'shared/shared.dart';
 
 void main() {
@@ -24,7 +25,24 @@ void main() {
   });
 
   test('initializeSession - initializes active session', () async {
-    final res = await regularQueries.initializeSession();
+    final res = await regularQueries.initializeSession(InitializeSessionParams(
+      collaborators: [
+        SessionUserEntity(
+          profileGradient: ProfileGradient.amethyst,
+          uid: tSetup.firstUserUID,
+          fullName: 'User 1',
+          sessionUserStatus: SessionUserStatus.offline,
+        ),
+        SessionUserEntity(
+          profileGradient: ProfileGradient.amethyst,
+          uid: tSetup.secondUserUID,
+          fullName: 'User 2',
+          sessionUserStatus: SessionUserStatus.offline,
+        )
+      ],
+      documentIds: [],
+      groupId: tSetup.groupId,
+    ));
     regularSessionID = res.first['id'];
     expect(res, isNotEmpty);
     expect(res.first['collaborator_uids'], contains(tSetup.firstUserUID));
@@ -53,8 +71,9 @@ void main() {
       );
     });
 
-    test('joinSession - second user can join the session', () async {
-      await regularQueries2.joinSession(regularSessionID);
+    test('updateUserStatus - second user can updates user status', () async {
+      await regularQueries2.updateUserStatus(SessionUserStatus.hasJoined);
+
       final res = await regularQueries.select();
       expect(
         res.first['collaborator_statuses'],

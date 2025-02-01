@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names
 import 'package:nokhte_backend/tables/groups.dart';
 import 'package:nokhte_backend/tables/sessions/queries.dart';
+import 'package:nokhte_backend/utils/profile_gradients_utils.dart';
 import 'constants.dart';
 import 'types/types.dart';
 
@@ -96,7 +97,8 @@ class SessionsStreams extends SessionsQueries with SessionsConstants {
 
         for (int i = 0; i < collaboratorNames.length; i++) {
           collaboratorInformation.add(SessionUserEntity(
-            profileGradient: selectedEvent[PROFILE_GRADIENTS][i],
+            profileGradient: ProfileGradientUtils.mapStringToProfileGradient(
+                selectedEvent[PROFILE_GRADIENTS][i]),
             fullName: collaboratorNames[i],
             uid: collaboratorUIDs[i],
             sessionUserStatus: collaboratorStatuses[i],
