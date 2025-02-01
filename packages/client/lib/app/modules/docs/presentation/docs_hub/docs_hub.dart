@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
-import 'package:nokhte/app/modules/home/home.dart';
-export 'documents_coordinator.dart';
+import 'package:nokhte/app/modules/docs/docs.dart';
+export 'docs_hub_coordinator.dart';
 
-class DocumentsScreen extends HookWidget {
-  final DocumentsCoordinator coordinator;
+class DocsHubScreen extends HookWidget {
+  final DocsHubCoordinator coordinator;
 
-  const DocumentsScreen({
+  const DocsHubScreen({
     super.key,
     required this.coordinator,
   });

@@ -26,10 +26,6 @@ class HomeModule extends Module {
       ),
     );
 
-    i.add<DocumentsCoordinator>(
-      () => DocumentsCoordinator(),
-    );
-
     i.add<InformationCoordinator>(
       () => InformationCoordinator(),
     );
@@ -42,14 +38,6 @@ class HomeModule extends Module {
       transition: TransitionType.noTransition,
       child: (context) => HomeScreen(
         coordinator: Modular.get<HomeScreenCoordinator>(),
-      ),
-    );
-
-    r.child(
-      HomeConstants.relativeDocuments,
-      transition: TransitionType.noTransition,
-      child: (context) => DocumentsScreen(
-        coordinator: Modular.get<DocumentsCoordinator>(),
       ),
     );
 

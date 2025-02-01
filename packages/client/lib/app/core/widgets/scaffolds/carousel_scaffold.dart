@@ -5,6 +5,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/constants/colors.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte/app/modules/home/home.dart';
 
 class CarouselScaffold extends HookWidget with OpacityUtils {
@@ -63,7 +64,7 @@ class CarouselScaffold extends HookWidget with OpacityUtils {
                     callbacks: [
                       () => Modular.to.navigate(HomeConstants.information),
                       () => Modular.to.navigate(HomeConstants.homeScreen),
-                      () => Modular.to.navigate(HomeConstants.documents)
+                      () => Modular.to.navigate(DocsConstants.docsHub)
                     ],
                     initialPosition: initialPosition,
                   ),
