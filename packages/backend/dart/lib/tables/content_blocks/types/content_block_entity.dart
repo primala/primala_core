@@ -3,7 +3,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:nokhte_backend/tables/content_blocks.dart';
 
-typedef ContentBlockList = List<ContentBlockEntity>;
+typedef ContentBlocks = List<ContentBlockEntity>;
 
 class ContentBlockEntity extends Equatable {
   final int id;

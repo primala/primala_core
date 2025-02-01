@@ -37,8 +37,7 @@ mixin SessionContentUtils {
     }
   }
 
-  static bool areContentListsEqual(
-      ContentBlockList list1, ContentBlockList list2) {
+  static bool areContentListsEqual(ContentBlocks list1, ContentBlocks list2) {
     if (list1.length != list2.length) return false;
 
     for (int i = 0; i < list1.length; i++) {

@@ -6,7 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class ContentBlocksStreams with ContentBlocksConstants, SessionsUtils {
   bool contentListeningStatus = false;
   final SupabaseClient supabase;
-  final ContentBlockList _contentList = [];
+  final ContentBlocks _contentList = [];
 
   ContentBlocksStreams({
     required this.supabase,

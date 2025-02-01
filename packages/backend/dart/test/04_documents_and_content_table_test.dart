@@ -75,16 +75,16 @@ void main() {
     );
 
     expect(res, isNotEmpty);
-    expect(res.first['title'], equals('New Title'));
-    expect(res.first['group_id'], equals(tSetup.groupId));
+    expect(res['title'], equals('New Title'));
+    expect(res['group_id'], equals(tSetup.groupId));
   });
 
   test("should be able to delete the document", () async {
     final res = await documentsQueries.deleteDocument(documentId);
 
     expect(res, isNotEmpty);
-    expect(res.first['id'], equals(documentId));
-    expect(res.first['group_id'], equals(tSetup.groupId));
+    expect(res['id'], equals(documentId));
+    expect(res['group_id'], equals(tSetup.groupId));
     final res2 = await documentsQueries.selectByGroup(tSetup.groupId);
     expect(res2, isEmpty);
   });

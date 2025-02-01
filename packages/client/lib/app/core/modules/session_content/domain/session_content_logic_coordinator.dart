@@ -38,7 +38,7 @@ abstract class _SessionContentLogicCoordinatorBase with Store, BaseMobxLogic {
       const Stream.empty().listen((event) {});
 
   @observable
-  ObservableStream<ContentBlockList> sessionContent =
+  ObservableStream<ContentBlocks> sessionContent =
       ObservableStream(const Stream.empty());
 
   @action

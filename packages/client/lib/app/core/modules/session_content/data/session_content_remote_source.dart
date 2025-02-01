@@ -2,7 +2,7 @@ import 'package:nokhte_backend/tables/content_blocks.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class SessionContentRemoteSource {
-  Stream<ContentBlockList> listenToDocumentContent(int documentId);
+  Stream<ContentBlocks> listenToDocumentContent(int documentId);
   Future<bool> cancelContentStream();
   Future<Map> addContent(AddContentParams params);
   Future<List> updateContent(UpdateContentParams params);
@@ -35,12 +35,13 @@ class SessionContentRemoteSourceImpl implements SessionContentRemoteSource {
 
   @override
   updateContent(params) async =>
-      await contentBlocksQueries.updateContent(params);
+      throw UnimplementedError('updateContent is not implemented');
 
   @override
-  updateParent(params) async => await contentBlocksQueries.updateParent(params);
+  updateParent(params) async =>
+      throw UnimplementedError('updateParent is not implemented');
 
   @override
   deleteContent(params) async =>
-      await contentBlocksQueries.deleteContent(params);
+      throw UnimplementedError('deleteContent is not implemented');
 }

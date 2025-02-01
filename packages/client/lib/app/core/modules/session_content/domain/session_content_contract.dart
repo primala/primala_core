@@ -7,7 +7,7 @@ abstract class SessionContentContract {
   Future<Either<Failure, bool>> updateContent(UpdateContentParams params);
   Future<Either<Failure, bool>> updateParent(UpdateParentParams params);
 
-  Future<Either<Failure, Stream<ContentBlockList>>> listenToDocumentContent(
+  Future<Either<Failure, Stream<ContentBlocks>>> listenToDocumentContent(
     int documentId,
   );
 

@@ -38,15 +38,20 @@ class ContentBlocksQueries with ContentBlocksConstants {
         .single();
   }
 
-  Future<List> deleteContent(int contentId) async {
+  Future<Map> deleteContent(int contentId) async {
     await getGroupId();
-    if (documentId == -1 || groupId == -1) return [];
-    return await supabase.from(TABLE).delete().eq(ID, contentId).select();
+    if (documentId == -1 || groupId == -1) return {};
+    return await supabase
+        .from(TABLE)
+        .delete()
+        .eq(ID, contentId)
+        .select()
+        .single();
   }
 
-  Future<List> updateContent(UpdateContentParams params) async {
+  Future<Map> updateContent(UpdateContentParams params) async {
     await getGroupId();
-    if (documentId == -1 || groupId == -1) return [];
+    if (documentId == -1 || groupId == -1) return {};
     return await supabase
         .from(TABLE)
         .update({
@@ -57,12 +62,13 @@ class ContentBlocksQueries with ContentBlocksConstants {
           LAST_EDITED_AT: DateTime.now().toUtc().toIso8601String(),
         })
         .eq(ID, params.contentId)
-        .select();
+        .select()
+        .single();
   }
 
-  Future<List> updateParent(UpdateParentParams params) async {
+  Future<Map> updateParent(UpdateParentParams params) async {
     await getGroupId();
-    if (documentId == -1 || groupId == -1) return [];
+    if (documentId == -1 || groupId == -1) return {};
     return await supabase
         .from(TABLE)
         .update({
@@ -70,6 +76,7 @@ class ContentBlocksQueries with ContentBlocksConstants {
           LAST_EDITED_AT: DateTime.now().toUtc().toIso8601String(),
         })
         .eq(ID, params.contentId)
-        .select();
+        .select()
+        .single();
   }
 }

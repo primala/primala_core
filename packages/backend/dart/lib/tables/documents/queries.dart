@@ -46,12 +46,13 @@ class DocumentsQueries with DocumentUtils, DocumentConstants {
   Future<List> selectByGroup(int groupId) async =>
       await supabase.from(TABLE).select().eq(GROUP_ID, groupId);
 
-  Future<List> updateTitle(UpdateDocumentTitleParams params) async =>
+  Future<Map> updateTitle(UpdateDocumentTitleParams params) async =>
       await supabase
           .from(TABLE)
           .update({TITLE: params.title})
           .eq(ID, params.documentId)
-          .select();
+          .select()
+          .single();
 
   Future<List> updateType(UpdateDocumentTypeParams params) async {
     return await supabase

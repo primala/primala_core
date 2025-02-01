@@ -4,14 +4,29 @@ import 'package:nokhte/app/core/error/failure.dart';
 import 'package:nokhte/app/core/mixins/response_to_status.dart';
 import 'package:nokhte/app/core/network/network_info.dart';
 import 'package:nokhte/app/modules/docs/docs.dart';
+import 'package:nokhte_backend/tables/content_blocks.dart';
 import 'package:nokhte_backend/tables/documents.dart';
 
 abstract class DocsContract {
   Future<Either<Failure, Stream<DocumentEntities>>> listenToDocuments(
-      int groupId);
+    int groupId,
+  );
   Future<bool> cancelDocumentStream();
+
   Future<Either<Failure, bool>> insertDocument(InsertDocumentParams params);
   Future<Either<Failure, bool>> deleteDocument(int documentId);
+  Future<Either<Failure, bool>> updateDocumentTitle(
+    UpdateDocumentTitleParams params,
+  );
+
+  Future<Either<Failure, bool>> addContent(AddContentParams params);
+  Future<Either<Failure, bool>> updateContent(UpdateContentParams params);
+  Future<Either<Failure, bool>> deleteContent(int contentId);
+
+  Future<Either<Failure, Stream<ContentBlocks>>> listenToDocumentContent(
+    int documentId,
+  );
+  Future<bool> cancelContentStream();
 }
 
 class DocsContractImpl extends DocsContract with ResponseToStatus {
@@ -50,6 +65,59 @@ class DocsContractImpl extends DocsContract with ResponseToStatus {
   deleteDocument(documentId) async {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.deleteDocument(documentId);
+      return fromSupabaseSingle(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  @override
+  addContent(params) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.addContent(params);
+      return fromSupabaseSingle(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  @override
+  cancelContentStream() async => await remoteSource.cancelContentStream();
+
+  @override
+  deleteContent(contentId) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.deleteContent(contentId);
+      return fromSupabaseSingle(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  @override
+  listenToDocumentContent(documentId) async {
+    if (await networkInfo.isConnected) {
+      final res = remoteSource.listenToDocumentContent(documentId);
+      return Right(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  @override
+  updateContent(params) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.updateContent(params);
+      return fromSupabaseSingle(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  @override
+  updateDocumentTitle(params) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.updateDocumentTitle(params);
       return fromSupabaseSingle(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
