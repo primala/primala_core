@@ -10,16 +10,17 @@ class NavCarousel extends HookWidget {
   final List<Function> callbacks;
   final int initialPosition;
   final double currentPosition;
+  final bool isEnabled;
   final Function(double) onPositionChanged;
 
-  const NavCarousel({
-    super.key,
-    required this.carouselItems,
-    required this.callbacks,
-    required this.initialPosition,
-    required this.currentPosition,
-    required this.onPositionChanged,
-  });
+  const NavCarousel(
+      {super.key,
+      required this.carouselItems,
+      required this.callbacks,
+      required this.initialPosition,
+      required this.currentPosition,
+      required this.onPositionChanged,
+      this.isEnabled = true});
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +37,8 @@ class NavCarousel extends HookWidget {
       children: [
         CarouselSlider(
           options: CarouselOptions(
+            scrollPhysics:
+                isEnabled ? null : const NeverScrollableScrollPhysics(),
             height: containerSize * .2,
             aspectRatio: 1,
             viewportFraction: .28,
@@ -51,7 +54,7 @@ class NavCarousel extends HookWidget {
                   Radius.circular(15),
                 ),
                 border: Border.all(
-                  color: Colors.black,
+                  color: isEnabled ? Colors.black : Colors.transparent,
                   width: 1,
                 ),
               ),
@@ -59,7 +62,7 @@ class NavCarousel extends HookWidget {
                 carouselItems[index],
                 fontSize: 20,
                 fontWeight: FontWeight.w300,
-                fontColor: Colors.black,
+                fontColor: isEnabled ? Colors.black : Colors.transparent,
               ),
             );
           }),

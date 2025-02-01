@@ -46,7 +46,18 @@ class CarouselScaffold extends HookWidget with OpacityUtils {
                 ),
                 child: Column(
                   mainAxisAlignment: mainAxisAlignment,
-                  children: [...children],
+                  children: [
+                    ...children,
+                    NavCarousel(
+                      currentPosition: currentPosition.value,
+                      onPositionChanged: (value) =>
+                          currentPosition.value = value,
+                      carouselItems: const [],
+                      callbacks: const [],
+                      initialPosition: initialPosition,
+                      isEnabled: false,
+                    ),
+                  ],
                 ),
               ),
             ),
