@@ -5,6 +5,7 @@ abstract class DocsRemoteSource {
   Stream<DocumentEntities> listenToDocuments(int groupId);
   Future<bool> cancelDocumentStream();
   Future<Map> insertDocument(InsertDocumentParams params);
+  Future<Map> deleteDocument(int documentId);
 }
 
 class DocsRemoteSourceImpl extends DocsRemoteSource {
@@ -25,4 +26,8 @@ class DocsRemoteSourceImpl extends DocsRemoteSource {
 
   @override
   insertDocument(params) async => await documentsQueries.insertDocument(params);
+
+  @override
+  deleteDocument(documentId) async =>
+      await documentsQueries.deleteDocument(documentId);
 }

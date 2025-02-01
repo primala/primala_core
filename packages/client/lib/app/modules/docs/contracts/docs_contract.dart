@@ -11,6 +11,7 @@ abstract class DocsContract {
       int groupId);
   Future<bool> cancelDocumentStream();
   Future<Either<Failure, bool>> insertDocument(InsertDocumentParams params);
+  Future<Either<Failure, bool>> deleteDocument(int documentId);
 }
 
 class DocsContractImpl extends DocsContract with ResponseToStatus {
@@ -39,6 +40,16 @@ class DocsContractImpl extends DocsContract with ResponseToStatus {
   insertDocument(params) async {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.insertDocument(params);
+      return fromSupabaseSingle(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  @override
+  deleteDocument(documentId) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.deleteDocument(documentId);
       return fromSupabaseSingle(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);

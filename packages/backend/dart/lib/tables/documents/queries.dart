@@ -75,6 +75,6 @@ class DocumentsQueries with DocumentUtils, DocumentConstants {
           .select()
           .single();
 
-  Future<List> deleteDocument(int documentId) async =>
-      await supabase.from(TABLE).delete().eq(ID, documentId).select();
+  Future<Map> deleteDocument(int documentId) async =>
+      await supabase.from(TABLE).delete().eq(ID, documentId).select().single();
 }
