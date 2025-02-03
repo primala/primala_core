@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
+import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte_backend/tables/documents.dart';
 
 class DocsDisplay extends HookWidget {
@@ -79,7 +80,21 @@ class DocsDisplay extends HookWidget {
             ),
             borderRadius: BorderRadius.circular(14),
           ),
-          child: Center(child: Text(doc.title)),
+          child: Padding(
+            padding: const EdgeInsets.only(
+              top: 16,
+              left: 8,
+              right: 8,
+            ),
+            child: Jost(
+              doc.title,
+              maxLines: 2,
+              fontSize: 16,
+              shouldCenter: true,
+              softWrap: true,
+              useEllipsis: true,
+            ),
+          ),
         ),
       );
 }

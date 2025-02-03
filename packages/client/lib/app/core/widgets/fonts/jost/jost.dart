@@ -12,6 +12,7 @@ class Jost extends StatelessWidget {
   final FontWeight fontWeight;
   final bool useEllipsis;
   final bool softWrap;
+  final int? maxLines;
   const Jost(
     this.content, {
     super.key,
@@ -24,6 +25,7 @@ class Jost extends StatelessWidget {
     this.shouldAlignRight = false,
     this.useEllipsis = false,
     this.softWrap = false,
+    this.maxLines,
   });
 
   @override
@@ -35,6 +37,7 @@ class Jost extends StatelessWidget {
           : shouldAlignRight
               ? TextAlign.right
               : null,
+      maxLines: maxLines,
       // softWrap: true,
       softWrap: softWrap,
       overflow: useEllipsis ? TextOverflow.ellipsis : TextOverflow.visible,
