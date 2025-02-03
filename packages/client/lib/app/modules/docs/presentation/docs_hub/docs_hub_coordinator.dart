@@ -1,6 +1,8 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/active_group/active_group.dart';
@@ -42,14 +44,28 @@ abstract class _DocsHubCoordinatorBase
 
   @action
   listenToDocuments() async {
+    print('active group id ${activeGroup.groupId}');
     final res = await contract.listenToDocuments(activeGroup.groupId);
     res.fold((failure) => errorUpdater(failure), (stream) {
       documentsStream = ObservableStream(stream);
       documentsStreamSubscription = documentsStream.listen((event) {
+        print('is there any event here $event');
         documents = ObservableList.of(event);
       });
     });
   }
+
+  @action
+  onDocTapped(int docId) async {}
+
+  @action
+  onCreateDocTapped() => Modular.to.push(MaterialPageRoute(
+        builder: (context) {
+          return CreateDocScreen(
+            coordinator: Modular.get<CreateDocCoordinator>(),
+          );
+        },
+      ));
 
   @action
   dispose() async {

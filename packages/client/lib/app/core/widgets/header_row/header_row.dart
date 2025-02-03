@@ -24,6 +24,7 @@ class HeaderRow extends HookWidget {
         children: [
           Row(
             mainAxisAlignment: mainAxisAlignment,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: children,
           ),
           if (includeDivider)

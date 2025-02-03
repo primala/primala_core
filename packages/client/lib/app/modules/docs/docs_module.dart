@@ -31,6 +31,13 @@ class DocsModule extends Module {
         activeGroup: Modular.get<ActiveGroup>(),
       ),
     );
+
+    i.add<CreateDocCoordinator>(
+      () => CreateDocCoordinator(
+        contract: i<DocsContractImpl>(),
+        activeGroup: Modular.get<ActiveGroup>(),
+      ),
+    );
   }
 
   @override

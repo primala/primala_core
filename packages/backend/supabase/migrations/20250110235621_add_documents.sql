@@ -2589,3 +2589,17 @@ alter table "public"."groups" replica identity full;
 
 alter table "public"."sessions" add column "profile_gradients" gradients[] not null;
 
+
+drop policy "Enables Broad Permissions if Is a Group Member" on "public"."content_blocks";
+
+alter table "public"."documents" drop column "expiration_date";
+
+alter table "public"."documents" drop column "type";
+
+create policy "Broad Permissions if Is a Group Member"
+on "public"."content_blocks"
+as permissive
+for all
+to authenticated
+using (is_group_member(auth.uid(), group_id));
+

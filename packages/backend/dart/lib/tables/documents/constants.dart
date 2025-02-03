@@ -4,8 +4,6 @@ mixin DocumentConstants {
   final String TABLE = S_TABLE;
   final String ID = S_ID;
   final String TITLE = S_TITLE;
-  final String TYPE = S_TYPE;
-  final String EXPIRATION_DATE = S_EXPIRATION_DATE;
   final String SPOTLIGHT_CONTENT_ID = S_SPOTLIGHT_CONTENT_ID;
   final String GROUP_ID = S_GROUP_ID;
   final String PARENT_DOCUMENT_ID = S_PARENT_DOCUMENT_ID;
@@ -13,8 +11,6 @@ mixin DocumentConstants {
   static const S_TABLE = 'documents';
   static const S_ID = 'id';
   static const S_TITLE = 'title';
-  static const S_TYPE = 'type';
-  static const S_EXPIRATION_DATE = 'expiration_date';
   static const S_SPOTLIGHT_CONTENT_ID = 'spotlight_content_id';
   static const S_GROUP_ID = 'group_id';
   static const S_PARENT_DOCUMENT_ID = 'parent_document_id';

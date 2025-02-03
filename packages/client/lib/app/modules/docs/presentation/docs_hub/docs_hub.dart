@@ -23,9 +23,9 @@ class DocsHubScreen extends HookWidget {
       return CarouselScaffold(
         initialPosition: 2,
         showWidgets: coordinator.showWidgets,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
-          HeaderRow(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const HeaderRow(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SmartHeader(
@@ -33,6 +33,11 @@ class DocsHubScreen extends HookWidget {
               ),
             ],
           ),
+          DocsDisplay(
+            docs: coordinator.documents,
+            onDocTapped: coordinator.onDocTapped,
+            onCreateDocTapped: coordinator.onCreateDocTapped,
+          )
         ],
       );
     });

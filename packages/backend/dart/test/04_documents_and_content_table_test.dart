@@ -46,26 +46,6 @@ void main() {
     expect(res['group_id'], equals(tSetup.groupId));
   });
 
-  test("should be able to update the document type", () async {
-    final res = await documentsQueries.updateType(
-      UpdateDocumentTypeParams(
-        documentId: documentId,
-        type: DocumentType.ephemeral,
-      ),
-    );
-
-    expect(res, isNotEmpty);
-    expect(
-      res.first['type'],
-      equals(
-        documentsQueries.mapDocumentTypeToString(
-          DocumentType.ephemeral,
-        ),
-      ),
-    );
-    expect(res.first['expiration_date'], isNotNull);
-    expect(res.first['group_id'], equals(tSetup.groupId));
-  });
   test("should be able to update the title", () async {
     final res = await documentsQueries.updateTitle(
       UpdateDocumentTitleParams(

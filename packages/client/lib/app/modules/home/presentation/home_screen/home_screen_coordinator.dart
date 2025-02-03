@@ -7,6 +7,7 @@ import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/active_group/active_group.dart';
 import 'package:nokhte/app/core/types/types.dart';
+import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 import 'package:nokhte/app/modules/home/home.dart';
 import 'package:nokhte_backend/tables/groups.dart';
@@ -61,6 +62,7 @@ abstract class _HomeScreenCoordinatorBase
       setShowCarousel(true);
       await contract.deleteStaleSessions();
     }
+    Modular.to.navigate(DocsConstants.docsHub);
   }
 
   @action

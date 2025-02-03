@@ -119,12 +119,8 @@ class BlockTextDisplay extends HookWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16.0),
                           border: GradientBoxBorder(
-                            gradient: LinearGradient(
-                              colors: BlockTextConstants.getGradient(
-                                      element.blockType)
-                                  .map((e) => e.color)
-                                  .toList(),
-                              stops: const [0, 1],
+                            gradient: BlockTextConstants.getGradient(
+                              element.blockType,
                             ),
                           ),
                         ),

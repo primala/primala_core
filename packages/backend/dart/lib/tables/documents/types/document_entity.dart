@@ -1,25 +1,20 @@
 import 'package:equatable/equatable.dart';
 import 'package:nokhte_backend/tables/content_blocks.dart';
-import 'package:nokhte_backend/tables/documents/documents.dart';
-import 'package:nokhte_backend/types/types.dart';
+import 'package:nokhte_backend/tables/documents.dart';
 
 typedef DocumentEntities = List<DocumentEntity>;
 
-class DocumentEntity extends Equatable {
+class DocumentEntity extends Equatable with DocumentConstants {
   final int documentId;
   final int? parentDocumentId;
   final ContentBlockEntity spotlightContent;
-  final DocumentType type;
   final String title;
-  final DateTime? expirationDate;
 
   DocumentEntity({
     required this.documentId,
     required this.parentDocumentId,
     required this.spotlightContent,
-    required this.type,
     required this.title,
-    required this.expirationDate,
   });
 
   @override
@@ -27,8 +22,15 @@ class DocumentEntity extends Equatable {
         documentId,
         parentDocumentId ?? -1,
         spotlightContent,
-        type,
         title,
-        expirationDate ?? const ConstDateTime.fromMillisecondsSinceEpoch(0),
       ];
+
+  static DocumentEntity fromSupabase(Map<String, dynamic> doc) {
+    return DocumentEntity(
+      documentId: doc[DocumentConstants.S_ID],
+      parentDocumentId: doc[DocumentConstants.S_PARENT_DOCUMENT_ID],
+      spotlightContent: ContentBlockEntity.initial(),
+      title: doc[DocumentConstants.S_TITLE],
+    );
+  }
 }

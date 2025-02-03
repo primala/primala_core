@@ -21,8 +21,6 @@ class DocumentsQueries with DocumentUtils, DocumentConstants {
     final res = await supabase
         .from(TABLE)
         .insert({
-          TYPE: mapDocumentTypeToString(params.type),
-          EXPIRATION_DATE: getExpirationDate(params.type),
           TITLE: params.documentTitle,
           GROUP_ID: params.groupId,
           PARENT_DOCUMENT_ID: params.parentDocumentId
@@ -33,6 +31,7 @@ class DocumentsQueries with DocumentUtils, DocumentConstants {
     final contentRes = await contentBlocks.addContent(
       AddContentParams(
         content: params.spotlightMessage,
+        groupId: params.groupId,
         documentId: docId,
         contentBlockType: params.contentBlockType,
       ),
@@ -53,17 +52,6 @@ class DocumentsQueries with DocumentUtils, DocumentConstants {
           .eq(ID, params.documentId)
           .select()
           .single();
-
-  Future<List> updateType(UpdateDocumentTypeParams params) async {
-    return await supabase
-        .from(TABLE)
-        .update({
-          TYPE: mapDocumentTypeToString(params.type),
-          EXPIRATION_DATE: getExpirationDate(params.type),
-        })
-        .eq(ID, params.documentId)
-        .select();
-  }
 
   Future<Map> updateSpotlightContentId(
           UpdateSpotlightContentIdParams params) async =>

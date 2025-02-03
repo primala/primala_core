@@ -21,13 +21,13 @@ class ContentBlocksQueries with ContentBlocksConstants {
   }
 
   Future<Map> addContent(AddContentParams params) async {
-    await getGroupId();
-    if (documentId == -1 || groupId == -1) return {};
+    // await getGroupId();
+    // if (documentId == -1 || groupId == -1) return {};
     return await supabase
         .from(TABLE)
         .insert({
           DOCUMENT_ID: params.documentId,
-          GROUP_ID: groupId,
+          GROUP_ID: params.groupId,
           CONTENT: params.content,
           TYPE: SessionContentUtils.mapContentBlockTypeToString(
             params.contentBlockType,

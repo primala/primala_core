@@ -165,6 +165,7 @@ class BlockTextFields extends HookWidget {
                                     //     store.updateTextFieldHeight(),
 
                                     keyboardType: TextInputType.multiline,
+
                                     maxLines: null,
                                     enabled:
                                         bottomPadding == 0 && movieIsInProgress

@@ -25,43 +25,43 @@ mixin BlockTextFieldMovies {
           .tween(
             'c1',
             ColorTween(
-              begin: grad1[0].color,
-              end: grad2[0].color,
+              begin: grad1.colors[0],
+              end: grad2.colors[0],
             ),
           )
           .tween(
             'c2',
             ColorTween(
-              begin: grad1[1].color,
-              end: grad2[1].color,
+              begin: grad1.colors[1],
+              end: grad2.colors[1],
             ),
           )
           .tween(
             'ic1',
             ColorTween(
-              begin: iconGrad1[0].color,
-              end: iconGrad2[0].color,
+              begin: iconGrad1.colors[0],
+              end: iconGrad2.colors[0],
             ),
           )
           .tween(
             'ic2',
             ColorTween(
-              begin: iconGrad1[1].color,
-              end: iconGrad2[1].color,
+              begin: iconGrad1.colors[1],
+              end: iconGrad2.colors[1],
             ),
           )
           .tween(
             's1',
             Tween<double>(
-              begin: grad1[0].stop,
-              end: grad2[0].stop,
+              begin: grad1.stops?[0] ?? 0.0,
+              end: grad2.stops?[0] ?? 0.0,
             ),
           )
           .tween(
             's2',
             Tween<double>(
-              begin: grad1[1].stop,
-              end: grad2[1].stop,
+              begin: grad1.stops?[1] ?? 1.0,
+              end: grad2.stops?[1] ?? 1.0,
             ),
           );
   }
@@ -75,33 +75,18 @@ mixin BlockTextFieldMovies {
     for (int i = 0; i < blocks.length; i++) {
       final block = blocks[i];
 
-      if (i == blocks.length) {
-        movie
-            .scene(
-              begin: Seconds.get(0),
-              end: Seconds.get(0, milli: 1),
-            )
-            .tween(
-              '${block.name}_bottom_position',
-              Tween<double>(
-                begin: 0,
-                end: 0,
-              ),
-            );
-      } else {
-        movie
-            .scene(
-              begin: Seconds.get(0),
-              end: Seconds.get(0, milli: 1),
-            )
-            .tween(
-              '${block.name}_bottom_position',
-              Tween<double>(
-                begin: 5.0 * (i < 2 ? i + 1 : 1),
-                end: 5.0,
-              ),
-            );
-      }
+      movie
+          .scene(
+            begin: Seconds.get(0),
+            end: Seconds.get(0, milli: 1),
+          )
+          .tween(
+            '${block.name}_bottom_position',
+            Tween<double>(
+              begin: i == blocks.length - 1 ? 0 : (5.0 * (i < 2 ? i + 1 : 1)),
+              end: 5.0,
+            ),
+          );
     }
 
     return movie;
@@ -118,10 +103,7 @@ mixin BlockTextFieldMovies {
       movie
           .scene(
             begin: Seconds.get(0),
-            end: Seconds.get(
-              0,
-              milli: 300,
-            ),
+            end: Seconds.get(0, milli: 300),
           )
           .tween(
             '${item.name}_bottom_position',
@@ -133,21 +115,11 @@ mixin BlockTextFieldMovies {
     }
 
     return movie;
-    //
   }
 
   static List<double> getRestingPositions(
     List<ContentBlockType> currentList,
   ) {
-    final blocks = currentList.toList();
-    final positions = <double>[];
-    for (int i = 0; i < blocks.length; i++) {
-      if (i == blocks.length - 1) {
-        positions.add(0);
-      } else {
-        positions.add(0);
-      }
-    }
-    return positions;
+    return List.filled(currentList.length, 0.0);
   }
 }
