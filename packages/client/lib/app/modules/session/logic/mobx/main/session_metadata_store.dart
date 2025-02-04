@@ -4,7 +4,6 @@ import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/types/types.dart';
-import 'package:nokhte/app/core/modules/session_content/session_content.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte_backend/tables/sessions.dart';
 part 'session_metadata_store.g.dart';
@@ -15,10 +14,10 @@ class SessionMetadataStore = _SessionMetadataStoreBase
 abstract class _SessionMetadataStoreBase
     with Store, BaseMobxLogic<NoParams, Stream<SessionMetadata>> {
   final SessionPresenceContract contract;
-  final SessionContentLogicCoordinator sessionContentLogic;
+  // final SessionContentLogicCoordinator sessionContentLogic;
   _SessionMetadataStoreBase({
     required this.contract,
-    required this.sessionContentLogic,
+    // required this.sessionContentLogic,
   }) {
     initBaseLogicActions();
   }
@@ -78,7 +77,7 @@ abstract class _SessionMetadataStoreBase
   dispose() async {
     metadataStreamSubscription = const Stream.empty().listen((event) {});
     sessionMetadata = ObservableStream(const Stream.empty());
-    await sessionContentLogic.dispose();
+    // await sessionContentLogic.dispose();
   }
 
   @action
