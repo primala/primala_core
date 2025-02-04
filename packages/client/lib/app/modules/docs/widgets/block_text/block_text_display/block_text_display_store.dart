@@ -3,7 +3,6 @@ import 'dart:async';
 
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
-
 import 'package:nokhte/app/core/types/seconds.dart';
 import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte_backend/tables/content_blocks.dart';
@@ -44,7 +43,6 @@ abstract class _BlockTextDisplayStoreBase extends BaseWidgetStore with Store {
     Timer(Seconds.get(0, milli: 500), () {
       blockTextFields.changeBlockType(item.type);
     });
-    //
   }
 
   @observable

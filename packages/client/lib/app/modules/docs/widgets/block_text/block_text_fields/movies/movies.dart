@@ -20,7 +20,7 @@ mixin BlockTextFieldMovies {
     return MovieTween()
       ..scene(
         begin: Seconds.get(0),
-        end: Seconds.get(1),
+        end: Seconds.get(0, milli: 300),
       )
           .tween(
             'c1',

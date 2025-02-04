@@ -22,8 +22,8 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
       ContentBlockType.purpose,
     ));
   }
-  late TextEditingController controller;
-  late FocusNode focusNode;
+  TextEditingController controller = TextEditingController();
+  FocusNode focusNode = FocusNode();
 
   @observable
   bool isFocused = false;
@@ -71,9 +71,9 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   reset() {
     setMode(BlockTextFieldMode.adding);
     controller.clear();
-    focusNode.unfocus();
     currentTextContent = '';
     setCurrentlySelectedParentId(-1);
+    updateTextFieldHeight();
     setCurrentlySelectedContentId(-1);
   }
 
@@ -121,29 +121,25 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   @action
   setisFocused(bool value) => isFocused = value;
 
-  constructor(TextEditingController controller, FocusNode focusNode) {
+  constructor() {
     setControl(Control.stop);
     setIconMovie(getExpandingIcons(blockIcons));
     setMovie(getTextFieldTransition(
       blockType,
       blockType,
     ));
+    controller = TextEditingController();
+    focusNode = FocusNode();
 
-    this.controller = controller;
-    this.focusNode = focusNode;
-    this.controller.clear();
-    this.focusNode.addListener(() {
+    controller.clear();
+    focusNode.addListener(() {
       setisFocused(focusNode.hasFocus);
       if (!focusNode.hasFocus) {
         setCurrentlySelectedParentId(-1);
         setCurrentlySelectedContentId(-1);
-      } else {
-        if (movieStatus == MovieStatus.finished) {
-          setControl(Control.stop);
-        }
       }
     });
-    this.controller.addListener(() {
+    controller.addListener(() {
       updateTextFieldHeight();
     });
   }
@@ -207,7 +203,7 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
     setMovieStatus(MovieStatus.inProgress);
     setControl(Control.playFromStart);
     setBlockType(newType);
-    Timer(Seconds.get(1, milli: 500), () {
+    Timer(Seconds.get(0, milli: 300), () {
       setMovieStatus(MovieStatus.finished);
       setControl(Control.stop);
     });

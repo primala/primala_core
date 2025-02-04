@@ -24,10 +24,7 @@ class BlockTextFields extends HookWidget {
   @override
   Widget build(BuildContext context) {
     useEffect(() {
-      store.constructor(
-        TextEditingController(),
-        FocusNode(),
-      );
+      store.constructor();
       return () async => await store.dispose();
     }, []);
 
@@ -50,7 +47,7 @@ class BlockTextFields extends HookWidget {
     }
 
     return Observer(builder: (context) {
-      final movieIsInProgress = store.movieStatus == MovieStatus.inProgress;
+      // final movieIsInProgress = store.movieStatus == MovieStatus.inProgress;
       return AnimatedOpacity(
         opacity: useWidgetOpacity(store.showWidget),
         duration: Seconds.get(1),
@@ -151,10 +148,10 @@ class BlockTextFields extends HookWidget {
                                     scrollPadding: EdgeInsets.zero,
                                     keyboardType: TextInputType.multiline,
                                     maxLines: null,
-                                    enabled:
-                                        bottomPadding == 0 && movieIsInProgress
-                                            ? false
-                                            : true,
+                                    // enabled: bottomPadding == 0
+                                    //     //&& movieIsInProgress
+                                    //     ? false
+                                    //     : true,
                                     decoration: InputDecoration(
                                       isDense: true,
                                       border: InputBorder.none,

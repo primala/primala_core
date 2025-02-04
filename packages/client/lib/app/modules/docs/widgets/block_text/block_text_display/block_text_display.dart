@@ -139,6 +139,7 @@ class BlockTextDisplay extends HookWidget {
                             Jost(
                               '${BlockTextConstants.whiteSpace}${element.content}',
                               fontSize: 16,
+                              softWrap: true,
                             ),
                           ],
                         ),
