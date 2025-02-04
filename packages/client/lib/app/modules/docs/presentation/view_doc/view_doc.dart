@@ -40,7 +40,7 @@ class ViewDocScreen extends HookWidget {
               showTextField: true,
             ),
           ),
-          Divider(
+          const Divider(
             height: 1,
             color: Colors.black,
           )
