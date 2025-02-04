@@ -41,7 +41,7 @@ abstract class _BlockTextDisplayStoreBase extends BaseWidgetStore with Store {
       blockTextFields.updateTextFieldHeight();
     });
     Timer(Seconds.get(0, milli: 500), () {
-      blockTextFields.changeBlockType(item.blockType);
+      blockTextFields.changeBlockType(item.type);
     });
     //
   }

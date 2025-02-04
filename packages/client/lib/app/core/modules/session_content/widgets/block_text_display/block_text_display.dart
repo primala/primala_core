@@ -120,7 +120,7 @@ class BlockTextDisplay extends HookWidget {
                           borderRadius: BorderRadius.circular(16.0),
                           border: GradientBoxBorder(
                             gradient: BlockTextConstants.getGradient(
-                              element.blockType,
+                              element.type,
                             ),
                           ),
                         ),
@@ -131,8 +131,7 @@ class BlockTextDisplay extends HookWidget {
                               top: -2,
                               left: 0,
                               child: Image.asset(
-                                BlockTextConstants.getAssetPath(
-                                    element.blockType),
+                                BlockTextConstants.getAssetPath(element.type),
                                 width: 25,
                                 height: 25,
                               ),

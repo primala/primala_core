@@ -43,7 +43,7 @@ mixin SessionContentUtils {
     for (int i = 0; i < list1.length; i++) {
       if (list1[i].id != list2[i].id ||
           list1[i].content != list2[i].content ||
-          list1[i].blockType != list2[i].blockType) {
+          list1[i].type != list2[i].type) {
         return false;
       }
     }

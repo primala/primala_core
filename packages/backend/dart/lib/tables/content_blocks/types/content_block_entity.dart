@@ -8,14 +8,14 @@ typedef ContentBlocks = List<ContentBlockEntity>;
 class ContentBlockEntity extends Equatable {
   final int id;
   final String content;
-  final ContentBlockType blockType;
+  final ContentBlockType type;
   final int numberOfParents;
   final DateTime lastEditedAt;
 
   ContentBlockEntity({
     required this.id,
     required this.content,
-    required this.blockType,
+    required this.type,
     required this.numberOfParents,
     required this.lastEditedAt,
   });
@@ -25,8 +25,7 @@ class ContentBlockEntity extends Equatable {
     return ContentBlockEntity(
       id: record['id'],
       content: record['content'],
-      blockType:
-          SessionContentUtils.mapStringToContentBlockType(record['type']),
+      type: SessionContentUtils.mapStringToContentBlockType(record['type']),
       numberOfParents: numberOfParents,
       lastEditedAt: DateTime.parse(record['last_edited_at']),
     );
@@ -35,12 +34,11 @@ class ContentBlockEntity extends Equatable {
   factory ContentBlockEntity.initial() => ContentBlockEntity(
         id: 0,
         content: '',
-        blockType: ContentBlockType.none,
+        type: ContentBlockType.quotation,
         numberOfParents: 0,
         lastEditedAt: DateTime.now(),
       );
 
   @override
-  List<Object> get props =>
-      [id, content, blockType, numberOfParents, lastEditedAt];
+  List<Object> get props => [id, content, type, numberOfParents, lastEditedAt];
 }

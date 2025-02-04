@@ -22,10 +22,9 @@ class ContentBlocksStreams with ContentBlocksConstants, SessionsUtils {
     return contentListeningStatus;
   }
 
-  Stream<List<ContentBlockEntity>> listenToDocumentContent(
-      int documentId) async* {
+  Stream<ContentBlocks> listenToDocumentContent(int documentId) async* {
     contentListeningStatus = true;
-    List<ContentBlockEntity> previousYield = [];
+    ContentBlocks previousYield = [];
 
     final events = supabase
         .from(TABLE)

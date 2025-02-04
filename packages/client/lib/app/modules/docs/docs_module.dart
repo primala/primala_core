@@ -24,10 +24,16 @@ class DocsModule extends Module {
         networkInfo: Modular.get<NetworkInfoImpl>(),
       ),
     );
+    i.add<ViewDocCoordinator>(
+      () => ViewDocCoordinator(
+        contract: i<DocsContractImpl>(),
+      ),
+    );
 
     i.add<DocsHubCoordinator>(
       () => DocsHubCoordinator(
         contract: i<DocsContractImpl>(),
+        viewDocCoordinator: Modular.get<ViewDocCoordinator>(),
         activeGroup: Modular.get<ActiveGroup>(),
       ),
     );

@@ -1,1 +1,1 @@
-export 'content_blocks/session_content.dart';
+export 'content_blocks/content_blocks.dart';

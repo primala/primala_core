@@ -1,36 +1,42 @@
 import 'package:equatable/equatable.dart';
-import 'package:nokhte_backend/tables/content_blocks.dart';
 import 'package:nokhte_backend/tables/documents.dart';
 
 typedef DocumentEntities = List<DocumentEntity>;
 
-class DocumentEntity extends Equatable with DocumentConstants {
-  final int documentId;
+class DocumentEntity extends Equatable {
+  final int id;
+  final int spotlightContentId;
   final int? parentDocumentId;
-  final ContentBlockEntity spotlightContent;
   final String title;
 
   DocumentEntity({
-    required this.documentId,
+    required this.id,
     required this.parentDocumentId,
-    required this.spotlightContent,
+    required this.spotlightContentId,
     required this.title,
   });
 
   @override
   List<Object> get props => [
-        documentId,
+        id,
+        spotlightContentId,
         parentDocumentId ?? -1,
-        spotlightContent,
         title,
       ];
 
-  static DocumentEntity fromSupabase(Map<String, dynamic> doc) {
+  factory DocumentEntity.fromSupabase(Map<String, dynamic> doc) {
     return DocumentEntity(
-      documentId: doc[DocumentConstants.S_ID],
+      id: doc[DocumentConstants.S_ID],
+      spotlightContentId: doc[DocumentConstants.S_SPOTLIGHT_CONTENT_ID],
       parentDocumentId: doc[DocumentConstants.S_PARENT_DOCUMENT_ID],
-      spotlightContent: ContentBlockEntity.initial(),
       title: doc[DocumentConstants.S_TITLE],
     );
   }
+
+  factory DocumentEntity.initial() => DocumentEntity(
+        id: -1,
+        spotlightContentId: -1,
+        parentDocumentId: -1,
+        title: '',
+      );
 }
