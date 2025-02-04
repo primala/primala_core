@@ -3,8 +3,9 @@ import 'dart:async';
 
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
-import 'package:nokhte/app/core/modules/session_content/session_content.dart';
+
 import 'package:nokhte/app/core/types/seconds.dart';
+import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte_backend/tables/content_blocks.dart';
 import 'package:simple_animations/simple_animations.dart';
 part 'block_text_display_store.g.dart';
@@ -29,7 +30,7 @@ abstract class _BlockTextDisplayStoreBase extends BaseWidgetStore with Store {
   int contentIdToDelete = -1;
 
   @action
-  setItemUIDToDelete(int value) => contentIdToDelete = value;
+  setItemIdToDelete(int value) => contentIdToDelete = value;
 
   @action
   onEdit(ContentBlockEntity item) {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_borders/gradient_borders.dart';
-import 'package:nokhte/app/core/modules/session_content/session_content.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte_backend/tables/content_blocks.dart';
 
 class SpotlightStatementTextField extends StatelessWidget {
@@ -41,6 +41,8 @@ class SpotlightStatementTextField extends StatelessWidget {
               ),
               child: TextField(
                 maxLines: null,
+                textInputAction: TextInputAction.done,
+                keyboardType: TextInputType.text,
                 onChanged: (value) => onTextUpdated(value),
                 onTapOutside: (event) => focusNode.unfocus(),
                 controller: controller,

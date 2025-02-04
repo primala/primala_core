@@ -1,11 +1,10 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
-import 'package:nokhte/app/core/modules/session_content/session_content.dart';
 import 'package:nokhte/app/core/types/types.dart';
+import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte_backend/tables/content_blocks.dart';
 import 'package:simple_animations/simple_animations.dart';
 part 'block_text_fields_store.g.dart';
@@ -48,12 +47,6 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   double textFieldHeight = 97.0;
 
   @observable
-  AddContentParams addContentParams = AddContentParams.initial();
-
-  @observable
-  UpdateContentParams updateContentParams = UpdateContentParams.initial();
-
-  @observable
   MovieStatus iconMovieStatus = MovieStatus.idle;
 
   @action
@@ -72,21 +65,16 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   }
 
   @action
-  setCurrentAddContentParams(AddContentParams value) =>
-      addContentParams = value;
-
-  @action
-  setCurrentUpdateContentParams(UpdateContentParams value) =>
-      updateContentParams = value;
-
-  @action
   setMode(BlockTextFieldMode value) => mode = value;
 
   @action
-  resetParams() {
+  reset() {
     setMode(BlockTextFieldMode.adding);
-    addContentParams = AddContentParams.initial();
-    updateContentParams = UpdateContentParams.initial();
+    controller.clear();
+    focusNode.unfocus();
+    currentTextContent = '';
+    setCurrentlySelectedParentId(-1);
+    setCurrentlySelectedContentId(-1);
   }
 
   @action
@@ -164,28 +152,6 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   onSubmit() {
     if (controller.text.trim().isNotEmpty) {
       currentTextContent = controller.text;
-      if (mode == BlockTextFieldMode.adding) {
-        setCurrentAddContentParams(
-          AddContentParams(
-            groupId: 1,
-            documentId: 1,
-            content: currentTextContent,
-            contentBlockType: blockType,
-            parentId: currentlySelectedParentId,
-          ),
-        );
-      } else {
-        setCurrentUpdateContentParams(
-          UpdateContentParams(
-            content: currentTextContent,
-            contentBlockType: blockType,
-            contentId: currentlySelectedContentId,
-          ),
-        );
-      }
-
-      controller.clear();
-      focusNode.unfocus();
       submissionCount++;
     } else {
       focusNode.unfocus();

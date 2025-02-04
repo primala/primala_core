@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
+import 'package:nokhte/app/core/modules/active_group/active_group.dart';
 import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte_backend/tables/content_blocks.dart';
 import 'package:nokhte_backend/tables/documents.dart';
@@ -14,10 +15,15 @@ class ViewDocCoordinator = _ViewDocCoordinatorBase with _$ViewDocCoordinator;
 abstract class _ViewDocCoordinatorBase
     with Store, BaseWidgetsCoordinator, BaseMobxLogic, Reactions {
   final DocsContract contract;
+  final BlockTextFieldsStore blockTextFields;
+  final ActiveGroup activeGroup;
+  final BlockTextDisplayStore blockTextDisplay;
 
   _ViewDocCoordinatorBase({
     required this.contract,
-  });
+    required this.activeGroup,
+    required this.blockTextDisplay,
+  }) : blockTextFields = blockTextDisplay.blockTextFields;
 
   Timer? _debounceTimer;
   static const _debounceDuration = Duration(milliseconds: 500);
@@ -27,6 +33,8 @@ abstract class _ViewDocCoordinatorBase
     this.doc = doc;
     await listenToContent(documentId);
     disposers.add(spotlightTextReactor());
+    disposers.add(blockTextFieldSubmissionReactor());
+    disposers.add(contentToDeletionReactor());
   }
 
   @observable
@@ -48,6 +56,10 @@ abstract class _ViewDocCoordinatorBase
       contentBlocksStream = ObservableStream(stream);
       contentBlocksStreamSubscription = contentBlocksStream.listen((value) {
         contentBlocks = ObservableList.of(value);
+        final filteredList = ObservableList.of(contentBlocks
+            .where((element) => element.id != spotlightContentBlockId)
+            .toList());
+        blockTextDisplay.setContent(filteredList);
       });
     });
   }
@@ -154,6 +166,22 @@ abstract class _ViewDocCoordinatorBase
         setSpotlightText(p0);
       });
 
+  blockTextFieldSubmissionReactor() =>
+      reaction((p0) => blockTextFields.submissionCount, (p0) async {
+        if (blockTextFields.mode == BlockTextFieldMode.adding) {
+          await contract.addContent(addContentParams);
+        } else {
+          await contract.updateContent(updateContentParams);
+        }
+        blockTextFields.reset();
+      });
+
+  contentToDeletionReactor() =>
+      reaction((p0) => blockTextDisplay.contentIdToDelete, (p0) async {
+        if (p0 == -1) return;
+        await contract.deleteContent(p0);
+      });
+
   @computed
   int get documentId => doc.id;
 
@@ -173,4 +201,20 @@ abstract class _ViewDocCoordinatorBase
 
   @computed
   String get spotlightText => spotlightContentBlock.content;
+
+  @computed
+  AddContentParams get addContentParams => AddContentParams(
+        content: blockTextFields.currentTextContent,
+        groupId: activeGroup.groupId,
+        documentId: documentId,
+        contentBlockType: blockTextFields.blockType,
+        parentId: blockTextFields.currentlySelectedParentId,
+      );
+
+  @computed
+  UpdateContentParams get updateContentParams => UpdateContentParams(
+        content: blockTextFields.currentTextContent,
+        contentId: blockTextFields.currentlySelectedContentId,
+        contentBlockType: blockTextFields.blockType,
+      );
 }

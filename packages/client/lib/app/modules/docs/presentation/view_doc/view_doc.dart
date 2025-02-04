@@ -24,27 +24,42 @@ class ViewDocScreen extends HookWidget {
     }, []);
     return Observer(builder: (context) {
       return AnimatedScaffold(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          DocHeader(
-            onChanged: coordinator.onTitleChanged,
-            controller: coordinator.docTitleController,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 30),
-            child: SpotlightStatement(
-              onTextUpdated: coordinator.onSpotlightTextChanged,
-              onBlockTypeUpdated: coordinator.onBlockTypeChanged,
-              controller: coordinator.spotlightController,
-              externalBlockType: coordinator.spotlightContentBlock.type,
-              showTextField: true,
+        body: MultiHitStack(
+          children: [
+            SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  DocHeader(
+                    onChanged: coordinator.onTitleChanged,
+                    controller: coordinator.docTitleController,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30),
+                    child: SpotlightStatement(
+                      onTextUpdated: coordinator.onSpotlightTextChanged,
+                      onBlockTypeUpdated: coordinator.onBlockTypeChanged,
+                      controller: coordinator.spotlightController,
+                      externalBlockType: coordinator.spotlightContentBlock.type,
+                      showTextField: true,
+                    ),
+                  ),
+                  const Divider(
+                    height: 1,
+                    color: Colors.black,
+                  ),
+                  const SizedBox(height: 20),
+                  BlockTextDisplay(
+                    store: coordinator.blockTextDisplay,
+                  ),
+                ],
+              ),
             ),
-          ),
-          const Divider(
-            height: 1,
-            color: Colors.black,
-          )
-        ],
+            BlockTextFields(
+              store: coordinator.blockTextFields,
+            ),
+          ],
+        ),
       );
     });
   }

@@ -1,13 +1,11 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/active_group/active_group.dart';
 import 'package:nokhte/app/core/types/types.dart';
-import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 import 'package:nokhte/app/modules/home/home.dart';
 import 'package:nokhte_backend/tables/groups.dart';
@@ -62,7 +60,6 @@ abstract class _HomeScreenCoordinatorBase
       setShowCarousel(true);
       await contract.deleteStaleSessions();
     }
-    Modular.to.navigate(DocsConstants.docsHub);
   }
 
   @action

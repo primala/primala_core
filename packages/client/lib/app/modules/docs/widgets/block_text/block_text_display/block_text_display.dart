@@ -1,12 +1,12 @@
 export 'block_text_display_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:nokhte/app/modules/docs/docs.dart';
 import 'context_menu/context_menu.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
-import 'package:nokhte/app/core/modules/session_content/session_content.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 
 class BlockTextDisplay extends HookWidget {
@@ -94,7 +94,7 @@ class BlockTextDisplay extends HookWidget {
                                 label: 'delete',
                                 iconPath: 'trash_icon_black',
                                 onSelected: () {
-                                  store.setItemUIDToDelete(element.id);
+                                  store.setItemIdToDelete(element.id);
                                 },
                               ),
                             ],

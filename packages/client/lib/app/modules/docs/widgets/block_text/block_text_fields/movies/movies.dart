@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nokhte/app/core/modules/session_content/widgets/widgets.dart';
 import 'package:nokhte/app/core/types/types.dart';
+import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte_backend/tables/content_blocks.dart';
 import 'package:simple_animations/simple_animations.dart';
 

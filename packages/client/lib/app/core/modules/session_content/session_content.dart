@@ -1,6 +1,5 @@
 export 'domain/domain.dart';
 export 'data/data.dart';
-export 'widgets/widgets.dart';
 
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/network/network_info.dart';

@@ -5,9 +5,9 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
-import 'package:nokhte/app/core/modules/session_content/session_content.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte_backend/tables/content_blocks.dart';
 import 'package:simple_animations/simple_animations.dart';
 export 'block_text_fields_store.dart';
@@ -74,6 +74,7 @@ class BlockTextFields extends HookWidget {
                 padding: EdgeInsets.only(bottom: bottomPadding),
                 child: Blur(
                   blur: 10,
+                  blurColor: Colors.black,
                   colorOpacity: 0.2,
                   child: AnimatedContainer(
                     duration: store.iconMovieStatus == MovieStatus.inProgress

@@ -12,17 +12,19 @@ export 'animated_scaffold_store.dart';
 
 class AnimatedScaffold extends HookWidget with OpacityUtils {
   final AnimatedScaffoldStore? store;
-  final List<Widget> children;
+  final List<Widget>? children;
   final bool showWidgets;
   final MainAxisAlignment mainAxisAlignment;
   final bool isScrollable;
+  final Widget? body;
   const AnimatedScaffold({
     super.key,
     this.store,
     this.mainAxisAlignment = MainAxisAlignment.start,
-    required this.children,
+    this.children,
     this.showWidgets = true,
     this.isScrollable = false,
+    this.body,
   });
 
   @override
@@ -40,9 +42,10 @@ class AnimatedScaffold extends HookWidget with OpacityUtils {
           body: AnimatedOpacity(
             opacity: useWidgetOpacity(showWidgets),
             duration: Seconds.get(0, milli: 500),
-            child: isScrollable
-                ? SingleChildScrollView(child: getBody())
-                : getBody(),
+            child: body ??
+                (isScrollable
+                    ? SingleChildScrollView(child: getBody())
+                    : getBody()),
           ),
         ),
       );
@@ -52,7 +55,7 @@ class AnimatedScaffold extends HookWidget with OpacityUtils {
   Widget getBody() {
     return Column(
       mainAxisAlignment: mainAxisAlignment,
-      children: children,
+      children: children ?? [],
     );
   }
 }
