@@ -20,7 +20,7 @@ class ViewDocScreen extends HookWidget {
   Widget build(BuildContext context) {
     useEffect(() {
       coordinator.constructor(doc);
-      return null;
+      return () => coordinator.dispose();
     }, []);
     return Observer(builder: (context) {
       return AnimatedScaffold(

@@ -162,6 +162,12 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   }
 
   @action
+  dispose() {
+    controller.dispose();
+    focusNode.dispose();
+  }
+
+  @action
   setBlockType(ContentBlockType typeToMove) {
     blockType = typeToMove;
     blockIcons.remove(typeToMove);

@@ -176,6 +176,15 @@ abstract class _ViewDocCoordinatorBase
         blockTextFields.reset();
       });
 
+  @override
+  @action
+  dispose() async {
+    super.dispose();
+    await contract.cancelContentStream();
+    await contentBlocksStreamSubscription.cancel();
+    _debounceTimer?.cancel();
+  }
+
   contentToDeletionReactor() =>
       reaction((p0) => blockTextDisplay.contentIdToDelete, (p0) async {
         if (p0 == -1) return;

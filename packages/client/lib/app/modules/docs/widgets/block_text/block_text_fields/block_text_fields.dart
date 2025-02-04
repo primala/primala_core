@@ -23,27 +23,15 @@ class BlockTextFields extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final textFieldKey = useMemoized(() => GlobalKey());
-    // final textFieldHeight = useState<double>(97.0);
     useEffect(() {
       store.constructor(
         TextEditingController(),
         FocusNode(),
       );
-      return null;
+      return () async => await store.dispose();
     }, []);
 
     final bottomPadding = MediaQuery.of(context).viewInsets.bottom;
-
-    // void updateTextFieldHeight() {
-    //   final RenderObject? renderBox =
-    //       textFieldKey.currentContext?.findRenderObject();
-    //   if (renderBox != null) {
-    //     store.setControl(Control.stop);
-    //     textFieldHeight.value = (renderBox.semanticBounds.height) + 60;
-    //     print('height ${textFieldHeight.value}');
-    //   }
-    // }
 
     Widget buildBlockIcon(ContentBlockType type, double position) {
       return Observer(builder: (context) {
@@ -161,18 +149,12 @@ class BlockTextFields extends HookWidget {
                                     controller: store.controller,
                                     focusNode: store.focusNode,
                                     scrollPadding: EdgeInsets.zero,
-
-                                    // onChanged: (_) =>
-                                    //     store.updateTextFieldHeight(),
-
                                     keyboardType: TextInputType.multiline,
-
                                     maxLines: null,
                                     enabled:
                                         bottomPadding == 0 && movieIsInProgress
                                             ? false
                                             : true,
-                                    // backgroundColor: Colors.transparent,
                                     decoration: InputDecoration(
                                       isDense: true,
                                       border: InputBorder.none,
