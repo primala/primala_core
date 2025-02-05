@@ -4,7 +4,7 @@ import 'package:nokhte_backend/types/types.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class UserRemoteSource {
-  Future<List> getUserInformation();
+  Future<Map> getUserInformation();
   Future<void> handleRequest(HandleRequestParams params);
   Stream<GroupRequests> listenToRequests();
   Future<void> deactivateAccount();
