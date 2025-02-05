@@ -90,6 +90,7 @@ class GroupsQueries with ProfileGradientUtils {
 
       if (event.isNotEmpty) {
         for (var row in event) {
+          print('what is the row ');
           final isAdmin = await supabase.rpc(
             'is_group_admin',
             params: {

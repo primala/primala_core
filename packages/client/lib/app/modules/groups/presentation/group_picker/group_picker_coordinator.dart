@@ -51,14 +51,10 @@ abstract class _GroupPickerCoordinatorBase
   }
 
   initReactors() {
-    disposers.add(groupsReactor());
     disposers.add(createGroupReactor());
     disposers.add(editGroupReactor());
     disposers.add(activeGroupReactor());
   }
-
-  @observable
-  ObservableList<GroupEntity> groups = ObservableList<GroupEntity>();
 
   @observable
   UserEntity user = UserEntity.initial();
@@ -83,13 +79,15 @@ abstract class _GroupPickerCoordinatorBase
 
   @action
   listenToGroups() async {
+    // print('did you even ghet called ');
     final res = await groupsContract.listenToGroups();
     res.fold(
       (failure) => errorUpdater(failure),
       (incomingGroups) {
+        print('are you going to be running in here ');
         groupsStream = ObservableStream(incomingGroups);
-        groupsStreamSubscription = groupsStream.listen((value) {
-          groups = ObservableList.of(value);
+        groupsStreamSubscription = groupsStream.listen((value) async {
+          groupDisplay.setGroups(value);
         });
       },
     );
@@ -157,6 +155,9 @@ abstract class _GroupPickerCoordinatorBase
   @action
   handleRequest(HandleRequestParams params) async {
     await userContract.handleRequest(params);
+    await groupsContract.cancelGroupsStream();
+    await groupsStreamSubscription.cancel();
+    await listenToGroups();
     Modular.to.pop();
   }
 
@@ -164,10 +165,6 @@ abstract class _GroupPickerCoordinatorBase
   updateActiveGroup(int groupId) async {
     await userContract.updateActiveGroup(groupId);
   }
-
-  groupsReactor() => reaction((p0) => groups, (p0) {
-        groupDisplay.setGroups(p0);
-      });
 
   editGroupReactor() => reaction((p0) => groupDisplay.groupIndexToEdit, (p0) {
         if (p0 == -1) return;
@@ -211,8 +208,9 @@ abstract class _GroupPickerCoordinatorBase
   @action
   dispose() async {
     super.dispose();
-    await groupsContract.cancelGroupsStream();
+
     await userContract.cancelRequestsStream();
+    await groupsContract.cancelGroupsStream();
     await groupsStreamSubscription.cancel();
     await requestsStreamSubscription.cancel();
   }

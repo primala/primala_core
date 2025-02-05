@@ -66,6 +66,7 @@ class DocsDisplay extends HookWidget {
               }
 
               return DocItem(
+                size: const Size(98, 130),
                 doc: docs[index],
                 onTap: () => onDocTapped(index),
               );

@@ -15,12 +15,13 @@ class UsersQueries with UsersConstants, ProfileGradientUtils {
   Future<List> insertUserInfo({
     required String fullName,
     required String email,
-  }) async =>
-      await supabase.from(TABLE).insert({
-        UID: userUID,
-        FULL_NAME: fullName,
-        EMAIL: email,
-      }).select();
+  }) async {
+    return await supabase.from(TABLE).insert({
+      UID: userUID,
+      FULL_NAME: fullName,
+      EMAIL: email,
+    }).select();
+  }
 
   Future<List> updateActiveGroup(int? groupId) async => await supabase
       .from(TABLE)
@@ -32,15 +33,13 @@ class UsersQueries with UsersConstants, ProfileGradientUtils {
 
   Future<Map> getUserInfo({
     String queryUID = '',
-  }) async =>
-      await supabase
-          .from(TABLE)
-          .select()
-          .eq(
-            UID,
-            queryUID.isEmpty ? userUID : queryUID,
-          )
-          .single();
+  }) async {
+    final res = await supabase.from(TABLE).select().eq(
+          UID,
+          queryUID.isEmpty ? userUID : queryUID,
+        );
+    return res.isNotEmpty ? res.first : {};
+  }
 
   Future<String> getFullName() async {
     final res = await getUserInfo();

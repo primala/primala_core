@@ -44,6 +44,7 @@ class DocumentEntity extends Equatable {
   static DocumentEntities fromSupabaseMultiple(List res) {
     List<DocumentEntity> temp = [];
     for (var doc in res) {
+      print('what is the doc $doc');
       temp.add(DocumentEntity.fromSupabaseSingle(doc));
     }
     return temp;

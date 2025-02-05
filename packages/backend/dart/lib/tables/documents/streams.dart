@@ -20,26 +20,21 @@ class DocumentsStreams with DocumentUtils, DocumentConstants, SessionsUtils {
   }
 
   Stream<DocumentEntities> listenToDocuments(int groupId) async* {
-    await supabase.from(TABLE).select();
+    print('are you even being called ');
+    final res = await supabase.from(TABLE).select();
+    print('res is $res');
+
     documentsStreamListeningStatus = true;
 
     final events =
         supabase.from(TABLE).stream(primaryKey: [ID]).eq(GROUP_ID, groupId);
 
-    await for (var e in events) {
+    await for (var event in events) {
       if (!documentsStreamListeningStatus) {
         break;
       }
-      DocumentEntities temp = <DocumentEntity>[];
 
-      if (e.isNotEmpty) {
-        for (var doc in e) {
-          temp.add(DocumentEntity.fromSupabaseSingle(doc));
-        }
-        yield temp;
-      } else {
-        yield [];
-      }
+      yield DocumentEntity.fromSupabaseMultiple(event);
     }
   }
 

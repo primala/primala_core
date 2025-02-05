@@ -65,5 +65,6 @@ abstract class _GroupDisplayStoreBase extends BaseWidgetStore with Store {
   }
 
   @action
-  setGroups(ObservableList<GroupEntity> groups) => this.groups = groups;
+  setGroups(List<GroupEntity> groups) =>
+      this.groups = ObservableList.of(groups);
 }
