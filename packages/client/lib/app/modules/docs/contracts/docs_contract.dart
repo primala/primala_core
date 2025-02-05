@@ -11,6 +11,12 @@ abstract class DocsContract {
   Future<Either<Failure, Stream<DocumentEntities>>> listenToDocuments(
     int groupId,
   );
+
+  Future<Either<Failure, Stream<DocumentEntities>>> listenToSpecificDocuments(
+    List<int> documentIds,
+    int groupId,
+  );
+
   Future<bool> cancelDocumentStream();
 
   Future<Either<Failure, bool>> insertDocument(InsertDocumentParams params);
@@ -119,6 +125,16 @@ class DocsContractImpl extends DocsContract with ResponseToStatus {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.updateDocumentTitle(params);
       return fromSupabaseSingle(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  @override
+  listenToSpecificDocuments(documentIds, groupId) async {
+    if (await networkInfo.isConnected) {
+      final res = remoteSource.listenToSpecificDocuments(documentIds, groupId);
+      return Right(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }

@@ -28,7 +28,7 @@ class DocsCarousel extends HookWidget {
         height: height,
         child: const Center(
           child: Jost(
-            "No collaborators",
+            "No documents",
             fontSize: 12,
             shouldCenter: true,
             softWrap: true,

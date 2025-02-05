@@ -319,6 +319,7 @@ class SessionsQueries
         .from(TABLE)
         .insert({
           COLLABORATOR_UIDS: collaboratorUids,
+          DOCUMENTS: params.docIds,
           PROFILE_GRADIENTS: profileGradients,
           COLLABORATOR_NAMES: collaboratorNames,
           COLLABORATOR_STATUSES: List.filled(

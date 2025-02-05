@@ -4,7 +4,9 @@ import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/types/types.dart';
+import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte/app/modules/session/session.dart';
+import 'package:nokhte_backend/tables/documents.dart';
 import 'package:nokhte_backend/tables/sessions.dart';
 part 'session_metadata_store.g.dart';
 
@@ -14,10 +16,10 @@ class SessionMetadataStore = _SessionMetadataStoreBase
 abstract class _SessionMetadataStoreBase
     with Store, BaseMobxLogic<NoParams, Stream<SessionMetadata>> {
   final SessionPresenceContract contract;
-  // final SessionContentLogicCoordinator sessionContentLogic;
+  final DocsContract docsContract;
   _SessionMetadataStoreBase({
     required this.contract,
-    // required this.sessionContentLogic,
+    required this.docsContract,
   }) {
     initBaseLogicActions();
   }
@@ -39,9 +41,6 @@ abstract class _SessionMetadataStoreBase
   String? currentSpeakerUID = '';
 
   @observable
-  String groupUID = '';
-
-  @observable
   String userUID = '';
 
   @observable
@@ -61,6 +60,18 @@ abstract class _SessionMetadataStoreBase
   bool sessionHasBegun = false;
 
   @observable
+  ObservableList<int> documentIds = ObservableList.of([]);
+
+  @observable
+  ObservableList<DocumentEntity> documents = ObservableList();
+
+  @observable
+  int? activeDocument;
+
+  @observable
+  int groupId = -1;
+
+  @observable
   DateTime speakingTimerStart = DateTime.fromMillisecondsSinceEpoch(0);
 
   @observable
@@ -73,11 +84,18 @@ abstract class _SessionMetadataStoreBase
   StreamSubscription metadataStreamSubscription =
       const Stream.empty().listen((event) {});
 
+  @observable
+  ObservableStream<DocumentEntities> documentsStream =
+      ObservableStream(const Stream.empty());
+
+  @observable
+  StreamSubscription documentsStreamSubscription =
+      const Stream.empty().listen((event) {});
+
   @action
   dispose() async {
     metadataStreamSubscription = const Stream.empty().listen((event) {});
     sessionMetadata = ObservableStream(const Stream.empty());
-    // await sessionContentLogic.dispose();
   }
 
   @action
@@ -95,6 +113,12 @@ abstract class _SessionMetadataStoreBase
             (element) => element.sessionUserStatus != SessionUserStatus.offline,
           );
           userUID = value.userUID;
+          final docs = value.documents
+              .map((e) => double.parse(e.toString()).toInt())
+              .toList();
+          documentIds = ObservableList.of(docs);
+          activeDocument = value.activeDocument;
+          groupId = value.groupId;
           collaboratorInformation = ObservableList.of(value.collaborators);
           speakingTimerStart = value.speakingTimerStart;
           secondarySpeakerSpotlightIsEmpty = value.secondarySpotlightIsEmpty;
@@ -105,20 +129,30 @@ abstract class _SessionMetadataStoreBase
           userIsSpeaking = value.userIsSpeaking;
           userCanSpeak = value.userCanSpeak;
           sessionId = value.sessionId;
-          // await sessionContentLogic.listenToSessionContent(sessionUID);
-
+          await listenToSpecificDocuments(
+            documentIds,
+            groupId,
+          );
           setState(StoreState.loaded);
         });
       },
     );
   }
 
-  getUIDFromName(String name) {
-    for (var collaborator in collaboratorInformation) {
-      if (collaborator.fullName == name) {
-        return collaborator.uid;
-      }
-    }
+  @action
+  listenToSpecificDocuments(List<int> documentIds, int groupId) async {
+    print('what are the document ids $documentIds');
+    final res = await docsContract.listenToSpecificDocuments(
+      documentIds,
+      groupId,
+    );
+    res.fold((failure) {}, (stream) {
+      documentsStream = ObservableStream(stream);
+      documentsStreamSubscription = documentsStream.listen((event) {
+        print('what is the event$event ');
+        documents = ObservableList.of(event);
+      });
+    });
   }
 
   @computed

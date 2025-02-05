@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nokhte_backend/tables/sessions.dart';
 import 'package:nokhte_backend/types/types.dart';
@@ -31,12 +32,14 @@ void main() {
           profileGradient: ProfileGradient.amethyst,
           uid: tSetup.firstUserUID,
           fullName: 'User 1',
+          isUser: true,
           sessionUserStatus: SessionUserStatus.offline,
         ),
         SessionUserEntity(
           profileGradient: ProfileGradient.amethyst,
           uid: tSetup.secondUserUID,
           fullName: 'User 2',
+          isUser: kFlutterMemoryAllocationsEnabled,
           sessionUserStatus: SessionUserStatus.offline,
         )
       ],

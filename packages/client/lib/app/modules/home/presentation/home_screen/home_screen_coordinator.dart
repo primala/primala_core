@@ -50,16 +50,16 @@ abstract class _HomeScreenCoordinatorBase
 
   @action
   constructor() async {
+    Modular.to.navigate(SessionConstants.lobby);
     final activeGroupId = activeGroup.groupId;
-
     if (activeGroup.groupEntity.name.isEmpty) {
-      await contract.deleteStaleSessions();
+      // await contract.deleteStaleSessions();
       await getGroup(activeGroupId);
     } else {
       selectedGroup = activeGroup.groupEntity;
       fadeInWidgets();
       setShowCarousel(true);
-      await contract.deleteStaleSessions();
+      // await contract.deleteStaleSessions();
     }
   }
 
@@ -85,13 +85,10 @@ abstract class _HomeScreenCoordinatorBase
   @action
   joinSession() async {
     if (sessionRequest.id == -1) return;
-    final res = await contract.joinSession(sessionRequest.id);
-    res.fold((failure) => errorUpdater(failure), (success) {
-      setShowWidgets(false);
-      setShowCarousel(false);
-      Timer(Seconds.get(0, milli: 500), () {
-        Modular.to.navigate(SessionConstants.lobby);
-      });
+    setShowWidgets(false);
+    setShowCarousel(false);
+    Timer(Seconds.get(0, milli: 500), () {
+      Modular.to.navigate(SessionConstants.lobby);
     });
   }
 

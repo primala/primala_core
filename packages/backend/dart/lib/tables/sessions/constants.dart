@@ -10,6 +10,8 @@ mixin SessionsConstants {
   String VERSION = S_VERSION;
   String COLLABORATOR_UIDS = S_COLLABORATOR_UIDS;
   String PROFILE_GRADIENTS = S_PROFILE_GRADIENTS;
+  String DOCUMENTS = S_DOCUMENTS;
+  String ACTIVE_DOCUMENT = S_ACTIVE_DOCUMENT;
   String GROUP_ID = S_GROUP_ID;
   String STATUS = S_STATUS;
   String COLLABORATOR_NAMES = S_COLLABORATOR_NAMES;
@@ -20,6 +22,8 @@ mixin SessionsConstants {
   static const S_SECONDARY_SPEAKER_SPOTLIGHT = 'secondary_speaker_spotlight';
   static const S_COLLABORATOR_STATUSES = 'collaborator_statuses';
   static const S_COLLABORATOR_NAMES = 'collaborator_names';
+  static const S_DOCUMENTS = 'documents';
+  static const S_ACTIVE_DOCUMENT = 'active_document';
   static const S_PROFILE_GRADIENTS = 'profile_gradients';
   static const S_ID = 'id';
   static const S_VERSION = 'version';

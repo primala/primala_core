@@ -10,6 +10,7 @@ class DocsModule extends Module {
   List<Module> get imports => [
         SupabaseModule(),
         ActiveGroupModule(),
+        DocsLogicModule(),
       ];
   @override
   binds(i) {

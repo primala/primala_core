@@ -99,6 +99,7 @@ class SessionsStreams extends SessionsQueries with SessionsConstants {
           collaboratorInformation.add(SessionUserEntity(
             profileGradient: ProfileGradientUtils.mapStringToProfileGradient(
                 selectedEvent[PROFILE_GRADIENTS][i]),
+            isUser: userUID == collaboratorUIDs[i],
             fullName: collaboratorNames[i],
             uid: collaboratorUIDs[i],
             sessionUserStatus: collaboratorStatuses[i],
@@ -124,8 +125,15 @@ class SessionsStreams extends SessionsQueries with SessionsConstants {
         final userCanSpeak = selectedEvent[SPEAKER_SPOTLIGHT] == null;
         final userIsSpeaking = selectedEvent[SPEAKER_SPOTLIGHT] == userUID;
 
+        final documents = selectedEvent[DOCUMENTS];
+        final activeDocument = selectedEvent[ACTIVE_DOCUMENT];
+        final groupId = selectedEvent[GROUP_ID];
+
         yield SessionMetadata(
           userUID: userUID,
+          groupId: groupId,
+          documents: documents,
+          activeDocument: activeDocument,
           sessionId: sessionID,
           speakingTimerStart: speakingTimerStart,
           secondarySpotlightIsEmpty: secondarySpotlightIsEmpty,

@@ -42,13 +42,15 @@ class DocumentsStreams with DocumentUtils, DocumentConstants, SessionsUtils {
       List<int> documentIds, int groupId) async* {
     documentsStreamListeningStatus = true;
 
-    // final events =
-    //     supabase.from(TABLE).stream(primaryKey: ['id']).eq(ID, groupId);
+    final events =
+        supabase.from(TABLE).stream(primaryKey: ['id']).eq(ID, groupId);
+    await for (var event in events) {
+      if (!documentsStreamListeningStatus) {
+        break;
+      }
 
-    // yield* _processDocumentStream(
-    //   events,
-    //   (event) => event.any((doc) => documentIds.contains(doc[ID])),
-    //   () => !documentsStreamListeningStatus || documentIds.isEmpty,
-    // );
+      final documents = DocumentEntity.fromSupabaseMultiple(event);
+      yield documents.where((doc) => documentIds.contains(doc.id)).toList();
+    }
   }
 }

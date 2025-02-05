@@ -1,17 +1,24 @@
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:nokhte/app/core/modules/posthog/posthog.dart';
+import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 
 class SessionModule extends Module {
   @override
   List<Module> get imports => [
         SessionLogicModule(),
+        PosthogModule(),
+        DocsLogicModule(),
         PreSessionModule(),
       ];
 
   @override
   binds(i) {
     i.add<LobbyCoordinator>(
-      () => LobbyCoordinator(),
+      () => LobbyCoordinator(
+        presence: Modular.get<SessionPresenceCoordinator>(),
+        captureScreen: Modular.get<CaptureScreen>(),
+      ),
     );
   }
 
