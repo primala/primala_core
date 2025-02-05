@@ -168,11 +168,9 @@ abstract class _ViewDocCoordinatorBase
 
   blockTextFieldSubmissionReactor() =>
       reaction((p0) => blockTextFields.submissionCount, (p0) async {
-        print('what is the p0 $p0 ');
         if (blockTextFields.mode == BlockTextFieldMode.adding) {
           await contract.addContent(addContentParams);
         } else {
-          print('what are the parameters $updateContentParams');
           await contract.updateContent(updateContentParams);
         }
         blockTextFields.reset();

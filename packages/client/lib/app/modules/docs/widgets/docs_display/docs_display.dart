@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
-import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte_backend/tables/documents.dart';
+export 'doc_item.dart';
 
 class DocsDisplay extends HookWidget {
   final Function(int) onDocTapped;
@@ -64,37 +65,12 @@ class DocsDisplay extends HookWidget {
                 }
               }
 
-              final doc = docs[index];
-              return _buildDocItem(index, doc);
+              return DocItem(
+                doc: docs[index],
+                onTap: () => onDocTapped(index),
+              );
             }),
       ),
     );
   }
-
-  Widget _buildDocItem(int index, DocumentEntity doc) => GestureDetector(
-        onTap: () => onDocTapped(index),
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.black,
-            ),
-            borderRadius: BorderRadius.circular(14),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: 16,
-              left: 8,
-              right: 8,
-            ),
-            child: Jost(
-              doc.title,
-              maxLines: 2,
-              fontSize: 16,
-              shouldCenter: true,
-              softWrap: true,
-              useEllipsis: true,
-            ),
-          ),
-        ),
-      );
 }
