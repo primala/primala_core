@@ -106,7 +106,6 @@ abstract class _GroupPickerCoordinatorBase
         user = value;
         if (user.activeGroupId != -1) {
           activeGroup.setGroupId(user.activeGroupId);
-          print('active group id ${user.activeGroupId}');
           Modular.to.navigate(HomeConstants.homeScreen, arguments: {});
         } else {
           initReactors();
