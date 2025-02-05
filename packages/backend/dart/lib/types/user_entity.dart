@@ -1,7 +1,10 @@
 import 'package:equatable/equatable.dart';
+import 'package:faker/faker.dart';
 import 'package:nokhte_backend/tables/users.dart';
 import 'package:nokhte_backend/types/types.dart';
 import 'package:nokhte_backend/utils/profile_gradients_utils.dart';
+
+typedef UserEntities = List<UserEntity>;
 
 class UserEntity extends Equatable {
   final String uid;
@@ -27,57 +30,56 @@ class UserEntity extends Equatable {
       activeGroupId: -1,
     );
   }
-  factory UserEntity.fromSupabase(List res) {
-    if (res.isEmpty) {
-      return UserEntity(
-        uid: '',
-        email: '',
-        fullName: '',
-        profileGradient: ProfileGradient.none,
-        activeGroupId: -1,
-      );
-    } else {
-      final uid = res.first[UsersConstants.S_UID];
-      final name = res.first[UsersConstants.S_FULL_NAME];
-      final email = res.first[UsersConstants.S_EMAIL];
-      final profileGradient = ProfileGradientUtils.mapStringToProfileGradient(
-          res.first[UsersConstants.S_GRADIENT]);
-      final activeGroupId = res.first[UsersConstants.S_ACTIVE_GROUP] ?? -1;
-      return UserEntity(
-        uid: uid,
-        fullName: name,
-        email: email,
-        profileGradient: profileGradient,
-        activeGroupId: activeGroupId,
-      );
+
+  factory UserEntity.fromSupabaseSingle(Map res) {
+    if (res.isEmpty) return UserEntity.initial();
+
+    return UserEntity(
+      uid: res[UsersConstants.S_UID],
+      fullName: res[UsersConstants.S_FULL_NAME],
+      email: res[UsersConstants.S_EMAIL],
+      profileGradient: ProfileGradientUtils.mapStringToProfileGradient(
+        res[UsersConstants.S_GRADIENT],
+      ),
+      activeGroupId: res[UsersConstants.S_ACTIVE_GROUP] ?? -1,
+    );
+  }
+
+  static UserEntities fromSupabaseMultiple(List res) {
+    List<UserEntity> temp = [];
+    for (var user in res) {
+      temp.add(UserEntity.fromSupabaseSingle(user));
     }
+    return temp;
   }
 
   factory UserEntity.fromDatabaseFunction(Map res) {
-    if (res[UsersConstants.S_UID] == null) {
-      return UserEntity(
-        uid: '',
-        fullName: '',
-        email: '',
-        profileGradient: ProfileGradient.none,
-        activeGroupId: -1,
-      );
-    } else {
-      final uid = res[UsersConstants.S_UID];
-      final name = res[UsersConstants.S_FULL_NAME];
-      final profileGradient = ProfileGradientUtils.mapStringToProfileGradient(
+    if (res[UsersConstants.S_UID] == null) return UserEntity.initial();
+
+    return UserEntity(
+      uid: res[UsersConstants.S_UID],
+      fullName: res[UsersConstants.S_FULL_NAME],
+      email: res[UsersConstants.S_EMAIL],
+      profileGradient: ProfileGradientUtils.mapStringToProfileGradient(
         res[UsersConstants.S_GRADIENT],
-      );
-      final email = res[UsersConstants.S_EMAIL];
-      final activeGroupId = res[UsersConstants.S_ACTIVE_GROUP] ?? -1;
+      ),
+      activeGroupId: res[UsersConstants.S_ACTIVE_GROUP] ?? -1,
+    );
+  }
+
+  static List<UserEntity> generateFakeUsers(int count) {
+    final faker = Faker();
+
+    return List.generate(count, (index) {
       return UserEntity(
-        uid: uid,
-        fullName: name,
-        email: email,
-        profileGradient: profileGradient,
-        activeGroupId: activeGroupId,
+        uid: faker.guid.guid(),
+        fullName: faker.person.name(),
+        email: faker.internet.email(),
+        profileGradient: ProfileGradient.values[
+            index % ProfileGradient.values.length], // Cycle through gradients
+        activeGroupId: faker.randomGenerator.integer(100, min: 1),
       );
-    }
+    });
   }
 
   @override

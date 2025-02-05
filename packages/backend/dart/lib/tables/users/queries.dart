@@ -30,18 +30,22 @@ class UsersQueries with UsersConstants, ProfileGradientUtils {
       .eq(UID, userUID)
       .select();
 
-  Future<List> getUserInfo({
+  Future<Map> getUserInfo({
     String queryUID = '',
   }) async =>
-      await supabase.from(TABLE).select().eq(
+      await supabase
+          .from(TABLE)
+          .select()
+          .eq(
             UID,
             queryUID.isEmpty ? userUID : queryUID,
-          );
+          )
+          .single();
 
   Future<String> getFullName() async {
     final res = await getUserInfo();
     if (res.isNotEmpty) {
-      return res.first[FULL_NAME];
+      return res[FULL_NAME];
     } else {
       return '';
     }
@@ -49,8 +53,8 @@ class UsersQueries with UsersConstants, ProfileGradientUtils {
 
   Future<int> getActiveGroup() async {
     final res = await getUserInfo();
-    if (res.isNotEmpty && res.first[ACTIVE_GROUP] != null) {
-      return res.first[ACTIVE_GROUP];
+    if (res.isNotEmpty && res[ACTIVE_GROUP] != null) {
+      return res[ACTIVE_GROUP];
     } else {
       return -1;
     }

@@ -18,7 +18,7 @@ abstract class AuthRemoteSource {
   Future<List> logIn(LogInParams params);
   Stream<bool> getAuthState();
   Future<List> addName({String theName = ""});
-  Future<List> getUserInfo();
+  Future<Map> getUserInfo();
   Future<bool> versionIsUpToDate();
 }
 
@@ -97,7 +97,7 @@ class AuthRemoteSourceImpl implements AuthRemoteSource {
   @override
   addName({String theName = ""}) async {
     final queries = UsersQueries(supabase: supabase);
-    final List nameCheck = await queries.getUserInfo();
+    final Map nameCheck = await queries.getUserInfo();
     String fullName;
     if (nameCheck.isEmpty) {
       if (theName.isEmpty) {
