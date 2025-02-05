@@ -4,9 +4,10 @@ import 'package:nokhte/app/core/modules/supabase/supabase.dart';
 import 'package:nokhte/app/core/network/network_info.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'session_logic.dart';
-export 'data/data.dart';
+export 'contracts/contracts.dart';
+export 'sources/sources.dart';
 export 'types/types.dart';
-export 'domain/domain.dart';
+export 'params/params.dart';
 export 'mobx/mobx.dart';
 
 class SessionLogicModule extends Module {
