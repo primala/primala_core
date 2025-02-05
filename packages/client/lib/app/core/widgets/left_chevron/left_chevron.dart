@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'left_chevron_painter.dart';
 
@@ -18,23 +17,21 @@ class LeftChevron extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final screenSize = useFullScreenSize();
-    return Observer(
-      builder: (context) => Padding(
-        padding: EdgeInsets.only(
-          left: screenSize.width * leftPadding,
-        ),
-        child: GestureDetector(
-          onTap: () {
-            onTap?.call();
-          },
-          child: CustomPaint(
-            painter: LeftChevronPainter(
-              color: color,
-            ),
-            child: SizedBox(
-              height: screenSize.height * .06,
-              width: screenSize.height * .06,
-            ),
+    return Padding(
+      padding: EdgeInsets.only(
+        left: screenSize.width * leftPadding,
+      ),
+      child: GestureDetector(
+        onTap: () {
+          onTap?.call();
+        },
+        child: CustomPaint(
+          painter: LeftChevronPainter(
+            color: color,
+          ),
+          child: SizedBox(
+            height: screenSize.height * .06,
+            width: screenSize.height * .06,
           ),
         ),
       ),
