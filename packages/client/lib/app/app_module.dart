@@ -4,6 +4,7 @@ import 'modules/docs/docs.dart';
 import 'modules/groups/groups.dart';
 import 'modules/auth/auth.dart';
 import 'modules/home/home.dart';
+import 'modules/session/session.dart';
 
 class AppModule extends Module {
   @override
@@ -17,5 +18,6 @@ class AppModule extends Module {
     r.module(HomeConstants.module, module: HomeModule());
     r.module(GroupsConstants.module, module: GroupsModule());
     r.module(DocsConstants.module, module: DocsModule());
+    r.module(SessionConstants.module, module: SessionModule());
   }
 }
