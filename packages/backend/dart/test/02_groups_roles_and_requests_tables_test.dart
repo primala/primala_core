@@ -194,8 +194,7 @@ void main() {
   test('user 2 should be able to read user 1 information', () async {
     final res = (await u2UsersQueries.getUserInfo(
       queryUID: tSetup.firstUserUID,
-    ))
-        .first;
+    ));
 
     expect(res, isNotEmpty);
     expect(res['uid'], equals(tSetup.firstUserUID));
@@ -204,8 +203,7 @@ void main() {
   test('user 1 should be able to read user 2 information', () async {
     final res = (await u1UsersQueries.getUserInfo(
       queryUID: tSetup.secondUserUID,
-    ))
-        .first;
+    ));
 
     expect(res, isNotEmpty);
     expect(res['uid'], equals(tSetup.secondUserUID));
@@ -309,7 +307,7 @@ void main() {
   test('user 2 should be able to set group as their active group', () async {
     await u2UsersQueries.updateActiveGroup(tSetup.groupId);
 
-    final res = (await u2UsersQueries.getUserInfo()).first;
+    final res = (await u2UsersQueries.getUserInfo());
 
     expect(res['active_group'], equals(tSetup.groupId));
   });
@@ -317,7 +315,7 @@ void main() {
   test("should be able to delete a group", () async {
     await u2GroupQueries.delete(tSetup.groupId);
 
-    final userResponse = (await u2UsersQueries.getUserInfo()).first;
+    final userResponse = (await u2UsersQueries.getUserInfo());
     final res2 = (await u2GroupQueries.select());
 
     expect(res2.isEmpty, true);

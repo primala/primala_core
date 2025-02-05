@@ -40,13 +40,13 @@ void main() {
           sessionUserStatus: SessionUserStatus.offline,
         )
       ],
-      documentIds: [],
+      docIds: [],
       groupId: tSetup.groupId,
     ));
-    regularSessionID = res.first['id'];
+    regularSessionID = res['id'];
     expect(res, isNotEmpty);
-    expect(res.first['collaborator_uids'], contains(tSetup.firstUserUID));
-    expect(res.first['status'], 'recruiting');
+    expect(res['collaborator_uids'], contains(tSetup.firstUserUID));
+    expect(res['status'], 'recruiting');
   });
 
   group('Regular Session Operations', () {
