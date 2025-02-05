@@ -9,11 +9,14 @@ export 'widgets/widgets.dart';
 class SessionStarterBody extends HookWidget {
   final List<DocumentEntity> allDocs;
   final List<UserEntity> allUsers;
+  final Function(List<UserEntity> collaborators, List<DocumentEntity> docs)
+      onSubmit;
 
   const SessionStarterBody({
     super.key,
     required this.allDocs,
     required this.allUsers,
+    required this.onSubmit,
   });
 
   @override
@@ -105,7 +108,10 @@ class SessionStarterBody extends HookWidget {
         GenericButton(
           isEnabled:
               selectedDocs.value.isNotEmpty && selectedUsers.value.isNotEmpty,
-          onPressed: () {},
+          onPressed: () async => await onSubmit(
+            selectedUsers.value,
+            selectedDocs.value,
+          ),
           label: 'Start Session',
         ),
       ],

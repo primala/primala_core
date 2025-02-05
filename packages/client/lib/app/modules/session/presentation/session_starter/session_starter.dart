@@ -41,6 +41,7 @@ class SessionStarterScreen extends HookWidget {
             ],
           ),
           SessionStarterBody(
+            onSubmit: coordinator.initializeSession,
             allDocs: coordinator.allDocuments,
             allUsers: coordinator.allCollaborators,
           ),
