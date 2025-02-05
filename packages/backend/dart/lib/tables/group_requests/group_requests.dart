@@ -35,8 +35,8 @@ class GroupRequestsQueries with ProfileGradientUtils {
 
   Future<List> sendRequests(List<SendRequestParams> params) async {
     final res = await usersQueries.getUserInfo();
-    final fullName = res.first[UsersConstants.S_FULL_NAME];
-    final profileGradient = res.first[UsersConstants.S_GRADIENT];
+    final fullName = res[UsersConstants.S_FULL_NAME];
+    final profileGradient = res[UsersConstants.S_GRADIENT];
     final groupName = await groupsQueries.getGroupName(params.first.groupId);
     final responses = [];
     for (var param in params) {

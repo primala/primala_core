@@ -43,6 +43,9 @@ class SessionsQueries
     }
   }
 
+  Future<Map> cancelSession(int sessionID) async =>
+      await supabase.from(TABLE).delete().eq(ID, sessionID).select().single();
+
   findCurrentSession() async {
     await getUserInformation();
     if (userIndex == -1 || sessionID == -1) {
@@ -304,7 +307,7 @@ class SessionsQueries
     return activeResponse;
   }
 
-  Future<List> initializeSession(InitializeSessionParams params) async {
+  Future<Map> initializeSession(InitializeSessionParams params) async {
     final collaboratorUids = params.collaborators.map((e) => e.uid).toList();
     final collaboratorNames =
         params.collaborators.map((e) => e.fullName).toList();
@@ -312,18 +315,22 @@ class SessionsQueries
         .map((e) =>
             ProfileGradientUtils.mapProfileGradientToString(e.profileGradient))
         .toList();
-    return await supabase.from(TABLE).insert({
-      COLLABORATOR_UIDS: collaboratorUids,
-      PROFILE_GRADIENTS: profileGradients,
-      COLLABORATOR_NAMES: collaboratorNames,
-      COLLABORATOR_STATUSES: List.filled(
-        collaboratorUids.length,
-        mapSessionUserStatusToString(
-          SessionUserStatus.offline,
-        ),
-      ),
-      GROUP_ID: params.groupId,
-    }).select();
+    return await supabase
+        .from(TABLE)
+        .insert({
+          COLLABORATOR_UIDS: collaboratorUids,
+          PROFILE_GRADIENTS: profileGradients,
+          COLLABORATOR_NAMES: collaboratorNames,
+          COLLABORATOR_STATUSES: List.filled(
+            collaboratorUids.length,
+            mapSessionUserStatusToString(
+              SessionUserStatus.offline,
+            ),
+          ),
+          GROUP_ID: params.groupId,
+        })
+        .select()
+        .single();
   }
 
   Future<List> _onCurrentActiveNokhteSession(

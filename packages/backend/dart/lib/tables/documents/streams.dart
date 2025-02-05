@@ -30,11 +30,11 @@ class DocumentsStreams with DocumentUtils, DocumentConstants, SessionsUtils {
       if (!documentsStreamListeningStatus) {
         break;
       }
-      final temp = <DocumentEntity>[];
+      DocumentEntities temp = <DocumentEntity>[];
 
       if (e.isNotEmpty) {
         for (var doc in e) {
-          temp.add(DocumentEntity.fromSupabase(doc));
+          temp.add(DocumentEntity.fromSupabaseSingle(doc));
         }
         yield temp;
       } else {
