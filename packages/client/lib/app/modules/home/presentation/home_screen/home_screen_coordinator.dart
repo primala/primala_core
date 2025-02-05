@@ -1,6 +1,5 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
@@ -8,6 +7,7 @@ import 'package:nokhte/app/core/modules/active_group/active_group.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 import 'package:nokhte/app/modules/home/home.dart';
+import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte_backend/tables/groups.dart';
 import 'package:nokhte_backend/tables/sessions.dart';
 part 'home_screen_coordinator.g.dart';
@@ -51,6 +51,7 @@ abstract class _HomeScreenCoordinatorBase
   @action
   constructor() async {
     final activeGroupId = activeGroup.groupId;
+
     if (activeGroup.groupEntity.name.isEmpty) {
       await contract.deleteStaleSessions();
       await getGroup(activeGroupId);
@@ -64,13 +65,11 @@ abstract class _HomeScreenCoordinatorBase
 
   @action
   goToSessionStarter() {
-    Modular.to.push(
-      MaterialPageRoute(
-        builder: (context) => SessionStarterScreen(
-          coordinator: Modular.get<SessionStarterCoordinator>(),
-        ),
-      ),
-    );
+    setShowWidgets(false);
+    setShowCarousel(false);
+    Timer(Seconds.get(0, milli: 500), () {
+      Modular.to.navigate(SessionConstants.sessionStarter);
+    });
   }
 
   @action
@@ -88,7 +87,11 @@ abstract class _HomeScreenCoordinatorBase
     if (sessionRequest.id == -1) return;
     final res = await contract.joinSession(sessionRequest.id);
     res.fold((failure) => errorUpdater(failure), (success) {
-      // TODO navigate inside session
+      setShowWidgets(false);
+      setShowCarousel(false);
+      Timer(Seconds.get(0, milli: 500), () {
+        Modular.to.navigate(SessionConstants.lobby);
+      });
     });
   }
 
@@ -108,9 +111,10 @@ abstract class _HomeScreenCoordinatorBase
   @action
   getGroup(int groupId) async {
     final res = await contract.getGroup(groupId);
-    res.fold((failure) => errorUpdater(failure), (group) {
+    res.fold((failure) => errorUpdater(failure), (group) async {
       selectedGroup = group;
       activeGroup.setGroupEntity(group);
+      await listenToSessionRequests();
       fadeInWidgets(onFadein: () {
         setShowCarousel(true);
       });

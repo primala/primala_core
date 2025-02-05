@@ -10,6 +10,8 @@ mixin SessionConstants {
 
   static const module = '/session';
   static const relativeLobby = '/lobby';
+  static const relativeSessionStarter = '/session_starter';
 
   static const lobby = '$module$relativeLobby';
+  static const sessionStarter = '$module$relativeSessionStarter';
 }

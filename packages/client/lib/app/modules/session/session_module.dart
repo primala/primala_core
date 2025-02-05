@@ -5,6 +5,7 @@ class SessionModule extends Module {
   @override
   List<Module> get imports => [
         SessionLogicModule(),
+        PreSessionModule(),
       ];
 
   @override
@@ -17,10 +18,18 @@ class SessionModule extends Module {
   @override
   routes(r) {
     r.child(
-      SessionConstants.lobby,
+      SessionConstants.relativeLobby,
       transition: TransitionType.noTransition,
       child: (context) => LobbyScreen(
         coordinator: Modular.get<LobbyCoordinator>(),
+      ),
+    );
+
+    r.child(
+      SessionConstants.relativeSessionStarter,
+      transition: TransitionType.noTransition,
+      child: (context) => SessionStarterScreen(
+        coordinator: Modular.get<SessionStarterCoordinator>(),
       ),
     );
   }
