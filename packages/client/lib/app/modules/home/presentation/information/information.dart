@@ -18,7 +18,7 @@ class InformationScreen extends HookWidget {
       return AnimatedScaffold(
         showWidgets: coordinator.showWidgets,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
+        children: const [
           HeaderRow(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [

@@ -44,9 +44,9 @@ class HomeScreenBody extends HookWidget {
             ElevatedButton(
               onPressed: () {
                 if (sessionIsActive) {
-                  startSession();
-                } else {
                   joinSession();
+                } else {
+                  startSession();
                 }
               },
               style: ElevatedButton.styleFrom(

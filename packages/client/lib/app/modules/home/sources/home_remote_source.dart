@@ -7,7 +7,6 @@ abstract class HomeRemoteSource {
   Stream<SessionRequest> listenToSessionRequests(int groupId);
   Future<bool> cancelSessionRequestsStream();
   Future<List> joinSession(int sessionID);
-  Future<List> initializeSession(InitializeSessionParams params);
   Future<Map> getGroup(int groupId);
   Future<List> clearActiveGroup();
   Future<void> deleteStaleSessions();
@@ -29,10 +28,6 @@ class HomeRemoteSourceImpl implements HomeRemoteSource {
   @override
   cancelSessionRequestsStream() async =>
       sessionStreams.cancelSessionRequestsStream();
-
-  @override
-  initializeSession(params) async =>
-      await sessionQueries.initializeSession(params);
 
   @override
   joinSession(sessionId) async => await sessionQueries.joinSession(sessionId);

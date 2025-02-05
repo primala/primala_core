@@ -11,6 +11,7 @@ class HomeLogicModule extends Module {
         LegacyConnectivityModule(),
         SupabaseModule(),
       ];
+
   @override
   void exportedBinds(i) {
     i.add<HomeRemoteSourceImpl>(

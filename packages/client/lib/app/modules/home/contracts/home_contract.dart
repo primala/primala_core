@@ -14,9 +14,6 @@ abstract class HomeContract {
   Future<Either<Failure, bool>> joinSession(int sessionId);
   Future<Either<Failure, bool>> deleteStaleSessions();
   Future<Either<Failure, bool>> clearActiveGroup();
-  Future<Either<Failure, bool>> initializeSession(
-    InitializeSessionParams params,
-  );
   Future<Either<Failure, GroupEntity>> getGroup(int groupId);
 }
 
@@ -46,16 +43,6 @@ class HomeContractImpl with ResponseToStatus implements HomeContract {
   joinSession(sessionId) async {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.joinSession(sessionId);
-      return fromSupabase(res);
-    } else {
-      return Left(FailureConstants.internetConnectionFailure);
-    }
-  }
-
-  @override
-  initializeSession(params) async {
-    if (await networkInfo.isConnected) {
-      final res = await remoteSource.initializeSession(params);
       return fromSupabase(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
