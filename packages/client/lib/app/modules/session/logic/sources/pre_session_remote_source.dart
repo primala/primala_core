@@ -7,7 +7,7 @@ abstract class PreSessionRemoteSource {
   Future<Map> initializeSession(InitializeSessionParams params);
   Future<List> getGroupMembers(int groupId);
   Future<List> getDocuments(int groupId);
-  String getUserUID();
+  String getUserUid();
 }
 
 class PreSessionRemoteSourceImpl implements PreSessionRemoteSource {
@@ -33,5 +33,5 @@ class PreSessionRemoteSourceImpl implements PreSessionRemoteSource {
       await groupRolesQueries.selectByGroup(groupId);
 
   @override
-  getUserUID() => supabase.auth.currentUser?.id ?? '';
+  getUserUid() => supabase.auth.currentUser?.id ?? '';
 }

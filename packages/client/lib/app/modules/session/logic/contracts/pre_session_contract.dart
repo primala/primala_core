@@ -15,6 +15,7 @@ abstract class PreSessionContract {
   );
   Future<Either<Failure, UserEntities>> getGroupMembers(int groupId);
   Future<Either<Failure, DocumentEntities>> getDocuments(int groupId);
+  String getUserUid();
 }
 
 class PreSessionContractImpl
@@ -52,14 +53,13 @@ class PreSessionContractImpl
   getGroupMembers(groupId) async {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.getGroupMembers(groupId);
-      final userUid = remoteSource.getUserUID();
       final usersRes = res.map((e) => e[UsersConstants.S_TABLE]).toList();
-      final groupCollaborators = UserEntity.fromSupabaseMultiple(usersRes)
-          .where((element) => element.uid != userUid)
-          .toList();
-      return Right(groupCollaborators);
+      return Right(UserEntity.fromSupabaseMultiple(usersRes));
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }
   }
+
+  @override
+  getUserUid() => remoteSource.getUserUid();
 }

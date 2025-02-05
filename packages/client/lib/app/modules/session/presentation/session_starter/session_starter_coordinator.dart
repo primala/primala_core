@@ -29,6 +29,9 @@ abstract class _SessionStarterCoordinatorBase
   }
 
   @observable
+  String userUid = '';
+
+  @observable
   ObservableList<UserEntity> allCollaborators = ObservableList.of([]);
 
   @observable
@@ -37,16 +40,20 @@ abstract class _SessionStarterCoordinatorBase
   @action
   constructor() async {
     setShowWidgets(true);
+    getUserUid();
     await getGroupMembers();
     await getDocuments();
   }
+
+  @action
+  getUserUid() => userUid = contract.getUserUid();
 
   @action
   initializeSession(
       List<UserEntity> collaborators, List<DocumentEntity> docs) async {
     final docIds = docs.map((e) => e.id).toList();
     final params = InitializeSessionParams(
-      collaborators: collaborators,
+      collaborators: [user, ...collaborators],
       groupId: activeGroup.groupId,
       docIds: docIds,
     );
@@ -80,4 +87,12 @@ abstract class _SessionStarterCoordinatorBase
       },
     );
   }
+
+  @computed
+  UserEntity get user =>
+      allCollaborators.firstWhere((element) => element.uid == userUid);
+
+  @computed
+  List<UserEntity> get availableCollaborators =>
+      allCollaborators.where((element) => element.uid != userUid).toList();
 }
