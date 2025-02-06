@@ -1,5 +1,5 @@
 import 'package:nokhte_backend/tables/documents.dart';
-import 'package:nokhte_backend/tables/sessions/utilities/utilities.dart';
+import 'package:nokhte_backend/tables/sessions/utilities/session_utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DocumentsStreams with DocumentUtils, DocumentConstants, SessionsUtils {

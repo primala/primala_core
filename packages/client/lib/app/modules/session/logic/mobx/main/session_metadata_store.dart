@@ -14,13 +14,14 @@ class SessionMetadataStore = _SessionMetadataStoreBase
     with _$SessionMetadataStore;
 
 abstract class _SessionMetadataStoreBase
-    with Store, BaseMobxLogic<NoParams, Stream<SessionMetadata>> {
+    with Store, BaseMobxLogic<NoParams, Stream<SessionMetadata>>, Reactions {
   final SessionPresenceContract contract;
   final DocsContract docsContract;
+  final ViewDocCoordinator viewDoc;
   _SessionMetadataStoreBase({
     required this.contract,
-    required this.docsContract,
-  }) {
+    required this.viewDoc,
+  }) : docsContract = viewDoc.contract {
     initBaseLogicActions();
   }
 
@@ -39,6 +40,9 @@ abstract class _SessionMetadataStoreBase
 
   @observable
   String? currentSpeakerUID = '';
+
+  @observable
+  PowerupType currentPowerup = PowerupType.none;
 
   @observable
   String userUID = '';
@@ -92,14 +96,23 @@ abstract class _SessionMetadataStoreBase
   StreamSubscription documentsStreamSubscription =
       const Stream.empty().listen((event) {});
 
+  @override
   @action
   dispose() async {
+    super.dispose();
+    await viewDoc.dispose();
     metadataStreamSubscription = const Stream.empty().listen((event) {});
     sessionMetadata = ObservableStream(const Stream.empty());
   }
 
+  initReactors() {
+    disposers.add(documentsReactor());
+    disposers.add(activeDocumentReactor());
+  }
+
   @action
   Future<void> get() async {
+    initReactors();
     final result = await contract.listenToSessionMetadata();
     result.fold(
       (failure) {
@@ -118,6 +131,7 @@ abstract class _SessionMetadataStoreBase
               .toList();
           documentIds = ObservableList.of(docs);
           activeDocument = value.activeDocument;
+          currentPowerup = value.currentPowerup;
           groupId = value.groupId;
           collaboratorInformation = ObservableList.of(value.collaborators);
           speakingTimerStart = value.speakingTimerStart;
@@ -129,14 +143,30 @@ abstract class _SessionMetadataStoreBase
           userIsSpeaking = value.userIsSpeaking;
           userCanSpeak = value.userCanSpeak;
           sessionId = value.sessionId;
-          await listenToSpecificDocuments(
-            documentIds,
-            groupId,
-          );
           setState(StoreState.loaded);
         });
       },
     );
+  }
+
+  documentsReactor() => reaction((p0) => documentIds, (p0) async {
+        if (documentIds.isEmpty) return;
+        await listenToSpecificDocuments(
+          documentIds,
+          groupId,
+        );
+      });
+
+  activeDocumentReactor() => reaction((p0) => activeDocument, (p0) async {
+        if (activeDocument == null) return;
+        await listenToActiveDocumentContent();
+      });
+
+  @action
+  listenToActiveDocumentContent() async {
+    if (activeDocument != null) {
+      await viewDoc.constructor(activeDoc);
+    }
   }
 
   @action
@@ -148,11 +178,20 @@ abstract class _SessionMetadataStoreBase
     );
     res.fold((failure) {}, (stream) {
       documentsStream = ObservableStream(stream);
-      documentsStreamSubscription = documentsStream.listen((event) {
+      documentsStreamSubscription = documentsStream.listen((event) async {
         print('what is the event$event ');
         documents = ObservableList.of(event);
       });
     });
+  }
+
+  @computed
+  DocumentEntity get activeDoc {
+    if (activeDocument != null) {
+      return documents.firstWhere((element) => element.id == activeDocument);
+    } else {
+      return DocumentEntity.initial();
+    }
   }
 
   @computed

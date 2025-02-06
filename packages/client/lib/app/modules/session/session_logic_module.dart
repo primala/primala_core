@@ -1,4 +1,5 @@
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:nokhte/app/core/modules/active_group/active_group.dart';
 import 'package:nokhte/app/core/modules/legacy_connectivity/legacy_connectivity.dart';
 import 'package:nokhte/app/core/modules/supabase/supabase.dart';
 import 'package:nokhte/app/core/network/network_info.dart';
@@ -11,6 +12,7 @@ class SessionLogicModule extends Module {
   List<Module> get imports => [
         SupabaseModule(),
         DocsLogicModule(),
+        ActiveGroupModule(),
         LegacyConnectivityModule(),
       ];
   @override
@@ -28,7 +30,13 @@ class SessionLogicModule extends Module {
     );
     i.add<SessionMetadataStore>(
       () => SessionMetadataStore(
-        docsContract: Modular.get<DocsContractImpl>(),
+        viewDoc: ViewDocCoordinator(
+          contract: Modular.get<DocsContractImpl>(),
+          activeGroup: Modular.get<ActiveGroup>(),
+          blockTextDisplay: BlockTextDisplayStore(
+            blockTextFields: BlockTextFieldsStore(),
+          ),
+        ),
         contract: Modular.get<SessionPresenceContractImpl>(),
       ),
     );

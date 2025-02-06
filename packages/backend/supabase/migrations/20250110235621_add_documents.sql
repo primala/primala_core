@@ -2603,3 +2603,19 @@ for all
 to authenticated
 using (is_group_member(auth.uid(), group_id));
 
+
+create type "public"."powerup_type" as enum ('cook', 'rally');
+
+alter table "public"."sessions" drop column "active_documents";
+
+alter table "public"."sessions" add column "active_document" bigint;
+
+alter table "public"."sessions" add column "current_powerup" powerup_type;
+
+alter table "public"."sessions" add column "documents" bigint[] not null default '{}'::bigint[];
+
+drop type "public"."request_status";
+
+alter table "public"."sessions" add constraint "sessions_active_document_fkey" FOREIGN KEY (active_document) REFERENCES documents(id) ON UPDATE CASCADE ON DELETE SET NULL not valid;
+
+alter table "public"."sessions" validate constraint "sessions_active_document_fkey";

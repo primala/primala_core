@@ -32,10 +32,11 @@ abstract class _ViewDocCoordinatorBase
   constructor(DocumentEntity doc) async {
     this.doc = doc;
     await listenToContent(documentId);
-    disposers.add(spotlightTextReactor());
-    disposers.add(blockTextFieldSubmissionReactor());
-    disposers.add(contentToDeletionReactor());
+    initReactors();
   }
+
+  @observable
+  bool reactorsAreInitiated = false;
 
   @observable
   ObservableList<ContentBlockEntity> contentBlocks =
@@ -48,6 +49,13 @@ abstract class _ViewDocCoordinatorBase
   @observable
   StreamSubscription contentBlocksStreamSubscription =
       const Stream.empty().listen((event) {});
+
+  initReactors() {
+    if (reactorsAreInitiated) return;
+    disposers.add(spotlightTextReactor());
+    disposers.add(blockTextFieldSubmissionReactor());
+    disposers.add(contentToDeletionReactor());
+  }
 
   @action
   listenToContent(int documentId) async {
@@ -179,6 +187,7 @@ abstract class _ViewDocCoordinatorBase
   @override
   @action
   dispose() async {
+    reactorsAreInitiated = false;
     super.dispose();
     await contract.cancelContentStream();
     await contentBlocksStreamSubscription.cancel();
