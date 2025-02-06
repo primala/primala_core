@@ -171,7 +171,6 @@ abstract class _SessionMetadataStoreBase
 
   @action
   listenToSpecificDocuments(List<int> documentIds, int groupId) async {
-    print('what are the document ids $documentIds');
     final res = await docsContract.listenToSpecificDocuments(
       documentIds,
       groupId,
@@ -179,7 +178,6 @@ abstract class _SessionMetadataStoreBase
     res.fold((failure) {}, (stream) {
       documentsStream = ObservableStream(stream);
       documentsStreamSubscription = documentsStream.listen((event) async {
-        print('what is the event$event ');
         documents = ObservableList.of(event);
       });
     });
@@ -275,7 +273,7 @@ abstract class _SessionMetadataStoreBase
   int get userIndex {
     int index = -1;
     for (int i = 0; i < collaboratorInformation.length; i++) {
-      if (collaboratorInformation[i].uid != userUID) {
+      if (collaboratorInformation[i].uid == userUID) {
         index = i;
       }
     }

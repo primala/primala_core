@@ -4,16 +4,14 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
-
-import 'refresh_banner.dart';
+import 'package:nokhte/app/modules/session/session.dart';
 export 'refresh_banner_store.dart';
-export 'refresh_banner.dart';
 
 class RefreshBanner extends HookWidget {
   final RefreshBannerStore store;
-  const RefreshBanner({
+  const RefreshBanner(
+    this.store, {
     super.key,
-    required this.store,
   });
 
   @override
@@ -23,35 +21,34 @@ class RefreshBanner extends HookWidget {
       screenSize: useFullScreenSize(),
       bumpPerHundredth: 0.0001,
     );
-    return Observer(
-      builder: (context) {
-        return AnimatedOpacity(
-          opacity: useWidgetOpacity(store.showWidget),
-          duration: Seconds.get(1),
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: size),
-                child: Center(
-                  child: Jost(
-                    "Swipe down to pause",
-                    fontSize: size * .3,
-                  ),
+    return Observer(builder: (context) {
+      return AnimatedOpacity(
+        opacity: useWidgetOpacity(store.showWidget),
+        duration: Seconds.get(0, milli: 500),
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: size),
+              child: Center(
+                child: Jost(
+                  "Swipe down to pause",
+                  fontSize: size * .3,
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: size * .06),
-                child: Image.asset(
-                  'assets/session/rounded_triangle.png',
-                  width: size * .4,
-                  height: size * .4,
-                ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: size * .06),
+              child: Image.asset(
+                'assets/session/rounded_triangle.png',
+                color: Colors.black,
+                width: size * .4,
+                height: size * .4,
               ),
-            ],
-          ),
-        );
-      },
-    );
+            ),
+          ],
+        ),
+      );
+    });
   }
 }
 

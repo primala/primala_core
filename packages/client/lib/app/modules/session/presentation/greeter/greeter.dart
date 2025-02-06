@@ -34,26 +34,39 @@ class GreeterScreen extends HookWidget {
       });
     }
 
-    return AnimatedScaffold(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        GestureDetector(
-          onTap: handleTap,
-          child: AnimatedBuilder(
+    return GestureDetector(
+      onTap: () => handleTap(),
+      child: AnimatedScaffold(
+        body: AnimatedBuilder(
             animation: controller,
-            builder: (context, child) {
+            builder: (context, _) {
               return Opacity(
                 opacity: fadeIn,
-                child: const Jost(
-                  'Put your phone on do not disturb',
-                  fontSize: 32,
-                  // fontWeight: FontWeight.bold,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Center(
+                      child: Jost(
+                        'Put your phone on do not disturb',
+                        fontSize: 24,
+                        softWrap: true,
+                        shouldCenter: true,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Jost(
+                      'tap when you have done so',
+                      fontSize: 16,
+                      fontColor: Colors.black.withOpacity(.6),
+                      softWrap: true,
+                      shouldCenter: true,
+                    ),
+                  ],
                 ),
               );
-            },
-          ),
-        ),
-      ],
+            }),
+      ),
     );
   }
 }

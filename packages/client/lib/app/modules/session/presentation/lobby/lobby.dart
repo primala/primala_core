@@ -29,6 +29,7 @@ class LobbyScreen extends HookWidget {
     return Observer(builder: (context) {
       return AnimatedScaffold(
         isScrollable: true,
+        showWidgets: coordinator.showWidgets,
         children: [
           const HeaderRow(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -75,11 +76,12 @@ class LobbyScreen extends HookWidget {
             docs: coordinator.sessionMetadata.documents,
           ),
           const SizedBox(height: 20),
-          GenericButton(
-            isEnabled: coordinator.canStartSession,
-            label: "Start Session",
-            onPressed: () async => coordinator.startSession(),
-          )
+          if (coordinator.isSessionLead)
+            GenericButton(
+              isEnabled: coordinator.canStartSession,
+              label: "Start Session",
+              onPressed: () async => await coordinator.startSession(),
+            )
         ],
       );
     });

@@ -20,13 +20,6 @@ class SessionsQueries
   })  : userUID = supabase.auth.currentUser?.id ?? '',
         usersQueries = UsersQueries(supabase: supabase);
 
-  getUserInformation() async {
-    if (userFullName.isEmpty) {
-      userFullName = await usersQueries.getFullName();
-      groupId = await usersQueries.getActiveGroup();
-    }
-  }
-
   Future<void> deleteStaleSessions() async {
     final currentActiveGroup = await usersQueries.getActiveGroup();
     final res =
@@ -47,35 +40,15 @@ class SessionsQueries
       await supabase.from(TABLE).delete().eq(ID, sessionID).select().single();
 
   findCurrentSession() async {
-    await getUserInformation();
+    print('user index is $userIndex and session id is $sessionID');
     if (userIndex == -1 || sessionID == -1) {
-      final res = await supabase.from(TABLE).select().eq(
-            STATUS,
-            mapSessionStatusToString(
-              SessionStatus.recruiting,
-            ),
-          );
-      if (res.isNotEmpty) {
-        for (var row in res) {
-          if (row[COLLABORATOR_UIDS].contains(userUID)) {
-            sessionID = row[ID];
-            userIndex = row[COLLABORATOR_UIDS].indexOf(userUID);
-            break;
-          }
-        }
-      } else {
-        final res = await supabase.from(TABLE).select().eq(
-              STATUS,
-              mapSessionStatusToString(
-                SessionStatus.started,
-              ),
-            );
-        for (var row in res) {
-          if (row[COLLABORATOR_UIDS].contains(userUID)) {
-            sessionID = row[ID];
-            userIndex = row[COLLABORATOR_UIDS].indexOf(userUID);
-            break;
-          }
+      final res = await supabase.from(TABLE).select();
+      for (var row in res) {
+        print('row is $row');
+        if (row[COLLABORATOR_UIDS].contains(userUID)) {
+          sessionID = row[ID];
+          userIndex = row[COLLABORATOR_UIDS].indexOf(userUID);
+          break;
         }
       }
     }
@@ -239,6 +212,7 @@ class SessionsQueries
     required bool addUserToSpotlight,
     DateTime time = const ConstDateTime.fromMillisecondsSinceEpoch(0),
   }) async {
+    print('are you running here inquiries');
     await findCurrentSession();
     final res = await getSpeakerSpotlight();
     final currentSpotlightSpeaker = res.mainType;
@@ -246,6 +220,7 @@ class SessionsQueries
       action: () async {
         if (addUserToSpotlight) {
           if (currentSpotlightSpeaker == null) {
+            print('is this block running ');
             return await _onCurrentActiveNokhteSession(
               supabase.from(TABLE).update(
                 {

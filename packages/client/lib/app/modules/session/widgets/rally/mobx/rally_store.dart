@@ -12,28 +12,17 @@ part 'rally_store.g.dart';
 class RallyStore = _RallyStoreBase with _$RallyStore;
 
 abstract class _RallyStoreBase extends BaseWidgetStore with Store, Reactions {
-  final TintStore tint;
-  // final BackButtonStore backButton;
+  final TintStore tint = TintStore();
 
-  _RallyStoreBase({
-    required this.tint,
-    // required this.backButton,
-  }) {
+  _RallyStoreBase() {
     setWidgetVisibility(false);
   }
 
   @action
   constructor() {
     tint.startAtEnd();
-    // disposers.add(backButtonTapReactor());
     disposers.add(glowColorReactor());
   }
-
-  // setValues({
-  //   required List<SessionUserInfoEntity> fullNames,
-  // }) {
-  //   setCollaborators(fullNames);
-  // }
 
   @observable
   RallyPhase phase = RallyPhase.initial;
@@ -86,6 +75,7 @@ abstract class _RallyStoreBase extends BaseWidgetStore with Store, Reactions {
     Timer(Seconds.get(0, milli: 500), () {
       phase = value;
       setWidgetVisibility(true);
+      print('phase $phase visibility $showWidget ');
     });
   }
 
@@ -99,12 +89,6 @@ abstract class _RallyStoreBase extends BaseWidgetStore with Store, Reactions {
       setCancelButtonVisibility(true);
     });
   }
-
-  // backButtonTapReactor() => reaction((p0) => backButton.tapCount, (p0) {
-  //       if (phase == RallyPhase.selection) {
-  //         setRallyPhase(RallyPhase.initial);
-  //       }
-  //     });
 
   glowColorReactor() => reaction((p0) => glowColor, (p0) {
         if (p0 == GlowColor.inflectionRed) {

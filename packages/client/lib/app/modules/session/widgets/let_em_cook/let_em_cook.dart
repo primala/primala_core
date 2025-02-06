@@ -16,9 +16,9 @@ export 'constants/constants.dart';
 
 class LetEmCook extends HookWidget {
   final LetEmCookStore store;
-  const LetEmCook({
+  const LetEmCook(
+    this.store, {
     super.key,
-    required this.store,
   });
 
   @override
@@ -32,7 +32,7 @@ class LetEmCook extends HookWidget {
         opacity: useWidgetOpacity(store.showWidget),
         duration: Seconds.get(1),
         child: GestureDetector(
-          onTap: () => store.onTap(),
+          onTap: store.buttonVisibility ? () => store.onTap() : null,
           child: Stack(
             children: [
               AnimatedOpacity(

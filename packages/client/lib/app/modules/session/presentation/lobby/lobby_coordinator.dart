@@ -52,11 +52,12 @@ abstract class _LobbyCoordinatorBase
       });
 
   sessionStarterReactor() =>
-      reaction((p0) => sessionMetadata.canStartTheSession, (p0) {
+      reaction((p0) => sessionMetadata.sessionHasBegun, (p0) {
         if (!p0) return;
         setShowWidgets(false);
         Timer(Seconds.get(0, milli: 500), () {
-          Modular.to.navigate(SessionConstants.greeter);
+          // Modular.to.navigate(SessionConstants.greeter);
+          Modular.to.navigate(SessionConstants.mainScreen);
         });
       });
 

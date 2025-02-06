@@ -1,5 +1,6 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
+import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 
@@ -18,6 +19,21 @@ class SessionModule extends Module {
       () => LobbyCoordinator(
         presence: Modular.get<SessionPresenceCoordinator>(),
         captureScreen: Modular.get<CaptureScreen>(),
+      ),
+    );
+    i.add<SessionMainCoordinator>(
+      () => SessionMainCoordinator(
+        captureScreen: Modular.get<CaptureScreen>(),
+        presence: Modular.get<SessionPresenceCoordinator>(),
+        refreshBanner: RefreshBannerStore(),
+        tint: TintStore(),
+        smartText: SmartTextStore(),
+        borderGlow: BorderGlowStore(),
+        swipe: SwipeDetector(),
+        tap: TapDetector(),
+        speakLessSmileMore: SpeakLessSmileMoreStore(),
+        letEmCook: LetEmCookStore(),
+        rally: RallyStore(),
       ),
     );
   }
@@ -46,10 +62,12 @@ class SessionModule extends Module {
       child: (context) => const GreeterScreen(),
     );
 
-    // r.child(
-    //   SessionConstants.relativeMainScreen,
-    //   transition: TransitionType.noTransition,
-    //   child: (context) => MainScreen(),
-    // );
+    r.child(
+      SessionConstants.relativeMainScreen,
+      transition: TransitionType.noTransition,
+      child: (context) => SessionMainScreen(
+        coordinator: Modular.get<SessionMainCoordinator>(),
+      ),
+    );
   }
 }

@@ -221,6 +221,18 @@ abstract class _ViewDocCoordinatorBase
   String get spotlightText => spotlightContentBlock.content;
 
   @computed
+  String get currentFocus {
+    if (contentBlocks.isEmpty) {
+      return '';
+    } else {
+      return contentBlocks
+          .where((element) => element.numberOfParents == 0)
+          .last
+          .content;
+    }
+  }
+
+  @computed
   AddContentParams get addContentParams => AddContentParams(
         content: blockTextFields.currentTextContent,
         groupId: activeGroup.groupId,

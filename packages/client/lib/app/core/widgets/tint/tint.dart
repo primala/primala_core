@@ -10,9 +10,9 @@ export 'mobx/tint_store.dart';
 
 class Tint extends HookWidget {
   final TintStore store;
-  const Tint({
+  const Tint(
+    this.store, {
     super.key,
-    required this.store,
   });
 
   @override

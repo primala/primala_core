@@ -15,9 +15,9 @@ export 'types/types.dart';
 
 class Rally extends HookWidget with RallyConstants {
   final RallyStore store;
-  Rally({
+  Rally(
+    this.store, {
     super.key,
-    required this.store,
   });
 
   Widget getWidgetsByPhase(
@@ -27,11 +27,11 @@ class Rally extends HookWidget with RallyConstants {
     switch (phase) {
       case RallyPhase.initial:
         return GestureDetector(
-            onTap: () {
-              if (store.showWidget) {
-                store.setRallyPhase(RallyPhase.selection);
-              }
-            },
+            onTap: store.showWidget
+                ? () {
+                    store.setRallyPhase(RallyPhase.selection);
+                  }
+                : null,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -53,7 +53,7 @@ class Rally extends HookWidget with RallyConstants {
         return MultiHitStack(
           children: [
             Tint(
-              store: store.tint,
+              store.tint,
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -63,11 +63,17 @@ class Rally extends HookWidget with RallyConstants {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    LeftChevron(onTap: () {
-                      if (phase == RallyPhase.selection) {
-                        store.setRallyPhase(RallyPhase.initial);
-                      }
-                    }),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 70),
+                      child: LeftChevron(
+                        color: Colors.white,
+                        onTap: () {
+                          if (phase == RallyPhase.selection) {
+                            store.setRallyPhase(RallyPhase.initial);
+                          }
+                        },
+                      ),
+                    ),
                     const Padding(
                       padding: EdgeInsets.only(top: 70.0, left: 25),
                       child: Chivo(
@@ -208,13 +214,15 @@ class Rally extends HookWidget with RallyConstants {
     });
 
     return Observer(
-      builder: (context) => AnimatedOpacity(
-        duration: Seconds.get(0, milli: 500),
-        opacity: useWidgetOpacity(store.showWidget),
-        child: FullScreen(
-          child: getWidgetsByPhase(store.phase, containerSize),
-        ),
-      ),
+      builder: (context) {
+        return AnimatedOpacity(
+          duration: Seconds.get(0, milli: 500),
+          opacity: useWidgetOpacity(store.showWidget),
+          child: FullScreen(
+            child: getWidgetsByPhase(store.phase, containerSize),
+          ),
+        );
+      },
     );
   }
 }
