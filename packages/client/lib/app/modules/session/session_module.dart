@@ -39,5 +39,17 @@ class SessionModule extends Module {
         coordinator: Modular.get<SessionStarterCoordinator>(),
       ),
     );
+
+    r.child(
+      SessionConstants.relativeGreeter,
+      transition: TransitionType.noTransition,
+      child: (context) => const GreeterScreen(),
+    );
+
+    // r.child(
+    //   SessionConstants.relativeMainScreen,
+    //   transition: TransitionType.noTransition,
+    //   child: (context) => MainScreen(),
+    // );
   }
 }

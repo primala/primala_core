@@ -11,7 +11,11 @@ mixin SessionConstants {
   static const module = '/session';
   static const relativeLobby = '/lobby';
   static const relativeSessionStarter = '/session_starter';
+  static const relativeMainScreen = '/main';
+  static const relativeGreeter = '/greeter';
 
   static const lobby = '$module$relativeLobby';
   static const sessionStarter = '$module$relativeSessionStarter';
+  static const mainScreen = '$module$relativeMainScreen';
+  static const greeter = '$module$relativeGreeter';
 }
