@@ -1,4 +1,5 @@
 export 'initialize_dormant_session_params.dart';
+export 'powerup_type.dart';
 export 'initialize_session_params.dart';
 export 'session_metadata.dart';
 export 'session_requests.dart';

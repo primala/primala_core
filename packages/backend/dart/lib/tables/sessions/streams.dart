@@ -128,10 +128,13 @@ class SessionsStreams extends SessionsQueries with SessionsConstants {
         final documents = selectedEvent[DOCUMENTS];
         final activeDocument = selectedEvent[ACTIVE_DOCUMENT];
         final groupId = selectedEvent[GROUP_ID];
+        final currentPowerup =
+            mapStringToPowerupType(selectedEvent[CURRENT_POWERUP] ?? '');
 
         yield SessionMetadata(
           userUID: userUID,
           groupId: groupId,
+          currentPowerup: currentPowerup,
           documents: documents,
           activeDocument: activeDocument,
           sessionId: sessionID,

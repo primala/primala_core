@@ -15,11 +15,13 @@ class SessionMetadata extends Equatable {
   final String? speakerUID;
   final String userUID;
   final DateTime speakingTimerStart;
+  final PowerupType currentPowerup;
 
   SessionMetadata({
     required this.sessionId,
     required this.documents,
     required this.activeDocument,
+    required this.currentPowerup,
     required this.collaborators,
     required this.groupId,
     required this.sessionStatus,
@@ -37,6 +39,7 @@ class SessionMetadata extends Equatable {
         userCanSpeak,
         groupId,
         documents,
+        currentPowerup,
         activeDocument ?? -1,
         userIsSpeaking,
         sessionId,

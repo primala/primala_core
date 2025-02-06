@@ -66,6 +66,28 @@ mixin SessionsUtils {
     }
   }
 
+  PowerupType mapStringToPowerupType(String powerupType) {
+    switch (powerupType) {
+      case 'cook':
+        return PowerupType.cook;
+      case 'rally':
+        return PowerupType.rally;
+      default:
+        return PowerupType.none;
+    }
+  }
+
+  String mapPowerupTypeToString(PowerupType powerupType) {
+    switch (powerupType) {
+      case PowerupType.cook:
+        return 'cook';
+      case PowerupType.rally:
+        return 'rally';
+      default:
+        return '';
+    }
+  }
+
   Future<T> retry<T>({
     required Future<T> Function() action,
     int maxRetries = 3,

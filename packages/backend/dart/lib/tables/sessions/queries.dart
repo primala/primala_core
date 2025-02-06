@@ -4,7 +4,7 @@ import 'package:nokhte_backend/types/types.dart';
 import 'package:nokhte_backend/utils/profile_gradients_utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'utilities/utilities.dart';
+import 'utilities/session_utils.dart';
 
 class SessionsQueries
     with SessionsConstants, SessionsUtils, ProfileGradientUtils {
@@ -151,6 +151,7 @@ class SessionsQueries
         return await _onCurrentActiveNokhteSession(
           supabase.from(TABLE).update(
             {
+              CURRENT_POWERUP: mapPowerupTypeToString(PowerupType.cook),
               SPEAKING_TIMER_START: DateTime.now().toUtc().toIso8601String(),
               VERSION: res.currentVersion + 1,
               SECONDARY_SPEAKER_SPOTLIGHT: userUID,
@@ -204,6 +205,7 @@ class SessionsQueries
                 {
                   SECONDARY_SPEAKER_SPOTLIGHT: secondarySpeakerUID,
                   VERSION: res.currentVersion + 1,
+                  CURRENT_POWERUP: mapPowerupTypeToString(PowerupType.rally),
                 },
               ),
               version: res.currentVersion,

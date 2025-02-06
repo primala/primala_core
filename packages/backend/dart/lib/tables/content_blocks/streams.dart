@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:nokhte_backend/tables/content_blocks.dart';
-import 'package:nokhte_backend/tables/sessions/utilities/utilities.dart';
+import 'package:nokhte_backend/tables/sessions/utilities/session_utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ContentBlocksStreams with ContentBlocksConstants, SessionsUtils {
