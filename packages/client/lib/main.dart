@@ -18,14 +18,14 @@ void main() async {
   late String supabaseUrl;
   late String supabaseAnonKey;
   if (kDebugMode) {
-    supabaseUrl = dotenv.env["DEV_SUPABASE_URL"] ?? '';
-    supabaseAnonKey = dotenv.env["DEV_SUPABASE_ANON_KEY"] ?? '';
+    // supabaseUrl = dotenv.env["DEV_SUPABASE_URL"] ?? '';
+    // supabaseAnonKey = dotenv.env["DEV_SUPABASE_ANON_KEY"] ?? '';
 
     // supabaseUrl = dotenv.env["PROD_SUPABASE_URL"] ?? '';
     // supabaseAnonKey = dotenv.env["PROD_SUPABASE_ANON_KEY"] ?? '';
 
-    // supabaseUrl = dotenv.env["STAGING_SUPABASE_URL"] ?? '';
-    // supabaseAnonKey = dotenv.env["STAGING_SUPABASE_ANON_KEY"] ?? '';
+    supabaseUrl = dotenv.env["STAGING_SUPABASE_URL"] ?? '';
+    supabaseAnonKey = dotenv.env["STAGING_SUPABASE_ANON_KEY"] ?? '';
   } else {
     supabaseUrl = dotenv.env["STAGING_SUPABASE_URL"] ?? '';
     supabaseAnonKey = dotenv.env["STAGING_SUPABASE_ANON_KEY"] ?? '';

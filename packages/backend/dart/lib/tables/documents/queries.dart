@@ -12,18 +12,12 @@ class DocumentsQueries with DocumentUtils, DocumentConstants {
     required this.supabase,
   }) : contentBlocks = ContentBlocksQueries(supabase: supabase);
 
-  DateTime? getExpirationDate(DocumentType type) =>
-      type == DocumentType.ephemeral
-          ? DateTime.now().add(const Duration(days: 7))
-          : null;
-
   Future<Map> insertDocument(InsertDocumentParams params) async {
     final res = await supabase
         .from(TABLE)
         .insert({
           TITLE: params.documentTitle,
           GROUP_ID: params.groupId,
-          PARENT_DOCUMENT_ID: params.parentDocumentId
         })
         .select()
         .single();

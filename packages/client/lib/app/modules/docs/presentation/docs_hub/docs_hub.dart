@@ -25,14 +25,7 @@ class DocsHubScreen extends HookWidget {
         showWidgets: coordinator.showWidgets,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const HeaderRow(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SmartHeader(
-                content: "Documents",
-              ),
-            ],
-          ),
+          const HeaderRow(title: 'Documents'),
           DocsDisplay(
             docs: coordinator.documents,
             onDocTapped: coordinator.onDocTapped,

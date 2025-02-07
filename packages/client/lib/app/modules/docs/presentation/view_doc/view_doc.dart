@@ -24,13 +24,16 @@ class ViewDocScreen extends HookWidget {
     }, []);
     return Observer(builder: (context) {
       return AnimatedScaffold(
+        showWidgets: coordinator.showWidgets,
         body: MultiHitStack(
           children: [
             SingleChildScrollView(
+              controller: coordinator.scrollController,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   DocHeader(
+                    onBackPress: coordinator.onBackPress,
                     onChanged: coordinator.onTitleChanged,
                     controller: coordinator.docTitleController,
                   ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_borders/gradient_borders.dart';
-import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte_backend/tables/content_blocks.dart';
 
@@ -28,18 +27,33 @@ class SpotlightStatementTextField extends StatelessWidget {
       opacity: textFieldOpacity,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32),
-        child: MultiHitStack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                border: GradientBoxBorder(
-                  gradient: BlockTextConstants.getGradient(
-                    type,
+        child: Container(
+          decoration: BoxDecoration(
+            border: GradientBoxBorder(
+              gradient: BlockTextConstants.getGradient(
+                type,
+              ),
+              width: 2.0,
+            ),
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: GestureDetector(
+                  onTap: () {
+                    focusNode.unfocus();
+                    onBackPressed();
+                  },
+                  child: Image.asset(
+                    BlockTextConstants.getAssetPath(type),
+                    width: 35,
+                    height: 35,
                   ),
                 ),
-                borderRadius: BorderRadius.circular(14),
               ),
-              child: TextField(
+              TextField(
                 maxLines: null,
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.text,
@@ -47,13 +61,14 @@ class SpotlightStatementTextField extends StatelessWidget {
                 onTapOutside: (event) => focusNode.unfocus(),
                 controller: controller,
                 focusNode: focusNode,
+                textAlign: TextAlign.center,
                 decoration: InputDecoration(
                   isDense: true,
-                  contentPadding: const EdgeInsets.only(
-                    left: 44,
-                    top: 16,
-                    bottom: 16,
-                  ),
+                  // contentPadding: const EdgeInsets.only(
+                  //   // left: 44,
+                  //   // top: 16,
+                  //   bottom: 16,
+                  // ),
                   border: InputBorder.none,
                   hintText:
                       'Enter your ${BlockTextConstants.getName(type).toLowerCase()}...',
@@ -62,23 +77,8 @@ class SpotlightStatementTextField extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-            Positioned(
-              left: 10,
-              top: 14,
-              child: GestureDetector(
-                onTap: () {
-                  focusNode.unfocus();
-                  onBackPressed();
-                },
-                child: Image.asset(
-                  BlockTextConstants.getAssetPath(type),
-                  width: 30,
-                  height: 30,
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -72,6 +72,9 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
     setMode(BlockTextFieldMode.adding);
     controller.clear();
     currentTextContent = '';
+    Timer(Seconds.get(0, milli: 1), () {
+      updateTextFieldHeight();
+    });
     setCurrentlySelectedParentId(-1);
     updateTextFieldHeight();
     setCurrentlySelectedContentId(-1);
@@ -149,12 +152,8 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
     if (controller.text.trim().isNotEmpty) {
       currentTextContent = controller.text;
       submissionCount++;
-    } else {
-      focusNode.unfocus();
-      Timer(Seconds.get(0, milli: 1), () {
-        updateTextFieldHeight();
-      });
     }
+    focusNode.unfocus();
   }
 
   @action

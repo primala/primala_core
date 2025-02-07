@@ -186,13 +186,9 @@ abstract class _GroupPickerCoordinatorBase
         setShowWidgets(false);
         final group = groupDisplay.groups[p0];
         await updateActiveGroup(group.id);
+        activeGroup.setGroupId(group.id);
         Timer(Seconds.get(0, milli: 500), () {
-          Modular.to.navigate(
-            HomeConstants.homeScreen,
-            arguments: {
-              HomeConstants.groupId: group.id,
-            },
-          );
+          Modular.to.navigate(HomeConstants.homeScreen);
         });
       });
 

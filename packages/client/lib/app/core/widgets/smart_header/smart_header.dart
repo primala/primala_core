@@ -14,11 +14,15 @@ class SmartHeader extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Jost(
-      content,
-      fontSize: 40,
-      shouldCenter: true,
-      fontColor: color,
+    return Expanded(
+      child: Center(
+        child: Jost(
+          content,
+          fontSize: 40,
+          shouldCenter: true,
+          fontColor: color,
+        ),
+      ),
     );
   }
 }

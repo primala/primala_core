@@ -19,7 +19,7 @@ class LeftChevron extends HookWidget {
     final screenSize = useFullScreenSize();
     return Padding(
       padding: EdgeInsets.only(
-        top: 5,
+        // top: 10,
         left: screenSize.width * leftPadding,
       ),
       child: GestureDetector(
@@ -31,8 +31,8 @@ class LeftChevron extends HookWidget {
             color: color,
           ),
           child: SizedBox(
-            height: screenSize.height * .06,
-            width: screenSize.height * .06,
+            height: screenSize.height * .04,
+            width: screenSize.height * .04,
           ),
         ),
       ),

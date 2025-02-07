@@ -10,6 +10,7 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte_backend/tables/sessions.dart';
 part 'session_main_coordinator.g.dart';
@@ -163,6 +164,14 @@ abstract class _SessionMainCoordinatorBase
           onClose: () {
             sessionBar.setWidgetVisibility(true);
           },
+          spotlightStatement: SpotlightStatement(
+            onTextUpdated: sessionMetadata.viewDoc.onSpotlightTextChanged,
+            onBlockTypeUpdated: sessionMetadata.viewDoc.onBlockTypeChanged,
+            controller: sessionMetadata.viewDoc.spotlightController,
+            externalBlockType:
+                sessionMetadata.viewDoc.spotlightContentBlock.type,
+            showTextField: true,
+          ),
         );
       });
 
@@ -177,6 +186,20 @@ abstract class _SessionMainCoordinatorBase
               onClose: () {
                 sessionBar.setWidgetVisibility(true);
               },
+              spotlightStatement: Column(
+                children: [
+                  SpotlightStatement(
+                    onTextUpdated:
+                        sessionMetadata.viewDoc.onSpotlightTextChanged,
+                    onBlockTypeUpdated:
+                        sessionMetadata.viewDoc.onBlockTypeChanged,
+                    controller: sessionMetadata.viewDoc.spotlightController,
+                    externalBlockType:
+                        sessionMetadata.viewDoc.spotlightContentBlock.type,
+                    showTextField: true,
+                  ),
+                ],
+              ),
             );
           default:
             break;

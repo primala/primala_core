@@ -28,17 +28,9 @@ class LoginScreen extends HookWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           HeaderRow(
-            children: [
-              LeftChevron(
-                onTap: coordinator.onGoBack,
-                color: Colors.white,
-              ),
-              const SmartHeader(
-                content: "Log in",
-                color: Colors.white,
-              ),
-              const LeftChevron(),
-            ],
+            title: "Log in",
+            onChevronTapped: coordinator.onGoBack,
+            chevronColor: Colors.white,
           ),
           AuthTextFields(
             store: coordinator.widgets.authTextFields,

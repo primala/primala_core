@@ -2,9 +2,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/active_group/active_group.dart';
+import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte_backend/tables/content_blocks.dart';
 import 'package:nokhte_backend/tables/documents.dart';
@@ -23,13 +25,17 @@ abstract class _ViewDocCoordinatorBase
     required this.contract,
     required this.activeGroup,
     required this.blockTextDisplay,
-  }) : blockTextFields = blockTextDisplay.blockTextFields;
+  }) : blockTextFields = blockTextDisplay.blockTextFields {
+    initBaseLogicActions();
+    initBaseWidgetsCoordinatorActions();
+  }
 
   Timer? _debounceTimer;
   static const _debounceDuration = Duration(milliseconds: 500);
 
   @action
   constructor(DocumentEntity doc) async {
+    setShowWidgets(false);
     this.doc = doc;
     await listenToContent(documentId);
     initReactors();
@@ -68,12 +74,24 @@ abstract class _ViewDocCoordinatorBase
             .where((element) => element.id != spotlightContentBlockId)
             .toList());
         blockTextDisplay.setContent(filteredList);
+        setShowWidgets(true);
       });
+    });
+  }
+
+  @action
+  onBackPress() {
+    Modular.to.pop();
+    Timer(Seconds.get(0, milli: 200), () {
+      title = '';
+      contentBlocks = ObservableList<ContentBlockEntity>();
     });
   }
 
   @observable
   String title = '';
+
+  final ScrollController scrollController = ScrollController();
 
   @observable
   DocumentEntity doc = DocumentEntity.initial();
@@ -178,6 +196,7 @@ abstract class _ViewDocCoordinatorBase
       reaction((p0) => blockTextFields.submissionCount, (p0) async {
         if (blockTextFields.mode == BlockTextFieldMode.adding) {
           await contract.addContent(addContentParams);
+          scrollController.jumpTo(scrollController.position.maxScrollExtent);
         } else {
           await contract.updateContent(updateContentParams);
         }
@@ -204,7 +223,7 @@ abstract class _ViewDocCoordinatorBase
   int get documentId => doc.id;
 
   @computed
-  int get spotlightContentBlockId => doc.id;
+  int get spotlightContentBlockId => doc.spotlightContentId;
 
   @computed
   ContentBlockEntity get spotlightContentBlock {

@@ -90,7 +90,7 @@ class SpotlightStatement extends HookWidget {
               selectionOpacity: selectionOpacity,
               onBlockTypeUpdated: onBlockTypeUpdated,
             ),
-          if (selectedType.value != null)
+          if (showTextField.value)
             SpotlightStatementTextField(
                 onTextUpdated: onTextUpdated,
                 type: selectedType.value!,

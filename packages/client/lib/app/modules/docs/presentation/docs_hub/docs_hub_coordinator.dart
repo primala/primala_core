@@ -42,8 +42,8 @@ abstract class _DocsHubCoordinatorBase
 
   @action
   constructor() async {
-    fadeInWidgets();
     await listenToDocuments();
+    fadeInWidgets();
     disposers.add(docTitleReactor());
   }
 
@@ -53,6 +53,7 @@ abstract class _DocsHubCoordinatorBase
     res.fold((failure) => errorUpdater(failure), (stream) {
       documentsStream = ObservableStream(stream);
       documentsStreamSubscription = documentsStream.listen((event) {
+        print('any documents $event');
         documents = ObservableList.of(event);
       });
     });
@@ -84,7 +85,9 @@ abstract class _DocsHubCoordinatorBase
   @action
   dispose() async {
     super.dispose();
-    await documentsStreamSubscription.cancel();
+    documents = ObservableList();
+    documentsStreamSubscription = const Stream.empty().listen((event) {});
+
     await contract.cancelDocumentStream();
   }
 
