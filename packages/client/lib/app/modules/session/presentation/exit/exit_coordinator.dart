@@ -1,0 +1,71 @@
+// ignore_for_file: must_be_immutable, library_private_types_in_public_api
+import 'dart:async';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:mobx/mobx.dart';
+import 'package:nokhte/app/core/mobx/mobx.dart';
+import 'package:nokhte/app/core/modules/active_group/active_group.dart';
+import 'package:nokhte/app/core/types/types.dart';
+import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:nokhte/app/modules/home/home.dart';
+import 'package:nokhte/app/modules/session/session.dart';
+import 'package:nokhte_backend/tables/groups.dart';
+import 'package:nokhte_backend/tables/sessions.dart';
+part 'exit_coordinator.g.dart';
+
+class SessionExitCoordinator = _SessionExitCoordinatorBase
+    with _$SessionExitCoordinator;
+
+abstract class _SessionExitCoordinatorBase
+    with Store, Reactions, BaseWidgetsCoordinator {
+  final SessionPresenceCoordinator presence;
+  final SessionMetadataStore sessionMetadata;
+  final ActiveGroup activeGroup;
+  final SwipeDetector swipe;
+
+  _SessionExitCoordinatorBase({
+    required this.presence,
+    required this.swipe,
+    required this.activeGroup,
+  }) : sessionMetadata = presence.sessionMetadataStore;
+
+  @action
+  constructor() async {
+    await presence.updateUserStatus(
+      SessionUserStatus.readyToLeave,
+    );
+    disposers.add(swipeReactor());
+    disposers.add(sessionExitReactor());
+  }
+
+  sessionExitReactor() =>
+      reaction((p0) => sessionMetadata.userIsSpeaking, (p0) async {
+        if (p0) {
+          if (sessionMetadata.userIndex == 0) {
+            await presence.deleteSession(sessionMetadata.sessionId);
+          }
+          activeGroup.setGroupEntity(GroupEntity.initial());
+          setShowWidgets(false);
+          Timer(Seconds.get(0, milli: 500), () {
+            Modular.to.navigate(HomeConstants.homeScreen);
+          });
+        }
+      });
+
+  swipeReactor() => reaction((p0) => swipe.directionsType, (p0) async {
+        switch (p0) {
+          case GestureDirections.down:
+            await presence.updateUserStatus(SessionUserStatus.online);
+            setShowWidgets(false);
+          default:
+            break;
+        }
+      });
+
+  @override
+  @action
+  dispose() async {
+    super.dispose();
+    await presence.dispose();
+    Modular.dispose<SessionLogicModule>();
+  }
+}

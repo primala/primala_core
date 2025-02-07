@@ -15,7 +15,7 @@ mixin SessionConstants {
   static const relativeGreeter = '/greeter';
   static const relativePause = '/pause';
   static const relativeDocPicker = '/doc_picker';
-  static const relativeEndSession = '/end_session';
+  static const relativeExitSession = '/exit_session';
 
   static const lobby = '$module$relativeLobby';
   static const sessionStarter = '$module$relativeSessionStarter';
@@ -23,5 +23,5 @@ mixin SessionConstants {
   static const greeter = '$module$relativeGreeter';
   static const pause = '$module$relativePause';
   static const docPicker = '$module$relativeDocPicker';
-  static const endSession = '$module$relativeEndSession';
+  static const exitSession = '$module$relativeExitSession';
 }

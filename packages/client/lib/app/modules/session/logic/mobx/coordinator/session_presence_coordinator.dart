@@ -76,8 +76,8 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
   }
 
   @action
-  completeTheSession() async {
-    final res = await contract.completeTheSession();
+  deleteSession(int sessionId) async {
+    final res = await contract.deleteSession(sessionId);
     res.fold(
       (failure) => errorUpdater(failure),
       (sessionUpdateStatus) => sessionIsFinished = sessionUpdateStatus,

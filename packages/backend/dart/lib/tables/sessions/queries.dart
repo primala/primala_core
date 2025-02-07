@@ -287,23 +287,8 @@ class SessionsQueries
     return [];
   }
 
-  Future<List> cleanUpSessions() async {
-    final activeResponse = await supabase
-        .from(TABLE)
-        .update({
-          STATUS: mapSessionStatusToString(
-            SessionStatus.finished,
-          )
-        })
-        .neq(
-            STATUS,
-            mapSessionStatusToString(
-              SessionStatus.dormant,
-            ))
-        .select();
-
-    return activeResponse;
-  }
+  Future<List> deleteSession(int sessionId) async =>
+      await supabase.from(TABLE).delete().eq(ID, sessionId).select();
 
   Future<Map> initializeSession(InitializeSessionParams params) async {
     final collaboratorUids = params.collaborators.map((e) => e.uid).toList();

@@ -57,9 +57,7 @@ class PauseScreen extends HookWidget {
                   showWidget: true,
                   assetPath: 'assets/session/end_session_icon.png',
                   sliderText: 'End Session',
-                  onSlideComplete: () {
-                    // go to end session
-                  },
+                  onSlideComplete: () => coordinator.onSlideComplete(),
                 ),
               ),
             ],

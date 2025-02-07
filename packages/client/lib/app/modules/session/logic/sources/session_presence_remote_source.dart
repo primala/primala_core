@@ -14,7 +14,7 @@ abstract class SessionPresenceRemoteSource {
   );
   String getUserUID();
   Future<List> updateActiveDocument(int docId);
-  Future<List> completeTheSession();
+  Future<List> deleteSession(int sessionId);
   Future<List> startTheSession();
   Future<List> updateSpeakingTimerStart();
 }
@@ -47,8 +47,8 @@ class SessionPresenceRemoteSourceImpl implements SessionPresenceRemoteSource {
       );
 
   @override
-  completeTheSession() async =>
-      await sessionInformationQueries.cleanUpSessions();
+  deleteSession(docId) async =>
+      await sessionInformationQueries.deleteSession(docId);
 
   @override
   startTheSession() async => await sessionInformationQueries.beginSession();

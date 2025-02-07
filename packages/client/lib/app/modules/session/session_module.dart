@@ -1,4 +1,5 @@
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:nokhte/app/core/modules/active_group/active_group.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/docs/docs.dart';
@@ -9,6 +10,7 @@ class SessionModule extends Module {
   List<Module> get imports => [
         SessionLogicModule(),
         PosthogModule(),
+        ActiveGroupModule(),
         DocsLogicModule(),
         PreSessionModule(),
       ];
@@ -26,6 +28,14 @@ class SessionModule extends Module {
       () => PauseCoordinator(
         presence: Modular.get<SessionPresenceCoordinator>(),
         tint: TintStore(),
+      ),
+    );
+
+    i.add<SessionExitCoordinator>(
+      () => SessionExitCoordinator(
+        activeGroup: Modular.get<ActiveGroup>(),
+        presence: Modular.get<SessionPresenceCoordinator>(),
+        swipe: SwipeDetector(),
       ),
     );
 
@@ -53,6 +63,14 @@ class SessionModule extends Module {
       transition: TransitionType.noTransition,
       child: (context) => LobbyScreen(
         coordinator: Modular.get<LobbyCoordinator>(),
+      ),
+    );
+
+    r.child(
+      SessionConstants.relativeExitSession,
+      transition: TransitionType.noTransition,
+      child: (context) => SessionExitScreen(
+        coordinator: Modular.get<SessionExitCoordinator>(),
       ),
     );
 

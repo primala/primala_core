@@ -47,7 +47,7 @@ abstract class _PauseCoordinatorBase with Store, BaseWidgetsCoordinator {
     setShowWidgets(false);
     tint.reverseMovie(const NoParams());
     Timer(Seconds.get(0, milli: 500), () {
-      Modular.to.navigate(SessionConstants.endSession);
+      Modular.to.navigate(SessionConstants.exitSession);
     });
   }
 }

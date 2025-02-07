@@ -1,4 +1,5 @@
 export 'session_starter/session_starter.dart';
+export 'exit/exit.dart';
 export 'doc_picker/doc_picker.dart';
 export 'pause/pause.dart';
 export 'lobby/lobby.dart';

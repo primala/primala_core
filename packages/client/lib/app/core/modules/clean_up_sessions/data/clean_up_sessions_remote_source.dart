@@ -13,6 +13,8 @@ class CleanUpSessionsRemoteSourceImpl implements CleanUpSessionsRemoteSource {
   }) : sessionInformationQueries = SessionsQueries(supabase: supabase);
 
   @override
-  deleteActiveNokhteSession() async =>
-      await sessionInformationQueries.cleanUpSessions();
+  deleteActiveNokhteSession() async {
+    await sessionInformationQueries.deleteStaleSessions();
+    return [];
+  }
 }

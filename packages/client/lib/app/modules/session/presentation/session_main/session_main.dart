@@ -16,7 +16,6 @@ class SessionMainScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     useEffect(() {
-      print('is the build running ');
       coordinator.constructor();
       return null;
       // return () => coordinator.deconstructor();

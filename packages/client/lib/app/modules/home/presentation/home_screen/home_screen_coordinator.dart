@@ -50,16 +50,15 @@ abstract class _HomeScreenCoordinatorBase
 
   @action
   constructor() async {
-    Modular.to.navigate(SessionConstants.lobby);
     final activeGroupId = activeGroup.groupId;
     if (activeGroup.groupEntity.name.isEmpty) {
-      // await contract.deleteStaleSessions();
+      await contract.deleteStaleSessions();
       await getGroup(activeGroupId);
     } else {
       selectedGroup = activeGroup.groupEntity;
       fadeInWidgets();
       setShowCarousel(true);
-      // await contract.deleteStaleSessions();
+      await contract.deleteStaleSessions();
     }
   }
 

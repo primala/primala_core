@@ -7,7 +7,7 @@ import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte_backend/tables/sessions.dart';
 
 abstract class SessionPresenceContract {
-  Future<Either<Failure, bool>> completeTheSession();
+  Future<Either<Failure, bool>> deleteSession(int sessionId);
   Future<Either<Failure, bool>> updateActiveDocument(int docId);
   Future<Either<Failure, bool>> startTheSession();
   Future<Either<Failure, bool>> updateUserStatus(SessionUserStatus params);
@@ -34,9 +34,9 @@ class SessionPresenceContractImpl
   });
 
   @override
-  completeTheSession() async {
+  deleteSession(sessionId) async {
     if (await networkInfo.isConnected) {
-      final res = await remoteSource.completeTheSession();
+      final res = await remoteSource.deleteSession(sessionId);
       return fromSupabase(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
