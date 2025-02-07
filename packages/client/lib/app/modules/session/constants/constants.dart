@@ -13,9 +13,15 @@ mixin SessionConstants {
   static const relativeSessionStarter = '/session_starter';
   static const relativeMainScreen = '/main';
   static const relativeGreeter = '/greeter';
+  static const relativePause = '/pause';
+  static const relativeDocPicker = '/doc_picker';
+  static const relativeEndSession = '/end_session';
 
   static const lobby = '$module$relativeLobby';
   static const sessionStarter = '$module$relativeSessionStarter';
   static const mainScreen = '$module$relativeMainScreen';
   static const greeter = '$module$relativeGreeter';
+  static const pause = '$module$relativePause';
+  static const docPicker = '$module$relativeDocPicker';
+  static const endSession = '$module$relativeEndSession';
 }

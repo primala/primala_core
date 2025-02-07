@@ -31,6 +31,9 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
   bool userStatusIsUpdated = false;
 
   @observable
+  bool activeDocumentIsUpdated = false;
+
+  @observable
   bool whoIsTalkingIsUpdated = false;
 
   @observable
@@ -132,6 +135,17 @@ abstract class _SessionPresenceCoordinatorBase with Store, BaseMobxLogic {
     res.fold(
       (failure) => errorUpdater(failure),
       (status) => powerUpIsUsed = status,
+    );
+    setState(StoreState.loaded);
+  }
+
+  @action
+  updateActiveDocument(int docId) async {
+    setState(StoreState.loading);
+    final res = await contract.updateActiveDocument(docId);
+    res.fold(
+      (failure) => errorUpdater(failure),
+      (status) => activeDocumentIsUpdated = status,
     );
     setState(StoreState.loaded);
   }

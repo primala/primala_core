@@ -1,6 +1,9 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
 import 'package:dartz/dartz.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
@@ -20,7 +23,7 @@ abstract class _SessionMainCoordinatorBase
   final SessionMetadataStore sessionMetadata;
   final PurposeBannerStore purposeBanner;
   final TintStore tint;
-  final RefreshBannerStore refreshBanner;
+  final SessionBarStore sessionBar;
   final BorderGlowStore borderGlow;
   final SmartTextStore smartText;
   final LetEmCookStore letEmCook;
@@ -35,7 +38,7 @@ abstract class _SessionMainCoordinatorBase
 
   _SessionMainCoordinatorBase({
     required this.captureScreen,
-    required this.refreshBanner,
+    required this.sessionBar,
     required this.presence,
     required this.smartText,
     required this.tint,
@@ -81,6 +84,7 @@ abstract class _SessionMainCoordinatorBase
     disposers.add(userCanSpeakReactor());
     disposers.add(tapReactor());
     disposers.add(currentFocusReactor());
+    disposers.add(purposeBannerTapReactor());
   }
 
   @action
@@ -94,10 +98,36 @@ abstract class _SessionMainCoordinatorBase
 
   @action
   onLetGo() {
-    refreshBanner.setWidgetVisibility(true);
+    sessionBar.setWidgetVisibility(true);
     smartText.setWidgetVisibility(true);
     borderGlow.initGlowDown();
     rally.reset();
+  }
+
+  @action
+  onPauseTapped() async {
+    await presence.dispose();
+    setShowWidgets(false);
+    if (presence.incidentsOverlayStore.showWidget) {
+      presence.incidentsOverlayStore.setWidgetVisibility(false);
+    }
+    Timer(Seconds.get(1), () {
+      Modular.to.navigate(SessionConstants.pause);
+    });
+  }
+
+  @action
+  onDocTapped() {
+    Modular.to.push(
+      MaterialPageRoute(builder: (BuildContext context) {
+        return Observer(builder: (context) {
+          return DocPicker(
+            docs: sessionMetadata.documents,
+            onDocPicked: presence.updateActiveDocument,
+          );
+        });
+      }),
+    );
   }
 
   @action
@@ -121,19 +151,30 @@ abstract class _SessionMainCoordinatorBase
         rally.setCurrentInitiator(p0);
       });
 
+  purposeBannerTapReactor() => reaction((p0) => purposeBanner.tapCount, (p0) {
+        if (!purposeBanner.showWidget) return;
+        purposeBanner.showModal(
+          onOpen: () {
+            sessionBar.setWidgetVisibility(false);
+          },
+          onClose: () {
+            sessionBar.setWidgetVisibility(true);
+          },
+        );
+      });
+
   swipeReactor() => reaction((p0) => swipe.directionsType, (p0) async {
         switch (p0) {
-          case GestureDirections.down:
-            if (presence.incidentsOverlayStore.showWidget) {
-              presence.incidentsOverlayStore.setWidgetVisibility(false);
-            }
-            await presence.dispose();
-            Timer(Seconds.get(1), () {
-              // Modular.to.navigate(SessionConstants.pause);
-            });
           case GestureDirections.up:
             if (!purposeBanner.showWidget) return;
-            purposeBanner.showModal(onOpen: () {}, onClose: () {});
+            purposeBanner.showModal(
+              onOpen: () {
+                sessionBar.setWidgetVisibility(false);
+              },
+              onClose: () {
+                sessionBar.setWidgetVisibility(true);
+              },
+            );
           default:
             break;
         }
@@ -168,7 +209,7 @@ abstract class _SessionMainCoordinatorBase
         if (p0) {
           borderGlow.initMovie(const NoParams());
           smartText.setWidgetVisibility(false);
-          refreshBanner.setWidgetVisibility(false);
+          sessionBar.setWidgetVisibility(false);
           rally.setRallyPhase(RallyPhase.initial);
           setDisableAllTouchFeedback(true);
           await presence.updateUserStatus(SessionUserStatus.online);
@@ -176,7 +217,7 @@ abstract class _SessionMainCoordinatorBase
           borderGlow.initGlowDown();
           // Timer(Seconds.get(1), () {
           smartText.setWidgetVisibility(true);
-          refreshBanner.setWidgetVisibility(true);
+          sessionBar.setWidgetVisibility(true);
           // });
         }
       });
@@ -200,7 +241,7 @@ abstract class _SessionMainCoordinatorBase
         (p0) {
           if (sessionMetadata.currentPowerup == PowerupType.rally) {
             if (p0) {
-              refreshBanner.setWidgetVisibility(false);
+              sessionBar.setWidgetVisibility(false);
               rally.setCurrentInitiator(
                 sessionMetadata.currentSpeakerFirstName,
               );

@@ -13,6 +13,7 @@ abstract class SessionPresenceRemoteSource {
     RallyParams params,
   );
   String getUserUID();
+  Future<List> updateActiveDocument(int docId);
   Future<List> completeTheSession();
   Future<List> startTheSession();
   Future<List> updateSpeakingTimerStart();
@@ -73,4 +74,9 @@ class SessionPresenceRemoteSourceImpl implements SessionPresenceRemoteSource {
   @override
   updateUserStatus(params) async =>
       await sessionInformationQueries.updateUserStatus(params);
+
+  @override
+  updateActiveDocument(docId) async {
+    return await sessionInformationQueries.updateActiveDocument(docId);
+  }
 }

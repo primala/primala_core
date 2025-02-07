@@ -7,13 +7,13 @@ export 'doc_item.dart';
 
 class DocsDisplay extends HookWidget {
   final Function(int) onDocTapped;
-  final Function() onCreateDocTapped;
+  final Function()? onCreateDocTapped;
   final DocumentEntities docs;
 
   const DocsDisplay({
     super.key,
     required this.onDocTapped,
-    required this.onCreateDocTapped,
+    this.onCreateDocTapped,
     required this.docs,
   });
 
@@ -41,28 +41,26 @@ class DocsDisplay extends HookWidget {
               mainAxisSpacing: 22,
               childAspectRatio: .76,
             ),
-            itemCount: docs.length + 1,
+            itemCount: docs.length + (onCreateDocTapped != null ? 1 : 0),
             itemBuilder: (context, index) {
-              if (index == docs.length) {
-                if (true) {
-                  return GestureDetector(
-                    onTap: () => onCreateDocTapped(),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.black,
-                        ),
-                        borderRadius: BorderRadius.circular(14),
+              if (index == docs.length && onCreateDocTapped != null) {
+                return GestureDetector(
+                  onTap: () => onCreateDocTapped?.call(),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.black,
                       ),
-                      child: Center(
-                          child: Image.asset(
-                        'assets/groups/plus_icon.png',
-                        width: 80,
-                        height: 80,
-                      )),
+                      borderRadius: BorderRadius.circular(14),
                     ),
-                  );
-                }
+                    child: Center(
+                        child: Image.asset(
+                      'assets/groups/plus_icon.png',
+                      width: 80,
+                      height: 80,
+                    )),
+                  ),
+                );
               }
 
               return DocItem(

@@ -19,6 +19,7 @@ class LeftChevron extends HookWidget {
     final screenSize = useFullScreenSize();
     return Padding(
       padding: EdgeInsets.only(
+        top: 5,
         left: screenSize.width * leftPadding,
       ),
       child: GestureDetector(

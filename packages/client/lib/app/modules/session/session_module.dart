@@ -21,11 +21,19 @@ class SessionModule extends Module {
         captureScreen: Modular.get<CaptureScreen>(),
       ),
     );
+
+    i.add<PauseCoordinator>(
+      () => PauseCoordinator(
+        presence: Modular.get<SessionPresenceCoordinator>(),
+        tint: TintStore(),
+      ),
+    );
+
     i.add<SessionMainCoordinator>(
       () => SessionMainCoordinator(
         captureScreen: Modular.get<CaptureScreen>(),
         presence: Modular.get<SessionPresenceCoordinator>(),
-        refreshBanner: RefreshBannerStore(),
+        sessionBar: SessionBarStore(),
         tint: TintStore(),
         smartText: SmartTextStore(),
         borderGlow: BorderGlowStore(),
@@ -53,6 +61,14 @@ class SessionModule extends Module {
       transition: TransitionType.noTransition,
       child: (context) => SessionStarterScreen(
         coordinator: Modular.get<SessionStarterCoordinator>(),
+      ),
+    );
+
+    r.child(
+      SessionConstants.relativePause,
+      transition: TransitionType.noTransition,
+      child: (context) => PauseScreen(
+        coordinator: Modular.get<PauseCoordinator>(),
       ),
     );
 

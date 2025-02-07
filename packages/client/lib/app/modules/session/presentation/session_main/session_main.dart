@@ -44,7 +44,11 @@ class SessionMainScreen extends HookWidget {
             Rally(coordinator.rally),
             if (!coordinator.sessionMetadata.userIsSpeaking)
               LetEmCook(coordinator.letEmCook),
-            RefreshBanner(coordinator.refreshBanner),
+            SessionBar(
+              coordinator.sessionBar,
+              onDocTapped: () async => await coordinator.onDocTapped(),
+              onPauseTapped: () async => await coordinator.onPauseTapped(),
+            ),
             PurposeBanner(
               coordinator.purposeBanner,
             ),

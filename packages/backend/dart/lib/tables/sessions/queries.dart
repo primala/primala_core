@@ -116,6 +116,27 @@ class SessionsQueries
     );
   }
 
+  Future<List> updateActiveDocument(int docId) async {
+    await findCurrentSession();
+    final res = await getSessionStatus();
+    return await retry<List>(
+      action: () async {
+        return await _onCurrentActiveNokhteSession(
+          supabase.from(TABLE).update(
+            {
+              ACTIVE_DOCUMENT: docId,
+              VERSION: res.currentVersion + 1,
+            },
+          ),
+          version: res.currentVersion,
+        );
+      },
+      shouldRetry: (result) {
+        return result.isEmpty;
+      },
+    );
+  }
+
   Future<List> refreshSpeakingTimerStart() async {
     await findCurrentSession();
     final res = await getSpeakerSpotlight();

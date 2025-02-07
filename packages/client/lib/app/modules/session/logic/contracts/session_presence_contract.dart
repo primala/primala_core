@@ -8,6 +8,7 @@ import 'package:nokhte_backend/tables/sessions.dart';
 
 abstract class SessionPresenceContract {
   Future<Either<Failure, bool>> completeTheSession();
+  Future<Either<Failure, bool>> updateActiveDocument(int docId);
   Future<Either<Failure, bool>> startTheSession();
   Future<Either<Failure, bool>> updateUserStatus(SessionUserStatus params);
   Future<Either<Failure, bool>> usePowerUp(
@@ -111,6 +112,16 @@ class SessionPresenceContractImpl
   updateSpeakingTimerStart() async {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.updateSpeakingTimerStart();
+      return fromSupabase(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  @override
+  updateActiveDocument(docId) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.updateActiveDocument(docId);
       return fromSupabase(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
