@@ -2149,7 +2149,7 @@ using (((auth.uid() = uid) OR check_users_share_group(auth.uid(), uid)));
 alter table "public"."users" add column "email" text not null default ''::text;
 
 
-alter table "public"."users" add constraint "users_email_key" UNIQUE using index "users_email_key";
+-- alter table "public"."users" add constraint "users_email_key" UNIQUE using index "users_email_key";
 
 insert into public.users (uid, email)
 select 
