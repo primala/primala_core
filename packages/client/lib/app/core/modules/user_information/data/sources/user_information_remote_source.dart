@@ -1,5 +1,4 @@
-import 'package:nokhte/app/core/modules/hive/hive.dart';
-import 'package:nokhte_backend/tables/user_information.dart';
+import 'package:nokhte_backend/tables/users.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -10,14 +9,13 @@ abstract class UserInformationRemoteSource {
 }
 
 class UserInformationRemoteSourceImpl
-    with UserInformationConstants
+    with UsersConstants
     implements UserInformationRemoteSource {
   final SupabaseClient supabase;
-  final UserInformationQueries userInfoQueries;
-  final userInfoBox = HiveBoxes.userInformation.toString();
+  final UsersQueries userInfoQueries;
 
   UserInformationRemoteSourceImpl({required this.supabase})
-      : userInfoQueries = UserInformationQueries(supabase: supabase);
+      : userInfoQueries = UsersQueries(supabase: supabase);
 
   @override
   getFullName() async => await userInfoQueries.getFullName();

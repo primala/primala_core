@@ -11,6 +11,7 @@ class HomeLogicModule extends Module {
         LegacyConnectivityModule(),
         SupabaseModule(),
       ];
+
   @override
   void exportedBinds(i) {
     i.add<HomeRemoteSourceImpl>(
@@ -23,12 +24,6 @@ class HomeLogicModule extends Module {
       () => HomeContractImpl(
         networkInfo: Modular.get<NetworkInfoImpl>(),
         remoteSource: Modular.get<HomeRemoteSourceImpl>(),
-      ),
-    );
-
-    i.add<HomeLogicCoordinator>(
-      () => HomeLogicCoordinator(
-        contract: Modular.get<HomeContractImpl>(),
       ),
     );
   }

@@ -10,9 +10,9 @@ export 'collaborator_presence_incidents_overlay.dart';
 
 class CollaboratorPresenceIncidentsOverlay extends StatelessWidget {
   final CollaboratorPresenceIncidentsOverlayStore store;
-  const CollaboratorPresenceIncidentsOverlay({
+  const CollaboratorPresenceIncidentsOverlay(
+    this.store, {
     super.key,
-    required this.store,
   });
 
   @override

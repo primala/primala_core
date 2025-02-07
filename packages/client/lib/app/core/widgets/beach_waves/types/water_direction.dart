@@ -1,4 +1,0 @@
-enum WaterDirection {
-  down,
-  up,
-}

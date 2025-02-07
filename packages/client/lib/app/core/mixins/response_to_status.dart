@@ -12,6 +12,14 @@ mixin ResponseToStatus {
     }
   }
 
+  Either<Failure, bool> fromSupabaseSingle(Map response) {
+    if (response.isEmpty) {
+      return const Right(false);
+    } else {
+      return const Right(true);
+    }
+  }
+
   Either<Failure, T> fromSupabaseProperty<T>(
       List res, String property, T defaultType) {
     if (res.isEmpty) {

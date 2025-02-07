@@ -6,5 +6,4 @@ export './store_state.dart';
 export 'base_widget_store.dart';
 export "./base_widgets_coordinator.dart";
 export './reactions.dart';
-export 'nokhte_widgets_utils.dart';
 export './swipe_navigation_utils.dart';
