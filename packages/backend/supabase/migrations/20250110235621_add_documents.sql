@@ -2148,7 +2148,6 @@ using (((auth.uid() = uid) OR check_users_share_group(auth.uid(), uid)));
 
 alter table "public"."users" add column "email" text not null default ''::text;
 
-CREATE UNIQUE INDEX users_email_key ON public.users USING btree (email);
 
 alter table "public"."users" add constraint "users_email_key" UNIQUE using index "users_email_key";
 
@@ -2159,6 +2158,9 @@ select
 from auth.users
 on conflict (uid) do update
 set email = coalesce(excluded.email, '');
+
+
+CREATE UNIQUE INDEX users_email_key ON public.users USING btree (email);
 
 drop policy "Can Update if Is Group Admin And Group Has More Than One Admin" on "public"."group_roles";
 
