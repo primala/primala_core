@@ -6,7 +6,7 @@ class TintMovie {
   static MovieTween get movie => MovieTween()
     ..scene(
       begin: Seconds.get(0),
-      end: Seconds.get(1),
+      end: Seconds.get(0, milli: 500),
     ).tween<double>(
       'opacity',
       Tween<double>(
@@ -17,7 +17,7 @@ class TintMovie {
   static MovieTween get revMovie => MovieTween()
     ..scene(
       begin: Seconds.get(0),
-      end: Seconds.get(1),
+      end: Seconds.get(0, milli: 500),
     ).tween<double>(
       'opacity',
       Tween<double>(

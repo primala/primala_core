@@ -43,8 +43,6 @@ abstract class _LetEmCookStoreBase extends BaseWidgetStore with Store {
 
   @action
   onTap() {
-    if (buttonVisibility) {
-      tapCount++;
-    }
+    tapCount++;
   }
 }

@@ -11,9 +11,9 @@ export 'purpose_banner_store.dart';
 
 class PurposeBanner extends HookWidget {
   final PurposeBannerStore store;
-  const PurposeBanner({
+  const PurposeBanner(
+    this.store, {
     super.key,
-    required this.store,
   });
 
   @override

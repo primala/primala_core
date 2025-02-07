@@ -1,5 +1,5 @@
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
-import 'package:nokhte_backend/tables/user_information.dart';
+import 'package:nokhte_backend/tables/users.dart';
 import 'package:posthog_flutter/posthog_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -18,7 +18,7 @@ class PosthogRemoteSourceImpl
     with PosthogEventConstants
     implements PosthogRemoteSource {
   final SupabaseClient supabase;
-  late UserInformationQueries userInfoQueries;
+  late UsersQueries usersQueries;
 
   PosthogRemoteSourceImpl({required this.supabase});
 
@@ -61,8 +61,8 @@ class PosthogRemoteSourceImpl
 
   @override
   identifyUser() async {
-    userInfoQueries = UserInformationQueries(supabase: supabase);
-    final fullNameRes = await userInfoQueries.getFullName();
+    usersQueries = UsersQueries(supabase: supabase);
+    final fullNameRes = await usersQueries.getFullName();
     await posthog.identify(
       userId: supabase.auth.currentUser!.id,
       userProperties: {

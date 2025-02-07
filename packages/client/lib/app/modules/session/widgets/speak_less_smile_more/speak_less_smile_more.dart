@@ -8,9 +8,9 @@ export 'speak_less_smile_more_store.dart';
 
 class SpeakLessSmileMore extends StatelessWidget {
   final SpeakLessSmileMoreStore store;
-  const SpeakLessSmileMore({
+  const SpeakLessSmileMore(
+    this.store, {
     super.key,
-    required this.store,
   });
 
   @override

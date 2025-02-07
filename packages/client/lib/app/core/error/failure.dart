@@ -16,6 +16,10 @@ class SupabaseFailure extends Failure {
   const SupabaseFailure({required super.message, required super.failureCode});
 }
 
+class AuthFailure extends Failure {
+  const AuthFailure({required super.message, required super.failureCode});
+}
+
 class AndroidPlatformFailure extends Failure {
   const AndroidPlatformFailure(
       {required super.message, required super.failureCode});

@@ -4,5 +4,5 @@ import 'package:nokhte_backend/types/types.dart';
 
 abstract class UserInformationContract {
   Future<Either<Failure, bool>> checkIfVersionIsUpToDate();
-  Future<Either<Failure, UserInformationEntity>> getUserInformation();
+  Future<Either<Failure, UserEntity>> getUserInformation();
 }

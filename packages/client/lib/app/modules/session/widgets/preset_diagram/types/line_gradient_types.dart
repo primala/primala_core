@@ -1,4 +1,0 @@
-enum LineGradientTypes {
-  talking,
-  notes,
-}

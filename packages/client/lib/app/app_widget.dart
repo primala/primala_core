@@ -10,7 +10,7 @@ class AppWidget extends StatelessWidget {
     return MaterialApp.router(
       theme: ThemeData(
           dividerColor: Colors.transparent, // Removes the border
-
+          splashColor: Colors.transparent,
           canvasColor: Colors.transparent,
           bottomSheetTheme: BottomSheetThemeData(
             showDragHandle: true,

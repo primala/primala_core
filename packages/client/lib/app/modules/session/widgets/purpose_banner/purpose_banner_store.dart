@@ -6,9 +6,10 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/base_widget_store.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
-import 'package:nokhte/app/core/modules/session_content/session_content.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:nokhte/app/modules/docs/docs.dart';
+import 'package:nokhte/app/modules/session/session.dart';
 
 part 'purpose_banner_store.g.dart';
 
@@ -16,12 +17,11 @@ class PurposeBannerStore = _PurposeBannerStoreBase with _$PurposeBannerStore;
 
 abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
     with Store {
-  final NokhteBlurStore blur;
+  final NokhteBlurStore blur = NokhteBlurStore();
   final BlockTextDisplayStore blockTextDisplay;
   final BlockTextFieldsStore blockTextFields;
 
   _PurposeBannerStoreBase({
-    required this.blur,
     required this.blockTextDisplay,
   }) : blockTextFields = blockTextDisplay.blockTextFields;
 
