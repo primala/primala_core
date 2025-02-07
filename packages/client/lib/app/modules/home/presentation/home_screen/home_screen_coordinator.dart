@@ -50,6 +50,7 @@ abstract class _HomeScreenCoordinatorBase
 
   @action
   constructor() async {
+    Modular.dispose<SessionPresenceCoordinator>();
     final activeGroupId = activeGroup.groupId;
     if (activeGroup.groupEntity.name.isEmpty) {
       await contract.deleteStaleSessions();

@@ -215,6 +215,7 @@ class Rally extends HookWidget with RallyConstants {
 
     return Observer(
       builder: (context) {
+        print('do we show the widget ${store.showWidget}');
         return AnimatedOpacity(
           duration: Seconds.get(0, milli: 500),
           opacity: useWidgetOpacity(store.showWidget),

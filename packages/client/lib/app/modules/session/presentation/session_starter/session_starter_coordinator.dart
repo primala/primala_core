@@ -40,6 +40,7 @@ abstract class _SessionStarterCoordinatorBase
 
   @action
   constructor() async {
+    Modular.dispose<SessionPresenceCoordinator>();
     getUserUid();
     await getGroupMembers();
     await getDocuments();

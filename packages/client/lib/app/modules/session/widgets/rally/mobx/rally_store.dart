@@ -75,7 +75,6 @@ abstract class _RallyStoreBase extends BaseWidgetStore with Store, Reactions {
     Timer(Seconds.get(0, milli: 500), () {
       phase = value;
       setWidgetVisibility(true);
-      print('phase $phase visibility $showWidget ');
     });
   }
 

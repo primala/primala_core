@@ -56,8 +56,7 @@ abstract class _LobbyCoordinatorBase
         if (!p0) return;
         setShowWidgets(false);
         Timer(Seconds.get(0, milli: 500), () {
-          // Modular.to.navigate(SessionConstants.greeter);
-          Modular.to.navigate(SessionConstants.mainScreen);
+          Modular.to.navigate(SessionConstants.greeter);
         });
       });
 

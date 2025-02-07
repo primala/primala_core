@@ -65,6 +65,9 @@ abstract class _SessionMainCoordinatorBase
     if (!sessionMetadata.userIsSpeaking && !sessionMetadata.userCanSpeak) {
       tint.initMovie(const NoParams());
     }
+    if (sessionMetadata.viewDoc.currentFocus.isNotEmpty) {
+      purposeBanner.setFocus(sessionMetadata.viewDoc.currentFocus);
+    }
     rally.setCollaborators(sessionMetadata.collaboratorsMinusUser);
     if (!sessionMetadata.everyoneIsOnline) {
       onCollaboratorLeft();
@@ -214,11 +217,13 @@ abstract class _SessionMainCoordinatorBase
           setDisableAllTouchFeedback(true);
           await presence.updateUserStatus(SessionUserStatus.online);
         } else {
-          borderGlow.initGlowDown();
-          // Timer(Seconds.get(1), () {
-          smartText.setWidgetVisibility(true);
-          sessionBar.setWidgetVisibility(true);
-          // });
+          onLetGo();
+          // borderGlow.initGlowDown();
+          // rally.reset();
+          // // Timer(Seconds.get(1), () {
+          // smartText.setWidgetVisibility(true);
+          // sessionBar.setWidgetVisibility(true);
+          // // });
         }
       });
 

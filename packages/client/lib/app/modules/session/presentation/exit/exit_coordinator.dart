@@ -26,19 +26,22 @@ abstract class _SessionExitCoordinatorBase
     required this.presence,
     required this.swipe,
     required this.activeGroup,
-  }) : sessionMetadata = presence.sessionMetadataStore;
+  }) : sessionMetadata = presence.sessionMetadataStore {
+    initBaseWidgetsCoordinatorActions();
+  }
 
   @action
   constructor() async {
+    disposers.add(swipeReactor());
+    disposers.add(sessionExitReactor());
     await presence.updateUserStatus(
       SessionUserStatus.readyToLeave,
     );
-    disposers.add(swipeReactor());
-    disposers.add(sessionExitReactor());
+    setShowWidgets(true);
   }
 
   sessionExitReactor() =>
-      reaction((p0) => sessionMetadata.userIsSpeaking, (p0) async {
+      reaction((p0) => sessionMetadata.canExitTheSession, (p0) async {
         if (p0) {
           if (sessionMetadata.userIndex == 0) {
             await presence.deleteSession(sessionMetadata.sessionId);
@@ -66,6 +69,6 @@ abstract class _SessionExitCoordinatorBase
   dispose() async {
     super.dispose();
     await presence.dispose();
-    Modular.dispose<SessionLogicModule>();
+    Modular.dispose<SessionPresenceCoordinator>();
   }
 }

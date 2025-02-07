@@ -19,24 +19,28 @@ class SessionExitScreen extends HookWidget {
     }, []);
     return Swipe(
       store: coordinator.swipe,
-      child: AnimatedScaffold(children: [
-        const Center(
-          child: Jost(
-            'Waiting to leave',
-            fontSize: 24,
+      child: AnimatedScaffold(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Center(
+            child: Jost(
+              'Waiting to leave',
+              fontSize: 24,
+              softWrap: true,
+              shouldCenter: true,
+            ),
+          ),
+          const SizedBox(height: 20),
+          Jost(
+            'swipe down to return to the session',
+            fontSize: 16,
+            fontColor: Colors.black.withOpacity(.6),
             softWrap: true,
             shouldCenter: true,
           ),
-        ),
-        const SizedBox(height: 20),
-        Jost(
-          'swipe down to return to the session',
-          fontSize: 16,
-          fontColor: Colors.black.withOpacity(.6),
-          softWrap: true,
-          shouldCenter: true,
-        ),
-      ]),
+          const SizedBox(height: 80),
+        ],
+      ),
     );
   }
 }
