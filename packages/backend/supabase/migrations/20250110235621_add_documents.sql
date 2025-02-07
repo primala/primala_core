@@ -2160,7 +2160,7 @@ on conflict (uid) do update
 set email = coalesce(excluded.email, '');
 
 
-CREATE UNIQUE INDEX users_email_key ON public.users USING btree (email);
+-- CREATE UNIQUE INDEX users_email_key ON public.users USING btree (email);
 
 drop policy "Can Update if Is Group Admin And Group Has More Than One Admin" on "public"."group_roles";
 
