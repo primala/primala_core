@@ -63,6 +63,7 @@ abstract class _HomeScreenCoordinatorBase
       selectedGroup = activeGroup.groupEntity;
       fadeInWidgets();
       setShowCarousel(true);
+      await listenToSessionRequests();
       await contract.deleteStaleSessions();
     }
     await captureScreen(HomeConstants.homeScreen);

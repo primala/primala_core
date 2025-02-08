@@ -19,11 +19,12 @@ class HomeScreen extends HookWidget {
     useEffect(() {
       coordinator.constructor();
 
-      return () => coordinator.dispose();
+      return null;
     }, []);
     final screenSize = useFullScreenSize().height;
     return Observer(builder: (context) {
       return CarouselScaffold(
+        dispose: coordinator.dispose,
         showWidgets: coordinator.showWidgets,
         showCarousel: coordinator.showCarousel,
         mainAxisAlignment: MainAxisAlignment.start,

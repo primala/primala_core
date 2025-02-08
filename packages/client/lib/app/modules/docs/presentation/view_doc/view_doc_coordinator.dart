@@ -78,6 +78,8 @@ abstract class _ViewDocCoordinatorBase
         final filteredList = ObservableList.of(contentBlocks
             .where((element) => element.id != spotlightContentBlockId)
             .toList());
+        spotlightController.text = spotlightText;
+
         blockTextDisplay.setContent(filteredList);
         setShowWidgets(true);
       });
@@ -208,10 +210,12 @@ abstract class _ViewDocCoordinatorBase
 
   blockTextFieldSubmissionReactor() =>
       reaction((p0) => blockTextFields.submissionCount, (p0) async {
-        if (characterCount > 2000) return;
+        if (characterCount > 2000 || p0 != 1) return;
         if (blockTextFields.mode == BlockTextFieldMode.adding) {
           await contract.addContent(addContentParams);
-          scrollController.jumpTo(scrollController.position.maxScrollExtent);
+          if (scrollController.hasClients) {
+            scrollController.jumpTo(scrollController.position.maxScrollExtent);
+          }
         } else {
           await contract.updateContent(updateContentParams);
         }

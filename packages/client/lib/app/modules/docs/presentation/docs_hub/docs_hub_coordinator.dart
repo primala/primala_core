@@ -96,8 +96,8 @@ abstract class _DocsHubCoordinatorBase
   dispose() async {
     super.dispose();
     await contract.cancelDocumentStream();
-    documentsStream = ObservableStream(const Stream.empty());
-    documentsStreamSubscription = const Stream.empty().listen((event) {});
+    await documentsStream.close();
+    await documentsStreamSubscription.cancel();
   }
 
   docTitleReactor() => reaction((p0) => selectedDocTitle, (p0) {

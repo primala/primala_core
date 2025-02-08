@@ -19,7 +19,7 @@ class DocsDisplay extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bottomPadding = useFullScreenSize().height * .7;
+    final bottomPadding = useFullScreenSize().height * 0.7;
     return SizedBox(
       height: bottomPadding,
       child: Padding(

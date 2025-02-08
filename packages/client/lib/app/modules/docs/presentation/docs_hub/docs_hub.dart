@@ -16,11 +16,13 @@ class DocsHubScreen extends HookWidget {
   Widget build(BuildContext context) {
     useEffect(() {
       coordinator.constructor();
-      return () async => await coordinator.dispose();
+      return null;
     }, []);
 
     return Observer(builder: (context) {
       return CarouselScaffold(
+        dispose: coordinator.dispose,
+        isScrollable: true,
         initialPosition: 2,
         showWidgets: coordinator.showWidgets,
         mainAxisAlignment: MainAxisAlignment.start,
