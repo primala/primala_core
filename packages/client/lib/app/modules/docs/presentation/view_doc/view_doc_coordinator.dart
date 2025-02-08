@@ -35,8 +35,12 @@ abstract class _ViewDocCoordinatorBase
 
   @action
   constructor(DocumentEntity doc) async {
+    spotlightController = TextEditingController();
+    docTitleController = TextEditingController();
+    scrollController = ScrollController();
     setShowWidgets(false);
     this.doc = doc;
+    docTitleController.text = doc.title;
     await listenToContent(documentId);
     initReactors();
   }
@@ -91,7 +95,7 @@ abstract class _ViewDocCoordinatorBase
   @observable
   String title = '';
 
-  final ScrollController scrollController = ScrollController();
+  ScrollController scrollController = ScrollController();
 
   @observable
   DocumentEntity doc = DocumentEntity.initial();
@@ -207,6 +211,9 @@ abstract class _ViewDocCoordinatorBase
   @action
   dispose() async {
     reactorsAreInitiated = false;
+    scrollController.dispose();
+    docTitleController.dispose();
+    spotlightController.dispose();
     super.dispose();
     await contract.cancelContentStream();
     await contentBlocksStreamSubscription.cancel();

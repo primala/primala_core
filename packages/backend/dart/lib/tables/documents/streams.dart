@@ -11,11 +11,6 @@ class DocumentsStreams with DocumentUtils, DocumentConstants, SessionsUtils {
   });
 
   Future<bool> cancelDocumentStream() async {
-    final res = supabase.realtime.getChannels();
-
-    if (res.isNotEmpty) {
-      await res.first.unsubscribe();
-    }
     documentsStreamListeningStatus = false;
     return documentsStreamListeningStatus;
   }
