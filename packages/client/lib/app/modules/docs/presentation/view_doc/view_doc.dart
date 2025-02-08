@@ -24,14 +24,18 @@ class ViewDocScreen extends HookWidget {
     }, []);
     return Observer(builder: (context) {
       return AnimatedScaffold(
+        showWidgets: coordinator.showWidgets,
         body: MultiHitStack(
           children: [
             SingleChildScrollView(
+              controller: coordinator.scrollController,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   DocHeader(
+                    onBackPress: coordinator.onBackPress,
                     onChanged: coordinator.onTitleChanged,
+                    onTrashPressed: coordinator.onTrashPressed,
                     controller: coordinator.docTitleController,
                   ),
                   Padding(
@@ -42,6 +46,14 @@ class ViewDocScreen extends HookWidget {
                       controller: coordinator.spotlightController,
                       externalBlockType: coordinator.spotlightContentBlock.type,
                       showTextField: true,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(right: 10),
+                    alignment: Alignment.centerRight,
+                    child: Jost(
+                      '${coordinator.characterCount}/2000',
+                      fontSize: 14,
                     ),
                   ),
                   const Divider(

@@ -44,16 +44,13 @@ class UserAvatar extends HookWidget with NokhteGradients {
               gradient,
             ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 2),
-            child: Center(
-              child: Jost(
-                getInitials(fullName),
-                fontSize: fontSize,
-                fontColor: Colors.white,
-                fontWeight: FontWeight.w400,
-                shouldCenter: true,
-              ),
+          child: Center(
+            child: Jost(
+              getInitials(fullName),
+              fontSize: fontSize,
+              fontColor: Colors.white,
+              fontWeight: FontWeight.w400,
+              shouldCenter: true,
             ),
           ),
         ),

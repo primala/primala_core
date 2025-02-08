@@ -24,7 +24,12 @@ class NavCarousel extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final containerSize = useFullScreenSize().height * .2;
+    final screenSize = useFullScreenSize();
+    final containerSize = useScaledSize(
+      baseValue: 0.2,
+      screenSize: screenSize,
+      bumpPerHundredth: 0.001,
+    );
     useEffect(() {
       if (currentPosition != initialPosition && currentPosition % 1 == 0) {
         callbacks[currentPosition.toInt()]();
@@ -68,8 +73,12 @@ class NavCarousel extends HookWidget {
           }),
         ),
         Padding(
-          padding: const EdgeInsets.only(
-            bottom: 35.0,
+          padding: EdgeInsets.only(
+            bottom: useScaledSize(
+              baseValue: 0.03,
+              screenSize: screenSize,
+              bumpPerHundredth: 0.0001,
+            ),
             top: 10,
           ),
           child: CarouselPlacementIndicator(

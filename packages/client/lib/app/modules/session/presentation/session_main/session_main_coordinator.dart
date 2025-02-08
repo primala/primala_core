@@ -10,6 +10,7 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte_backend/tables/sessions.dart';
 part 'session_main_coordinator.g.dart';
@@ -55,6 +56,7 @@ abstract class _SessionMainCoordinatorBase
               presence.sessionMetadataStore.viewDoc.blockTextDisplay,
         ) {
     initBaseCoordinatorActions();
+
     initBaseWidgetsCoordinatorActions();
   }
 
@@ -76,6 +78,20 @@ abstract class _SessionMainCoordinatorBase
 
   initReactors() {
     disposers.add(currentSpeakerReactor());
+    disposers.add(presence.initReactors(
+      onCollaboratorJoined: () {
+        onCollaboratorJoined();
+      },
+      onCollaboratorLeft: () async {
+        tint.reverseMovie(const NoParams());
+        smartText.setWidgetVisibility(false);
+        purposeBanner.setWidgetVisibility(false);
+        setDisableAllTouchFeedback(true);
+        if (sessionMetadata.userIsSpeaking) {
+          await presence.updateWhoIsTalking(UpdateWhoIsTalkingParams.clearOut);
+        }
+      },
+    ));
     disposers.add(swipeReactor());
     disposers.add(letEmCookReactor());
     disposers.add(glowColorReactor());
@@ -88,6 +104,14 @@ abstract class _SessionMainCoordinatorBase
     disposers.add(tapReactor());
     disposers.add(currentFocusReactor());
     disposers.add(purposeBannerTapReactor());
+  }
+
+  @action
+  onCollaboratorJoined() {
+    setDisableAllTouchFeedback(false);
+    presenceOverlay.setWidgetVisibility(false);
+    smartText.setWidgetVisibility(true);
+    purposeBanner.setWidgetVisibility(true);
   }
 
   @action
@@ -119,8 +143,20 @@ abstract class _SessionMainCoordinatorBase
     });
   }
 
+  onInactive() async {
+    await presence.updateUserStatus(SessionUserStatus.offline);
+  }
+
+  onResumed() async {
+    await presence.updateUserStatus(SessionUserStatus.online);
+    if (presence.sessionMetadataStore.everyoneIsOnline) {
+      onCollaboratorJoined();
+    }
+  }
+
   @action
   onDocTapped() {
+    if (disableAllTouchFeedback) return;
     Modular.to.push(
       MaterialPageRoute(builder: (BuildContext context) {
         return Observer(builder: (context) {
@@ -163,10 +199,35 @@ abstract class _SessionMainCoordinatorBase
           onClose: () {
             sessionBar.setWidgetVisibility(true);
           },
+          spotlightStatement: Column(
+            children: [
+              SpotlightStatement(
+                onTextUpdated: sessionMetadata.viewDoc.onSpotlightTextChanged,
+                onBlockTypeUpdated: sessionMetadata.viewDoc.onBlockTypeChanged,
+                controller: sessionMetadata.viewDoc.spotlightController,
+                externalBlockType:
+                    sessionMetadata.viewDoc.spotlightContentBlock.type,
+                showTextField: true,
+                fontColor: Colors.white,
+              ),
+              Observer(builder: (context) {
+                return Container(
+                  padding: const EdgeInsets.only(right: 10),
+                  alignment: Alignment.centerRight,
+                  child: Jost(
+                    '${sessionMetadata.viewDoc.characterCount}/2000',
+                    fontColor: Colors.white,
+                    fontSize: 14,
+                  ),
+                );
+              }),
+            ],
+          ),
         );
       });
 
   swipeReactor() => reaction((p0) => swipe.directionsType, (p0) async {
+        if (disableAllTouchFeedback) return;
         switch (p0) {
           case GestureDirections.up:
             if (!purposeBanner.showWidget) return;
@@ -177,6 +238,32 @@ abstract class _SessionMainCoordinatorBase
               onClose: () {
                 sessionBar.setWidgetVisibility(true);
               },
+              spotlightStatement: Column(
+                children: [
+                  SpotlightStatement(
+                    onTextUpdated:
+                        sessionMetadata.viewDoc.onSpotlightTextChanged,
+                    onBlockTypeUpdated:
+                        sessionMetadata.viewDoc.onBlockTypeChanged,
+                    controller: sessionMetadata.viewDoc.spotlightController,
+                    externalBlockType:
+                        sessionMetadata.viewDoc.spotlightContentBlock.type,
+                    showTextField: true,
+                    fontColor: Colors.white,
+                  ),
+                  Observer(builder: (context) {
+                    return Container(
+                      padding: const EdgeInsets.only(right: 10),
+                      alignment: Alignment.centerRight,
+                      child: Jost(
+                        '${sessionMetadata.viewDoc.characterCount}/2000',
+                        fontSize: 14,
+                        fontColor: Colors.white,
+                      ),
+                    );
+                  }),
+                ],
+              ),
             );
           default:
             break;

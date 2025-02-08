@@ -41,6 +41,9 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   int currentlySelectedContentId = -1;
 
   @observable
+  int characterCount = 0;
+
+  @observable
   GlobalKey textFieldKey = GlobalKey();
 
   @observable
@@ -65,6 +68,9 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   }
 
   @action
+  onChange(String value) => characterCount = value.length;
+
+  @action
   setMode(BlockTextFieldMode value) => mode = value;
 
   @action
@@ -72,6 +78,11 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
     setMode(BlockTextFieldMode.adding);
     controller.clear();
     currentTextContent = '';
+    focusNode.unfocus();
+    Timer(Seconds.get(0, milli: 1), () {
+      updateTextFieldHeight();
+    });
+    characterCount = 0;
     setCurrentlySelectedParentId(-1);
     updateTextFieldHeight();
     setCurrentlySelectedContentId(-1);
@@ -149,12 +160,8 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
     if (controller.text.trim().isNotEmpty) {
       currentTextContent = controller.text;
       submissionCount++;
-    } else {
-      focusNode.unfocus();
-      Timer(Seconds.get(0, milli: 1), () {
-        updateTextFieldHeight();
-      });
     }
+    // focusNode.unfocus();
   }
 
   @action

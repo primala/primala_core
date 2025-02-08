@@ -28,17 +28,9 @@ class SignupScreen extends HookWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           HeaderRow(
-            children: [
-              LeftChevron(
-                onTap: coordinator.onGoBack,
-                color: Colors.white,
-              ),
-              const SmartHeader(
-                content: "Sign up",
-                color: Colors.white,
-              ),
-              const LeftChevron()
-            ],
+            title: 'Sign up',
+            onChevronTapped: coordinator.onGoBack,
+            chevronColor: Colors.white,
           ),
           AuthTextFields(
             store: coordinator.widgets.authTextFields,

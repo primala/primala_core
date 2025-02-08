@@ -2,9 +2,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/active_group/active_group.dart';
+import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte_backend/tables/content_blocks.dart';
 import 'package:nokhte_backend/tables/documents.dart';
@@ -23,14 +25,22 @@ abstract class _ViewDocCoordinatorBase
     required this.contract,
     required this.activeGroup,
     required this.blockTextDisplay,
-  }) : blockTextFields = blockTextDisplay.blockTextFields;
+  }) : blockTextFields = blockTextDisplay.blockTextFields {
+    initBaseLogicActions();
+    initBaseWidgetsCoordinatorActions();
+  }
 
   Timer? _debounceTimer;
   static const _debounceDuration = Duration(milliseconds: 500);
 
   @action
   constructor(DocumentEntity doc) async {
+    spotlightController = TextEditingController();
+    docTitleController = TextEditingController();
+    scrollController = ScrollController();
+    setShowWidgets(false);
     this.doc = doc;
+    docTitleController.text = doc.title;
     await listenToContent(documentId);
     initReactors();
   }
@@ -55,6 +65,7 @@ abstract class _ViewDocCoordinatorBase
     disposers.add(spotlightTextReactor());
     disposers.add(blockTextFieldSubmissionReactor());
     disposers.add(contentToDeletionReactor());
+    disposers.add(textFieldCharactersReactor());
   }
 
   @action
@@ -68,12 +79,33 @@ abstract class _ViewDocCoordinatorBase
             .where((element) => element.id != spotlightContentBlockId)
             .toList());
         blockTextDisplay.setContent(filteredList);
+        setShowWidgets(true);
       });
+    });
+  }
+
+  @action
+  onTrashPressed() async {
+    final res = await contract.deleteDocument(documentId);
+    res.fold((failure) => errorUpdater(failure), (value) => onBackPress());
+  }
+
+  @action
+  onBackPress() {
+    Modular.to.pop();
+    Timer(Seconds.get(0, milli: 200), () {
+      title = '';
+      contentBlocks = ObservableList<ContentBlockEntity>();
     });
   }
 
   @observable
   String title = '';
+
+  @observable
+  int textFieldCharactersCount = 0;
+
+  ScrollController scrollController = ScrollController();
 
   @observable
   DocumentEntity doc = DocumentEntity.initial();
@@ -176,18 +208,28 @@ abstract class _ViewDocCoordinatorBase
 
   blockTextFieldSubmissionReactor() =>
       reaction((p0) => blockTextFields.submissionCount, (p0) async {
+        if (characterCount > 2000) return;
         if (blockTextFields.mode == BlockTextFieldMode.adding) {
           await contract.addContent(addContentParams);
+          scrollController.jumpTo(scrollController.position.maxScrollExtent);
         } else {
           await contract.updateContent(updateContentParams);
         }
         blockTextFields.reset();
       });
 
+  textFieldCharactersReactor() =>
+      reaction((p0) => blockTextFields.currentTextContent, (p0) {
+        textFieldCharactersCount = p0.length;
+      });
+
   @override
   @action
   dispose() async {
     reactorsAreInitiated = false;
+    // scrollController.dispose();
+    // docTitleController.dispose();
+    // spotlightController.dispose();
     super.dispose();
     await contract.cancelContentStream();
     await contentBlocksStreamSubscription.cancel();
@@ -204,7 +246,7 @@ abstract class _ViewDocCoordinatorBase
   int get documentId => doc.id;
 
   @computed
-  int get spotlightContentBlockId => doc.id;
+  int get spotlightContentBlockId => doc.spotlightContentId;
 
   @computed
   ContentBlockEntity get spotlightContentBlock {
@@ -215,6 +257,16 @@ abstract class _ViewDocCoordinatorBase
     } else {
       return ContentBlockEntity.initial();
     }
+  }
+
+  @computed
+  int get characterCount {
+    int count =
+        spotlightContentBlock.content.length + blockTextFields.characterCount;
+    for (var element in contentBlocks) {
+      count += element.content.length;
+    }
+    return count;
   }
 
   @computed

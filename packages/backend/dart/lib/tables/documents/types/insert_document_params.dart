@@ -5,7 +5,6 @@ import 'package:nokhte_backend/tables/documents.dart';
 class InsertDocumentParams extends Equatable {
   final int groupId;
   final DocumentType type;
-  final int? parentDocumentId;
   final String documentTitle;
   final ContentBlockType contentBlockType;
   final String spotlightMessage;
@@ -16,7 +15,6 @@ class InsertDocumentParams extends Equatable {
     required this.spotlightMessage,
     required this.documentTitle,
     this.type = DocumentType.evergreen,
-    this.parentDocumentId,
   });
 
   @override
@@ -26,6 +24,5 @@ class InsertDocumentParams extends Equatable {
         contentBlockType,
         spotlightMessage,
         type,
-        parentDocumentId ?? -1,
       ];
 }

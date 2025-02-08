@@ -95,7 +95,11 @@ class AuthTextFields extends HookWidget {
       builder: (_) => Padding(
         padding: EdgeInsets.only(
           top: screenSize.height * .0,
-          bottom: screenSize.height * .15,
+          bottom: useScaledSize(
+            baseValue: .15,
+            screenSize: screenSize,
+            bumpPerHundredth: .0001,
+          ),
         ),
         child: Column(
           children: List.generate(store.fieldsToShow.length, (index) {

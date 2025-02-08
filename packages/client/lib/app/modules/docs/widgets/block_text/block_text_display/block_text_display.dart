@@ -11,9 +11,11 @@ import 'package:nokhte/app/core/widgets/widgets.dart';
 
 class BlockTextDisplay extends HookWidget {
   final BlockTextDisplayStore store;
+  final Color fontColor;
   const BlockTextDisplay({
     super.key,
     required this.store,
+    this.fontColor = Colors.black,
   });
 
   @override
@@ -140,6 +142,7 @@ class BlockTextDisplay extends HookWidget {
                               '${BlockTextConstants.whiteSpace}${element.content}',
                               fontSize: 16,
                               softWrap: true,
+                              fontColor: fontColor,
                             ),
                           ],
                         ),
@@ -150,7 +153,7 @@ class BlockTextDisplay extends HookWidget {
               );
             }),
             SizedBox(
-              height: bottomPadding + 150,
+              height: bottomPadding + 250,
             ),
           ],
         ),

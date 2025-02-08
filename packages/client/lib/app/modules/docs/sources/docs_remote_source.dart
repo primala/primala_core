@@ -4,10 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class DocsRemoteSource {
   Stream<DocumentEntities> listenToDocuments(int groupId);
-  Stream<DocumentEntities> listenToSpecificDocuments(
-    List<int> documentIds,
-    int groupId,
-  );
+  Stream<DocumentEntities> listenToSpecificDocuments(List<int> documentIds);
   Future<bool> cancelDocumentStream();
 
   Future<Map> insertDocument(InsertDocumentParams params);
@@ -79,6 +76,6 @@ class DocsRemoteSourceImpl extends DocsRemoteSource {
   }
 
   @override
-  listenToSpecificDocuments(documentIds, groupId) =>
-      documentsStreams.listenToSpecificDocuments(documentIds, groupId);
+  listenToSpecificDocuments(documentIds) =>
+      documentsStreams.listenToSpecificDocuments(documentIds);
 }

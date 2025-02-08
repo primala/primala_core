@@ -3,3 +3,4 @@ export './gestures/gestures.dart';
 export './multi_hit_stack/multi_hit_stack.dart';
 export './nokhte_custom_animation_builder/nokhte_custom_animation_builder.dart';
 export 'opacity_utils.dart';
+export 'dialogue_utils.dart';

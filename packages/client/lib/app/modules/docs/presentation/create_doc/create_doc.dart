@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/docs/docs.dart';
@@ -21,10 +22,11 @@ class CreateDocScreen extends HookWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           DocHeader(
+            onBackPress: () => Modular.to.pop(),
             onChanged: coordinator.setTitle,
           ),
           Padding(
-            padding: EdgeInsets.only(top: screenHeight * .25),
+            padding: EdgeInsets.only(bottom: screenHeight * .25),
             child: SpotlightStatement(
               onTextUpdated: coordinator.setSpotlightTextContent,
               onBlockTypeUpdated: coordinator.setBlockType,

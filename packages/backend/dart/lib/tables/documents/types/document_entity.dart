@@ -7,12 +7,10 @@ typedef DocumentEntities = List<DocumentEntity>;
 class DocumentEntity extends Equatable {
   final int id;
   final int spotlightContentId;
-  final int? parentDocumentId;
   final String title;
 
   DocumentEntity({
     required this.id,
-    required this.parentDocumentId,
     required this.spotlightContentId,
     required this.title,
   });
@@ -21,7 +19,6 @@ class DocumentEntity extends Equatable {
   List<Object> get props => [
         id,
         spotlightContentId,
-        parentDocumentId ?? -1,
         title,
       ];
 
@@ -29,7 +26,6 @@ class DocumentEntity extends Equatable {
     return DocumentEntity(
       id: doc[DocumentConstants.S_ID],
       spotlightContentId: doc[DocumentConstants.S_SPOTLIGHT_CONTENT_ID],
-      parentDocumentId: doc[DocumentConstants.S_PARENT_DOCUMENT_ID],
       title: doc[DocumentConstants.S_TITLE],
     );
   }
@@ -37,13 +33,13 @@ class DocumentEntity extends Equatable {
   factory DocumentEntity.initial() => DocumentEntity(
         id: -1,
         spotlightContentId: -1,
-        parentDocumentId: -1,
         title: '',
       );
 
   static DocumentEntities fromSupabaseMultiple(List res) {
     List<DocumentEntity> temp = [];
     for (var doc in res) {
+      print('what is the doc $doc');
       temp.add(DocumentEntity.fromSupabaseSingle(doc));
     }
     return temp;
@@ -56,9 +52,6 @@ class DocumentEntity extends Equatable {
       return DocumentEntity(
         id: index + 1,
         spotlightContentId: faker.randomGenerator.integer(100, min: 1),
-        parentDocumentId: index % 5 == 0
-            ? null
-            : faker.randomGenerator.integer(index, min: 1),
         title: faker.lorem.sentence(),
       );
     });

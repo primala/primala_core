@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nokhte/app/core/constants/constants.dart';
+import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 export 'invitation_body_store.dart';
@@ -18,9 +19,16 @@ class InvitationBody extends HookWidget with NokhteGradients {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = useFullScreenSize();
+
+    final gapSize = useScaledSize(
+      baseValue: .05,
+      screenSize: screenSize,
+      bumpPerHundredth: -.0001,
+    );
     return Observer(builder: (context) {
       return Padding(
-        padding: const EdgeInsets.only(top: 50),
+        padding: EdgeInsets.only(top: gapSize),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -35,9 +43,7 @@ class InvitationBody extends HookWidget with NokhteGradients {
               onCurrentPermissionTapped: store.onPermissionLevelTap,
               currentRole: store.currentRole,
             ),
-            const SizedBox(
-              height: 50,
-            ),
+            SizedBox(height: gapSize),
             InvitationSelectionArea(
               titleText: store.selectAreaTitleText,
               bodyText: store.selectAreaBodyText,

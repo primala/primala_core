@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:nokhte/app/core/constants/colors.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -29,17 +28,8 @@ class EditGroupScreen extends HookWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           HeaderRow(
-            children: [
-              LeftChevron(
-                onTap: () => coordinator.onGoBack(),
-              ),
-              const SmartHeader(
-                content: "Edit Group",
-              ),
-              const LeftChevron(
-                color: NokhteColors.eggshell,
-              ),
-            ],
+            title: "Edit Group",
+            onChevronTapped: () => coordinator.onGoBack(),
           ),
           Padding(
             padding: EdgeInsets.only(
