@@ -76,6 +76,7 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   @action
   reset() {
     print('is refresh running ');
+    submissionCount = 0;
     setMode(BlockTextFieldMode.adding);
     controller.clear();
     currentTextContent = '';
@@ -84,9 +85,7 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
       updateTextFieldHeight();
     });
     characterCount = 0;
-    submissionCount = 0;
     setCurrentlySelectedParentId(-1);
-    updateTextFieldHeight();
     setCurrentlySelectedContentId(-1);
   }
 
@@ -163,7 +162,7 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
         currentTextContent != controller.text) {
       print('is this being called five times ');
       currentTextContent = controller.text;
-      submissionCount = 1;
+      submissionCount++;
     }
     // focusNode.unfocus();
   }

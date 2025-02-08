@@ -35,6 +35,7 @@ abstract class _ViewDocCoordinatorBase
 
   @action
   constructor(DocumentEntity doc) async {
+    dispose();
     spotlightController = TextEditingController();
     docTitleController = TextEditingController();
     scrollController = ScrollController();
@@ -210,6 +211,7 @@ abstract class _ViewDocCoordinatorBase
 
   blockTextFieldSubmissionReactor() =>
       reaction((p0) => blockTextFields.submissionCount, (p0) async {
+        print('are you running ten times $p0');
         if (characterCount > 2000 || p0 != 1) return;
         if (blockTextFields.mode == BlockTextFieldMode.adding) {
           await contract.addContent(addContentParams);
@@ -226,6 +228,11 @@ abstract class _ViewDocCoordinatorBase
       reaction((p0) => blockTextFields.currentTextContent, (p0) {
         textFieldCharactersCount = p0.length;
       });
+
+  isDuplicate(String text) {
+    if (contentBlocks.isEmpty) return false;
+    return contentBlocks.any((element) => element.content == text);
+  }
 
   @override
   @action
