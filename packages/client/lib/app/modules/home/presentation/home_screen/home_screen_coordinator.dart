@@ -4,6 +4,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/active_group/active_group.dart';
+import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 import 'package:nokhte/app/modules/home/home.dart';
@@ -16,12 +17,15 @@ class HomeScreenCoordinator = _HomeScreenCoordinatorBase
     with _$HomeScreenCoordinator;
 
 abstract class _HomeScreenCoordinatorBase
-    with Store, BaseWidgetsCoordinator, BaseMobxLogic {
+    with Store, BaseWidgetsCoordinator, BaseMobxLogic, BaseCoordinator {
   final HomeContract contract;
   final ActiveGroup activeGroup;
+  @override
+  final CaptureScreen captureScreen;
 
   _HomeScreenCoordinatorBase({
     required this.contract,
+    required this.captureScreen,
     required this.activeGroup,
   }) {
     initBaseLogicActions();
@@ -61,6 +65,7 @@ abstract class _HomeScreenCoordinatorBase
       setShowCarousel(true);
       await contract.deleteStaleSessions();
     }
+    await captureScreen(HomeConstants.homeScreen);
   }
 
   @action

@@ -17,6 +17,7 @@ class HomeModule extends Module {
   binds(i) {
     i.add<HomeScreenCoordinator>(
       () => HomeScreenCoordinator(
+        captureScreen: Modular.get<CaptureScreen>(),
         contract: Modular.get<HomeContractImpl>(),
         activeGroup: Modular.get<ActiveGroup>(),
       ),

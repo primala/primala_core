@@ -19,6 +19,7 @@ class SessionModule extends Module {
   binds(i) {
     i.add<LobbyCoordinator>(
       () => LobbyCoordinator(
+        captureSessionStart: Modular.get<CaptureSessionStart>(),
         presence: Modular.get<SessionPresenceCoordinator>(),
         captureScreen: Modular.get<CaptureScreen>(),
       ),
@@ -33,6 +34,7 @@ class SessionModule extends Module {
 
     i.add<SessionExitCoordinator>(
       () => SessionExitCoordinator(
+        captureSessionEnd: Modular.get<CaptureSessionEnd>(),
         activeGroup: Modular.get<ActiveGroup>(),
         presence: Modular.get<SessionPresenceCoordinator>(),
         swipe: SwipeDetector(),

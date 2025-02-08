@@ -12,6 +12,7 @@ abstract class PosthogRemoteSource {
     CaptureSessionEndParams params,
   );
   Future<void> captureScreen(String screenRoute);
+  Future<void> captureCreateDoc();
 }
 
 class PosthogRemoteSourceImpl
@@ -36,7 +37,7 @@ class PosthogRemoteSourceImpl
   @override
   captureSessionEnd(params) async {
     final durationInMinutes =
-        DateTime.now().difference(params.sessionsStartTime).inSeconds / 60;
+        DateTime.now().difference(params.sessionStartTime).inSeconds / 60;
     if (durationInMinutes < 5) return;
     await Posthog().capture(
       eventName: END_SESSION,
@@ -76,4 +77,8 @@ class PosthogRemoteSourceImpl
   captureScreen(String screenRoute) async {
     await posthog.capture(eventName: formatRoute(screenRoute));
   }
+
+  @override
+  Future<void> captureCreateDoc() async =>
+      posthog.capture(eventName: CREATE_DOC);
 }

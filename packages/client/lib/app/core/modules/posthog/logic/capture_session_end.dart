@@ -13,14 +13,14 @@ class CaptureSessionEnd
 }
 
 class CaptureSessionEndParams extends Equatable {
-  final DateTime sessionsStartTime;
+  final DateTime sessionStartTime;
   final int numberOfCollaborators;
 
   const CaptureSessionEndParams({
-    required this.sessionsStartTime,
+    required this.sessionStartTime,
     required this.numberOfCollaborators,
   });
 
   @override
-  List<Object> get props => [sessionsStartTime, numberOfCollaborators];
+  List<Object> get props => [sessionStartTime, numberOfCollaborators];
 }

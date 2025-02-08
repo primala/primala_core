@@ -3,6 +3,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/active_group/active_group.dart';
+import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte_backend/tables/content_blocks.dart';
 import 'package:nokhte_backend/tables/documents/documents.dart';
@@ -14,10 +15,12 @@ class CreateDocCoordinator = _CreateDocCoordinatorBase
 abstract class _CreateDocCoordinatorBase with Store, BaseMobxLogic {
   final DocsContract contract;
   final ActiveGroup activeGroup;
+  final CaptureCreateDoc captureCreateDoc;
 
   _CreateDocCoordinatorBase({
     required this.contract,
     required this.activeGroup,
+    required this.captureCreateDoc,
   });
 
   @observable
@@ -43,8 +46,9 @@ abstract class _CreateDocCoordinatorBase with Store, BaseMobxLogic {
     final res = await contract.insertDocument(params);
     res.fold((failure) {
       errorUpdater(failure);
-    }, (status) {
+    }, (status) async {
       Modular.to.pop();
+      await captureCreateDoc();
     });
   }
 

@@ -14,11 +14,13 @@ class CaptureSessionStart
 
 class CaptureSessionStartParams extends Equatable {
   final int numberOfCollaborators;
+  final int numberOfDocs;
 
   const CaptureSessionStartParams({
     required this.numberOfCollaborators,
+    required this.numberOfDocs,
   });
 
   @override
-  List<Object> get props => [numberOfCollaborators];
+  List<Object> get props => [numberOfCollaborators, numberOfDocs];
 }

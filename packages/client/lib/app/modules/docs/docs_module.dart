@@ -1,5 +1,6 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/modules/active_group/active_group.dart';
+import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/modules/supabase/supabase.dart';
 import 'package:nokhte/app/core/network/network_info.dart';
 import 'package:nokhte/app/modules/docs/docs.dart';
@@ -11,6 +12,7 @@ class DocsModule extends Module {
         SupabaseModule(),
         ActiveGroupModule(),
         DocsLogicModule(),
+        PosthogModule(),
       ];
   @override
   binds(i) {
@@ -37,6 +39,7 @@ class DocsModule extends Module {
 
     i.add<DocsHubCoordinator>(
       () => DocsHubCoordinator(
+        captureScreen: Modular.get<CaptureScreen>(),
         contract: i<DocsContractImpl>(),
         viewDocCoordinator: Modular.get<ViewDocCoordinator>(),
         activeGroup: Modular.get<ActiveGroup>(),
@@ -45,6 +48,7 @@ class DocsModule extends Module {
 
     i.add<CreateDocCoordinator>(
       () => CreateDocCoordinator(
+        captureCreateDoc: Modular.get<CaptureCreateDoc>(),
         contract: i<DocsContractImpl>(),
         activeGroup: Modular.get<ActiveGroup>(),
       ),
