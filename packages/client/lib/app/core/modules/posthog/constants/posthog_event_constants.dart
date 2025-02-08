@@ -3,4 +3,5 @@
 mixin PosthogEventConstants {
   String END_SESSION = 'end_session';
   String START_SESSION = 'start_session';
+  String CREATE_DOC = 'create_doc';
 }

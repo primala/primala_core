@@ -4,6 +4,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/active_group/active_group.dart';
+import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/home/home.dart';
@@ -19,12 +20,14 @@ abstract class _SessionExitCoordinatorBase
     with Store, Reactions, BaseWidgetsCoordinator {
   final SessionPresenceCoordinator presence;
   final SessionMetadataStore sessionMetadata;
+  final CaptureSessionEnd captureSessionEnd;
   final ActiveGroup activeGroup;
   final SwipeDetector swipe;
 
   _SessionExitCoordinatorBase({
     required this.presence,
     required this.swipe,
+    required this.captureSessionEnd,
     required this.activeGroup,
   }) : sessionMetadata = presence.sessionMetadataStore {
     initBaseWidgetsCoordinatorActions();
@@ -45,6 +48,13 @@ abstract class _SessionExitCoordinatorBase
         if (p0) {
           if (sessionMetadata.userIndex == 0) {
             await presence.deleteSession(sessionMetadata.sessionId);
+            await captureSessionEnd(
+              CaptureSessionEndParams(
+                sessionStartTime: sessionMetadata.sessionStartTime,
+                numberOfCollaborators:
+                    sessionMetadata.collaboratorInformation.length,
+              ),
+            );
           }
           activeGroup.setGroupEntity(GroupEntity.initial());
           setShowWidgets(false);

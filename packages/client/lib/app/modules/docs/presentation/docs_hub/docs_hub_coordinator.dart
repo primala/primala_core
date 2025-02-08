@@ -5,6 +5,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/active_group/active_group.dart';
+import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte_backend/tables/documents.dart';
 part 'docs_hub_coordinator.g.dart';
@@ -12,15 +13,23 @@ part 'docs_hub_coordinator.g.dart';
 class DocsHubCoordinator = _DocsHubCoordinatorBase with _$DocsHubCoordinator;
 
 abstract class _DocsHubCoordinatorBase
-    with Store, BaseWidgetsCoordinator, BaseMobxLogic, Reactions {
+    with
+        Store,
+        BaseWidgetsCoordinator,
+        BaseCoordinator,
+        BaseMobxLogic,
+        Reactions {
   final DocsContract contract;
   final ActiveGroup activeGroup;
   final ViewDocCoordinator viewDocCoordinator;
+  @override
+  final CaptureScreen captureScreen;
 
   _DocsHubCoordinatorBase({
     required this.contract,
     required this.activeGroup,
     required this.viewDocCoordinator,
+    required this.captureScreen,
   }) {
     initBaseLogicActions();
     initBaseWidgetsCoordinatorActions();
@@ -44,7 +53,9 @@ abstract class _DocsHubCoordinatorBase
   constructor() async {
     await listenToDocuments();
     fadeInWidgets();
+
     disposers.add(docTitleReactor());
+    await captureScreen(DocsConstants.docsHub);
   }
 
   @action

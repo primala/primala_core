@@ -3,8 +3,9 @@ import 'package:nokhte/app/core/network/network_info.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'posthog.dart';
 export 'constants/constants.dart';
-export 'data/data.dart';
-export 'domain/domain.dart';
+export 'contracts/posthog_contract.dart';
+export 'sources/posthog_remote_source.dart';
+export 'logic/logic.dart';
 
 class PosthogModule extends Module {
   @override
@@ -21,11 +22,19 @@ class PosthogModule extends Module {
         networkInfo: Modular.get<NetworkInfoImpl>(),
       ),
     );
+
     i.add<CaptureScreen>(
       () => CaptureScreen(
         contract: Modular.get<PosthogContractImpl>(),
       ),
     );
+
+    i.add<CaptureCreateDoc>(
+      () => CaptureCreateDoc(
+        contract: Modular.get<PosthogContractImpl>(),
+      ),
+    );
+
     i.add<CaptureSessionEnd>(
       () => CaptureSessionEnd(
         contract: Modular.get<PosthogContractImpl>(),

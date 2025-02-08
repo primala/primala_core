@@ -17,10 +17,12 @@ abstract class _LobbyCoordinatorBase
   final SessionMetadataStore sessionMetadata;
   @override
   final CaptureScreen captureScreen;
+  final CaptureSessionStart captureSessionStart;
 
   _LobbyCoordinatorBase({
     required this.presence,
     required this.captureScreen,
+    required this.captureSessionStart,
   }) : sessionMetadata = presence.sessionMetadataStore {
     initBaseCoordinatorActions();
     initBaseWidgetsCoordinatorActions();
@@ -43,7 +45,15 @@ abstract class _LobbyCoordinatorBase
   onInactive() async => presence.updateUserStatus(SessionUserStatus.offline);
 
   @action
-  startSession() async => await presence.startTheSession();
+  startSession() async {
+    await presence.startTheSession();
+    await captureSessionStart(
+      CaptureSessionStartParams(
+        numberOfCollaborators: sessionMetadata.collaboratorInformation.length,
+        numberOfDocs: sessionMetadata.documentIds.length,
+      ),
+    );
+  }
 
   metadataStateCoordinator() =>
       reaction((p0) => sessionMetadata.state, (p0) async {
