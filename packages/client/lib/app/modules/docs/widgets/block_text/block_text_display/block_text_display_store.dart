@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/types/seconds.dart';
@@ -24,6 +25,12 @@ abstract class _BlockTextDisplayStoreBase extends BaseWidgetStore with Store {
 
   @action
   setSwipeProgress(double val, int index) => swipeProgresses[index] = val;
+
+  ScrollController scrollController = ScrollController();
+
+  @action
+  setScrollController(ScrollController controller) =>
+      scrollController = controller;
 
   @observable
   int contentIdToDelete = -1;

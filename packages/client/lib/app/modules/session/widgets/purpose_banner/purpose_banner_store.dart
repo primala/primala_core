@@ -88,7 +88,8 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
                 store: blur,
               ),
               SingleChildScrollView(
-                controller: scrollController,
+                controller: blockTextDisplay.scrollController,
+                physics: const ClampingScrollPhysics(),
                 child: Observer(
                   builder: (context) => SizedBox(
                     width: MediaQuery.of(context).size.width,
