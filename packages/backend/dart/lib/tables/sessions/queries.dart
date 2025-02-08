@@ -305,7 +305,7 @@ class SessionsQueries
           DOCUMENTS: params.docIds,
           PROFILE_GRADIENTS: profileGradients,
           COLLABORATOR_NAMES: collaboratorNames,
-          ACTIVE_DOCUMENT: params.docIds.first,
+          ACTIVE_DOCUMENT: params.docIds.isEmpty ? null : params.docIds.first,
           COLLABORATOR_STATUSES: List.filled(
             collaboratorUids.length,
             mapSessionUserStatusToString(
