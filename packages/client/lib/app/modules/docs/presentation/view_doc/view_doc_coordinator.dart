@@ -215,6 +215,7 @@ abstract class _ViewDocCoordinatorBase
         } else {
           await contract.updateContent(updateContentParams);
         }
+        blockTextFields.reset();
       });
 
   textFieldCharactersReactor() =>
@@ -226,9 +227,9 @@ abstract class _ViewDocCoordinatorBase
   @action
   dispose() async {
     reactorsAreInitiated = false;
-    scrollController.dispose();
-    docTitleController.dispose();
-    spotlightController.dispose();
+    // scrollController.dispose();
+    // docTitleController.dispose();
+    // spotlightController.dispose();
     super.dispose();
     await contract.cancelContentStream();
     await contentBlocksStreamSubscription.cancel();

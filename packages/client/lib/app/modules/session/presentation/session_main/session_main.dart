@@ -20,6 +20,13 @@ class SessionMainScreen extends HookWidget {
       return null;
       // return () => coordinator.deconstructor();
     }, []);
+    useOnAppLifecycleStateChange(
+      (previous, current) => coordinator.onAppLifeCycleStateChange(
+        current,
+        onResumed: () async => await coordinator.onResumed(),
+        onInactive: () async => await coordinator.onInactive(),
+      ),
+    );
     return Observer(builder: (context) {
       return AnimatedScaffold(
         showWidgets: coordinator.showWidgets,
