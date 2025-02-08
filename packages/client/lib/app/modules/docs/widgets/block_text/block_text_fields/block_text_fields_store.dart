@@ -75,8 +75,6 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
 
   @action
   reset() {
-    print('is refresh running ');
-    submissionCount = 0;
     setMode(BlockTextFieldMode.adding);
     controller.clear();
     currentTextContent = '';
@@ -163,6 +161,8 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
       print('is this being called five times ');
       currentTextContent = controller.text;
       submissionCount++;
+    } else {
+      reset();
     }
     // focusNode.unfocus();
   }

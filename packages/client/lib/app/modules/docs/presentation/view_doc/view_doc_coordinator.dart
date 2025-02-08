@@ -39,7 +39,6 @@ abstract class _ViewDocCoordinatorBase
     spotlightController = TextEditingController();
     docTitleController = TextEditingController();
     scrollController = ScrollController();
-    blockTextDisplay.setScrollController(scrollController);
     setShowWidgets(false);
     this.doc = doc;
     docTitleController.text = doc.title;
@@ -212,18 +211,9 @@ abstract class _ViewDocCoordinatorBase
 
   blockTextFieldSubmissionReactor() =>
       reaction((p0) => blockTextFields.submissionCount, (p0) async {
-        if (characterCount > 2000 || p0 != 1) return;
+        if (characterCount > 2000) return;
         if (blockTextFields.mode == BlockTextFieldMode.adding) {
           await contract.addContent(addContentParams);
-          if (scrollController.hasClients) {
-            if (scrollController.position.pixels ==
-                scrollController.position.maxScrollExtent) return;
-            scrollController.animateTo(
-              scrollController.position.maxScrollExtent,
-              duration: const Duration(milliseconds: 800),
-              curve: Curves.easeIn,
-            );
-          }
         } else {
           await contract.updateContent(updateContentParams);
         }
@@ -278,8 +268,7 @@ abstract class _ViewDocCoordinatorBase
 
   @computed
   int get characterCount {
-    int count =
-        spotlightContentBlock.content.length + blockTextFields.characterCount;
+    int count = blockTextFields.characterCount;
     for (var element in contentBlocks) {
       count += element.content.length;
     }

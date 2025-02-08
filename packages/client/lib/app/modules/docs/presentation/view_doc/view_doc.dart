@@ -28,7 +28,7 @@ class ViewDocScreen extends HookWidget {
         body: MultiHitStack(
           children: [
             SingleChildScrollView(
-              controller: coordinator.scrollController,
+              controller: coordinator.blockTextDisplay.scrollController,
               physics: const ClampingScrollPhysics(),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,

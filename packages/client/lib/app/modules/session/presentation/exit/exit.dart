@@ -17,22 +17,23 @@ class SessionExitScreen extends HookWidget {
       coordinator.constructor();
       return () async => await coordinator.dispose();
     }, []);
-    return Swipe(
-      store: coordinator.swipe,
+    return GestureDetector(
+      onTap: () => coordinator.onTap(),
       child: AnimatedScaffold(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        showWidgets: coordinator.showWidgets,
         children: [
           const Center(
             child: Jost(
               'Waiting to leave',
               fontSize: 24,
-              softWrap: true,
               shouldCenter: true,
             ),
           ),
           const SizedBox(height: 20),
           Jost(
-            'swipe down to return to the session',
+            'tap to return to the session',
             fontSize: 16,
             fontColor: Colors.black.withOpacity(.6),
             softWrap: true,
