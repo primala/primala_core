@@ -74,7 +74,7 @@ create table "public"."documents" (
 
 alter table "public"."documents" enable row level security;
 
--- CREATE UNIQUE INDEX documents_pkey ON public.documents USING btree (id);
+CREATE UNIQUE INDEX documents_pkey ON public.documents USING btree (id);
 
 -- CREATE UNIQUE INDEX users_email_key ON public.users USING btree (email);
 
