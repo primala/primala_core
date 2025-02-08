@@ -4,15 +4,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 
-class DocHeader extends HookWidget {
+class DocHeader extends HookWidget with DialogueUtils {
   final Function(String) onChanged;
   final TextEditingController? controller;
   final Function onBackPress;
+  final Function? onTrashPressed;
 
   const DocHeader({
     super.key,
     required this.onChanged,
     required this.onBackPress,
+    this.onTrashPressed,
     this.controller,
   });
 
@@ -66,9 +68,33 @@ class DocHeader extends HookWidget {
               ),
             ),
           ),
-          const LeftChevron(
-            color: Colors.transparent,
-          ),
+          if (onTrashPressed != null)
+            Container(
+              margin: const EdgeInsets.only(right: 20),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.black, width: 1.0),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(3),
+                child: GestureDetector(
+                  onTap: () => showDeleteConfirmationDialog(
+                    context: context,
+                    onConfirm: onTrashPressed!,
+                    title: 'Delete Document',
+                    content: 'Are you sure you want to delete this document?',
+                  ),
+                  child: Image.asset(
+                    'assets/groups/trash_icon_white.png',
+                    color: Colors.black,
+                    height: 30,
+                    width: 30,
+                  ),
+                ),
+              ),
+            ),
+          if (onTrashPressed == null)
+            const LeftChevron(color: Colors.transparent)
         ],
       ),
     );

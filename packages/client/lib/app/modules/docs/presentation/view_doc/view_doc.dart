@@ -35,6 +35,7 @@ class ViewDocScreen extends HookWidget {
                   DocHeader(
                     onBackPress: coordinator.onBackPress,
                     onChanged: coordinator.onTitleChanged,
+                    onTrashPressed: coordinator.onTrashPressed,
                     controller: coordinator.docTitleController,
                   ),
                   Padding(

@@ -84,6 +84,12 @@ abstract class _ViewDocCoordinatorBase
   }
 
   @action
+  onTrashPressed() async {
+    final res = await contract.deleteDocument(documentId);
+    res.fold((failure) => errorUpdater(failure), (value) => onBackPress());
+  }
+
+  @action
   onBackPress() {
     Modular.to.pop();
     Timer(Seconds.get(0, milli: 200), () {
