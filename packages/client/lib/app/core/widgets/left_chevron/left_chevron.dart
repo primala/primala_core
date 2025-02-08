@@ -7,20 +7,35 @@ class LeftChevron extends HookWidget {
   final Color color;
   final Function? onTap;
   final double leftPadding;
+  final double topPadding;
   const LeftChevron({
     super.key,
     this.color = Colors.black,
-    this.leftPadding = 0.05,
+    this.leftPadding = 0.01,
+    this.topPadding = 0.015,
     this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final screenSize = useFullScreenSize();
+    final chevronSize = useScaledSize(
+      baseValue: 0.04,
+      screenSize: screenSize,
+      bumpPerHundredth: 0.0001,
+    );
     return Padding(
       padding: EdgeInsets.only(
-        top: 5,
-        left: screenSize.width * leftPadding,
+        top: useScaledSize(
+          baseValue: topPadding,
+          screenSize: screenSize,
+          bumpPerHundredth: 0.0001,
+        ),
+        left: useScaledSize(
+          baseValue: leftPadding,
+          screenSize: screenSize,
+          bumpPerHundredth: 0.0001,
+        ),
       ),
       child: GestureDetector(
         onTap: () {
@@ -31,8 +46,8 @@ class LeftChevron extends HookWidget {
             color: color,
           ),
           child: SizedBox(
-            height: screenSize.height * .06,
-            width: screenSize.height * .06,
+            height: chevronSize,
+            width: chevronSize,
           ),
         ),
       ),

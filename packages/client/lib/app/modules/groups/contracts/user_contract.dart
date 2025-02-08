@@ -16,6 +16,7 @@ abstract class UserContract {
   Future<Either<Failure, bool>> updateUserProfileGradient(
     ProfileGradient profileGradient,
   );
+  Future<Either<Failure, bool>> checkIfVersionIsUpToDate();
   Future<Either<Failure, bool>> updateActiveGroup(int groupId);
 }
 
@@ -56,6 +57,16 @@ class UserContractImpl with ResponseToStatus implements UserContract {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.updateActiveGroup(groupId);
       return fromSupabase(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  @override
+  checkIfVersionIsUpToDate() async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.versionIsUpToDate();
+      return Right(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);
     }

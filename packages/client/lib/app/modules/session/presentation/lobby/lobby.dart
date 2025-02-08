@@ -32,13 +32,7 @@ class LobbyScreen extends HookWidget {
         showWidgets: coordinator.showWidgets,
         children: [
           const HeaderRow(
-            mainAxisAlignment: MainAxisAlignment.center,
-            includeDivider: true,
-            children: [
-              SmartHeader(
-                content: "Lobby",
-              ),
-            ],
+            title: "Lobby",
           ),
           Container(
             alignment: Alignment.centerLeft,

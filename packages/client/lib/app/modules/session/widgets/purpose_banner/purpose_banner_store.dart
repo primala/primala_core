@@ -58,6 +58,7 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
   showModal({
     required Function onOpen,
     required Function onClose,
+    required Widget spotlightStatement,
   }) {
     if (true) {
       print(' is this being called $modalIsVisible');
@@ -74,7 +75,7 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
           ),
         ),
         isScrollControlled: true,
-        backgroundColor: Colors.black.withOpacity(.2),
+        backgroundColor: Colors.black.withOpacity(.4),
         context: buildContext,
         builder: (context) => DraggableScrollableSheet(
           maxChildSize: .91,
@@ -96,8 +97,16 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
+                            spotlightStatement,
+                            Divider(
+                              color: Colors.white,
+                              thickness: 1,
+                              height: 20,
+                            ),
+                            SizedBox(height: 20),
                             BlockTextDisplay(
                               store: blockTextDisplay,
+                              fontColor: Colors.white,
                             ),
                           ],
                         ),

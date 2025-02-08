@@ -47,7 +47,7 @@ abstract class _GroupPickerCoordinatorBase
 
   @action
   constructor() async {
-    await getUserInformation();
+    await checkAppVersion();
   }
 
   initReactors() {
@@ -79,16 +79,29 @@ abstract class _GroupPickerCoordinatorBase
 
   @action
   listenToGroups() async {
-    // print('did you even ghet called ');
     final res = await groupsContract.listenToGroups();
     res.fold(
       (failure) => errorUpdater(failure),
       (incomingGroups) {
-        print('are you going to be running in here ');
         groupsStream = ObservableStream(incomingGroups);
         groupsStreamSubscription = groupsStream.listen((value) async {
           groupDisplay.setGroups(value);
         });
+      },
+    );
+  }
+
+  @action
+  checkAppVersion() async {
+    final res = await userContract.checkIfVersionIsUpToDate();
+    res.fold(
+      (failure) async => await getUserInformation(),
+      (isUpToDate) async {
+        if (!isUpToDate) {
+          Modular.to.navigate(GroupsConstants.updateApp);
+        } else {
+          await getUserInformation();
+        }
       },
     );
   }
@@ -186,13 +199,9 @@ abstract class _GroupPickerCoordinatorBase
         setShowWidgets(false);
         final group = groupDisplay.groups[p0];
         await updateActiveGroup(group.id);
+        activeGroup.setGroupId(group.id);
         Timer(Seconds.get(0, milli: 500), () {
-          Modular.to.navigate(
-            HomeConstants.homeScreen,
-            arguments: {
-              HomeConstants.groupId: group.id,
-            },
-          );
+          Modular.to.navigate(HomeConstants.homeScreen);
         });
       });
 

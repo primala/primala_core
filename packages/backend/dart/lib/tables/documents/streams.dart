@@ -11,25 +11,18 @@ class DocumentsStreams with DocumentUtils, DocumentConstants, SessionsUtils {
   });
 
   Future<bool> cancelDocumentStream() async {
-    final res = supabase.realtime.getChannels();
-    if (res.isNotEmpty) {
-      await res.first.unsubscribe();
-    }
     documentsStreamListeningStatus = false;
     return documentsStreamListeningStatus;
   }
 
   Stream<DocumentEntities> listenToDocuments(int groupId) async* {
-    print('are you even being called ');
-    final res = await supabase.from(TABLE).select();
-    print('res is $res');
-
     documentsStreamListeningStatus = true;
 
     final events =
-        supabase.from(TABLE).stream(primaryKey: [ID]).eq(GROUP_ID, groupId);
+        supabase.from(TABLE).stream(primaryKey: ['id']).eq(GROUP_ID, groupId);
 
     await for (var event in events) {
+      print('event: $event');
       if (!documentsStreamListeningStatus) {
         break;
       }
@@ -39,11 +32,12 @@ class DocumentsStreams with DocumentUtils, DocumentConstants, SessionsUtils {
   }
 
   Stream<List<DocumentEntity>> listenToSpecificDocuments(
-      List<int> documentIds, int groupId) async* {
+      List<int> documentIds) async* {
     documentsStreamListeningStatus = true;
 
-    final events =
-        supabase.from(TABLE).stream(primaryKey: ['id']).eq(ID, groupId);
+    final events = supabase
+        .from(TABLE)
+        .stream(primaryKey: ['id']).inFilter('id', documentIds);
     await for (var event in events) {
       if (!documentsStreamListeningStatus) {
         break;

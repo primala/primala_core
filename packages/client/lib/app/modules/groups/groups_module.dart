@@ -74,6 +74,12 @@ class GroupsModule extends Module {
     );
 
     r.child(
+      GroupsConstants.relativeUpdateApp,
+      transition: TransitionType.noTransition,
+      child: (context) => const UpdateAppScreen(),
+    );
+
+    r.child(
       GroupsConstants.relativeAccountSettings,
       transition: TransitionType.noTransition,
       child: (context) => AccountSettingsScreen(

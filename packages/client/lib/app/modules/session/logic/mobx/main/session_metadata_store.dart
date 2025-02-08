@@ -151,10 +151,7 @@ abstract class _SessionMetadataStoreBase
 
   documentsReactor() => reaction((p0) => documentIds, (p0) async {
         if (documentIds.isEmpty) return;
-        await listenToSpecificDocuments(
-          documentIds,
-          groupId,
-        );
+        await listenToSpecificDocuments(documentIds);
       });
 
   activeDocumentReactor() => reaction((p0) => activeDocument, (p0) async {
@@ -170,10 +167,9 @@ abstract class _SessionMetadataStoreBase
   }
 
   @action
-  listenToSpecificDocuments(List<int> documentIds, int groupId) async {
+  listenToSpecificDocuments(List<int> documentIds) async {
     final res = await docsContract.listenToSpecificDocuments(
       documentIds,
-      groupId,
     );
     res.fold((failure) {}, (stream) {
       documentsStream = ObservableStream(stream);

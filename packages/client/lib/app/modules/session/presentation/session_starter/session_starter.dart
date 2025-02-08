@@ -26,18 +26,8 @@ class SessionStarterScreen extends HookWidget {
         showWidgets: coordinator.showWidgets,
         children: [
           HeaderRow(
-            includeDivider: true,
-            children: [
-              LeftChevron(
-                onTap: () => coordinator.onGoBack(),
-              ),
-              const SmartHeader(
-                content: "Start Session",
-              ),
-              const LeftChevron(
-                color: Colors.transparent,
-              ),
-            ],
+            title: "Start Session",
+            onChevronTapped: () => coordinator.onGoBack(),
           ),
           SessionStarterBody(
             onSubmit: coordinator.initializeSession,

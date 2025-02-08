@@ -12,4 +12,9 @@ abstract class _InformationCoordinatorBase
     initBaseLogicActions();
     initBaseWidgetsCoordinatorActions();
   }
+
+  @action
+  constructor() {
+    fadeInWidgets();
+  }
 }

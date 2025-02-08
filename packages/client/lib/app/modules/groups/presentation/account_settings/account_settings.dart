@@ -21,18 +21,8 @@ class AccountSettingsScreen extends HookWidget {
         showWidgets: coordinator.showWidgets,
         children: [
           HeaderRow(
-            includeDivider: false,
-            children: [
-              LeftChevron(
-                onTap: coordinator.onGoBack,
-              ),
-              const SmartHeader(
-                content: "Settings",
-              ),
-              const LeftChevron(
-                color: Colors.transparent,
-              ),
-            ],
+            title: "Settings",
+            onChevronTapped: coordinator.onGoBack,
           ),
           SettingsLayout(
             onDeactivate: coordinator.onDeactivate,

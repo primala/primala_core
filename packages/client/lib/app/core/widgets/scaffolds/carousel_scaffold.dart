@@ -13,6 +13,7 @@ class CarouselScaffold extends HookWidget with OpacityUtils {
   final bool showWidgets;
   final bool showCarousel;
   final MainAxisAlignment mainAxisAlignment;
+  final CrossAxisAlignment crossAxisAlignment;
   final int initialPosition;
 
   const CarouselScaffold({
@@ -22,6 +23,7 @@ class CarouselScaffold extends HookWidget with OpacityUtils {
     this.showCarousel = true,
     this.showWidgets = true,
     this.mainAxisAlignment = MainAxisAlignment.start,
+    this.crossAxisAlignment = CrossAxisAlignment.center,
   });
 
   @override
@@ -44,6 +46,7 @@ class CarouselScaffold extends HookWidget with OpacityUtils {
               ),
               child: Column(
                 mainAxisAlignment: mainAxisAlignment,
+                crossAxisAlignment: crossAxisAlignment,
                 children: [
                   ...children,
                   const Spacer(),

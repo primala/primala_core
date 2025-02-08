@@ -12,6 +12,7 @@ mixin GroupsConstants {
   static const relativeInviteToGroup = '/invite_to_group';
   static const relativeSelectRole = '/select_role';
   static const relativeInbox = '/inbox';
+  static const relativeUpdateApp = '/update_app';
 
   static const groupPicker = '$module$relativeGroupPicker';
   static const createGroup = '$module$relativeCreateGroup';
@@ -23,6 +24,7 @@ mixin GroupsConstants {
   static const inviteToGroup = '$module$relativeInviteToGroup';
   static const selectRole = '$module$relativeSelectRole';
   static const inbox = '$module$relativeInbox';
+  static const updateApp = '$module$relativeUpdateApp';
 
   static const PROFILE_GRADIENT = 'profileGradient';
   static const GROUP_NAME = 'groupName';

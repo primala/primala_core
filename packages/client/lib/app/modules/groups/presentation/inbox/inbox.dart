@@ -21,18 +21,8 @@ class InboxScreen extends HookWidget {
       isScrollable: true,
       children: [
         HeaderRow(
-          includeDivider: false,
-          children: [
-            LeftChevron(
-              onTap: () => Modular.to.pop(),
-            ),
-            const SmartHeader(
-              content: "Inbox",
-            ),
-            const LeftChevron(
-              color: Colors.transparent,
-            ),
-          ],
+          title: "Inbox",
+          onChevronTapped: () => Modular.to.pop(),
         ),
         InboxBody(
           handleRequest: handleRequest,

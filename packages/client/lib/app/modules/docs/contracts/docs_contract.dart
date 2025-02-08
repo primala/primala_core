@@ -14,7 +14,6 @@ abstract class DocsContract {
 
   Future<Either<Failure, Stream<DocumentEntities>>> listenToSpecificDocuments(
     List<int> documentIds,
-    int groupId,
   );
 
   Future<bool> cancelDocumentStream();
@@ -131,9 +130,9 @@ class DocsContractImpl extends DocsContract with ResponseToStatus {
   }
 
   @override
-  listenToSpecificDocuments(documentIds, groupId) async {
+  listenToSpecificDocuments(documentIds) async {
     if (await networkInfo.isConnected) {
-      final res = remoteSource.listenToSpecificDocuments(documentIds, groupId);
+      final res = remoteSource.listenToSpecificDocuments(documentIds);
       return Right(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);

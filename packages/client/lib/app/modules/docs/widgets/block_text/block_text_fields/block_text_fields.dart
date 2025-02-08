@@ -147,6 +147,7 @@ class BlockTextFields extends HookWidget {
                                     focusNode: store.focusNode,
                                     scrollPadding: EdgeInsets.zero,
                                     keyboardType: TextInputType.multiline,
+                                    onChanged: store.onChange,
                                     maxLines: null,
                                     // enabled: bottomPadding == 0
                                     //     //&& movieIsInProgress
@@ -184,7 +185,7 @@ class BlockTextFields extends HookWidget {
                                       child: GestureDetector(
                                         onTap: () {
                                           store.onSubmit();
-                                          store.textFieldHeight = 97;
+                                          // store.textFieldHeight = 97;
                                         },
                                         child: Container(
                                           width: 30,

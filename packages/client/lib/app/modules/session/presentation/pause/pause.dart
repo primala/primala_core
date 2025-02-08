@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 export 'pause_coordinator.dart';
@@ -18,6 +19,12 @@ class PauseScreen extends HookWidget {
       coordinator.constructor();
       return null;
     }, []);
+    final screenSize = useFullScreenSize();
+    final scaledPadding = useScaledSize(
+      baseValue: .2,
+      screenSize: screenSize,
+      bumpPerHundredth: -0.001,
+    );
 
     return Observer(builder: (context) {
       return AnimatedScaffold(
@@ -42,7 +49,7 @@ class PauseScreen extends HookWidget {
                     ),
                   ),
                   const Padding(
-                    padding: EdgeInsets.only(top: 15.0),
+                    padding: EdgeInsets.only(top: 0.0),
                     child: Jost(
                       'Tap to resume',
                       fontSize: 20,
@@ -52,7 +59,7 @@ class PauseScreen extends HookWidget {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 200.0),
+                padding: EdgeInsets.only(top: scaledPadding),
                 child: GeneralizedActionSlider(
                   showWidget: true,
                   assetPath: 'assets/session/end_session_icon.png',
