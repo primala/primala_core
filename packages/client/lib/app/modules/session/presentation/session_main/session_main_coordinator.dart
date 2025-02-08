@@ -164,13 +164,26 @@ abstract class _SessionMainCoordinatorBase
           onClose: () {
             sessionBar.setWidgetVisibility(true);
           },
-          spotlightStatement: SpotlightStatement(
-            onTextUpdated: sessionMetadata.viewDoc.onSpotlightTextChanged,
-            onBlockTypeUpdated: sessionMetadata.viewDoc.onBlockTypeChanged,
-            controller: sessionMetadata.viewDoc.spotlightController,
-            externalBlockType:
-                sessionMetadata.viewDoc.spotlightContentBlock.type,
-            showTextField: true,
+          spotlightStatement: Column(
+            children: [
+              SpotlightStatement(
+                onTextUpdated: sessionMetadata.viewDoc.onSpotlightTextChanged,
+                onBlockTypeUpdated: sessionMetadata.viewDoc.onBlockTypeChanged,
+                controller: sessionMetadata.viewDoc.spotlightController,
+                externalBlockType:
+                    sessionMetadata.viewDoc.spotlightContentBlock.type,
+                showTextField: true,
+              ),
+              Container(
+                padding: const EdgeInsets.only(right: 10),
+                alignment: Alignment.centerRight,
+                child: Jost(
+                  '${sessionMetadata.viewDoc.characterCount}/2000',
+                  fontColor: Colors.white,
+                  fontSize: 14,
+                ),
+              ),
+            ],
           ),
         );
       });
@@ -197,6 +210,15 @@ abstract class _SessionMainCoordinatorBase
                     externalBlockType:
                         sessionMetadata.viewDoc.spotlightContentBlock.type,
                     showTextField: true,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(right: 10),
+                    alignment: Alignment.centerRight,
+                    child: Jost(
+                      '${sessionMetadata.viewDoc.characterCount}/2000',
+                      fontSize: 14,
+                      fontColor: Colors.white,
+                    ),
                   ),
                 ],
               ),

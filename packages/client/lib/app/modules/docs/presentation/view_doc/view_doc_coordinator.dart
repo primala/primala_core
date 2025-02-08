@@ -65,6 +65,7 @@ abstract class _ViewDocCoordinatorBase
     disposers.add(spotlightTextReactor());
     disposers.add(blockTextFieldSubmissionReactor());
     disposers.add(contentToDeletionReactor());
+    disposers.add(textFieldCharactersReactor());
   }
 
   @action
@@ -100,6 +101,9 @@ abstract class _ViewDocCoordinatorBase
 
   @observable
   String title = '';
+
+  @observable
+  int textFieldCharactersCount = 0;
 
   ScrollController scrollController = ScrollController();
 
@@ -204,13 +208,18 @@ abstract class _ViewDocCoordinatorBase
 
   blockTextFieldSubmissionReactor() =>
       reaction((p0) => blockTextFields.submissionCount, (p0) async {
+        if (characterCount > 2000) return;
         if (blockTextFields.mode == BlockTextFieldMode.adding) {
           await contract.addContent(addContentParams);
           scrollController.jumpTo(scrollController.position.maxScrollExtent);
         } else {
           await contract.updateContent(updateContentParams);
         }
-        blockTextFields.reset();
+      });
+
+  textFieldCharactersReactor() =>
+      reaction((p0) => blockTextFields.currentTextContent, (p0) {
+        textFieldCharactersCount = p0.length;
       });
 
   @override
@@ -247,6 +256,16 @@ abstract class _ViewDocCoordinatorBase
     } else {
       return ContentBlockEntity.initial();
     }
+  }
+
+  @computed
+  int get characterCount {
+    int count =
+        spotlightContentBlock.content.length + blockTextFields.characterCount;
+    for (var element in contentBlocks) {
+      count += element.content.length;
+    }
+    return count;
   }
 
   @computed

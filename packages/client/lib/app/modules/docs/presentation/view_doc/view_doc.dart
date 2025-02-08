@@ -48,6 +48,14 @@ class ViewDocScreen extends HookWidget {
                       showTextField: true,
                     ),
                   ),
+                  Container(
+                    padding: const EdgeInsets.only(right: 10),
+                    alignment: Alignment.centerRight,
+                    child: Jost(
+                      '${coordinator.characterCount}/2000',
+                      fontSize: 14,
+                    ),
+                  ),
                   const Divider(
                     height: 1,
                     color: Colors.black,
