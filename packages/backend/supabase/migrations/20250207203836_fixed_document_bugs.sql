@@ -74,9 +74,9 @@ create table "public"."documents" (
 
 alter table "public"."documents" enable row level security;
 
-CREATE UNIQUE INDEX documents_pkey ON public.documents USING btree (id);
+-- CREATE UNIQUE INDEX documents_pkey ON public.documents USING btree (id);
 
-CREATE UNIQUE INDEX users_email_key ON public.users USING btree (email);
+-- CREATE UNIQUE INDEX users_email_key ON public.users USING btree (email);
 
 alter table "public"."documents" add constraint "documents_pkey" PRIMARY KEY using index "documents_pkey";
 
@@ -92,7 +92,7 @@ alter table "public"."documents" add constraint "documents_spotlight_content_id_
 
 alter table "public"."documents" validate constraint "documents_spotlight_content_id_fkey";
 
-alter table "public"."users" add constraint "users_email_key" UNIQUE using index "users_email_key";
+-- alter table "public"."users" add constraint "users_email_key" UNIQUE using index "users_email_key";
 
 grant delete on table "public"."documents" to "anon";
 
