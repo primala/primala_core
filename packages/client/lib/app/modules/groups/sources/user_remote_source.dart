@@ -1,6 +1,7 @@
 import 'package:nokhte_backend/tables/group_requests.dart';
 import 'package:nokhte_backend/tables/users.dart';
 import 'package:nokhte_backend/types/types.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class UserRemoteSource {
@@ -10,6 +11,7 @@ abstract class UserRemoteSource {
   Future<void> deactivateAccount();
   Future<bool> cancelRequestsStream();
   Future<List> updateUserProfileGradient(ProfileGradient param);
+  Future<bool> versionIsUpToDate();
   Future<List> updateActiveGroup(int groupId);
 }
 
@@ -43,6 +45,13 @@ class UserRemoteSourceImpl implements UserRemoteSource {
 
   @override
   getUserInformation() async => await usersQueries.getUserInfo();
+
+  @override
+  versionIsUpToDate() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String version = packageInfo.version;
+    return (await supabase.rpc('get_valid_app_versions')).contains(version);
+  }
 
   @override
   cancelRequestsStream() async =>

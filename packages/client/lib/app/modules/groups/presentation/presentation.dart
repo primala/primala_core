@@ -9,3 +9,4 @@ export 'group_icon_picker/group_icon_picker.dart';
 export 'group_members/group_members.dart';
 export 'invite_to_group/invite_to_group.dart';
 export 'select_role/select_role.dart';
+export 'update_app/update_app.dart';
