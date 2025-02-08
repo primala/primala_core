@@ -24,9 +24,15 @@ class HeaderRow extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = useFullScreenSize().height;
+    final screenSize = useFullScreenSize();
     return Padding(
-      padding: EdgeInsets.only(top: screenHeight * .1),
+      padding: EdgeInsets.only(
+        top: useScaledSize(
+          baseValue: .1,
+          screenSize: screenSize,
+          bumpPerHundredth: -.001,
+        ),
+      ),
       child: Column(
         children: [
           MultiHitStack(
@@ -36,6 +42,7 @@ class HeaderRow extends HookWidget {
                 children: [
                   SmartHeader(
                     content: title,
+                    color: chevronColor,
                   ),
                 ],
               ),

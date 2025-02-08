@@ -13,6 +13,7 @@ class SpotlightStatement extends HookWidget {
   final ContentBlockType? externalBlockType;
   final bool showTextField;
   final double paddingValue;
+  final Color fontColor;
 
   const SpotlightStatement({
     super.key,
@@ -22,6 +23,7 @@ class SpotlightStatement extends HookWidget {
     this.externalBlockType,
     this.paddingValue = 0.5,
     this.showTextField = false,
+    this.fontColor = Colors.black,
   });
 
   @override
@@ -92,6 +94,7 @@ class SpotlightStatement extends HookWidget {
             ),
           if (showTextField.value)
             SpotlightStatementTextField(
+                fontColor: fontColor,
                 onTextUpdated: onTextUpdated,
                 type: selectedType.value!,
                 onBackPressed: () {

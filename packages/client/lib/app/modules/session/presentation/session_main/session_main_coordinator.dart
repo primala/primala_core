@@ -208,6 +208,7 @@ abstract class _SessionMainCoordinatorBase
                 externalBlockType:
                     sessionMetadata.viewDoc.spotlightContentBlock.type,
                 showTextField: true,
+                fontColor: Colors.white,
               ),
               Observer(builder: (context) {
                 return Container(
@@ -248,6 +249,7 @@ abstract class _SessionMainCoordinatorBase
                     externalBlockType:
                         sessionMetadata.viewDoc.spotlightContentBlock.type,
                     showTextField: true,
+                    fontColor: Colors.white,
                   ),
                   Observer(builder: (context) {
                     return Container(

@@ -28,7 +28,7 @@ class GroupMembersScreen extends HookWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           HeaderRow(
-            title: 'Group Members',
+            title: 'Members',
             onChevronTapped: coordinator.onGoBack,
           ),
           GroupMembersList(

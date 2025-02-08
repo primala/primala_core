@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:nokhte/app/core/constants/colors.dart';
+import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 
 class TitleBar extends HookWidget {
@@ -19,10 +20,17 @@ class TitleBar extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = useFullScreenSize();
     return Container(
       color: Colors.white,
       child: Padding(
-        padding: const EdgeInsets.only(top: 70),
+        padding: EdgeInsets.only(
+          top: useScaledSize(
+            baseValue: .08,
+            screenSize: screenSize,
+            bumpPerHundredth: -0.0005,
+          ),
+        ),
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           GestureDetector(
