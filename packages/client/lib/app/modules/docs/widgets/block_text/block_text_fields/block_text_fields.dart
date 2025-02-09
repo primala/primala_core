@@ -31,19 +31,17 @@ class BlockTextFields extends HookWidget {
     final bottomPadding = MediaQuery.of(context).viewInsets.bottom;
 
     Widget buildBlockIcon(ContentBlockType type, double position) {
-      return Observer(builder: (context) {
-        return Positioned(
-          bottom: position,
-          child: GestureDetector(
-            onTap: () => store.onTap(type),
-            child: Image.asset(
-              BlockTextConstants.getAssetPath(type),
-              width: 37,
-              height: 37,
-            ),
+      return Positioned(
+        bottom: position,
+        child: GestureDetector(
+          onTap: () => store.onTap(type),
+          child: Image.asset(
+            BlockTextConstants.getAssetPath(type),
+            width: 37,
+            height: 37,
           ),
-        );
-      });
+        ),
+      );
     }
 
     return Observer(builder: (context) {

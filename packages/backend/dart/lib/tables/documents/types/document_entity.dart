@@ -25,7 +25,7 @@ class DocumentEntity extends Equatable {
   factory DocumentEntity.fromSupabaseSingle(Map<String, dynamic> doc) {
     return DocumentEntity(
       id: doc[DocumentConstants.S_ID],
-      spotlightContentId: doc[DocumentConstants.S_SPOTLIGHT_CONTENT_ID],
+      spotlightContentId: doc[DocumentConstants.S_SPOTLIGHT_CONTENT_ID] ?? -1,
       title: doc[DocumentConstants.S_TITLE],
     );
   }

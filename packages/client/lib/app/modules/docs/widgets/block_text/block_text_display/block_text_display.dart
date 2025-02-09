@@ -153,7 +153,7 @@ class BlockTextDisplay extends HookWidget {
               );
             }),
             SizedBox(
-              height: bottomPadding + 250,
+              height: bottomPadding + store.blockTextFields.textFieldHeight,
             ),
           ],
         ),

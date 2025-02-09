@@ -1,4 +1,4 @@
-// ignore_for_file: constant_identifier_names
+// ignore_for_file: constant_identifier_names, invalid_use_of_internal_member
 import 'package:nokhte_backend/tables/groups.dart';
 import 'package:nokhte_backend/tables/sessions/queries.dart';
 import 'package:nokhte_backend/utils/profile_gradients_utils.dart';
@@ -18,8 +18,10 @@ class SessionsStreams extends SessionsQueries with SessionsConstants {
   Future<bool> cancelSessionRequestsStream() async {
     resetValues();
     final res = supabase.realtime.getChannels();
-    if (res.isNotEmpty) {
-      await res.first.unsubscribe();
+    for (var channel in res) {
+      if (channel.topic.contains(TABLE)) {
+        channel.unsubscribe();
+      }
     }
     requestsListeningStatus = false;
     return requestsListeningStatus;

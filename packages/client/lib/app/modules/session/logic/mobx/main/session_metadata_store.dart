@@ -175,6 +175,7 @@ abstract class _SessionMetadataStoreBase
       documentsStream = ObservableStream(stream);
       documentsStreamSubscription = documentsStream.listen((event) async {
         documents = ObservableList.of(event);
+        viewDoc.constructor(activeDoc);
       });
     });
   }

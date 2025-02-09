@@ -59,7 +59,6 @@ class ContentBlocksQueries with ContentBlocksConstants {
           TYPE: SessionContentUtils.mapContentBlockTypeToString(
             params.contentBlockType,
           ),
-          LAST_EDITED_AT: DateTime.now().toUtc().toIso8601String(),
         })
         .eq(ID, params.contentId)
         .select()

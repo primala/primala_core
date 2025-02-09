@@ -201,6 +201,11 @@ abstract class _SessionMainCoordinatorBase
           },
           spotlightStatement: Column(
             children: [
+              DocHeader(
+                color: Colors.white,
+                onChanged: sessionMetadata.viewDoc.onTitleChanged,
+                controller: sessionMetadata.viewDoc.docTitleController,
+              ),
               SpotlightStatement(
                 onTextUpdated: sessionMetadata.viewDoc.onSpotlightTextChanged,
                 onBlockTypeUpdated: sessionMetadata.viewDoc.onBlockTypeChanged,
@@ -240,6 +245,11 @@ abstract class _SessionMainCoordinatorBase
               },
               spotlightStatement: Column(
                 children: [
+                  DocHeader(
+                    color: Colors.white,
+                    onChanged: sessionMetadata.viewDoc.onTitleChanged,
+                    controller: sessionMetadata.viewDoc.docTitleController,
+                  ),
                   SpotlightStatement(
                     onTextUpdated:
                         sessionMetadata.viewDoc.onSpotlightTextChanged,

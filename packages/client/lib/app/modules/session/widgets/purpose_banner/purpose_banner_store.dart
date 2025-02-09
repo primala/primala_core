@@ -82,43 +82,42 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
           initialChildSize: .9,
           minChildSize: .7,
           expand: false,
-          builder: (context, scrollController) => Observer(
-            builder: (context) => MultiHitStack(
-              children: [
-                NokhteBlur(
-                  store: blur,
-                ),
-                SingleChildScrollView(
-                  controller: scrollController,
-                  child: Observer(
-                    builder: (context) => SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            spotlightStatement,
-                            Divider(
-                              color: Colors.white,
-                              thickness: 1,
-                              height: 20,
-                            ),
-                            SizedBox(height: 20),
-                            BlockTextDisplay(
-                              store: blockTextDisplay,
-                              fontColor: Colors.white,
-                            ),
-                          ],
-                        ),
+          builder: (context, scrollController) => MultiHitStack(
+            children: [
+              NokhteBlur(
+                store: blur,
+              ),
+              SingleChildScrollView(
+                controller: blockTextDisplay.scrollController,
+                physics: const ClampingScrollPhysics(),
+                child: Observer(
+                  builder: (context) => SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          spotlightStatement,
+                          Divider(
+                            color: Colors.white,
+                            thickness: 1,
+                            height: 20,
+                          ),
+                          SizedBox(height: 20),
+                          BlockTextDisplay(
+                            store: blockTextDisplay,
+                            fontColor: Colors.white,
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ),
-                BlockTextFields(
-                  store: blockTextDisplay.blockTextFields,
-                ),
-              ],
-            ),
+              ),
+              BlockTextFields(
+                store: blockTextDisplay.blockTextFields,
+              ),
+            ],
           ),
         ),
       ).whenComplete(() {

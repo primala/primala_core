@@ -7,15 +7,17 @@ import 'package:nokhte/app/core/widgets/widgets.dart';
 class DocHeader extends HookWidget with DialogueUtils {
   final Function(String) onChanged;
   final TextEditingController? controller;
-  final Function onBackPress;
+  final Function? onBackPress;
   final Function? onTrashPressed;
+  final Color color;
 
   const DocHeader({
     super.key,
     required this.onChanged,
-    required this.onBackPress,
+    this.onBackPress,
     this.onTrashPressed,
     this.controller,
+    this.color = Colors.black,
   });
 
   @override
@@ -24,59 +26,66 @@ class DocHeader extends HookWidget with DialogueUtils {
     final focusNode = useFocusNode();
     final screenHeight = useFullScreenSize().height;
     return Padding(
-      padding: EdgeInsets.only(top: screenHeight * .1),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+      padding: EdgeInsets.only(
+        top: onBackPress != null ? screenHeight * .1 : 0,
+        bottom: onBackPress == null ? screenHeight * .01 : 0,
+      ),
+      child: MultiHitStack(
         children: [
-          LeftChevron(
-            onTap: () => onBackPress(),
-          ),
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: TextField(
-                controller: controller,
-                focusNode: focusNode,
-                onTapOutside: (event) => focusNode.unfocus(),
-                onChanged: onChanged,
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.done,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.jost(
-                  color: Colors.black,
-                  fontSize: 24,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (onBackPress != null)
+                LeftChevron(
+                  onTap: () => onBackPress!(),
                 ),
-                cursorColor: Colors.black,
-                maxLines: null,
-                decoration: InputDecoration(
-                  hintText: 'Document Name',
-                  hintStyle: GoogleFonts.jost(
-                    color: Colors.black.withOpacity(0.5),
-                    fontSize: 24,
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: BorderSide.none,
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 1,
+                  child: TextField(
+                    controller: controller,
+                    focusNode: focusNode,
+                    onTapOutside: (event) => focusNode.unfocus(),
+                    onChanged: onChanged,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.done,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.jost(
+                      color: color,
+                      fontSize: 24,
+                    ),
+                    cursorColor: Colors.black,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      hintText: 'Document Name',
+                      hintStyle: GoogleFonts.jost(
+                        color: color.withOpacity(0.5),
+                        fontSize: 24,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 1,
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
+              if (onBackPress != null)
+                const LeftChevron(color: Colors.transparent)
+            ],
           ),
           if (onTrashPressed != null)
-            Container(
-              margin: const EdgeInsets.only(right: 20),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.black, width: 1.0),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(3),
+            Positioned(
+              right: 10,
+              top: 10,
+              child: Container(
                 child: GestureDetector(
                   onTap: () => showDeleteConfirmationDialog(
                     context: context,
@@ -93,8 +102,6 @@ class DocHeader extends HookWidget with DialogueUtils {
                 ),
               ),
             ),
-          if (onTrashPressed == null)
-            const LeftChevron(color: Colors.transparent)
         ],
       ),
     );

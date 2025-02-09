@@ -1,4 +1,4 @@
-// ignore_for_file: constant_identifier_names
+// ignore_for_file: constant_identifier_names, invalid_use_of_internal_member
 import 'package:nokhte_backend/tables/groups/groups_queries.dart';
 import 'package:nokhte_backend/tables/users.dart';
 import 'package:nokhte_backend/utils/profile_gradients_utils.dart';
@@ -71,8 +71,10 @@ class GroupsQueries with ProfileGradientUtils {
 
   Future<bool> cancelGroupsStream() async {
     final res = supabase.realtime.getChannels();
-    if (res.isNotEmpty) {
-      await res.first.unsubscribe();
+    for (var channel in res) {
+      if (channel.topic.contains(TABLE)) {
+        channel.unsubscribe();
+      }
     }
     groupsListeningStatus = false;
     return groupsListeningStatus;

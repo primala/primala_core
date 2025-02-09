@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nokhte/app/core/constants/colors.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 
 class CarouselPlacementIndicator extends StatelessWidget with OpacityUtils {
@@ -20,7 +21,7 @@ class CarouselPlacementIndicator extends StatelessWidget with OpacityUtils {
     required double targetValue,
   }) {
     return Padding(
-      padding: const EdgeInsets.only(right: 8.0, top: 8.0),
+      padding: const EdgeInsets.only(right: 8.0),
       child: Opacity(
         opacity: interpolate(
           currentValue: currentPosition,
@@ -42,13 +43,16 @@ class CarouselPlacementIndicator extends StatelessWidget with OpacityUtils {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(
-        length,
-        (index) => buildCircle(
-          currentPosition: currentPosition,
-          targetValue: index.toDouble(),
+    return Container(
+      color: NokhteColors.eggshell,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(
+          length,
+          (index) => buildCircle(
+            currentPosition: currentPosition,
+            targetValue: index.toDouble(),
+          ),
         ),
       ),
     );

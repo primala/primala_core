@@ -14,12 +14,16 @@ class CarouselScaffold extends HookWidget with OpacityUtils {
   final bool showCarousel;
   final MainAxisAlignment mainAxisAlignment;
   final CrossAxisAlignment crossAxisAlignment;
+  final Function dispose;
   final int initialPosition;
+  final bool isScrollable;
 
   const CarouselScaffold({
     super.key,
+    required this.dispose,
     required this.children,
     required this.initialPosition,
+    this.isScrollable = false,
     this.showCarousel = true,
     this.showWidgets = true,
     this.mainAxisAlignment = MainAxisAlignment.start,
@@ -38,29 +42,49 @@ class CarouselScaffold extends HookWidget with OpacityUtils {
             opacity: useWidgetOpacity(showWidgets),
             duration: const Duration(milliseconds: 500),
             child: Opacity(
-              opacity: interpolate(
-                currentValue: currentPosition.value,
-                targetValue: initialPosition.toDouble(),
-                minOutput: 0.0,
-                maxOutput: 1.0,
-              ),
-              child: Column(
-                mainAxisAlignment: mainAxisAlignment,
-                crossAxisAlignment: crossAxisAlignment,
-                children: [
-                  ...children,
-                  const Spacer(),
-                  NavCarousel(
-                    currentPosition: currentPosition.value,
-                    onPositionChanged: (value) => currentPosition.value = value,
-                    carouselItems: const ['', '', ''],
-                    callbacks: [() {}, () {}, () {}],
-                    initialPosition: initialPosition,
-                    isEnabled: false,
-                  ),
-                ],
-              ),
-            ),
+                opacity: interpolate(
+                  currentValue: currentPosition.value,
+                  targetValue: initialPosition.toDouble(),
+                  minOutput: 0.0,
+                  maxOutput: 1.0,
+                ),
+                child: isScrollable
+                    ? SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: mainAxisAlignment,
+                          crossAxisAlignment: crossAxisAlignment,
+                          children: [
+                            ...children,
+                            // const Spacer(),
+                            NavCarousel(
+                              currentPosition: currentPosition.value,
+                              onPositionChanged: (value) =>
+                                  currentPosition.value = value,
+                              carouselItems: const ['', '', ''],
+                              callbacks: [() {}, () {}, () {}],
+                              initialPosition: initialPosition,
+                              isEnabled: false,
+                            ),
+                          ],
+                        ),
+                      )
+                    : Column(
+                        mainAxisAlignment: mainAxisAlignment,
+                        crossAxisAlignment: crossAxisAlignment,
+                        children: [
+                          ...children,
+                          const Spacer(),
+                          NavCarousel(
+                            currentPosition: currentPosition.value,
+                            onPositionChanged: (value) =>
+                                currentPosition.value = value,
+                            carouselItems: const ['', '', ''],
+                            callbacks: [() {}, () {}, () {}],
+                            initialPosition: initialPosition,
+                            isEnabled: false,
+                          ),
+                        ],
+                      )),
           ),
           AnimatedOpacity(
             opacity: useWidgetOpacity(showCarousel),
@@ -74,9 +98,18 @@ class CarouselScaffold extends HookWidget with OpacityUtils {
                   onPositionChanged: (value) => currentPosition.value = value,
                   carouselItems: const ['info', 'home', 'docs'],
                   callbacks: [
-                    () => Modular.to.navigate(HomeConstants.information),
-                    () => Modular.to.navigate(HomeConstants.homeScreen),
-                    () => Modular.to.navigate(DocsConstants.docsHub)
+                    () async {
+                      await dispose();
+                      Modular.to.navigate(HomeConstants.information);
+                    },
+                    () async {
+                      await dispose();
+                      Modular.to.navigate(HomeConstants.homeScreen);
+                    },
+                    () async {
+                      await dispose();
+                      Modular.to.navigate(DocsConstants.docsHub);
+                    }
                   ],
                   initialPosition: initialPosition,
                 ),

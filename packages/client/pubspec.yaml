@@ -2,7 +2,7 @@ name: nokhte
 description: A new Flutter project.
 publish_to: "none"
 
-version: 2.53.0+140426654
+version: 2.54.0+140497788
 
 environment:
   sdk: ">=3.0.0 <4.0.0"

@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_use_of_internal_member
+
 import 'dart:async';
 import 'package:nokhte_backend/tables/content_blocks.dart';
 import 'package:nokhte_backend/tables/sessions/utilities/session_utils.dart';
@@ -14,8 +16,10 @@ class ContentBlocksStreams with ContentBlocksConstants, SessionsUtils {
 
   Future<bool> cancelContentListeningStream() async {
     final res = supabase.realtime.getChannels();
-    if (res.isNotEmpty) {
-      await res.first.unsubscribe();
+    for (var channel in res) {
+      if (channel.topic.contains(TABLE)) {
+        channel.unsubscribe();
+      }
     }
     _contentList.clear();
     contentListeningStatus = false;

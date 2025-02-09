@@ -35,9 +35,11 @@ abstract class _ViewDocCoordinatorBase
 
   @action
   constructor(DocumentEntity doc) async {
+    dispose();
     spotlightController = TextEditingController();
     docTitleController = TextEditingController();
     scrollController = ScrollController();
+    blockTextDisplay.setScrollController(scrollController);
     setShowWidgets(false);
     this.doc = doc;
     docTitleController.text = doc.title;
@@ -78,6 +80,8 @@ abstract class _ViewDocCoordinatorBase
         final filteredList = ObservableList.of(contentBlocks
             .where((element) => element.id != spotlightContentBlockId)
             .toList());
+        spotlightController.text = spotlightText;
+
         blockTextDisplay.setContent(filteredList);
         setShowWidgets(true);
       });
@@ -208,10 +212,18 @@ abstract class _ViewDocCoordinatorBase
 
   blockTextFieldSubmissionReactor() =>
       reaction((p0) => blockTextFields.submissionCount, (p0) async {
-        if (characterCount > 2000) return;
+        if (characterCount > 2000 || p0 != 1) return;
         if (blockTextFields.mode == BlockTextFieldMode.adding) {
           await contract.addContent(addContentParams);
-          scrollController.jumpTo(scrollController.position.maxScrollExtent);
+          if (scrollController.hasClients) {
+            if (scrollController.position.pixels ==
+                scrollController.position.maxScrollExtent) return;
+            scrollController.animateTo(
+              scrollController.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 800),
+              curve: Curves.easeIn,
+            );
+          }
         } else {
           await contract.updateContent(updateContentParams);
         }
@@ -222,6 +234,11 @@ abstract class _ViewDocCoordinatorBase
       reaction((p0) => blockTextFields.currentTextContent, (p0) {
         textFieldCharactersCount = p0.length;
       });
+
+  isDuplicate(String text) {
+    if (contentBlocks.isEmpty) return false;
+    return contentBlocks.any((element) => element.content == text);
+  }
 
   @override
   @action

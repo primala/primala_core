@@ -75,6 +75,8 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
 
   @action
   reset() {
+    print('is refresh running ');
+    submissionCount = 0;
     setMode(BlockTextFieldMode.adding);
     controller.clear();
     currentTextContent = '';
@@ -84,7 +86,6 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
     });
     characterCount = 0;
     setCurrentlySelectedParentId(-1);
-    updateTextFieldHeight();
     setCurrentlySelectedContentId(-1);
   }
 
@@ -157,7 +158,9 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
 
   @action
   onSubmit() {
-    if (controller.text.trim().isNotEmpty) {
+    if (controller.text.trim().isNotEmpty &&
+        currentTextContent != controller.text) {
+      print('is this being called five times ');
       currentTextContent = controller.text;
       submissionCount++;
     }

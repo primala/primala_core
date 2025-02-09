@@ -19,9 +19,10 @@ class InformationScreen extends HookWidget {
     required String title,
     required String description,
     required Size screenSize,
+    double borderWidth = 1,
     bool hasBorder = false,
     bool hasPadding = false,
-    double imageSize = 50,
+    double imageSize = 45,
     EdgeInsets padding = const EdgeInsets.only(left: 20),
   }) {
     return HookBuilder(
@@ -48,7 +49,7 @@ class InformationScreen extends HookWidget {
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.black,
-                          width: hasBorder ? 1 : 1,
+                          width: borderWidth,
                         ),
                         shape: BoxShape.circle,
                       ),
@@ -70,22 +71,24 @@ class InformationScreen extends HookWidget {
                     ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 32),
+              padding: const EdgeInsets.only(left: 19, top: 5),
               child: Jost(
                 title,
                 fontColor: Colors.black,
                 fontSize: scaledTextSize * 1.2,
               ),
             ),
+            SizedBox(height: scaledGapSize * .72),
             Padding(
-              padding: const EdgeInsets.only(left: 52, right: 20),
+              padding: const EdgeInsets.only(left: 32, right: 82),
               child: Jost(
                 description,
                 softWrap: true,
                 fontSize: scaledTextSize * .9,
+                fontWeight: FontWeight.w300,
               ),
             ),
-            SizedBox(height: scaledGapSize),
+            SizedBox(height: scaledGapSize * 1.5),
           ],
         );
       },
@@ -108,19 +111,22 @@ class InformationScreen extends HookWidget {
 
     return Observer(
       builder: (context) => CarouselScaffold(
+        isScrollable: true,
+        dispose: () {},
         initialPosition: 0,
         showWidgets: coordinator.showWidgets,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const HeaderRow(title: 'Session Information'),
-          SizedBox(height: headerSpacing),
+          SizedBox(height: headerSpacing * 1.4),
           _buildFeatureItem(
             imagePath: 'assets/power_up/cook_button.png',
             title: 'Cook',
             description:
                 'When someone is saying something useful, you can give them more time to speak',
             screenSize: screenSize,
+            borderWidth: 0,
           ),
           _buildFeatureItem(
             imagePath: 'assets/power_up/rally_button_blue.png',
@@ -130,6 +136,7 @@ class InformationScreen extends HookWidget {
             screenSize: screenSize,
             hasBorder: true,
             hasPadding: false,
+            // borderWidth: .9,
           ),
           _buildFeatureItem(
             imagePath: 'assets/session/pencil_icon.png',
@@ -139,7 +146,8 @@ class InformationScreen extends HookWidget {
             screenSize: screenSize,
             hasBorder: true,
             hasPadding: true,
-            imageSize: 35,
+            // borderWidth: 1.8,
+            imageSize: 32,
           ),
         ],
       ),
