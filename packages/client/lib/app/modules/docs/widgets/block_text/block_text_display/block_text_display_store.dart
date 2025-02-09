@@ -13,12 +13,19 @@ part 'block_text_display_store.g.dart';
 class BlockTextDisplayStore = _BlockTextDisplayStoreBase
     with _$BlockTextDisplayStore;
 
-abstract class _BlockTextDisplayStoreBase extends BaseWidgetStore with Store {
+abstract class _BlockTextDisplayStoreBase extends BaseWidgetStore
+    with Store, Reactions {
   final BlockTextFieldsStore blockTextFields;
 
   _BlockTextDisplayStoreBase({
     required this.blockTextFields,
   });
+
+  @action
+  constructor() {
+    scrollController = ScrollController();
+    disposers.add(focusReactor());
+  }
 
   @observable
   ObservableList<double> swipeProgresses = ObservableList<double>();
@@ -27,10 +34,6 @@ abstract class _BlockTextDisplayStoreBase extends BaseWidgetStore with Store {
   setSwipeProgress(double val, int index) => swipeProgresses[index] = val;
 
   ScrollController scrollController = ScrollController();
-
-  @action
-  setScrollController(ScrollController controller) =>
-      scrollController = controller;
 
   @observable
   int contentIdToDelete = -1;
@@ -79,4 +82,18 @@ abstract class _BlockTextDisplayStoreBase extends BaseWidgetStore with Store {
   onSubmit() {
     blockTextFields.onSubmit();
   }
+
+  focusReactor() => reaction((p0) => blockTextFields.isFocused, (p0) {
+        if (p0) {
+          if (scrollController.hasClients) {
+            Timer(Seconds.get(0, milli: 500), () {
+              scrollController.animateTo(
+                scrollController.position.maxScrollExtent,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeIn,
+              );
+            });
+          }
+        }
+      });
 }

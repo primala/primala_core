@@ -146,7 +146,7 @@ class InformationScreen extends HookWidget {
             screenSize: screenSize,
             hasBorder: true,
             hasPadding: true,
-            // borderWidth: 1.8,
+            borderWidth: 1.8,
             imageSize: 32,
           ),
         ],

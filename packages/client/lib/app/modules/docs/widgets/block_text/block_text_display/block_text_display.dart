@@ -21,6 +21,11 @@ class BlockTextDisplay extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final width = useFullScreenSize().width;
+    useEffect(() {
+      store.constructor();
+
+      return () => store.dispose();
+    }, []);
     return Observer(builder: (context) {
       final bottomPadding = MediaQuery.of(context).viewInsets.bottom;
       return SizedBox(
@@ -47,7 +52,7 @@ class BlockTextDisplay extends HookWidget {
                           SizedBox(width: (progress.value * 50)), //
                           Icon(
                             Icons.reply,
-                            color: Colors.white,
+                            color: fontColor,
                             size: progress.value * 250,
                           ),
                           SizedBox(

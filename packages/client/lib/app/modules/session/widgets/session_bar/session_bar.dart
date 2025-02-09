@@ -66,7 +66,7 @@ class SessionBar extends HookWidget {
                       // color: Colors.white,
                       border: Border.all(
                         color: Colors.black,
-                        width: 1,
+                        width: 2,
                       ),
                       shape: BoxShape.circle,
                     ),

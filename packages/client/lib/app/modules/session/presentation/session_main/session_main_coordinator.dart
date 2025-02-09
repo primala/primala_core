@@ -66,10 +66,12 @@ abstract class _SessionMainCoordinatorBase
     initReactors();
     if (!sessionMetadata.userIsSpeaking && !sessionMetadata.userCanSpeak) {
       tint.initMovie(const NoParams());
+      letEmCook.setCurrentCook(sessionMetadata.currentSpeakerFirstName);
     }
     if (sessionMetadata.viewDoc.currentFocus.isNotEmpty) {
       purposeBanner.setFocus(sessionMetadata.viewDoc.currentFocus);
     }
+
     rally.setCollaborators(sessionMetadata.collaboratorsMinusUser);
     if (!sessionMetadata.everyoneIsOnline) {
       onCollaboratorLeft();
@@ -197,6 +199,9 @@ abstract class _SessionMainCoordinatorBase
             sessionBar.setWidgetVisibility(false);
           },
           onClose: () {
+            if ((sessionMetadata.userIsInSecondarySpeakingSpotlight &&
+                    sessionMetadata.currentPowerup == PowerupType.rally) ||
+                sessionMetadata.userIsSpeaking) return;
             sessionBar.setWidgetVisibility(true);
           },
           spotlightStatement: Column(
@@ -241,6 +246,9 @@ abstract class _SessionMainCoordinatorBase
                 sessionBar.setWidgetVisibility(false);
               },
               onClose: () {
+                if ((sessionMetadata.userIsInSecondarySpeakingSpotlight &&
+                        sessionMetadata.currentPowerup == PowerupType.rally) ||
+                    sessionMetadata.userIsSpeaking) return;
                 sessionBar.setWidgetVisibility(true);
               },
               spotlightStatement: Column(
@@ -311,7 +319,6 @@ abstract class _SessionMainCoordinatorBase
           smartText.setWidgetVisibility(false);
           sessionBar.setWidgetVisibility(false);
           rally.setRallyPhase(RallyPhase.initial);
-          setDisableAllTouchFeedback(true);
           await presence.updateUserStatus(SessionUserStatus.online);
         } else {
           onLetGo();

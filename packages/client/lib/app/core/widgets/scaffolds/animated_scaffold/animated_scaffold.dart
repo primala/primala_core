@@ -15,12 +15,14 @@ class AnimatedScaffold extends HookWidget with OpacityUtils {
   final List<Widget>? children;
   final bool showWidgets;
   final MainAxisAlignment mainAxisAlignment;
+  final CrossAxisAlignment crossAxisAlignment;
   final bool isScrollable;
   final Widget? body;
   const AnimatedScaffold({
     super.key,
     this.store,
     this.mainAxisAlignment = MainAxisAlignment.start,
+    this.crossAxisAlignment = CrossAxisAlignment.center,
     this.children,
     this.showWidgets = true,
     this.isScrollable = false,
@@ -55,6 +57,7 @@ class AnimatedScaffold extends HookWidget with OpacityUtils {
   Widget getBody() {
     return Column(
       mainAxisAlignment: mainAxisAlignment,
+      crossAxisAlignment: crossAxisAlignment,
       children: children ?? [],
     );
   }

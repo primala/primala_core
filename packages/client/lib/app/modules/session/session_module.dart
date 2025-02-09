@@ -37,7 +37,6 @@ class SessionModule extends Module {
         captureSessionEnd: Modular.get<CaptureSessionEnd>(),
         activeGroup: Modular.get<ActiveGroup>(),
         presence: Modular.get<SessionPresenceCoordinator>(),
-        swipe: SwipeDetector(),
       ),
     );
 

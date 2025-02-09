@@ -6,7 +6,6 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/active_group/active_group.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/types/types.dart';
-import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/home/home.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte_backend/tables/groups.dart';
@@ -22,11 +21,9 @@ abstract class _SessionExitCoordinatorBase
   final SessionMetadataStore sessionMetadata;
   final CaptureSessionEnd captureSessionEnd;
   final ActiveGroup activeGroup;
-  final SwipeDetector swipe;
 
   _SessionExitCoordinatorBase({
     required this.presence,
-    required this.swipe,
     required this.captureSessionEnd,
     required this.activeGroup,
   }) : sessionMetadata = presence.sessionMetadataStore {
@@ -35,11 +32,10 @@ abstract class _SessionExitCoordinatorBase
 
   @action
   constructor() async {
-    disposers.add(swipeReactor());
-    disposers.add(sessionExitReactor());
     await presence.updateUserStatus(
       SessionUserStatus.readyToLeave,
     );
+    disposers.add(sessionExitReactor());
     setShowWidgets(true);
   }
 
@@ -64,15 +60,15 @@ abstract class _SessionExitCoordinatorBase
         }
       });
 
-  swipeReactor() => reaction((p0) => swipe.directionsType, (p0) async {
-        switch (p0) {
-          case GestureDirections.down:
-            await presence.updateUserStatus(SessionUserStatus.online);
-            setShowWidgets(false);
-          default:
-            break;
-        }
-      });
+  @action
+  onTap() async {
+    if (!showWidgets) return;
+    await presence.updateUserStatus(SessionUserStatus.online);
+    setShowWidgets(false);
+    Timer(Seconds.get(0, milli: 500), () {
+      Modular.to.navigate(SessionConstants.mainScreen);
+    });
+  }
 
   @override
   @action
