@@ -27,7 +27,7 @@ class SessionsStreams extends SessionsQueries with SessionsConstants {
     return requestsListeningStatus;
   }
 
-  Stream<SessionRequest> listenToSessionRequests(int groupId) async* {
+  Stream<ActiveSession> listenToActiveSessions(int groupId) async* {
     requestsListeningStatus = true;
 
     final events = supabase.from(TABLE).stream(primaryKey: ['id']).eq(
@@ -40,20 +40,19 @@ class SessionsStreams extends SessionsQueries with SessionsConstants {
         break;
       }
 
-      final filteredEvent = event.where((e) =>
-          e[STATUS] ==
-          mapSessionStatusToString(
-            SessionStatus.recruiting,
-          ));
-      event = List.from(filteredEvent);
-
-      if (filteredEvent.isNotEmpty) {
-        final selectedEvent = filteredEvent.first;
+      if (event.isNotEmpty) {
+        final selectedEvent = event.first;
         final sessionID = selectedEvent[ID];
         final sessionHost = selectedEvent[COLLABORATOR_NAMES].first;
-        yield SessionRequest(id: sessionID, sessionHost: sessionHost);
+        final canJoin = selectedEvent[STATUS] ==
+                mapSessionStatusToString(
+                  SessionStatus.recruiting,
+                ) &&
+            selectedEvent[COLLABORATOR_UIDS].contains(userUID);
+        yield ActiveSession(
+            id: sessionID, sessionHost: sessionHost, canJoin: canJoin);
       } else {
-        yield SessionRequest(id: -1, sessionHost: '');
+        yield ActiveSession.initial();
       }
     }
   }

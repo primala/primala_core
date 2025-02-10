@@ -20,14 +20,16 @@ class UserAvatar extends HookWidget with NokhteGradients {
     this.fontSize = 16,
   });
 
-  getInitials(String fullName) {
+  String getInitials(String fullName) {
     if (fullName.isNotEmpty) {
       final names = fullName.split(' ');
-      final initials = names.map((name) => name[0]).join('');
-      return initials.toUpperCase();
-    } else {
-      return '';
+      if (names.isNotEmpty) {
+        final firstInitial = names.first[0];
+        final lastInitial = names.last[0];
+        return (firstInitial + lastInitial).toUpperCase();
+      }
     }
+    return '';
   }
 
   @override

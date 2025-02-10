@@ -27,6 +27,11 @@ abstract class _BlockTextDisplayStoreBase extends BaseWidgetStore
     disposers.add(focusReactor());
   }
 
+  Timer? timer;
+
+  @observable
+  int timerCount = 0;
+
   @observable
   ObservableList<double> swipeProgresses = ObservableList<double>();
 
@@ -86,14 +91,18 @@ abstract class _BlockTextDisplayStoreBase extends BaseWidgetStore
   focusReactor() => reaction((p0) => blockTextFields.isFocused, (p0) {
         if (p0) {
           if (scrollController.hasClients) {
-            Timer(Seconds.get(0, milli: 500), () {
+            Timer.periodic(const Duration(milliseconds: 200), (timer) {
+              timerCount++;
+              if (timerCount > 4) timer.cancel();
               scrollController.animateTo(
                 scrollController.position.maxScrollExtent,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeIn,
+                duration: const Duration(milliseconds: 100),
+                curve: Curves.linear,
               );
             });
           }
+        } else {
+          timerCount = 0;
         }
       });
 }

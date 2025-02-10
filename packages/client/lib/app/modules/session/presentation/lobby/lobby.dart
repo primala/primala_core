@@ -34,6 +34,7 @@ class LobbyScreen extends HookWidget {
           const HeaderRow(
             title: "Lobby",
           ),
+          const SizedBox(height: 30),
           Container(
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.only(left: 10, bottom: 5),

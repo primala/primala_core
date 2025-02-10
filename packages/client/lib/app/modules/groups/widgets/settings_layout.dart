@@ -70,6 +70,12 @@ class SettingsLayout extends HookWidget {
                 ),
               ),
             ),
+            SizedBox(height: 20),
+            Jost(
+              user.email,
+              fontSize: 16,
+              fontColor: Colors.black.withOpacity(.6),
+            ),
             const Padding(
               padding: EdgeInsets.only(
                 top: 30.0,

@@ -13,6 +13,7 @@ import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte_backend/tables/sessions.dart';
+import 'package:simple_animations/simple_animations.dart';
 part 'session_main_coordinator.g.dart';
 
 class SessionMainCoordinator = _SessionMainCoordinatorBase
@@ -127,7 +128,9 @@ abstract class _SessionMainCoordinatorBase
 
   @action
   onLetGo() {
-    sessionBar.setWidgetVisibility(true);
+    if (!sessionMetadata.userCanSpeak) {
+      sessionBar.setWidgetVisibility(true);
+    }
     smartText.setWidgetVisibility(true);
     borderGlow.initGlowDown();
     rally.reset();
@@ -135,6 +138,7 @@ abstract class _SessionMainCoordinatorBase
 
   @action
   onPauseTapped() async {
+    borderGlow.setControl(Control.stop);
     await presence.dispose();
     setShowWidgets(false);
     if (presence.incidentsOverlayStore.showWidget) {
