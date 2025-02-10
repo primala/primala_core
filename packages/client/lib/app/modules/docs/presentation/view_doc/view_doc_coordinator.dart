@@ -38,7 +38,6 @@ abstract class _ViewDocCoordinatorBase
     dispose();
     spotlightController = TextEditingController();
     docTitleController = TextEditingController();
-    scrollController = ScrollController();
     setShowWidgets(false);
     this.doc = doc;
     docTitleController.text = doc.title;

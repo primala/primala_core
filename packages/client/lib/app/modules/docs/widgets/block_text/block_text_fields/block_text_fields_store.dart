@@ -129,7 +129,7 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   setIsExpanded(bool value) => isExpanded = value;
 
   @action
-  setisFocused(bool value) => isFocused = value;
+  setIsFocused(bool value) => isFocused = value;
 
   constructor() {
     setControl(Control.stop);
@@ -143,7 +143,7 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
 
     controller.clear();
     focusNode.addListener(() {
-      setisFocused(focusNode.hasFocus);
+      setIsFocused(focusNode.hasFocus);
       if (!focusNode.hasFocus) {
         setCurrentlySelectedParentId(-1);
         setCurrentlySelectedContentId(-1);
