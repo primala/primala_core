@@ -51,8 +51,7 @@ class HomeScreen extends HookWidget {
             height: screenSize * .18,
           ),
           HomeScreenBody(
-            sessionIsActive: coordinator.sessionIsActive,
-            sessionHost: coordinator.sessionHost,
+            activeSession: coordinator.activeSession,
             startSession: coordinator.goToSessionStarter,
             joinSession: coordinator.joinSession,
           ),

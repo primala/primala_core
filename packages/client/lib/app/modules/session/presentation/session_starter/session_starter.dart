@@ -29,6 +29,7 @@ class SessionStarterScreen extends HookWidget {
             title: "Start Session",
             onChevronTapped: () => coordinator.onGoBack(),
           ),
+          const SizedBox(height: 30),
           SessionStarterBody(
             onSubmit: coordinator.initializeSession,
             allDocs: coordinator.allDocuments,

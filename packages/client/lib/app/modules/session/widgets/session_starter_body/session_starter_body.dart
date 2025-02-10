@@ -81,7 +81,7 @@ class SessionStarterBody extends HookWidget {
           docs: unselectedDocs.value,
           onTap: selectDoc,
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 40),
         Divider(
           height: 1,
           thickness: 1,

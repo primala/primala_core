@@ -9,6 +9,7 @@ class SpotlightStatementSelectionView extends HookWidget {
   final ValueNotifier<bool> showTextField;
   final Animation<double> selectionOpacity;
   final Function(ContentBlockType) onBlockTypeUpdated;
+  final Color color;
 
   const SpotlightStatementSelectionView({
     super.key,
@@ -16,6 +17,7 @@ class SpotlightStatementSelectionView extends HookWidget {
     required this.showTextField,
     required this.selectionOpacity,
     required this.onBlockTypeUpdated,
+    required this.color,
   });
 
   List<Widget> _buildContentTypeButtons(
@@ -45,7 +47,7 @@ class SpotlightStatementSelectionView extends HookWidget {
                 Jost(
                   BlockTextConstants.getName(type),
                   fontSize: 12,
-                  fontColor: Colors.black.withOpacity(.6),
+                  fontColor: color.withOpacity(.6),
                 ),
               ],
             ),
@@ -63,7 +65,7 @@ class SpotlightStatementSelectionView extends HookWidget {
         child: Container(
           decoration: BoxDecoration(
             border: Border.all(
-              color: Colors.black,
+              color: color,
               width: 1.0,
             ),
             borderRadius: BorderRadius.circular(14),
@@ -78,7 +80,7 @@ class SpotlightStatementSelectionView extends HookWidget {
                 child: Jost(
                   'Spotlight Statement',
                   fontSize: 20,
-                  fontColor: Colors.black.withOpacity(.6),
+                  fontColor: color.withOpacity(.6),
                 ),
               ),
               Padding(

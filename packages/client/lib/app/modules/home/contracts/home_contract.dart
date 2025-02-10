@@ -8,7 +8,7 @@ import 'package:nokhte_backend/tables/groups.dart';
 import 'package:nokhte_backend/tables/sessions.dart';
 
 abstract class HomeContract {
-  Future<Either<Failure, Stream<SessionRequest>>> listenToSessionRequests(
+  Future<Either<Failure, Stream<ActiveSession>>> listenToActiveSessions(
       int groupId);
   Future<bool> cancelSessionRequestsStream();
   Future<Either<Failure, bool>> joinSession(int sessionId);
@@ -26,9 +26,9 @@ class HomeContractImpl with ResponseToStatus implements HomeContract {
   });
 
   @override
-  listenToSessionRequests(groupId) async {
+  listenToActiveSessions(groupId) async {
     if (await networkInfo.isConnected) {
-      final res = remoteSource.listenToSessionRequests(groupId);
+      final res = remoteSource.listenToActiveSessions(groupId);
       return Right(res);
     } else {
       return Left(FailureConstants.internetConnectionFailure);

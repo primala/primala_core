@@ -4,7 +4,7 @@ import 'package:nokhte_backend/tables/users.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class HomeRemoteSource {
-  Stream<SessionRequest> listenToSessionRequests(int groupId);
+  Stream<ActiveSession> listenToActiveSessions(int groupId);
   Future<bool> cancelSessionRequestsStream();
   Future<List> joinSession(int sessionID);
   Future<Map> getGroup(int groupId);
@@ -33,8 +33,8 @@ class HomeRemoteSourceImpl implements HomeRemoteSource {
   joinSession(sessionId) async => await sessionQueries.joinSession(sessionId);
 
   @override
-  listenToSessionRequests(groupId) =>
-      sessionStreams.listenToSessionRequests(groupId);
+  listenToActiveSessions(groupId) =>
+      sessionStreams.listenToActiveSessions(groupId);
 
   @override
   getGroup(groupId) async => await groupsQueries.select(groupId: groupId);

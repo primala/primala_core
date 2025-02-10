@@ -87,6 +87,7 @@ class SpotlightStatement extends HookWidget {
         children: [
           if (!showTextField.value)
             SpotlightStatementSelectionView(
+              color: fontColor,
               selectedType: selectedType,
               showTextField: showTextField,
               selectionOpacity: selectionOpacity,

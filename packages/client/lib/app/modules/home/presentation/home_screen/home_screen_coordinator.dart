@@ -39,14 +39,14 @@ abstract class _HomeScreenCoordinatorBase
   GroupEntity selectedGroup = GroupEntity.initial();
 
   @observable
-  SessionRequest sessionRequest = SessionRequest.initial();
+  ActiveSession activeSession = ActiveSession.initial();
 
   @observable
-  ObservableStream<SessionRequest> sessionRequestStream =
+  ObservableStream<ActiveSession> activeSessionStream =
       ObservableStream(const Stream.empty());
 
   @observable
-  StreamSubscription sessionRequestsStreamSubscription =
+  StreamSubscription activeSessionStreamSubscription =
       const Stream.empty().listen((event) {});
 
   @action
@@ -63,7 +63,7 @@ abstract class _HomeScreenCoordinatorBase
       selectedGroup = activeGroup.groupEntity;
       fadeInWidgets();
       setShowCarousel(true);
-      await listenToSessionRequests();
+      await listenToActiveSessions();
       await contract.deleteStaleSessions();
     }
     await captureScreen(HomeConstants.homeScreen);
@@ -79,18 +79,19 @@ abstract class _HomeScreenCoordinatorBase
   }
 
   @action
-  listenToSessionRequests() async {
-    final res = await contract.listenToSessionRequests(selectedGroup.id);
+  listenToActiveSessions() async {
+    final res = await contract.listenToActiveSessions(selectedGroup.id);
     res.fold((failure) => errorUpdater(failure), (stream) {
-      sessionRequestsStreamSubscription = stream.listen((event) {
-        sessionRequest = event;
+      activeSessionStreamSubscription = stream.listen((event) {
+        print('event $event');
+        activeSession = event;
       });
     });
   }
 
   @action
   joinSession() async {
-    if (sessionRequest.id == -1) return;
+    if (activeSession.id == -1 || !activeSession.canJoin) return;
     setShowWidgets(false);
     setShowCarousel(false);
     Timer(Seconds.get(0, milli: 500), () {
@@ -117,7 +118,7 @@ abstract class _HomeScreenCoordinatorBase
     res.fold((failure) => errorUpdater(failure), (group) async {
       selectedGroup = group;
       activeGroup.setGroupEntity(group);
-      await listenToSessionRequests();
+      await listenToActiveSessions();
       fadeInWidgets(onFadein: () {
         setShowCarousel(true);
       });
@@ -127,13 +128,6 @@ abstract class _HomeScreenCoordinatorBase
   @action
   dispose() async {
     await contract.cancelSessionRequestsStream();
-    await sessionRequestsStreamSubscription.cancel();
+    await activeSessionStreamSubscription.cancel();
   }
-
-  @computed
-  bool get sessionIsActive => sessionRequest.id != -1 ? true : false;
-
-  @computed
-  String get sessionHost =>
-      sessionRequest.id != -1 ? sessionRequest.sessionHost : '';
 }

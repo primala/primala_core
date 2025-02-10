@@ -87,29 +87,26 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
               NokhteBlur(
                 store: blur,
               ),
-              SingleChildScrollView(
-                controller: blockTextDisplay.scrollController,
-                physics: const ClampingScrollPhysics(),
-                child: Observer(
-                  builder: (context) => SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          spotlightStatement,
-                          Divider(
-                            color: Colors.white,
-                            thickness: 1,
-                            height: 20,
-                          ),
-                          SizedBox(height: 20),
-                          BlockTextDisplay(
-                            store: blockTextDisplay,
-                            fontColor: Colors.white,
-                          ),
-                        ],
-                      ),
+              Observer(
+                builder: (context) => SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: SingleChildScrollView(
+                    controller: blockTextDisplay.scrollController,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        spotlightStatement,
+                        const Divider(
+                          color: Colors.white,
+                          thickness: 1,
+                          height: 20,
+                        ),
+                        const SizedBox(height: 20),
+                        BlockTextDisplay(
+                          store: blockTextDisplay,
+                          fontColor: Colors.white,
+                        ),
+                      ],
                     ),
                   ),
                 ),
