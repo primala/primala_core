@@ -26,7 +26,8 @@ class SessionsQueries
         await supabase.from(TABLE).select().eq(GROUP_ID, currentActiveGroup);
 
     for (var row in res) {
-      if (row[STATUS] != mapSessionStatusToString(SessionStatus.recruiting)) {
+      if (row[STATUS] != mapSessionStatusToString(SessionStatus.recruiting) &&
+          row[COLLABORATOR_UIDS].contains(userUID)) {
         await supabase.from(TABLE).delete().eq(ID, row[ID]);
       }
 

@@ -31,6 +31,7 @@ class SpotlightStatementTextField extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32),
         child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           decoration: BoxDecoration(
             border: GradientBoxBorder(
               gradient: BlockTextConstants.getGradient(
