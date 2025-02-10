@@ -128,7 +128,7 @@ abstract class _SessionMainCoordinatorBase
 
   @action
   onLetGo() {
-    if (!sessionMetadata.userCanSpeak) {
+    if (!purposeBanner.showWidget) {
       sessionBar.setWidgetVisibility(true);
     }
     smartText.setWidgetVisibility(true);
