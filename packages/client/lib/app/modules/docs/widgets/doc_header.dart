@@ -48,6 +48,7 @@ class DocHeader extends HookWidget with DialogueUtils {
                   child: TextField(
                     controller: controller,
                     focusNode: focusNode,
+                    textCapitalization: TextCapitalization.words,
                     onTapOutside: (event) => focusNode.unfocus(),
                     onChanged: onChanged,
                     keyboardType: TextInputType.text,
