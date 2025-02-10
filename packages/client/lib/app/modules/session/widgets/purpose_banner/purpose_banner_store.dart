@@ -60,7 +60,7 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
     required Function onClose,
     required Widget spotlightStatement,
   }) {
-    if (true) {
+    if (!modalIsVisible) {
       print(' is this being called $modalIsVisible');
       onOpen();
       setModalIsVisible(true);
