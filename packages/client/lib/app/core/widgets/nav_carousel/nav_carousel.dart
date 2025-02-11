@@ -6,7 +6,7 @@ import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 export 'carousel_placement_indicator.dart';
 
-class NavCarousel extends HookWidget {
+class NavCarousel extends HookWidget with OpacityUtils {
   final List<String> carouselItems;
   final List<Function> callbacks;
   final int initialPosition;
@@ -64,7 +64,14 @@ class NavCarousel extends HookWidget {
                     Radius.circular(15),
                   ),
                   border: Border.all(
-                    color: isEnabled ? Colors.black : Colors.transparent,
+                    color: isEnabled
+                        ? Colors.black.withOpacity(interpolate(
+                            currentValue: currentPosition,
+                            targetValue: index.toDouble(),
+                            minOutput: 0.5,
+                            maxOutput: 1.0,
+                          ))
+                        : Colors.transparent,
                     width: 1,
                   ),
                 ),
@@ -72,7 +79,14 @@ class NavCarousel extends HookWidget {
                   carouselItems[index],
                   fontSize: 20,
                   fontWeight: FontWeight.w300,
-                  fontColor: isEnabled ? Colors.black : Colors.transparent,
+                  fontColor: isEnabled
+                      ? Colors.black.withOpacity(interpolate(
+                          currentValue: currentPosition,
+                          targetValue: index.toDouble(),
+                          minOutput: 0.5,
+                          maxOutput: 1.0,
+                        ))
+                      : Colors.transparent,
                 ),
               );
             }),
