@@ -6,34 +6,22 @@ import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/logic/types/types.dart';
 import 'package:nokhte/app/modules/session/widgets/widgets.dart';
+import 'package:nokhte_backend/tables/sessions.dart';
 part 'rally_store.g.dart';
 
 class RallyStore = _RallyStoreBase with _$RallyStore;
 
 abstract class _RallyStoreBase extends BaseWidgetStore with Store, Reactions {
-  final TintStore tint;
-  final BackButtonStore backButton;
+  final TintStore tint = TintStore();
 
-  _RallyStoreBase({
-    required this.tint,
-    required this.backButton,
-  }) {
+  _RallyStoreBase() {
     setWidgetVisibility(false);
   }
 
   @action
   constructor() {
     tint.startAtEnd();
-    disposers.add(backButtonTapReactor());
     disposers.add(glowColorReactor());
-  }
-
-  setValues({
-    required List<String> fullNames,
-    required List<bool> canRally,
-  }) {
-    setCollaborators(fullNames);
-    setCanRally(canRally);
   }
 
   @observable
@@ -43,7 +31,7 @@ abstract class _RallyStoreBase extends BaseWidgetStore with Store, Reactions {
   bool cancelButtonVisibility = true;
 
   @observable
-  ObservableList<String> collaborators = ObservableList.of([]);
+  ObservableList<SessionUserEntity> collaborators = ObservableList.of([]);
 
   @observable
   ObservableList<bool> canRally = ObservableList.of([]);
@@ -72,7 +60,7 @@ abstract class _RallyStoreBase extends BaseWidgetStore with Store, Reactions {
   }
 
   @action
-  setCollaborators(List<String> value) =>
+  setCollaborators(List<SessionUserEntity> value) =>
       collaborators = ObservableList.of(value);
 
   @action
@@ -101,12 +89,6 @@ abstract class _RallyStoreBase extends BaseWidgetStore with Store, Reactions {
     });
   }
 
-  backButtonTapReactor() => reaction((p0) => backButton.tapCount, (p0) {
-        if (phase == RallyPhase.selection) {
-          setRallyPhase(RallyPhase.initial);
-        }
-      });
-
   glowColorReactor() => reaction((p0) => glowColor, (p0) {
         if (p0 == GlowColor.inflectionRed) {
           setCancelButtonVisibility(false);
@@ -119,6 +101,12 @@ abstract class _RallyStoreBase extends BaseWidgetStore with Store, Reactions {
       : currentPartnerFullName.split(' ').first;
 
   @computed
-  String get currentPartnerFullName =>
-      currentlySelectedIndex == -1 ? '' : collaborators[currentlySelectedIndex];
+  String get currentPartnerFullName => currentlySelectedIndex == -1
+      ? ''
+      : collaborators[currentlySelectedIndex].fullName;
+
+  @computed
+  String get currentPartnerUID => currentlySelectedIndex == -1
+      ? ''
+      : collaborators[currentlySelectedIndex].uid;
 }

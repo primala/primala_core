@@ -1,33 +1,29 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
-import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
-import 'package:nokhte/app/core/extensions/extensions.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/types/types.dart';
-import 'package:nokhte/app/modules/presets/presets.dart';
+import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte/app/modules/session/session.dart';
-import 'package:nokhte_backend/tables/company_presets.dart';
-import 'package:nokhte_backend/tables/rt_active_nokhte_sessions.dart';
+import 'package:nokhte_backend/tables/documents.dart';
+import 'package:nokhte_backend/tables/sessions.dart';
 part 'session_metadata_store.g.dart';
 
 class SessionMetadataStore = _SessionMetadataStoreBase
     with _$SessionMetadataStore;
 
 abstract class _SessionMetadataStoreBase
-    with Store, BaseMobxLogic<NoParams, Stream<NokhteSessionMetadata>> {
+    with Store, BaseMobxLogic<NoParams, Stream<SessionMetadata>>, Reactions {
   final SessionPresenceContract contract;
-  final PresetsLogicCoordinator presetsLogic;
+  final DocsContract docsContract;
+  final ViewDocCoordinator viewDoc;
   _SessionMetadataStoreBase({
     required this.contract,
-    required this.presetsLogic,
-  }) {
+    required this.viewDoc,
+  }) : docsContract = viewDoc.contract {
     initBaseLogicActions();
   }
-
-  @observable
-  int userIndex = 0;
 
   @observable
   bool everyoneIsOnline = false;
@@ -36,10 +32,20 @@ abstract class _SessionMetadataStoreBase
   bool userIsSpeaking = false;
 
   @observable
-  ObservableList<NameAndUID> namesAndUIDs = ObservableList.of([]);
+  int sessionId = -1;
+
+  @observable
+  ObservableList<SessionUserEntity> collaboratorInformation =
+      ObservableList.of([]);
 
   @observable
   String? currentSpeakerUID = '';
+
+  @observable
+  PowerupType currentPowerup = PowerupType.none;
+
+  @observable
+  String userUID = '';
 
   @observable
   bool userIsInSecondarySpeakingSpotlight = false;
@@ -52,22 +58,22 @@ abstract class _SessionMetadataStoreBase
   bool userCanSpeak = false;
 
   @observable
-  ObservableList<double> currentPhases = ObservableList.of(List.filled(9, -9));
-
-  @observable
   bool secondarySpeakerSpotlightIsEmpty = false;
 
   @observable
   bool sessionHasBegun = false;
 
   @observable
-  double affirmativePhase = -1.0;
+  ObservableList<int> documentIds = ObservableList.of([]);
 
   @observable
-  String leaderUID = '';
+  ObservableList<DocumentEntity> documents = ObservableList();
 
   @observable
-  String presetUID = '';
+  int? activeDocument;
+
+  @observable
+  int groupId = -1;
 
   @observable
   DateTime speakingTimerStart = DateTime.fromMillisecondsSinceEpoch(0);
@@ -76,50 +82,38 @@ abstract class _SessionMetadataStoreBase
   DateTime sessionStartTime = DateTime.fromMillisecondsSinceEpoch(0);
 
   @observable
-  SessionInstructionTypes instructionType = SessionInstructionTypes.initial;
-
-  @action
-  setAffirmativePhase(double value) => affirmativePhase = value;
-
-  @observable
-  ObservableStream<NokhteSessionMetadata> sessionMetadata =
+  ObservableStream<SessionMetadata> sessionMetadata =
       ObservableStream(const Stream.empty());
 
-  StreamSubscription streamSubscription =
+  StreamSubscription metadataStreamSubscription =
       const Stream.empty().listen((event) {});
 
-  @action
-  resetValues() {
-    setState(StoreState.initial);
-    presetsLogic.reset();
-    currentPhases = ObservableList.of(List.filled(9, -9));
-  }
+  @observable
+  ObservableStream<DocumentEntities> documentsStream =
+      ObservableStream(const Stream.empty());
 
+  @observable
+  StreamSubscription documentsStreamSubscription =
+      const Stream.empty().listen((event) {});
+
+  @override
   @action
-  dispose() {
-    streamSubscription = const Stream.empty().listen((event) {});
+  dispose() async {
+    super.dispose();
+    await viewDoc.dispose();
+    metadataStreamSubscription = const Stream.empty().listen((event) {});
     sessionMetadata = ObservableStream(const Stream.empty());
   }
 
-  @action
-  _getStaticMetadata() async {
-    final res = await contract.getSTSessionMetadata(const NoParams());
-    res.fold((failure) => mapFailureToMessage(failure), (entity) async {
-      if (presetsLogic.presetsEntity.uids.isEmpty) {
-        userIndex = entity.userIndex;
-        namesAndUIDs = ObservableList.of(entity.namesAndUIDs);
-        presetUID = entity.presetUID;
-        sessionStartTime = entity.createdAt;
-        leaderUID = entity.leaderUID;
-        await presetsLogic.getCompanyPresets(Right(entity.presetUID));
-      }
-    });
+  initReactors() {
+    disposers.add(documentsReactor());
+    disposers.add(activeDocumentReactor());
   }
 
   @action
-  Future<void> get(params) async {
-    resetValues();
-    final result = await contract.listenToRTSessionMetadata(params);
+  Future<void> get() async {
+    initReactors();
+    final result = await contract.listenToSessionMetadata();
     result.fold(
       (failure) {
         setErrorMessage(mapFailureToMessage(failure));
@@ -127,63 +121,90 @@ abstract class _SessionMetadataStoreBase
       },
       (stream) {
         sessionMetadata = ObservableStream(stream);
-        streamSubscription = sessionMetadata.listen((value) async {
-          if (value.phases.length != currentPhases.length) {
-            await _getStaticMetadata();
-          }
-          everyoneIsOnline = value.everyoneIsOnline;
-          final phases = value.phases.map((e) => double.parse(e.toString()));
+        metadataStreamSubscription = sessionMetadata.listen((value) async {
+          everyoneIsOnline = value.collaborators.every(
+            (element) => element.sessionUserStatus != SessionUserStatus.offline,
+          );
+          userUID = value.userUID;
+          final docs = value.documents
+              .map((e) => double.parse(e.toString()).toInt())
+              .toList();
+          documentIds = ObservableList.of(docs);
+          activeDocument = value.activeDocument;
+          currentPowerup = value.currentPowerup;
+          groupId = value.groupId;
+          collaboratorInformation = ObservableList.of(value.collaborators);
           speakingTimerStart = value.speakingTimerStart;
           secondarySpeakerSpotlightIsEmpty = value.secondarySpotlightIsEmpty;
           userIsInSecondarySpeakingSpotlight =
               value.userIsInSecondarySpeakingSpotlight;
           currentSpeakerUID = value.speakerUID;
-          currentPhases = ObservableList.of(phases);
-          sessionHasBegun = value.sessionHasBegun;
+          sessionHasBegun = value.sessionStatus == SessionStatus.started;
           userIsSpeaking = value.userIsSpeaking;
           userCanSpeak = value.userCanSpeak;
-
+          sessionId = value.sessionId;
           setState(StoreState.loaded);
         });
       },
     );
   }
 
-  getUIDFromName(String name) {
-    for (var nameAndUID in namesAndUIDs) {
-      if (nameAndUID.name == name) {
-        return nameAndUID.uid;
-      }
+  documentsReactor() => reaction((p0) => documentIds, (p0) async {
+        if (documentIds.isEmpty) return;
+        await listenToSpecificDocuments(documentIds);
+      });
+
+  activeDocumentReactor() => reaction((p0) => activeDocument, (p0) async {
+        if (activeDocument == null) return;
+        await listenToActiveDocumentContent();
+      });
+
+  @action
+  listenToActiveDocumentContent() async {
+    if (activeDocument != null) {
+      await viewDoc.constructor(activeDoc);
+    }
+  }
+
+  @action
+  listenToSpecificDocuments(List<int> documentIds) async {
+    final res = await docsContract.listenToSpecificDocuments(
+      documentIds,
+    );
+    res.fold((failure) {}, (stream) {
+      documentsStream = ObservableStream(stream);
+      documentsStreamSubscription = documentsStream.listen((event) async {
+        documents = ObservableList.of(event);
+        viewDoc.constructor(activeDoc);
+      });
+    });
+  }
+
+  @computed
+  DocumentEntity get activeDoc {
+    if (activeDocument != null) {
+      return documents.firstWhere((element) => element.id == activeDocument);
+    } else {
+      return DocumentEntity.initial();
     }
   }
 
   @computed
-  bool get canStartTheSession => currentPhases.every((e) => e >= 1.0);
+  bool get canStartTheSession =>
+      collaboratorStatuses
+          .every((element) => element == SessionUserStatus.readyToStart) &&
+      collaboratorStatuses.length > 1;
 
   @computed
-  bool get canStartUsingSession =>
-      currentPhases.every((e) => e.isGreaterThanOrEqualTo(2));
+  bool get canStartUsingSession => collaboratorStatuses
+      .every((element) => element == SessionUserStatus.online);
 
   @computed
-  bool get canExitTheSession => currentPhases.every((e) => e == 3);
+  bool get canExitTheSession => collaboratorStatuses
+      .every((element) => element == SessionUserStatus.readyToLeave);
 
   @computed
-  bool get canReturnHome =>
-      currentPhases.every((e) => e.isGreaterThanOrEqualTo(5));
-
-  @computed
-  double get userPhase => currentPhases[userIndex];
-
-  @computed
-  int get numberOfAffirmative {
-    int count = 0;
-    for (double value in currentPhases) {
-      if (value == affirmativePhase) {
-        count++;
-      }
-    }
-    return count;
-  }
+  bool get canStillAbort => numberOfCollaborators == 1;
 
   @computed
   DateTime get now => time.value ?? DateTime.now();
@@ -215,9 +236,9 @@ abstract class _SessionMetadataStoreBase
   String get currentSpeakerFirstName {
     if (currentSpeakerUID != null) {
       String name = '';
-      for (var nameAndUID in namesAndUIDs) {
-        if (nameAndUID.uid == currentSpeakerUID) {
-          name = nameAndUID.name.split(' ').first;
+      for (var collaborator in collaboratorInformation) {
+        if (collaborator.uid == currentSpeakerUID) {
+          name = collaborator.fullName.split(' ').first;
         }
       }
       return name;
@@ -240,61 +261,39 @@ abstract class _SessionMetadataStoreBase
       glowColor != GlowColor.green;
 
   @computed
-  int get numberOfCollaborators => currentPhases.length;
+  int get numberOfCollaborators => collaboratorInformation.length;
 
   @computed
-  bool get someoneIsTakingANote =>
-      currentPhases.any((element) => element == 2.5);
+  bool get canStillLeave => collaboratorInformation.length < 2;
 
   @computed
-  List<String> get fullNames {
-    final names = <String>[];
-    for (int i = 0; i < namesAndUIDs.length; i++) {
-      if (i != userIndex) {
-        names.add(namesAndUIDs[i].name);
+  int get userIndex {
+    int index = -1;
+    for (int i = 0; i < collaboratorInformation.length; i++) {
+      if (collaboratorInformation[i].uid == userUID) {
+        index = i;
       }
     }
-
-    return names;
+    return index;
   }
 
   @computed
-  CompanyPresetsEntity get presetEntity => presetsLogic.presetsEntity;
-
-  @computed
-  SessionScreenTypes get screenType => presetEntity.articles.isEmpty
-      ? SessionScreenTypes.none
-      : presetEntity.screenTypes.first;
-
-  @computed
-  PresetTypes get presetType => presetEntity.articles.isEmpty
-      ? PresetTypes.none
-      : presetEntity.presets.first;
-
-  @computed
-  List<SessionTags> get tags {
-    if (presetEntity.tags.isEmpty) {
-      return [];
-    } else {
-      final list = <SessionTags>[];
-      for (var section in presetEntity.articles.first.articleSections) {
-        list.add(section.tag);
+  List<SessionUserEntity> get collaboratorsMinusUser {
+    final temp = <SessionUserEntity>[];
+    for (int i = 0; i < collaboratorInformation.length; i++) {
+      if (collaboratorInformation[i].uid != userUID) {
+        temp.add(collaboratorInformation[i]);
       }
-      return list;
     }
+    return temp;
   }
 
   @computed
-  PresetArticleEntity get article => presetEntity.articles.first;
-
-  @computed
-  List<bool> get canRallyArray {
-    final list = <bool>[];
-    for (int i = 0; i < currentPhases.length; i++) {
-      if (i != userIndex) {
-        list.add(currentPhases[i] == 2.0);
-      }
+  List<SessionUserStatus> get collaboratorStatuses {
+    final statuses = <SessionUserStatus>[];
+    for (int i = 0; i < collaboratorInformation.length; i++) {
+      statuses.add(collaboratorInformation[i].sessionUserStatus);
     }
-    return list;
+    return statuses;
   }
 }

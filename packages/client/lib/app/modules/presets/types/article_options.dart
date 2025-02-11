@@ -1,1 +1,0 @@
-enum ArticleOptions { talkingToggle, notesToggle }

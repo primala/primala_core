@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:nokhte/app/app_module.dart';
 import 'package:nokhte/app/app_widget.dart';
-import 'package:nokhte/app/core/modules/quick_actions/constants/constants.dart';
+import 'package:nokhte/app/modules/auth/auth.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:posthog_flutter/posthog_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -14,9 +13,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load();
 
-  Modular.setInitialRoute('/login/');
-
-  await Hive.initFlutter();
+  Modular.setInitialRoute(AuthConstants.greeter);
 
   late String supabaseUrl;
   late String supabaseAnonKey;
@@ -46,8 +43,6 @@ void main() async {
     url: supabaseUrl,
     anonKey: supabaseAnonKey,
   );
-
-  await QuickActionsConstants.initQuickActions();
 
   runApp(
     ModularApp(

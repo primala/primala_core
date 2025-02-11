@@ -16,9 +16,9 @@ export 'constants/constants.dart';
 
 class LetEmCook extends HookWidget {
   final LetEmCookStore store;
-  const LetEmCook({
+  const LetEmCook(
+    this.store, {
     super.key,
-    required this.store,
   });
 
   @override
@@ -32,7 +32,7 @@ class LetEmCook extends HookWidget {
         opacity: useWidgetOpacity(store.showWidget),
         duration: Seconds.get(1),
         child: GestureDetector(
-          onTap: () => store.onTap(),
+          onTap: store.buttonVisibility ? () => store.onTap() : null,
           child: Stack(
             children: [
               AnimatedOpacity(
@@ -46,7 +46,7 @@ class LetEmCook extends HookWidget {
                         height: containerSize,
                         width: containerSize,
                         child: Image.asset(
-                          'assets/cook_button.png',
+                          'assets/power_up/cook_button.png',
                           width: containerSize,
                           height: containerSize,
                         ),
@@ -87,15 +87,15 @@ class LetEmCook extends HookWidget {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 3),
-                          child: NokhteGradientText(
-                            store: NokhteGradientTextStore(),
-                            content: 'Sent',
-                            gradient: LetEmCookConstants.greenGrad(
-                                value.get('opacity')),
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(top: 3),
+                        //   child: NokhteGradientText(
+                        //     store: NokhteGradientTextStore(),
+                        //     content: 'Sent',
+                        //     gradient: LetEmCookConstants.greenGrad(
+                        //         value.get('opacity')),
+                        //   ),
+                        // ),
                       ],
                     );
                   }),

@@ -1,0 +1,4 @@
+enum BlockTextFieldMode {
+  adding,
+  editing,
+}

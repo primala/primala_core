@@ -2,31 +2,33 @@ name: nokhte
 description: A new Flutter project.
 publish_to: "none"
 
-version: 2.26.0+131872913
+version: 2.58.0+140609515
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
+  action_slider: ^0.7.0
   android_package_manager: ^0.7.1
   blur: ^3.1.0
   carousel_slider: ^5.0.0
   connectivity_plus: ^5.0.1
   crypto: ^3.0.3
+  cupertino_icons: ^1.0.8
   dartz: ^0.10.1
   equatable: ^2.0.5
+  extended_text_field: ^14.0.1
   flutter:
     sdk: flutter
   flutter_dotenv: ^5.1.0
   flutter_hooks: ^0.20.3
   flutter_mobx: ^2.2.0
   flutter_modular: ^6.3.2
-  glassfy_flutter: ^1.6.2
+  flutter_slidable: ^3.1.1
   google_fonts: ^5.1.0
   gradient_borders: ^1.0.0
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  intl: ^0.18.1
   mobile_scanner: ^5.1.1
   mobx: ^2.2.1
   nokhte_backend:
@@ -58,17 +60,53 @@ flutter:
   uses-material-design: true
   assets:
     - .env
-    - assets/app_logo.png
-    - assets/flexible_seating.png
-    - assets/strict_seating.png
-    - assets/apple_icon.png
-    - assets/google_icon.png
-    - assets/cook_button.png
-    - assets/rounded_triangle.png
-    - assets/rally_button_blue.png
-    - assets/rally_button_red.png
-    - assets/rally_button_white.png
+    - assets/article/flexible_seating.png
+    - assets/article/strict_seating.png
+
+    - assets/groups/storage_icon.png
+    - assets/groups/queue_icon.png
+    - assets/groups/add_remove_icon.png
+    - assets/groups/trash_icon_white.png
+    - assets/groups/user_icon.png
+    - assets/groups/settings_icon.png
+    - assets/groups/envelope_icon.png
+    - assets/groups/plus_icon.png
+    - assets/groups/pencil_icon_white.png
+    - assets/groups/pencil_icon_black.png
+    - assets/groups/envelope_icon_transparent.png
+    - assets/groups/magnifying_glass_icon.png
+
+    - assets/blocks/conclusion_icon.png
+    - assets/blocks/conclusion_send_icon.png
+    - assets/blocks/idea_icon.png
+    - assets/blocks/idea_send_icon.png
+    - assets/blocks/purpose_icon.png
+    - assets/blocks/purpose_send_icon.png
+    - assets/blocks/question_icon.png
+    - assets/blocks/question_send_icon.png
+    - assets/blocks/quotation_icon.png
+    - assets/blocks/quotation_send_icon.png
+
+    - assets/home/camera_icon.png
+    - assets/home/qr_code_icon.png
+
+    - assets/login/apple_icon.png
+    - assets/login/google_icon.png
+    - assets/login/header.png
+
+    - assets/power_up/cook_button.png
+    - assets/power_up/rally_button_blue.png
+    - assets/power_up/rally_button_red.png
+    - assets/power_up/rally_button_white.png
+
+    - assets/session/rounded_triangle.png
+    - assets/session/home_beach_icon.png
+    - assets/session/end_session_icon.png
+    - assets/session/session_information_icon.png
+    - assets/session/pause_icon.png
+    - assets/session/pencil_icon.png
+    - assets/session/trash_icon_black.png
+
 flutter_icons:
-  image_path: "assets/app_logo.png"
   android: true
   ios: true
