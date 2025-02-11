@@ -60,7 +60,7 @@ class Rally extends HookWidget with RallyConstants {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Padding(
@@ -75,12 +75,18 @@ class Rally extends HookWidget with RallyConstants {
                       ),
                     ),
                     const Padding(
-                      padding: EdgeInsets.only(top: 70.0, left: 25),
+                      padding: EdgeInsets.only(top: 70.0),
                       child: Chivo(
                         "Rally with:",
                         fontSize: 45,
                         shouldCenter: true,
                         fontWeight: FontWeight.w100,
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 70),
+                      child: LeftChevron(
+                        color: Colors.transparent,
                       ),
                     ),
                   ],

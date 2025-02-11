@@ -78,7 +78,9 @@ abstract class _ViewDocCoordinatorBase
         final filteredList = ObservableList.of(contentBlocks
             .where((element) => element.id != spotlightContentBlockId)
             .toList());
-        spotlightController.text = spotlightText;
+        if (spotlightController.text.isEmpty && spotlightText.isNotEmpty) {
+          spotlightController.text = spotlightText;
+        }
 
         blockTextDisplay.setContent(filteredList);
         setShowWidgets(true);
@@ -138,7 +140,7 @@ abstract class _ViewDocCoordinatorBase
 
   @action
   onSpotlightTextChanged(String value) {
-    if (titleEditWasExternal) return;
+    if (spotlightEditWasExternal) return;
     _debounceTimer?.cancel();
     _debounceTimer = Timer(_debounceDuration, () async {
       await contract.updateContent(
@@ -169,6 +171,7 @@ abstract class _ViewDocCoordinatorBase
     final currentPosition = docTitleController.selection.baseOffset;
     final oldText = docTitleController.text;
     final wasAtEnd = currentPosition == oldText.length;
+    // print('current position $currentPosition');
     docTitleController.text = value;
     if (currentPosition != -1) {
       if (wasAtEnd) {
@@ -185,12 +188,16 @@ abstract class _ViewDocCoordinatorBase
 
   @action
   setSpotlightText(String value) {
+    print(
+        'value $value spotlight text ${spotlightController.text} ${value == spotlightController.text}');
     if (value == spotlightController.text) return;
     spotlightEditWasExternal = true;
     final currentPosition = spotlightController.selection.baseOffset;
+    print('$currentPosition ');
     final oldText = spotlightController.text;
     final wasAtEnd = currentPosition == oldText.length;
     spotlightController.text = value;
+    print('current position $currentPosition');
     if (currentPosition != -1) {
       if (wasAtEnd) {
         spotlightController.selection =
@@ -271,7 +278,7 @@ abstract class _ViewDocCoordinatorBase
     for (var element in contentBlocks) {
       count += element.content.length;
     }
-    return count;
+    return count - spotlightText.length;
   }
 
   @computed
