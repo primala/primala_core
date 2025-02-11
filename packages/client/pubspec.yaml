@@ -90,6 +90,10 @@ flutter:
     - assets/home/camera_icon.png
     - assets/home/qr_code_icon.png
 
+    - assets/information/cook_icon.png
+    - assets/information/pencil_icon.png
+    - assets/information/rally_icon.png
+
     - assets/login/apple_icon.png
     - assets/login/google_icon.png
     - assets/login/header.png

@@ -19,11 +19,7 @@ class InformationScreen extends HookWidget {
     required String title,
     required String description,
     required Size screenSize,
-    double borderWidth = 1,
-    bool hasBorder = false,
-    bool hasPadding = false,
-    double imageSize = 45,
-    EdgeInsets padding = const EdgeInsets.only(left: 20),
+    EdgeInsets padding = const EdgeInsets.only(left: 15),
   }) {
     return HookBuilder(
       builder: (context) {
@@ -44,31 +40,21 @@ class InformationScreen extends HookWidget {
           children: [
             Padding(
               padding: padding,
-              child: hasBorder
-                  ? Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.black,
-                          width: borderWidth,
-                        ),
-                        shape: BoxShape.circle,
-                      ),
-                      padding: hasPadding
-                          ? const EdgeInsets.all(5)
-                          : EdgeInsets.zero,
-                      child: Image.asset(
-                        imagePath,
-                        color: Colors.black,
-                        height: imageSize,
-                        width: imageSize,
-                      ),
-                    )
-                  : Image.asset(
-                      imagePath,
-                      color: Colors.black,
-                      height: imageSize,
-                      width: imageSize,
-                    ),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 1,
+                  ),
+                  shape: BoxShape.circle,
+                ),
+                child: Image.asset(
+                  imagePath,
+                  color: Colors.black,
+                  height: 45,
+                  width: 45,
+                ),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 19, top: 5),
@@ -121,33 +107,25 @@ class InformationScreen extends HookWidget {
           const HeaderRow(title: 'Session Information'),
           SizedBox(height: headerSpacing * 1.4),
           _buildFeatureItem(
-            imagePath: 'assets/power_up/cook_button.png',
+            imagePath: 'assets/information/cook_icon.png',
             title: 'Cook',
             description:
                 'When someone is saying something useful, you can give them more time to speak',
             screenSize: screenSize,
-            borderWidth: 0,
           ),
           _buildFeatureItem(
-            imagePath: 'assets/power_up/rally_button_blue.png',
+            imagePath: 'assets/information/rally_icon.png',
             title: 'Rally',
             description:
                 'When you want to ask a quick question, or get a quick response, you can start a rally',
             screenSize: screenSize,
-            hasBorder: true,
-            hasPadding: false,
-            // borderWidth: .9,
           ),
           _buildFeatureItem(
-            imagePath: 'assets/session/pencil_icon.png',
+            imagePath: 'assets/information/pencil_icon.png',
             title: 'Docs',
             description:
                 'With a limit of 2,000 characters per document, you can create and condense your thoughts as a group',
             screenSize: screenSize,
-            hasBorder: true,
-            hasPadding: true,
-            borderWidth: 1.8,
-            imageSize: 32,
           ),
         ],
       ),
