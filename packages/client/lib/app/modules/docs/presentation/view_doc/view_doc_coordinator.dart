@@ -271,7 +271,7 @@ abstract class _ViewDocCoordinatorBase
     for (var element in contentBlocks) {
       count += element.content.length;
     }
-    return count;
+    return count - spotlightText.length;
   }
 
   @computed
