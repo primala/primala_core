@@ -2,7 +2,7 @@ name: nokhte
 description: A new Flutter project.
 publish_to: "none"
 
-version: 2.58.0+140609515
+version: 2.59.0+140681994
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -89,6 +89,10 @@ flutter:
 
     - assets/home/camera_icon.png
     - assets/home/qr_code_icon.png
+
+    - assets/information/cook_icon.png
+    - assets/information/pencil_icon.png
+    - assets/information/rally_icon.png
 
     - assets/login/apple_icon.png
     - assets/login/google_icon.png
