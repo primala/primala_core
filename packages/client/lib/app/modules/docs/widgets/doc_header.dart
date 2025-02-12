@@ -10,6 +10,7 @@ class DocHeader extends HookWidget with DialogueUtils {
   final Function? onBackPress;
   final Function? onTrashPressed;
   final Color color;
+  final String text;
 
   const DocHeader({
     super.key,
@@ -17,12 +18,14 @@ class DocHeader extends HookWidget with DialogueUtils {
     this.onBackPress,
     this.onTrashPressed,
     this.controller,
+    this.text = '',
     this.color = Colors.black,
   });
 
   @override
   Widget build(BuildContext context) {
     final controller = this.controller ?? useTextEditingController();
+    print('controller text value ${controller.text}');
     final focusNode = useFocusNode();
     final screenHeight = useFullScreenSize().height;
     return Padding(
