@@ -31,9 +31,17 @@ class SpotlightStatement extends HookWidget {
     final selectedType = useState<ContentBlockType?>(
         externalBlockType == ContentBlockType.none ? null : externalBlockType);
     final showTextField = useState(this.showTextField);
+    final isInitiallyRendered = useState(false);
     final animationController = useAnimationController(
       duration: const Duration(seconds: 1),
     );
+    if (this.showTextField && !isInitiallyRendered.value) {
+      animationController.animateTo(
+        1.0,
+        duration: Duration.zero,
+      );
+      isInitiallyRendered.value = true;
+    }
 
     final selectionOpacity = Tween<double>(
       begin: 1.0,
