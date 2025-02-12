@@ -106,6 +106,9 @@ abstract class _ViewDocCoordinatorBase
   @observable
   String title = '';
 
+  @action
+  setTitleVal(String value) => title = value;
+
   @observable
   int textFieldCharactersCount = 0;
 
@@ -172,10 +175,14 @@ abstract class _ViewDocCoordinatorBase
 
   @action
   setTitle(String value) {
+    print('is this being called $value');
     setText(
       value,
       docTitleController,
-      onEditInitiated: () => setTitleEditWasExternal(true),
+      onEditInitiated: () {
+        setTitleVal(value);
+        return setTitleEditWasExternal(true);
+      },
       onEditCompleted: () => setTitleEditWasExternal(false),
     );
   }
