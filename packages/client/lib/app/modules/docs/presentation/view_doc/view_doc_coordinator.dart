@@ -178,7 +178,9 @@ abstract class _ViewDocCoordinatorBase
         docTitleController.selection =
             TextSelection.fromPosition(TextPosition(offset: value.length));
       } else {
-        final newPosition = currentPosition.clamp(0, value.length);
+        final difference = value.length - oldText.length;
+        final newPosition =
+            (currentPosition + difference).clamp(0, value.length);
         docTitleController.selection =
             TextSelection.fromPosition(TextPosition(offset: newPosition));
       }
@@ -188,22 +190,20 @@ abstract class _ViewDocCoordinatorBase
 
   @action
   setSpotlightText(String value) {
-    print(
-        'value $value spotlight text ${spotlightController.text} ${value == spotlightController.text}');
     if (value == spotlightController.text) return;
     spotlightEditWasExternal = true;
     final currentPosition = spotlightController.selection.baseOffset;
-    print('$currentPosition ');
     final oldText = spotlightController.text;
     final wasAtEnd = currentPosition == oldText.length;
     spotlightController.text = value;
-    print('current position $currentPosition');
     if (currentPosition != -1) {
       if (wasAtEnd) {
         spotlightController.selection =
             TextSelection.fromPosition(TextPosition(offset: value.length));
       } else {
-        final newPosition = currentPosition.clamp(0, value.length);
+        final difference = value.length - oldText.length;
+        final newPosition =
+            (currentPosition + difference).clamp(0, value.length);
         spotlightController.selection =
             TextSelection.fromPosition(TextPosition(offset: newPosition));
       }
