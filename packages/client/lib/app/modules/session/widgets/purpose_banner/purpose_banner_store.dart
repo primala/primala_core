@@ -18,12 +18,14 @@ class PurposeBannerStore = _PurposeBannerStoreBase with _$PurposeBannerStore;
 abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
     with Store {
   final NokhteBlurStore blur = NokhteBlurStore();
+  final ViewDocCoordinator viewDocCoordinator;
   final BlockTextDisplayStore blockTextDisplay;
   final BlockTextFieldsStore blockTextFields;
 
   _PurposeBannerStoreBase({
-    required this.blockTextDisplay,
-  }) : blockTextFields = blockTextDisplay.blockTextFields;
+    required this.viewDocCoordinator,
+  })  : blockTextFields = viewDocCoordinator.blockTextDisplay.blockTextFields,
+        blockTextDisplay = viewDocCoordinator.blockTextDisplay;
 
   late BuildContext buildContext;
   // late AnimationController controller;
@@ -58,7 +60,6 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
   showModal({
     required Function onOpen,
     required Function onClose,
-    required Widget spotlightStatement,
   }) {
     if (!modalIsVisible) {
       print(' is this being called $modalIsVisible');
@@ -87,15 +88,41 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
               NokhteBlur(
                 store: blur,
               ),
-              Observer(
-                builder: (context) => SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: SingleChildScrollView(
-                    controller: blockTextDisplay.scrollController,
-                    child: Column(
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: SingleChildScrollView(
+                  controller: blockTextDisplay.scrollController,
+                  child: Observer(builder: (context) {
+                    print('title ${viewDocCoordinator.title}');
+                    return Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        spotlightStatement,
+                        DocHeader(
+                          color: Colors.white,
+                          onChanged: viewDocCoordinator.onTitleChanged,
+                          controller: viewDocCoordinator.docTitleController,
+                          text: viewDocCoordinator.title,
+                        ),
+                        SpotlightStatement(
+                          onTextUpdated:
+                              viewDocCoordinator.onSpotlightTextChanged,
+                          onBlockTypeUpdated:
+                              viewDocCoordinator.onBlockTypeChanged,
+                          controller: viewDocCoordinator.spotlightController,
+                          externalBlockType:
+                              viewDocCoordinator.spotlightContentBlock.type,
+                          showTextField: true,
+                          fontColor: Colors.white,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.only(right: 10),
+                          alignment: Alignment.centerRight,
+                          child: Jost(
+                            '${viewDocCoordinator.characterCount}/2000',
+                            fontSize: 14,
+                            fontColor: Colors.white,
+                          ),
+                        ),
                         const Divider(
                           color: Colors.white,
                           thickness: 1,
@@ -107,8 +134,8 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
                           fontColor: Colors.white,
                         ),
                       ],
-                    ),
-                  ),
+                    );
+                  }),
                 ),
               ),
               BlockTextFields(

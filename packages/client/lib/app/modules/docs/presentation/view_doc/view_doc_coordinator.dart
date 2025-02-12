@@ -106,6 +106,9 @@ abstract class _ViewDocCoordinatorBase
   @observable
   String title = '';
 
+  @action
+  setTitleVal(String value) => title = value;
+
   @observable
   int textFieldCharactersCount = 0;
 
@@ -121,8 +124,14 @@ abstract class _ViewDocCoordinatorBase
   @observable
   bool titleEditWasExternal = false;
 
+  @action
+  setTitleEditWasExternal(bool value) => titleEditWasExternal = value;
+
   @observable
   bool spotlightEditWasExternal = false;
+
+  @action
+  setSpotlightEditWasExternal(bool value) => spotlightEditWasExternal = value;
 
   @action
   onTitleChanged(String value) {
@@ -166,49 +175,76 @@ abstract class _ViewDocCoordinatorBase
 
   @action
   setTitle(String value) {
-    if (value == docTitleController.text) return;
-    titleEditWasExternal = true;
-    final currentPosition = docTitleController.selection.baseOffset;
-    final oldText = docTitleController.text;
-    final wasAtEnd = currentPosition == oldText.length;
-    // print('current position $currentPosition');
-    docTitleController.text = value;
-    if (currentPosition != -1) {
-      if (wasAtEnd) {
-        docTitleController.selection =
-            TextSelection.fromPosition(TextPosition(offset: value.length));
-      } else {
-        final newPosition = currentPosition.clamp(0, value.length);
-        docTitleController.selection =
-            TextSelection.fromPosition(TextPosition(offset: newPosition));
-      }
-    }
-    titleEditWasExternal = false;
+    print('is this being called $value');
+    setText(
+      value,
+      docTitleController,
+      onEditInitiated: () {
+        setTitleVal(value);
+        return setTitleEditWasExternal(true);
+      },
+      onEditCompleted: () => setTitleEditWasExternal(false),
+    );
   }
 
   @action
   setSpotlightText(String value) {
-    print(
-        'value $value spotlight text ${spotlightController.text} ${value == spotlightController.text}');
-    if (value == spotlightController.text) return;
-    spotlightEditWasExternal = true;
-    final currentPosition = spotlightController.selection.baseOffset;
-    print('$currentPosition ');
-    final oldText = spotlightController.text;
+    setText(
+      value,
+      spotlightController,
+      onEditInitiated: () => setSpotlightEditWasExternal(true),
+      onEditCompleted: () => setSpotlightEditWasExternal(false),
+    );
+  }
+
+  @action
+  setText(String value, TextEditingController controller,
+      {required Function onEditInitiated, required Function onEditCompleted}) {
+    if (value == controller.text) return;
+    onEditInitiated();
+
+    final currentPosition = controller.selection.baseOffset;
+    final oldText = controller.text;
     final wasAtEnd = currentPosition == oldText.length;
-    spotlightController.text = value;
-    print('current position $currentPosition');
-    if (currentPosition != -1) {
-      if (wasAtEnd) {
-        spotlightController.selection =
-            TextSelection.fromPosition(TextPosition(offset: value.length));
-      } else {
-        final newPosition = currentPosition.clamp(0, value.length);
-        spotlightController.selection =
-            TextSelection.fromPosition(TextPosition(offset: newPosition));
-      }
+
+    int firstDiff = 0;
+    while (firstDiff < oldText.length &&
+        firstDiff < value.length &&
+        oldText[firstDiff] == value[firstDiff]) {
+      firstDiff++;
     }
-    spotlightEditWasExternal = false;
+
+    int oldTextSuffix = oldText.length - 1;
+    int newTextSuffix = value.length - 1;
+    while (oldTextSuffix >= firstDiff &&
+        newTextSuffix >= firstDiff &&
+        oldText[oldTextSuffix] == value[newTextSuffix]) {
+      oldTextSuffix--;
+      newTextSuffix--;
+    }
+
+    controller.text = value;
+
+    if (currentPosition != -1) {
+      int newPosition;
+      if (wasAtEnd) {
+        newPosition = value.length;
+      } else if (currentPosition <= firstDiff) {
+        newPosition = currentPosition;
+      } else if (currentPosition > oldTextSuffix + 1) {
+        final lengthDifference = value.length - oldText.length;
+        newPosition = currentPosition + lengthDifference;
+      } else {
+        newPosition = newTextSuffix + 1;
+      }
+
+      newPosition = newPosition.clamp(0, value.length);
+
+      controller.selection =
+          TextSelection.fromPosition(TextPosition(offset: newPosition));
+    }
+
+    onEditCompleted();
   }
 
   spotlightTextReactor() => reaction((p0) => spotlightText, (p0) {

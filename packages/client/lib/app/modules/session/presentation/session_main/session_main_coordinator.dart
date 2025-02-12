@@ -10,7 +10,6 @@ import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
-import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte_backend/tables/sessions.dart';
 import 'package:simple_animations/simple_animations.dart';
@@ -53,8 +52,7 @@ abstract class _SessionMainCoordinatorBase
   })  : sessionMetadata = presence.sessionMetadataStore,
         presenceOverlay = presence.incidentsOverlayStore,
         purposeBanner = PurposeBannerStore(
-          blockTextDisplay:
-              presence.sessionMetadataStore.viewDoc.blockTextDisplay,
+          viewDocCoordinator: presence.sessionMetadataStore.viewDoc,
         ) {
     initBaseCoordinatorActions();
 
@@ -208,35 +206,6 @@ abstract class _SessionMainCoordinatorBase
                 sessionMetadata.userIsSpeaking) return;
             sessionBar.setWidgetVisibility(true);
           },
-          spotlightStatement: Column(
-            children: [
-              DocHeader(
-                color: Colors.white,
-                onChanged: sessionMetadata.viewDoc.onTitleChanged,
-                controller: sessionMetadata.viewDoc.docTitleController,
-              ),
-              SpotlightStatement(
-                onTextUpdated: sessionMetadata.viewDoc.onSpotlightTextChanged,
-                onBlockTypeUpdated: sessionMetadata.viewDoc.onBlockTypeChanged,
-                controller: sessionMetadata.viewDoc.spotlightController,
-                externalBlockType:
-                    sessionMetadata.viewDoc.spotlightContentBlock.type,
-                showTextField: true,
-                fontColor: Colors.white,
-              ),
-              Observer(builder: (context) {
-                return Container(
-                  padding: const EdgeInsets.only(right: 10),
-                  alignment: Alignment.centerRight,
-                  child: Jost(
-                    '${sessionMetadata.viewDoc.characterCount}/2000',
-                    fontColor: Colors.white,
-                    fontSize: 14,
-                  ),
-                );
-              }),
-            ],
-          ),
         );
       });
 
@@ -255,37 +224,6 @@ abstract class _SessionMainCoordinatorBase
                     sessionMetadata.userIsSpeaking) return;
                 sessionBar.setWidgetVisibility(true);
               },
-              spotlightStatement: Column(
-                children: [
-                  DocHeader(
-                    color: Colors.white,
-                    onChanged: sessionMetadata.viewDoc.onTitleChanged,
-                    controller: sessionMetadata.viewDoc.docTitleController,
-                  ),
-                  SpotlightStatement(
-                    onTextUpdated:
-                        sessionMetadata.viewDoc.onSpotlightTextChanged,
-                    onBlockTypeUpdated:
-                        sessionMetadata.viewDoc.onBlockTypeChanged,
-                    controller: sessionMetadata.viewDoc.spotlightController,
-                    externalBlockType:
-                        sessionMetadata.viewDoc.spotlightContentBlock.type,
-                    showTextField: true,
-                    fontColor: Colors.white,
-                  ),
-                  Observer(builder: (context) {
-                    return Container(
-                      padding: const EdgeInsets.only(right: 10),
-                      alignment: Alignment.centerRight,
-                      child: Jost(
-                        '${sessionMetadata.viewDoc.characterCount}/2000',
-                        fontSize: 14,
-                        fontColor: Colors.white,
-                      ),
-                    );
-                  }),
-                ],
-              ),
             );
           default:
             break;

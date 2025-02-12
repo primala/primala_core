@@ -156,15 +156,8 @@ abstract class _SessionMetadataStoreBase
 
   activeDocumentReactor() => reaction((p0) => activeDocument, (p0) async {
         if (activeDocument == null) return;
-        await listenToActiveDocumentContent();
+        await viewDoc.constructor(activeDoc);
       });
-
-  @action
-  listenToActiveDocumentContent() async {
-    if (activeDocument != null) {
-      await viewDoc.constructor(activeDoc);
-    }
-  }
 
   @action
   listenToSpecificDocuments(List<int> documentIds) async {
@@ -176,6 +169,7 @@ abstract class _SessionMetadataStoreBase
       documentsStreamSubscription = documentsStream.listen((event) async {
         documents = ObservableList.of(event);
         viewDoc.constructor(activeDoc);
+        viewDoc.setTitle(activeDoc.title);
       });
     });
   }
