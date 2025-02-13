@@ -1,12 +1,13 @@
 import { serve } from "std/server";
-import { supabaseAdmin } from "../constants/supabase.ts";
+import { supabaseAdmin, getUserUid } from "../constants/supabase.ts";
 
 serve(async (req) => {
-  const { userUid } = await req.json();
   let returnRes = {
     status: 200,
     message: "successfully deleted user",
   };
+
+  const userUid = await getUserUid(req);
 
   const { error } = await supabaseAdmin.auth.admin.deleteUser(userUid);
 

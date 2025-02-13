@@ -31,9 +31,7 @@ class UserRemoteSourceImpl implements UserRemoteSource {
 
   @override
   deleteAccount() async {
-    final res = await supabase.functions.invoke('delete-user', body: {
-      "userUid": supabase.auth.currentUser?.id ?? '',
-    });
+    final res = await supabase.functions.invoke('delete-user');
     await supabase.auth.signOut();
     return res;
   }
