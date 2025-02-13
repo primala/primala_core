@@ -24,6 +24,13 @@ class GroupRolesQueries {
   }) async =>
       supabase.from(TABLE).select().eq(USER_UID, userUid).eq(GROUP_ID, groupId);
 
+  Future<bool> hasNoGroupMemberships() async =>
+      (await supabase.from(TABLE).select().eq(
+                USER_UID,
+                supabase.auth.currentUser!.id,
+              ))
+          .isEmpty;
+
   Future<List> selectByGroup(
     int groupId,
   ) async =>

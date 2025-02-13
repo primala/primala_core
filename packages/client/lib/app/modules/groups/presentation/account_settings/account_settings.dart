@@ -25,7 +25,8 @@ class AccountSettingsScreen extends HookWidget {
             onChevronTapped: coordinator.onGoBack,
           ),
           SettingsLayout(
-            onDeactivate: coordinator.onDeactivate,
+            canDeleteAccount: coordinator.canDeleteAccount,
+            onDeleteAccount: coordinator.onDelete,
             user: coordinator.user,
           ),
           // GroupNameTextField(

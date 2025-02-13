@@ -8,13 +8,15 @@ import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 import 'package:nokhte_backend/types/types.dart';
 
-class SettingsLayout extends HookWidget {
-  final Function onDeactivate;
+class SettingsLayout extends HookWidget with DialogueUtils {
+  final Function onDeleteAccount;
   final UserEntity user;
+  final bool canDeleteAccount;
   const SettingsLayout({
     super.key,
-    required this.onDeactivate,
+    required this.onDeleteAccount,
     required this.user,
+    required this.canDeleteAccount,
   });
 
   @override
@@ -103,7 +105,7 @@ class SettingsLayout extends HookWidget {
               title: const Padding(
                 padding: EdgeInsets.only(left: 16),
                 child: Jost(
-                  'Deactivate Account',
+                  'Delete Account',
                   fontSize: 18,
                   fontColor: Colors.black,
                   fontWeight: FontWeight.w300,
@@ -134,34 +136,52 @@ class SettingsLayout extends HookWidget {
                   animationController.reverse();
                 }
               },
-              expandedAlignment: Alignment.centerRight,
+              expandedAlignment: canDeleteAccount
+                  ? Alignment.centerRight
+                  : Alignment.centerLeft,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 28),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.zero,
-                      elevation: 0,
-                      backgroundColor: NokhteColors.red,
-                      visualDensity: VisualDensity.compact,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
+                if (canDeleteAccount)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 28),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        elevation: 0,
+                        backgroundColor: NokhteColors.red,
+                        visualDensity: VisualDensity.compact,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
                       ),
-                    ),
-                    onPressed: () async {
-                      await onDeactivate();
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Jost(
-                        'Deactivate',
-                        fontWeight: FontWeight.w400,
-                        fontSize: 18,
-                        fontColor: NokhteColors.eggshell,
+                      onPressed: () => showDeleteConfirmationDialog(
+                        context: context,
+                        onConfirm: onDeleteAccount,
+                        title: 'Delete Account',
+                        content:
+                            'This action is permanent and cannot be undone. All your data, settings, and preferences will be irreversibly deleted.',
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Jost(
+                          'Delete',
+                          fontWeight: FontWeight.w400,
+                          fontSize: 18,
+                          fontColor: NokhteColors.eggshell,
+                        ),
                       ),
                     ),
                   ),
-                ),
+                if (!canDeleteAccount)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 50),
+                    child: Jost(
+                      'You must leave or delete all groups before deleting your account.',
+                      fontSize: 12,
+                      softWrap: true,
+                      fontWeight: FontWeight.w300,
+                      fontColor: Colors.black.withOpacity(.6),
+                    ),
+                  ),
               ],
             ),
           ],

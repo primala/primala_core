@@ -57,7 +57,6 @@ abstract class _GroupDisplayStoreBase extends BaseWidgetStore with Store {
   @action
   onGroupTap(int index) {
     if (isManagingGroups) {
-      if (!groups[index].isAdmin) return;
       groupIndexToEdit = index;
     } else {
       activeGroupIndex = index;
