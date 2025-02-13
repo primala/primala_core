@@ -149,18 +149,14 @@ class GroupDisplay extends HookWidget with NokhteGradients {
             Stack(
               children: [
                 GroupAvatar(
-                  showText:
-                      (store.showMonogram && store.groups[index].isAdmin) ||
-                          (!store.groups[index].isAdmin),
+                  showText: store.showMonogram,
                   groupName: group.name,
                   size: 70,
                   profileGradient: group.profileGradient,
                   fontSize: 30,
                 ),
                 AnimatedOpacity(
-                  opacity: store.showPencilIcon && store.groups[index].isAdmin
-                      ? 0.5
-                      : 0,
+                  opacity: store.showPencilIcon ? 0.5 : 0,
                   duration: const Duration(milliseconds: 500),
                   child: Container(
                     height: 70,

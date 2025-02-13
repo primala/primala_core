@@ -186,6 +186,11 @@ abstract class _GroupPickerCoordinatorBase
         Modular.to.push(MaterialPageRoute(builder: (BuildContext context) {
           return EditGroupScreen(
             group: group,
+            onGroupLeft: () async {
+              await groupsContract.cancelGroupsStream();
+              await groupsStreamSubscription.cancel();
+              await listenToGroups();
+            },
             coordinator: Modular.get<EditGroupCoordinator>(),
           );
         }));

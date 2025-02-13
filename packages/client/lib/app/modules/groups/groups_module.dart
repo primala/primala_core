@@ -32,7 +32,8 @@ class GroupsModule extends Module {
     i.add<EditGroupCoordinator>(
       () => EditGroupCoordinator(
         captureScreen: Modular.get<CaptureScreen>(),
-        contract: Modular.get<GroupsContractImpl>(),
+        groupsContract: Modular.get<GroupsContractImpl>(),
+        groupRolesContract: Modular.get<GroupRolesContractImpl>(),
         groupNameTextField: GroupNameTextFieldStore(),
       ),
     );

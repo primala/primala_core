@@ -11,8 +11,10 @@ abstract class UserContract {
   Future<bool> cancelRequestsStream();
   Future<Either<Failure, Stream<GroupRequests>>> listenToRequests();
   Future<Either<Failure, UserEntity>> getUserInformation();
+  Future<Either<Failure, bool>> checkIfCanDeleteAccount();
+
   Future<Either<Failure, bool>> handleRequest(HandleRequestParams params);
-  Future<Either<Failure, bool>> deactivateAccount();
+  Future<Either<Failure, bool>> deleteAccount();
   Future<Either<Failure, bool>> updateUserProfileGradient(
     ProfileGradient profileGradient,
   );
@@ -27,8 +29,8 @@ class UserContractImpl with ResponseToStatus implements UserContract {
   UserContractImpl({required this.remoteSource, required this.networkInfo});
 
   @override
-  deactivateAccount() async {
-    await remoteSource.deactivateAccount();
+  deleteAccount() async {
+    await remoteSource.deleteAccount();
     return const Right(true);
   }
 
@@ -94,4 +96,14 @@ class UserContractImpl with ResponseToStatus implements UserContract {
 
   @override
   cancelRequestsStream() async => await remoteSource.cancelRequestsStream();
+
+  @override
+  checkIfCanDeleteAccount() async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.checkIfCanDeleteAccount();
+      return Right(res);
+    } else {
+      return Left(FailureConstants.internetConnectionFailure);
+    }
+  }
 }
