@@ -1,4 +1,5 @@
 import 'package:nokhte_backend/tables/group_requests.dart';
+import 'package:nokhte_backend/tables/group_roles.dart';
 import 'package:nokhte_backend/tables/users.dart';
 import 'package:nokhte_backend/types/types.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -8,25 +9,34 @@ abstract class UserRemoteSource {
   Future<Map> getUserInformation();
   Future<void> handleRequest(HandleRequestParams params);
   Stream<GroupRequests> listenToRequests();
-  Future<void> deactivateAccount();
+  Future<FunctionResponse> deleteAccount();
   Future<bool> cancelRequestsStream();
   Future<List> updateUserProfileGradient(ProfileGradient param);
   Future<bool> versionIsUpToDate();
+  Future<bool> checkIfCanDeleteAccount();
   Future<List> updateActiveGroup(int groupId);
 }
 
 class UserRemoteSourceImpl implements UserRemoteSource {
   final SupabaseClient supabase;
   final GroupRequestsQueries groupRequestsQueries;
+  final GroupRolesQueries groupRolesQueries;
   final UsersQueries usersQueries;
 
   UserRemoteSourceImpl({
     required this.supabase,
   })  : groupRequestsQueries = GroupRequestsQueries(supabase: supabase),
+        groupRolesQueries = GroupRolesQueries(supabase: supabase),
         usersQueries = UsersQueries(supabase: supabase);
 
   @override
-  deactivateAccount() async => await supabase.auth.signOut();
+  deleteAccount() async {
+    final res = await supabase.functions.invoke('delete-user', body: {
+      "userUid": supabase.auth.currentUser?.id ?? '',
+    });
+    await supabase.auth.signOut();
+    return res;
+  }
 
   @override
   listenToRequests() => groupRequestsQueries.listenToRequests();
@@ -56,4 +66,8 @@ class UserRemoteSourceImpl implements UserRemoteSource {
   @override
   cancelRequestsStream() async =>
       await groupRequestsQueries.cancelRequestsStream();
+
+  @override
+  checkIfCanDeleteAccount() async =>
+      await groupRolesQueries.hasNoGroupMemberships();
 }

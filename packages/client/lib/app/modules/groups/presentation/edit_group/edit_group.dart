@@ -10,21 +10,24 @@ export 'edit_group_coordinator.dart';
 class EditGroupScreen extends HookWidget {
   final EditGroupCoordinator coordinator;
   final GroupEntity group;
+  final Function onGroupLeft;
   const EditGroupScreen({
     super.key,
     required this.coordinator,
     required this.group,
+    required this.onGroupLeft,
   });
 
   @override
   Widget build(BuildContext context) {
     useEffect(() {
-      coordinator.constructor(group);
+      coordinator.constructor(group, onGroupLeft);
       return null;
     }, []);
     final screenHeight = useFullScreenSize().height;
     return Observer(
       builder: (context) => AnimatedScaffold(
+        showWidgets: coordinator.showWidgets,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           HeaderRow(
@@ -53,6 +56,10 @@ class EditGroupScreen extends HookWidget {
             ),
           ),
           GroupEditMenu(
+            isAdmin: coordinator.isAdmin,
+            isNotTheOnlyAdmin: coordinator.isNotTheOnlyAdmin,
+            onLeaveGroupTapped: coordinator.leaveGroup,
+            groupName: coordinator.group.name,
             onInviteTapped: coordinator.goToInvite,
             onManageCollaboratorsTapped: coordinator.goToGroupMembers,
             onDeleteGroupTapped: coordinator.deleteGroup,

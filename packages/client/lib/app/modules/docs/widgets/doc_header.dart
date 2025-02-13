@@ -25,7 +25,6 @@ class DocHeader extends HookWidget with DialogueUtils {
   @override
   Widget build(BuildContext context) {
     final controller = this.controller ?? useTextEditingController();
-    print('controller text value ${controller.text}');
     final focusNode = useFocusNode();
     final screenHeight = useFullScreenSize().height;
     return Padding(

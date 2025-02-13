@@ -2,15 +2,16 @@
 
 Nokhte is open-source mobile app that helps people collaborate in person.
 
-Currently, the app has a solo session that allows individuals to take notes and see how long they are speaking.
+Currently, the app has a group session that allows individuals to take notes and see how long they are speaking.
 
 There are also group sessions that:
 1. make everyone join the session at the same time.
 2. prevent interruptions between people.
 3. lock app functionality if anyone goes offline during the meeting.
+4. Let 'Em Cook -> Give People More Time to Speak
+5. Rally -> Allow Two People to Talk at One Time
 
-![app store marketing](https://github.com/user-attachments/assets/d7a22683-17f3-4774-baea-42a700932e7a)
-
+![app store marketing](https://github.com/user-attachments/assets/5312a631-883c-48fb-b4bc-063395368123)
 
 
 ## Contributing

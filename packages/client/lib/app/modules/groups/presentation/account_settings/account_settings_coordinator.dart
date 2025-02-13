@@ -46,11 +46,15 @@ abstract class _AccountSettingsCoordinatorBase
     ));
     disposers.add(animatedScaffoldReactor());
     await getUserInformation();
+    await checkIfCanDeleteAccount();
     await captureScreen(GroupsConstants.accountSettings);
   }
 
   @observable
   UserEntity user = UserEntity.initial();
+
+  @observable
+  bool canDeleteAccount = false;
 
   @action
   getUserInformation() async {
@@ -65,8 +69,17 @@ abstract class _AccountSettingsCoordinatorBase
   }
 
   @action
-  onDeactivate() async {
-    final res = await contract.deactivateAccount();
+  checkIfCanDeleteAccount() async {
+    final res = await contract.checkIfCanDeleteAccount();
+    res.fold(
+      (failure) => errorUpdater(failure),
+      (success) => canDeleteAccount = success,
+    );
+  }
+
+  @action
+  onDelete() async {
+    final res = await contract.deleteAccount();
     res.fold(
       (failure) => errorUpdater(failure),
       (success) {
