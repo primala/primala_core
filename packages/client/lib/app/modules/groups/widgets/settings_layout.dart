@@ -72,7 +72,7 @@ class SettingsLayout extends HookWidget with DialogueUtils {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Jost(
               user.email,
               fontSize: 16,

@@ -90,12 +90,7 @@ abstract class _AccountSettingsCoordinatorBase
   }
 
   @action
-  onGoBack() {
-    setShowWidgets(false);
-    Timer(Seconds.get(0, milli: 500), () {
-      Modular.to.navigate(GroupsConstants.groupPicker);
-    });
-  }
+  onGoBack() => Modular.to.pop();
 
   animatedScaffoldReactor() =>
       reaction((p0) => animatedScaffold.movieStatus, (p0) {

@@ -1,12 +1,10 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
-
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/active_group/active_group.dart';
 import 'package:nokhte/app/core/types/types.dart';
-import 'package:nokhte/app/modules/home/constants/constants.dart';
 import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte_backend/tables/documents.dart';
 import 'package:nokhte_backend/tables/sessions.dart';
@@ -91,12 +89,7 @@ abstract class _SessionStarterCoordinatorBase
   }
 
   @action
-  onGoBack() {
-    setShowWidgets(false);
-    Timer(Seconds.get(0, milli: 500), () {
-      Modular.to.navigate(HomeConstants.homeScreen);
-    });
-  }
+  onGoBack() => Modular.to.pop();
 
   @computed
   UserEntity get user =>

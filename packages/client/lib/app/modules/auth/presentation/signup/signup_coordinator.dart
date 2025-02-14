@@ -6,7 +6,6 @@ import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/modules/user_information/user_information.dart';
-import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/auth/auth.dart';
 part 'signup_coordinator.g.dart';
 
@@ -88,11 +87,7 @@ abstract class _SignupCoordinatorBase with Store, BaseCoordinator, Reactions {
   @action
   onGoBack() {
     if (disableAllTouchFeedback) return;
-    widgets.setShowWidgets(false);
-    Timer(Seconds.get(0, milli: 500), () {
-      Modular.to.navigate(AuthConstants.greeter);
-    });
-    setDisableAllTouchFeedback(true);
+    Modular.to.pop();
   }
 
   authStateReactor() => reaction((p0) => isLoggedIn, (p0) async {
