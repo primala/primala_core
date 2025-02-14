@@ -158,7 +158,6 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   onSubmit() {
     if (controller.text.trim().isNotEmpty &&
         currentTextContent != controller.text) {
-      print('is this being called five times ');
       currentTextContent = controller.text;
       submissionCount++;
     } else {

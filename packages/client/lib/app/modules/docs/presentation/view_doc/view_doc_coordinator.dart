@@ -175,7 +175,6 @@ abstract class _ViewDocCoordinatorBase
 
   @action
   setTitle(String value) {
-    print('is this being called $value');
     setText(
       value,
       docTitleController,

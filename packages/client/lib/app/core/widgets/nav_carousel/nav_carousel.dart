@@ -42,7 +42,7 @@ class NavCarousel extends HookWidget with OpacityUtils {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Container(
-          padding: EdgeInsets.only(top: 24),
+          padding: const EdgeInsets.only(top: 24),
           // height: containerSize * .2,
           color: NokhteColors.eggshell,
           child: CarouselSlider(

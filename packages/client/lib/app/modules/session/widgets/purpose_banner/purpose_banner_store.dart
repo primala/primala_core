@@ -62,7 +62,6 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
     required Function onClose,
   }) {
     if (!modalIsVisible) {
-      print(' is this being called $modalIsVisible');
       onOpen();
       setModalIsVisible(true);
       blur.init(
@@ -93,7 +92,6 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
                 child: SingleChildScrollView(
                   controller: blockTextDisplay.scrollController,
                   child: Observer(builder: (context) {
-                    print('title ${viewDocCoordinator.title}');
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
