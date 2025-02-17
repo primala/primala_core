@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/modules/auth/auth.dart';
 import 'package:nokhte_backend/tables/users.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -24,7 +23,6 @@ abstract class AuthRemoteSource {
 
 class AuthRemoteSourceImpl implements AuthRemoteSource {
   final SupabaseClient supabase;
-  late UserInformationRemoteSourceImpl userInfoRemoteSource;
 
   AuthRemoteSourceImpl({required this.supabase});
 
