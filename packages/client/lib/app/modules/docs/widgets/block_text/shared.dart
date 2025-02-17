@@ -15,7 +15,7 @@ mixin BlockTextConstants {
                   Color(0xFF000000),
                 ]
               : const [
-                  Color(0xFF6D6D6D),
+                  Color(0xFF000000),
                   Color(0xFF000000),
                 ],
           stops: isIcon ? const [1, 1] : const [0, 1],
