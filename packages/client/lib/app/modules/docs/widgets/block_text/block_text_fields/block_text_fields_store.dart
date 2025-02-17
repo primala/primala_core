@@ -47,25 +47,10 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   GlobalKey textFieldKey = GlobalKey();
 
   @observable
-  double textFieldHeight = 97.0;
-
-  @observable
   MovieStatus iconMovieStatus = MovieStatus.idle;
 
   @action
   setIconMovieStatus(MovieStatus value) => iconMovieStatus = value;
-
-  @action
-  updateTextFieldHeight() {
-    final RenderObject? renderBox =
-        textFieldKey.currentContext?.findRenderObject();
-    if (renderBox != null) {
-      if (movieStatus == MovieStatus.finished) {
-        setControl(Control.stop);
-      }
-      textFieldHeight = (renderBox.semanticBounds.height) + 77;
-    }
-  }
 
   @action
   onChange(String value) => characterCount = value.length;
@@ -79,9 +64,6 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
     controller.clear();
     currentTextContent = '';
     focusNode.unfocus();
-    Timer(Seconds.get(0, milli: 1), () {
-      updateTextFieldHeight();
-    });
     characterCount = 0;
     setCurrentlySelectedParentId(-1);
     setCurrentlySelectedContentId(-1);
@@ -149,9 +131,6 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
         setCurrentlySelectedContentId(-1);
       }
     });
-    controller.addListener(() {
-      updateTextFieldHeight();
-    });
   }
 
   @action
@@ -160,16 +139,21 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
         currentTextContent != controller.text) {
       currentTextContent = controller.text;
       submissionCount++;
-    } else {
+    } else if (controller.text.trim().isEmpty) {
       reset();
     }
     // focusNode.unfocus();
   }
 
   @action
+  onError() {
+    currentTextContent = '';
+  }
+
+  @action
   dispose() {
-    controller.dispose();
-    focusNode.dispose();
+    // controller.dispose();
+    // focusNode.dispose();
   }
 
   @action
