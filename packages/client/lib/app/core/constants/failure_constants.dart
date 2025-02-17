@@ -1,53 +1,49 @@
 import 'package:nokhte/app/core/error/failure.dart';
 
 class FailureConstants {
-  static String get androidPlatformFailureMsg => 'Not Available on Android';
-  static String get authFailureMsg =>
-      "Authentication Failure, Please Try Again.";
-  static String get internetConnectionFailureMsg =>
+  static const authFailureMsg = "Authentication Failure, Please Try Again.";
+  static const internetConnectionFailureMsg =
       "Check Your Internet Connection, and Try Again.";
-  static String get serverFailureMsg =>
+  static const serverFailureMsg =
       "Something's Wrong with our Servers, Try Again.";
-  static String get genericFailureMsg => "Unexpected Error, Try Again.";
-  static String get invalidDeepLinkMsg =>
-      "Invalid invitation, try another invitation";
-  static String get lookedThemselvesUpMsg =>
+  static const genericFailureMsg = "Unexpected Error, Try Again.";
+  static const lookedThemselvesUpMsg =
       "You can't invite yourself to the group again";
-  static String get cancelledPurchaseFailureMsg => "Cancelled Purchase";
-  static String get groupCreationFailureMsg => "Group Creation Failure";
+  static const cancelledPurchaseFailureMsg = "Cancelled Purchase";
+  static const groupCreationFailureMsg = "Group Creation Failure";
+  static const addContentErrorMsg = "Error Adding Content";
+  static const updateContentErrorMsg = "Error Updating Content";
 
-  static NetworkConnectionFailure get internetConnectionFailure =>
-      const NetworkConnectionFailure(
-          message: "Internet Connection Error",
-          failureCode: "INTERNET_FAILURE");
-  static SupabaseFailure get serverFailure => const SupabaseFailure(
-      message: "Supabase Failure", failureCode: "SUPABASE_FAILURE");
-  static GenericFailure get genericFailure => const GenericFailure(
-      message: "Generic Failure", failureCode: "GENERIC_FAILURE");
-  static AuthenticationFailure get authFailure => const AuthenticationFailure(
-      message: "Authentication Failure", failureCode: "AUTH_FAILURE");
-  static DatabaseFailure get dbFailure => const DatabaseFailure(
-      message: "Database Failure", failureCode: "DATABASE_FAILURE");
-  static AndroidPlatformFailure get androidPlatformFailure =>
-      AndroidPlatformFailure(
-          failureCode: 'NOT_AVAILABLE_ON_ANDROID_ERROR',
-          message: androidPlatformFailureMsg);
-  static UserInputFailure get invalidDeepLinkFailure => UserInputFailure(
-        message: invalidDeepLinkMsg,
-        failureCode: "INVALID_DEEP_LINK",
-      );
+  static const internetConnectionFailure = Failure(
+      message: "Internet Connection Error", failureCode: "INTERNET_FAILURE");
+  static const addContentFailure = Failure(
+    message: addContentErrorMsg,
+    failureCode: "ADD_CONTENT_FAILURE",
+  );
+  static const updateContentFailure = Failure(
+    message: updateContentErrorMsg,
+    failureCode: "UPDATE_CONTENT_FAILURE",
+  );
+  static const serverFailure =
+      Failure(message: "Supabase Failure", failureCode: "SUPABASE_FAILURE");
+  static const genericFailure =
+      Failure(message: "Generic Failure", failureCode: "GENERIC_FAILURE");
+  static const authFailure =
+      Failure(message: "Authentication Failure", failureCode: "AUTH_FAILURE");
+  static const dbFailure =
+      Failure(message: "Database Failure", failureCode: "DATABASE_FAILURE");
 
-  static UserInputFailure get lookedThemselvesUpFailure => UserInputFailure(
-        message: lookedThemselvesUpMsg,
-        failureCode: "LOOKED_THEMSELVES_UP",
-      );
-  static UserInputFailure get groupCreationFailure => UserInputFailure(
-        message: groupCreationFailureMsg,
-        failureCode: "GROUP_CREATION_FAILURE",
-      );
+  static const lookedThemselvesUpFailure = Failure(
+    message: lookedThemselvesUpMsg,
+    failureCode: "LOOKED_THEMSELVES_UP",
+  );
+  static const groupCreationFailure = Failure(
+    message: groupCreationFailureMsg,
+    failureCode: "GROUP_CREATION_FAILURE",
+  );
 
-  static UserInputFailure get cancelledPurchaseFailure => UserInputFailure(
-        message: cancelledPurchaseFailureMsg,
-        failureCode: "CANCELLED_PURCHASE",
-      );
+  static const cancelledPurchaseFailure = Failure(
+    message: cancelledPurchaseFailureMsg,
+    failureCode: "CANCELLED_PURCHASE",
+  );
 }
