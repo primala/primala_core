@@ -254,6 +254,7 @@ abstract class _ViewDocCoordinatorBase
       reaction((p0) => blockTextFields.submissionCount, (p0) async {
         if (characterCount > 2000) return;
         if (blockTextFields.mode == BlockTextFieldMode.adding) {
+          if (isDuplicate(blockTextFields.currentTextContent)) return;
           await contract.addContent(addContentParams);
         } else {
           await contract.updateContent(updateContentParams);
