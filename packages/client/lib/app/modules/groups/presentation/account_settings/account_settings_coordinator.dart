@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/constants/colors.dart';
+import 'package:nokhte/app/core/constants/text_field_validators.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/types/types.dart';
@@ -24,6 +25,7 @@ abstract class _AccountSettingsCoordinatorBase
         BaseWidgetsCoordinator,
         AnimatedScaffoldMovie,
         BaseCoordinator,
+        TextFieldValidators,
         Reactions {
   final UserContract contract;
   final AnimatedScaffoldStore animatedScaffold;
@@ -56,6 +58,12 @@ abstract class _AccountSettingsCoordinatorBase
   @observable
   bool canDeleteAccount = false;
 
+  @observable
+  String nameErrorText = '';
+
+  @observable
+  String nameInput = '';
+
   @action
   getUserInformation() async {
     final res = await contract.getUserInformation();
@@ -63,6 +71,7 @@ abstract class _AccountSettingsCoordinatorBase
       (failure) => errorUpdater(failure),
       (success) {
         user = success;
+        nameInput = user.fullName;
         fadeInWidgets();
       },
     );
@@ -90,12 +99,35 @@ abstract class _AccountSettingsCoordinatorBase
   }
 
   @action
-  onGoBack() {
-    setShowWidgets(false);
-    Timer(Seconds.get(0, milli: 500), () {
-      Modular.to.navigate(GroupsConstants.groupPicker);
-    });
+  onNameChanged(String value) {
+    nameErrorText = validateFullName(value);
+    nameInput = value;
   }
+
+  @action
+  onNameSubmit(String value) async {
+    if (nameHasError || value.isEmpty) return;
+    final res = await contract.updateFullName(value);
+    res.fold(
+      (failure) => errorUpdater(failure),
+      (success) async => await getUserInformation(),
+    );
+  }
+
+  @action
+  onGradientChanged(ProfileGradient gradient) async {
+    final res = await contract.updateUserProfileGradient(gradient);
+    res.fold(
+      (failure) => errorUpdater(failure),
+      (success) async {
+        await getUserInformation();
+        Modular.to.pop();
+      },
+    );
+  }
+
+  @action
+  onGoBack() => Modular.to.pop();
 
   animatedScaffoldReactor() =>
       reaction((p0) => animatedScaffold.movieStatus, (p0) {
@@ -103,4 +135,7 @@ abstract class _AccountSettingsCoordinatorBase
           Modular.to.navigate(AuthConstants.greeter);
         }
       });
+
+  @computed
+  bool get nameHasError => nameErrorText.isNotEmpty;
 }

@@ -34,7 +34,8 @@ abstract class _GroupNameTextFieldStoreBase with Store, NokhteGradients {
 
   @action
   setIsEnabled(bool value) => isEnabled = value;
-
+  @observable
+  int submissionCount = 0;
   @action
   validateGroupName(String groupName) {
     this.groupName = groupName;
@@ -49,6 +50,12 @@ abstract class _GroupNameTextFieldStoreBase with Store, NokhteGradients {
         errorMessage = '';
       }
     }
+  }
+
+  @action
+  onSubmit(String value) {
+    if (hasError || !isValidInput) return;
+    submissionCount++;
   }
 
   @computed

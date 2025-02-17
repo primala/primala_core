@@ -36,7 +36,6 @@ class UpdateAppScreen extends HookWidget {
     }
 
     useEffect(() {
-      print('is update screen running ');
       controller.forward();
       return null;
     }, []);

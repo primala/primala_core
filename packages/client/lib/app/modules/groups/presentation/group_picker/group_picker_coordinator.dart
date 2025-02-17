@@ -145,11 +145,13 @@ abstract class _GroupPickerCoordinatorBase
 
   @action
   onSettingsTapped() {
-    setShowWidgets(false);
-
-    Timer(Seconds.get(0, milli: 500), () {
-      Modular.to.navigate(GroupsConstants.accountSettings);
-    });
+    Modular.to.push(
+      MaterialPageRoute(builder: (BuildContext context) {
+        return AccountSettingsScreen(
+          coordinator: Modular.get<AccountSettingsCoordinator>(),
+        );
+      }),
+    );
   }
 
   @action

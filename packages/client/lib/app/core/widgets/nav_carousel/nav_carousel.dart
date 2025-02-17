@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -31,6 +33,16 @@ class NavCarousel extends HookWidget with OpacityUtils {
       screenSize: screenSize,
       bumpPerHundredth: 0.001,
     );
+    final textOpacity = useState<double>(0.0);
+
+    showTextTemporarily() {
+      textOpacity.value = 0.6;
+
+      Timer(const Duration(seconds: 3), () {
+        textOpacity.value = 0.0;
+      });
+    }
+
     useEffect(() {
       if (currentPosition != initialPosition && currentPosition % 1 == 0) {
         callbacks[currentPosition.toInt()]();
@@ -41,8 +53,17 @@ class NavCarousel extends HookWidget with OpacityUtils {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
+        AnimatedOpacity(
+          opacity: textOpacity.value,
+          duration: const Duration(milliseconds: 250),
+          child: const Jost(
+            'Swipe to Navigate',
+            fontColor: Colors.black,
+            fontSize: 14,
+          ),
+        ),
         Container(
-          padding: EdgeInsets.only(top: 24),
+          padding: const EdgeInsets.only(top: 14),
           // height: containerSize * .2,
           color: NokhteColors.eggshell,
           child: CarouselSlider(
@@ -57,14 +78,31 @@ class NavCarousel extends HookWidget with OpacityUtils {
               onScrolled: (value) => onPositionChanged(value ?? 0),
             ),
             items: List.generate(carouselItems.length, (index) {
-              return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(15),
+              return GestureDetector(
+                onTap: isEnabled ? showTextTemporarily : null,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(15),
+                    ),
+                    border: Border.all(
+                      color: isEnabled
+                          ? Colors.black.withOpacity(interpolate(
+                              currentValue: currentPosition,
+                              targetValue: index.toDouble(),
+                              minOutput: 0.5,
+                              maxOutput: 1.0,
+                            ))
+                          : Colors.transparent,
+                      width: 1,
+                    ),
                   ),
-                  border: Border.all(
-                    color: isEnabled
+                  child: Jost(
+                    carouselItems[index],
+                    fontSize: 20,
+                    fontWeight: FontWeight.w300,
+                    fontColor: isEnabled
                         ? Colors.black.withOpacity(interpolate(
                             currentValue: currentPosition,
                             targetValue: index.toDouble(),
@@ -72,21 +110,7 @@ class NavCarousel extends HookWidget with OpacityUtils {
                             maxOutput: 1.0,
                           ))
                         : Colors.transparent,
-                    width: 1,
                   ),
-                ),
-                child: Jost(
-                  carouselItems[index],
-                  fontSize: 20,
-                  fontWeight: FontWeight.w300,
-                  fontColor: isEnabled
-                      ? Colors.black.withOpacity(interpolate(
-                          currentValue: currentPosition,
-                          targetValue: index.toDouble(),
-                          minOutput: 0.5,
-                          maxOutput: 1.0,
-                        ))
-                      : Colors.transparent,
                 ),
               );
             }),
@@ -109,9 +133,9 @@ class NavCarousel extends HookWidget with OpacityUtils {
         Container(
           color: NokhteColors.eggshell,
           height: useScaledSize(
-            baseValue: 0.03,
+            baseValue: 0.05,
             screenSize: screenSize,
-            bumpPerHundredth: -0.0003,
+            bumpPerHundredth: -0.0008,
           ),
         )
       ],

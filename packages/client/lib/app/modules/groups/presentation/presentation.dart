@@ -7,3 +7,5 @@ export 'group_members/group_members.dart';
 export 'invite_to_group/invite_to_group.dart';
 export 'select_role/select_role.dart';
 export 'update_app/update_app.dart';
+export 'account_gradient_picker/account_gradient_picker.dart';
+export 'group_gradient_picker/group_gradient_picker.dart';

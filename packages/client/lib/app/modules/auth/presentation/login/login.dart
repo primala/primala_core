@@ -23,7 +23,6 @@ class LoginScreen extends HookWidget {
 
     return Observer(builder: (context) {
       return AnimatedScaffold(
-        showWidgets: coordinator.widgets.showWidgets,
         store: coordinator.widgets.animatedScaffold,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

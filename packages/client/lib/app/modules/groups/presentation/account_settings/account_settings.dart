@@ -28,6 +28,10 @@ class AccountSettingsScreen extends HookWidget {
             canDeleteAccount: coordinator.canDeleteAccount,
             onDeleteAccount: coordinator.onDelete,
             user: coordinator.user,
+            onNameChanged: coordinator.onNameChanged,
+            onNameSubmit: coordinator.onNameSubmit,
+            errorText: coordinator.nameErrorText,
+            onGradientChanged: coordinator.onGradientChanged,
           ),
           // GroupNameTextField(
           //   store: coordinator.widgets.groupNameTextField,

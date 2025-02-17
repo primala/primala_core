@@ -11,6 +11,8 @@ class UserAvatar extends HookWidget with NokhteGradients {
   final double size;
   final double fontSize;
   final Function()? onXTap;
+  final Function? onPencilTap;
+
   const UserAvatar({
     super.key,
     required this.fullName,
@@ -18,18 +20,26 @@ class UserAvatar extends HookWidget with NokhteGradients {
     required this.size,
     this.onXTap,
     this.fontSize = 16,
+    this.onPencilTap,
   });
 
   String getInitials(String fullName) {
-    if (fullName.isNotEmpty) {
-      final names = fullName.split(' ');
-      if (names.isNotEmpty) {
-        final firstInitial = names.first[0];
-        final lastInitial = names.last[0];
-        return (firstInitial + lastInitial).toUpperCase();
-      }
+    if (fullName.isEmpty) {
+      return '';
     }
-    return '';
+
+    final names =
+        fullName.trim().split(' ').where((name) => name.isNotEmpty).toList();
+
+    if (names.isEmpty) {
+      return '';
+    } else if (names.length == 1) {
+      return names[0][0].toUpperCase();
+    } else {
+      final firstInitial = names.first[0];
+      final lastInitial = names.last[0];
+      return (firstInitial + lastInitial).toUpperCase();
+    }
   }
 
   @override
@@ -93,6 +103,46 @@ class UserAvatar extends HookWidget with NokhteGradients {
               ),
             ),
           ),
+        if (onPencilTap != null)
+          Positioned(
+            right: 5,
+            bottom: 0,
+            child: GestureDetector(
+              onTap: () => onPencilTap?.call(),
+              child: Container(
+                height: size * .27,
+                width: size * .27,
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(.09),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.black, width: 1),
+                ),
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Blur(
+                        borderRadius: BorderRadius.circular(20),
+                        blurColor: Colors.white,
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Center(
+                        child: Image.asset(
+                          'assets/groups/pencil_icon_black.png',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
       ],
     );
   }
