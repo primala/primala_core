@@ -88,20 +88,18 @@ class DocHeader extends HookWidget with DialogueUtils {
             Positioned(
               right: 10,
               top: 10,
-              child: Container(
-                child: GestureDetector(
-                  onTap: () => showDeleteConfirmationDialog(
-                    context: context,
-                    onConfirm: onTrashPressed!,
-                    title: 'Delete Document',
-                    content: 'Are you sure you want to delete this document?',
-                  ),
-                  child: Image.asset(
-                    'assets/groups/trash_icon_white.png',
-                    color: Colors.black,
-                    height: 30,
-                    width: 30,
-                  ),
+              child: GestureDetector(
+                onTap: () => showDeleteConfirmationDialog(
+                  context: context,
+                  onConfirm: onTrashPressed!,
+                  title: 'Delete Document',
+                  content: 'Are you sure you want to delete this document?',
+                ),
+                child: Image.asset(
+                  'assets/groups/trash_icon_white.png',
+                  color: Colors.black,
+                  height: 30,
+                  width: 30,
                 ),
               ),
             ),
