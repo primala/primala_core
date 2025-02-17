@@ -11,7 +11,8 @@ abstract class UserRemoteSource {
   Stream<GroupRequests> listenToRequests();
   Future<FunctionResponse> deleteAccount();
   Future<bool> cancelRequestsStream();
-  Future<List> updateUserProfileGradient(ProfileGradient param);
+  Future<Map> updateUserProfileGradient(ProfileGradient param);
+  Future<Map> updateFullName(String fullName);
   Future<bool> versionIsUpToDate();
   Future<bool> checkIfCanDeleteAccount();
   Future<List> updateActiveGroup(int groupId);
@@ -68,4 +69,7 @@ class UserRemoteSourceImpl implements UserRemoteSource {
   @override
   checkIfCanDeleteAccount() async =>
       await groupRolesQueries.hasNoGroupMemberships();
+
+  @override
+  updateFullName(fullName) async => await usersQueries.updateFullName(fullName);
 }

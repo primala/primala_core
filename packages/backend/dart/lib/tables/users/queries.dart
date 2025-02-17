@@ -59,14 +59,24 @@ class UsersQueries with UsersConstants, ProfileGradientUtils {
     }
   }
 
-  Future<List> updateProfileGradient(ProfileGradient param) async =>
+  Future<Map> updateFullName(String fullName) async => await supabase
+      .from(TABLE)
+      .update({
+        FULL_NAME: fullName,
+      })
+      .eq(UID, userUID)
+      .select()
+      .single();
+
+  Future<Map> updateProfileGradient(ProfileGradient param) async =>
       await supabase
           .from(TABLE)
           .update({
             GRADIENT: ProfileGradientUtils.mapProfileGradientToString(param),
           })
           .eq(UID, userUID)
-          .select();
+          .select()
+          .single();
 
   Future<List> deleteUserInfo() async =>
       await supabase.from(TABLE).delete().eq(UID, userUID).select();
