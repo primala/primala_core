@@ -5,6 +5,9 @@ import 'package:nokhte/app/core/constants/failure_constants.dart';
 import 'package:nokhte/app/core/error/failure.dart';
 import 'package:nokhte/app/core/mobx/store_state.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
+import 'package:nokhte/app/core/types/types.dart';
+import 'package:nokhte/app/core/widgets/widgets.dart';
+import 'package:toastification/toastification.dart';
 
 mixin BaseMobxLogic<Params, T> {
   final _state = Observable(StoreState.initial);
@@ -36,8 +39,8 @@ mixin BaseMobxLogic<Params, T> {
   }
 
   String mapFailureToMessage(Failure failure) {
-    switch (failure.runtimeType) {
-      case NetworkConnectionFailure:
+    switch (failure.message) {
+      case FailureConstants.authFailureMsg:
         return FailureConstants.internetConnectionFailureMsg;
       default:
         return FailureConstants.genericFailureMsg;
@@ -45,7 +48,14 @@ mixin BaseMobxLogic<Params, T> {
   }
 
   errorUpdater(Failure failure) {
-    setErrorMessage(mapFailureToMessage(failure));
+    // setErrorMessage(mapFailureToMessage(failure));
+    toastification.show(
+      title: Jost(failure.message, fontSize: 12),
+      // message: Jost(mapFailureToMessage(failure), fontSize: 12),
+      style: ToastificationStyle.flat,
+      autoCloseDuration: Seconds.get(5),
+      type: ToastificationType.error,
+    );
     setState(StoreState.initial);
   }
 
