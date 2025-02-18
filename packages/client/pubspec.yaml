@@ -94,9 +94,7 @@ flutter:
     - assets/login/header.png
 
     - assets/power_up/cook_button.png
-    - assets/power_up/rally_button_blue.png
-    - assets/power_up/rally_button_red.png
-    - assets/power_up/rally_button_white.png
+    - assets/power_up/rally_button.png
 
     - assets/session/rounded_triangle.png
     - assets/session/home_beach_icon.png

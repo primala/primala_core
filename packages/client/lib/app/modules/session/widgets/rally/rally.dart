@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart' hide BackButton;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:nokhte/app/core/constants/colors.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
@@ -37,9 +38,10 @@ class Rally extends HookWidget with RallyConstants {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/power_up/rally_button_blue.png',
+                  'assets/power_up/rally_button.png',
                   width: containerSize,
                   height: containerSize,
+                  color: navyBlue,
                 ),
                 Jost(
                   'Tap to rally',
@@ -139,9 +141,10 @@ class Rally extends HookWidget with RallyConstants {
                 child: Column(
                   children: [
                     Image.asset(
-                      'assets/power_up/rally_button_blue.png',
+                      'assets/power_up/rally_button.png',
                       width: containerSize,
                       height: containerSize,
+                      color: navyBlue,
                     ),
                     Jost(
                       'Rallying with ${store.currentPartnerFirstName}',
@@ -166,9 +169,10 @@ class Rally extends HookWidget with RallyConstants {
                     child: Column(
                       children: [
                         Image.asset(
-                          'assets/power_up/rally_button_red.png',
+                          'assets/power_up/rally_button.png',
                           width: containerSize,
                           height: containerSize,
+                          color: redGrad.first,
                         ),
                         Jost(
                           'Stop Rally',
@@ -192,9 +196,10 @@ class Rally extends HookWidget with RallyConstants {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/power_up/rally_button_blue.png',
+                'assets/power_up/rally_button.png',
                 width: containerSize,
                 height: containerSize,
+                color: navyBlue,
               ),
               Jost(
                 'Rallying with ${store.currentInitiatorFirstName}',
