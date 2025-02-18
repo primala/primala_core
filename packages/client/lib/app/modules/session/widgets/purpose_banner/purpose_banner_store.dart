@@ -140,9 +140,9 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
           ),
         ),
       ).whenComplete(() {
+        setModalIsVisible(false);
         onClose();
         blur.reverse();
-        setWidgetVisibility(true);
       });
     }
   }
