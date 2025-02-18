@@ -29,7 +29,6 @@ class CreateDocScreen extends HookWidget {
             padding: EdgeInsets.only(bottom: screenHeight * .25),
             child: SpotlightStatement(
               onTextUpdated: coordinator.setSpotlightTextContent,
-              onBlockTypeUpdated: coordinator.setBlockType,
             ),
           ),
           GenericButton(

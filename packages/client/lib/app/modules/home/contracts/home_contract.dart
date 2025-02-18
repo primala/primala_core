@@ -31,7 +31,7 @@ class HomeContractImpl with ResponseToStatus implements HomeContract {
       final res = remoteSource.listenToActiveSessions(groupId);
       return Right(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -45,7 +45,7 @@ class HomeContractImpl with ResponseToStatus implements HomeContract {
       final res = await remoteSource.joinSession(sessionId);
       return fromSupabase(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -55,7 +55,7 @@ class HomeContractImpl with ResponseToStatus implements HomeContract {
       final res = await remoteSource.getGroup(groupId);
       return Right(GroupEntity.fromSupabase(res));
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -65,7 +65,7 @@ class HomeContractImpl with ResponseToStatus implements HomeContract {
       final res = await remoteSource.clearActiveGroup();
       return fromSupabase(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -75,7 +75,7 @@ class HomeContractImpl with ResponseToStatus implements HomeContract {
       await remoteSource.deleteStaleSessions();
       return const Right(true);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 }

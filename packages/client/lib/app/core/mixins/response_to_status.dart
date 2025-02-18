@@ -1,7 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:nokhte/app/core/constants/failure_constants.dart';
 import 'package:nokhte/app/core/error/failure.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 mixin ResponseToStatus {
   Either<Failure, bool> fromSupabase(List response) {
@@ -26,14 +24,6 @@ mixin ResponseToStatus {
       return Right(defaultType);
     } else {
       return Right(res.first[property]);
-    }
-  }
-
-  Either<Failure, bool> fromFunctionResponse(FunctionResponse res) {
-    if (res.data["status"] == 200) {
-      return const Right(true);
-    } else {
-      return Left(FailureConstants.invalidDeepLinkFailure);
     }
   }
 }

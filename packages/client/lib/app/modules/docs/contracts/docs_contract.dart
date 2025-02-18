@@ -3,6 +3,7 @@ import 'package:nokhte/app/core/constants/constants.dart';
 import 'package:nokhte/app/core/error/failure.dart';
 import 'package:nokhte/app/core/mixins/response_to_status.dart';
 import 'package:nokhte/app/core/network/network_info.dart';
+import 'package:nokhte/app/core/utilities/contract_utils.dart';
 import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte_backend/tables/content_blocks.dart';
 import 'package:nokhte_backend/tables/documents.dart';
@@ -34,7 +35,8 @@ abstract class DocsContract {
   Future<bool> cancelContentStream();
 }
 
-class DocsContractImpl extends DocsContract with ResponseToStatus {
+class DocsContractImpl extends DocsContract
+    with ResponseToStatus, ContractUtils {
   final DocsRemoteSource remoteSource;
   final NetworkInfo networkInfo;
 
@@ -49,7 +51,7 @@ class DocsContractImpl extends DocsContract with ResponseToStatus {
       final res = remoteSource.listenToDocuments(groupId);
       return Right(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -62,7 +64,7 @@ class DocsContractImpl extends DocsContract with ResponseToStatus {
       final res = await remoteSource.insertDocument(params);
       return fromSupabaseSingle(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -72,19 +74,19 @@ class DocsContractImpl extends DocsContract with ResponseToStatus {
       final res = await remoteSource.deleteDocument(documentId);
       return fromSupabaseSingle(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
   @override
-  addContent(params) async {
-    if (await networkInfo.isConnected) {
-      final res = await remoteSource.addContent(params);
-      return fromSupabaseSingle(res);
-    } else {
-      return Left(FailureConstants.internetConnectionFailure);
-    }
-  }
+  addContent(params) async => handleRemoteOperation<Map>(
+        operation: () => remoteSource.addContent(params),
+        failure: FailureConstants.addContentFailure,
+        networkInfo: networkInfo,
+      ).then((result) => result.fold(
+            (failure) => Left(failure),
+            (success) => fromSupabaseSingle(success),
+          ));
 
   @override
   cancelContentStream() async => await remoteSource.cancelContentStream();
@@ -95,7 +97,7 @@ class DocsContractImpl extends DocsContract with ResponseToStatus {
       final res = await remoteSource.deleteContent(contentId);
       return fromSupabaseSingle(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -105,19 +107,19 @@ class DocsContractImpl extends DocsContract with ResponseToStatus {
       final res = remoteSource.listenToDocumentContent(documentId);
       return Right(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
   @override
-  updateContent(params) async {
-    if (await networkInfo.isConnected) {
-      final res = await remoteSource.updateContent(params);
-      return fromSupabaseSingle(res);
-    } else {
-      return Left(FailureConstants.internetConnectionFailure);
-    }
-  }
+  updateContent(params) async => handleRemoteOperation<Map>(
+        operation: () => remoteSource.updateContent(params),
+        failure: FailureConstants.updateContentFailure,
+        networkInfo: networkInfo,
+      ).then((result) => result.fold(
+            (failure) => Left(failure),
+            (success) => fromSupabaseSingle(success),
+          ));
 
   @override
   updateDocumentTitle(params) async {
@@ -125,7 +127,7 @@ class DocsContractImpl extends DocsContract with ResponseToStatus {
       final res = await remoteSource.updateDocumentTitle(params);
       return fromSupabaseSingle(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -135,7 +137,7 @@ class DocsContractImpl extends DocsContract with ResponseToStatus {
       final res = remoteSource.listenToSpecificDocuments(documentIds);
       return Right(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 }

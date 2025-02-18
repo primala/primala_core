@@ -6,7 +6,6 @@ import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
-import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/modules/auth/auth.dart';
 part 'login_greeter_coordinator.g.dart';
 
@@ -18,14 +17,12 @@ abstract class _LoginGreeterCoordinatorBase
   final LoginGreeterWidgetsCoordinator widgets;
   final AuthContract contract;
   final IdentifyUser identifyUser;
-  final UserInformationCoordinator userInfo;
   @override
   final CaptureScreen captureScreen;
 
   _LoginGreeterCoordinatorBase({
     required this.contract,
     required this.widgets,
-    required this.userInfo,
     required this.identifyUser,
     required this.captureScreen,
   }) {
@@ -47,7 +44,6 @@ abstract class _LoginGreeterCoordinatorBase
     widgets.constructor();
     listenToAuthState();
     initReactors();
-    await userInfo.checkIfVersionIsUpToDate();
     await captureScreen(AuthConstants.greeter);
   }
 

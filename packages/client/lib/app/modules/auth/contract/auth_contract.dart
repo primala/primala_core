@@ -2,9 +2,9 @@ import 'package:dartz/dartz.dart';
 import 'package:nokhte/app/core/constants/failure_constants.dart';
 import 'package:nokhte/app/core/error/failure.dart';
 import 'package:nokhte/app/core/mixins/response_to_status.dart';
+import 'package:nokhte/app/core/utilities/contract_utils.dart';
 import 'package:nokhte/app/modules/auth/auth.dart';
 import 'package:nokhte/app/core/network/network_info.dart';
-import 'utils.dart';
 
 abstract class AuthContract {
   Future<Either<Failure, bool>> signInWithGoogle();
@@ -17,7 +17,7 @@ abstract class AuthContract {
 }
 
 class AuthContractImpl
-    with ResponseToStatus, AuthUtils
+    with ResponseToStatus, ContractUtils
     implements AuthContract {
   final AuthRemoteSource remoteSource;
   final NetworkInfo networkInfo;
@@ -33,10 +33,10 @@ class AuthContractImpl
         final remoteAuth = await getOAuthProvider();
         return Right(remoteAuth);
       } catch (err) {
-        return Left(FailureConstants.authFailure);
+        return const Left(FailureConstants.authFailure);
       }
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -49,7 +49,7 @@ class AuthContractImpl
       final res = await remoteSource.addName();
       return fromSupabase(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -59,7 +59,7 @@ class AuthContractImpl
       final versionRes = await remoteSource.versionIsUpToDate();
       return Right(versionRes);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -74,6 +74,7 @@ class AuthContractImpl
   Future<Either<Failure, bool>> signUp(SignUpParams params) async {
     return handleRemoteOperation<List>(
       operation: () => remoteSource.signUp(params),
+      failure: FailureConstants.authFailure,
       networkInfo: networkInfo,
     ).then((result) => result.fold(
           (failure) => Left(failure),
@@ -86,6 +87,7 @@ class AuthContractImpl
     return handleRemoteOperation<List>(
       operation: () => remoteSource.logIn(params),
       networkInfo: networkInfo,
+      failure: FailureConstants.authFailure,
     ).then((result) => result.fold(
           (failure) => Left(failure),
           (success) => fromSupabase(success),
