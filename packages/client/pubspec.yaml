@@ -74,6 +74,7 @@ flutter:
     - assets/blocks/conclusion_send_icon.png
     - assets/blocks/idea_icon.png
     - assets/blocks/idea_send_icon.png
+    - assets/blocks/nokhte_icon.png
     - assets/blocks/purpose_icon.png
     - assets/blocks/purpose_send_icon.png
     - assets/blocks/question_icon.png

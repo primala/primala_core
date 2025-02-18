@@ -92,7 +92,7 @@ abstract class _HomeScreenCoordinatorBase
   }
 
   @action
-  joinSession() async {
+  joinSession() {
     if (activeSession.id == -1 || !activeSession.canJoin) return;
     setShowWidgets(false);
     setShowCarousel(false);

@@ -1,6 +1,5 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
@@ -55,16 +54,21 @@ abstract class _BlockTextDisplayStoreBase extends BaseWidgetStore
     });
   }
 
-  @observable
-  ObservableList<ContentBlockEntity> content =
-      ObservableList<ContentBlockEntity>();
-
   @action
   onParentSelected(int itemId) {
-    blockTextFields.setControl(Control.stop);
+    blockTextFields.blur.init(end: const Duration(milliseconds: 300));
+    setControl(Control.stop);
+    blockTextFields.setCurrentlySelectedBlock(getBlockFromId(itemId));
     blockTextFields.setCurrentlySelectedParentId(itemId);
     blockTextFields.focusNode.requestFocus();
   }
+
+  ContentBlockEntity getBlockFromId(int id) =>
+      content.firstWhere((element) => element.id == id);
+
+  @observable
+  ObservableList<ContentBlockEntity> content =
+      ObservableList<ContentBlockEntity>();
 
   @action
   setContent(ObservableList<ContentBlockEntity> newContent) {
@@ -84,20 +88,33 @@ abstract class _BlockTextDisplayStoreBase extends BaseWidgetStore
   }
 
   focusReactor() => reaction((p0) => blockTextFields.isFocused, (p0) {
-        // if (p0) {
-        //   Timer.periodic(const Duration(milliseconds: 200), (timer) {
-        //     timerCount++;
-        //     if (timerCount > 4) {
-        //       timer.cancel();
-        //       timerCount = 0;
-        //       return;
-        //     }
-        //     scrollController.animateTo(
-        //       scrollController.position.maxScrollExtent,
-        //       duration: const Duration(milliseconds: 100),
-        //       curve: Curves.linear,
-        //     );
-        //   });
-        // }
+        if (p0) {
+          if (currentlySelectedParentIdIndex == -1) {
+            Timer.periodic(const Duration(milliseconds: 200), (timer) {
+              timerCount++;
+              if (timerCount > 4) {
+                timer.cancel();
+                timerCount = 0;
+                return;
+              }
+              scrollController.animateTo(
+                scrollController.position.maxScrollExtent,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.linear,
+              );
+            });
+          }
+        }
       });
+
+  @computed
+  int get currentlySelectedParentIdIndex {
+    int temp = -1;
+    for (int i = 0; i < content.length; i++) {
+      if (content[i].id == blockTextFields.currentlySelectedParentId) {
+        temp = i;
+      }
+    }
+    return temp;
+  }
 }

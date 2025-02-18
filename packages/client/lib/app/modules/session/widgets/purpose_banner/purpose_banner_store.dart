@@ -1,6 +1,5 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
@@ -75,7 +74,7 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
           ),
         ),
         isScrollControlled: true,
-        backgroundColor: Colors.black.withOpacity(.4),
+        backgroundColor: const Color(0xFFA7A59F),
         context: buildContext,
         builder: (context) => DraggableScrollableSheet(
           maxChildSize: .91,
@@ -104,13 +103,9 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
                         SpotlightStatement(
                           onTextUpdated:
                               viewDocCoordinator.onSpotlightTextChanged,
-                          onBlockTypeUpdated:
-                              viewDocCoordinator.onBlockTypeChanged,
                           controller: viewDocCoordinator.spotlightController,
                           externalBlockType:
                               viewDocCoordinator.spotlightContentBlock.type,
-                          showTextField: true,
-                          fontColor: Colors.white,
                         ),
                         Container(
                           padding: const EdgeInsets.only(right: 10),
@@ -138,6 +133,8 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
               ),
               BlockTextFields(
                 store: blockTextDisplay.blockTextFields,
+                fontColor: Colors.white,
+                baseColor: const Color(0xFFA7A59F),
               ),
             ],
           ),
@@ -145,7 +142,7 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
       ).whenComplete(() {
         onClose();
         blur.reverse();
-        setModalIsVisible(false);
+        setWidgetVisibility(true);
       });
     }
   }

@@ -5,6 +5,7 @@ import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/docs/docs.dart';
+import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte_backend/tables/content_blocks.dart';
 import 'package:simple_animations/simple_animations.dart';
 part 'block_text_fields_store.g.dart';
@@ -14,6 +15,7 @@ class BlockTextFieldsStore = _BlockTextFieldsStoreBase
 
 abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
     with Store, BlockTextFieldMovies {
+  final NokhteBlurStore blur = NokhteBlurStore();
   _BlockTextFieldsStoreBase() {
     setBlockType(ContentBlockType.purpose);
     setIconMovie(getExpandingIcons(blockIcons));
@@ -24,6 +26,13 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   }
   TextEditingController controller = TextEditingController();
   FocusNode focusNode = FocusNode();
+
+  @observable
+  ContentBlockEntity currentlySelectedBlock = ContentBlockEntity.initial();
+
+  @action
+  setCurrentlySelectedBlock(ContentBlockEntity value) =>
+      currentlySelectedBlock = value;
 
   @observable
   bool isFocused = false;
@@ -65,8 +74,18 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
     currentTextContent = '';
     focusNode.unfocus();
     characterCount = 0;
+    blur.reverse();
     setCurrentlySelectedParentId(-1);
     setCurrentlySelectedContentId(-1);
+  }
+
+  @action
+  onParentDeselected() {
+    setCurrentlySelectedParentId(-1);
+    Timer(Seconds.get(0, milli: 300), () {
+      setCurrentlySelectedBlock(ContentBlockEntity.initial());
+    });
+    blur.reverse();
   }
 
   @action
@@ -101,6 +120,9 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   @observable
   int submissionCount = 0;
 
+  @observable
+  double textFieldHeight = 40.0;
+
   @action
   setIconMovie(MovieTween value) => iconMovie = value;
 
@@ -131,6 +153,21 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
         setCurrentlySelectedContentId(-1);
       }
     });
+    controller.addListener(() {
+      updateTextFieldHeight();
+    });
+  }
+
+  @action
+  updateTextFieldHeight() {
+    final RenderObject? renderBox =
+        textFieldKey.currentContext?.findRenderObject();
+    if (renderBox != null) {
+      if (movieStatus == MovieStatus.finished) {
+        setControl(Control.stop);
+      }
+      textFieldHeight = (renderBox.semanticBounds.height) + 40;
+    }
   }
 
   @action
