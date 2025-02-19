@@ -117,7 +117,7 @@ class GroupDisplay extends HookWidget with NokhteGradients {
                       return FadeTransition(opacity: animation, child: child);
                     },
                     child: Text(
-                      store.isManagingGroups ? 'Done' : 'Manage Profiles',
+                      store.isManagingGroups ? 'Done' : 'Manage Groups',
                       key: ValueKey(store.isManagingGroups),
                       style: GoogleFonts.jost(
                         fontSize: 16,
