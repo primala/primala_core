@@ -120,10 +120,16 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   int submissionCount = 0;
 
   @observable
+  double extraHeight = 0;
+
+  @observable
   double textFieldHeight = 75.0;
 
   @action
   setIconMovie(MovieTween value) => iconMovie = value;
+
+  @action
+  setExtraHeight(double value) => extraHeight = value;
 
   @action
   setIconControl(Control value) => iconControl = value;

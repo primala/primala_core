@@ -30,10 +30,6 @@ class BlockTextFields extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    useEffect(() {
-      store.constructor();
-      return () async => await store.dispose();
-    }, []);
     final screenSize = useFullScreenSize();
     double bottomPadding = MediaQuery.of(context).viewInsets.bottom;
     double size = bottomPadding > 100
@@ -51,6 +47,11 @@ class BlockTextFields extends HookWidget {
             screenSize: screenSize,
           );
 
+    useEffect(() {
+      store.constructor();
+      store.setExtraHeight(size);
+      return () async => await store.dispose();
+    }, []);
     return Observer(builder: (context) {
       return AnimatedOpacity(
         opacity: useWidgetOpacity(store.showWidget),

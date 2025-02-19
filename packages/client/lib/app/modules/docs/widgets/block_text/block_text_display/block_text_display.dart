@@ -41,7 +41,8 @@ class BlockTextDisplay extends HookWidget {
               itemBuilder: (context, index) {
                 if (index == store.content.length) {
                   return SizedBox(
-                      height: store.blockTextFields.textFieldHeight / 1);
+                      height: store.blockTextFields.textFieldHeight +
+                          store.blockTextFields.extraHeight);
                 }
                 final element = store.content[index];
                 return SwipeableTile(
