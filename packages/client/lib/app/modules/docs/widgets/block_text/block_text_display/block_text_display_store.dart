@@ -49,7 +49,7 @@ abstract class _BlockTextDisplayStoreBase extends BaseWidgetStore
     blockTextFields.setMode(BlockTextFieldMode.editing);
     blockTextFields.controller.text = item.content;
     blockTextFields.focusNode.requestFocus();
-    Timer(Seconds.get(0, milli: 500), () {
+    Timer(Seconds.get(0, milli: 800), () {
       blockTextFields.changeBlockType(item.type);
     });
   }
@@ -62,6 +62,12 @@ abstract class _BlockTextDisplayStoreBase extends BaseWidgetStore
     blockTextFields.setCurrentlySelectedParentId(itemId);
     blockTextFields.focusNode.requestFocus();
   }
+
+  @observable
+  bool blockScroll = false;
+
+  @action
+  setBlockScroll(bool value) => blockScroll = value;
 
   ContentBlockEntity getBlockFromId(int id) =>
       content.firstWhere((element) => element.id == id);
@@ -89,6 +95,11 @@ abstract class _BlockTextDisplayStoreBase extends BaseWidgetStore
 
   focusReactor() => reaction((p0) => blockTextFields.isFocused, (p0) {
         if (p0) {
+          if (blockScroll) {
+            setBlockScroll(false);
+            return;
+          }
+          if (blockTextFields.currentlySelectedContentId != -1) return;
           if (currentlySelectedParentIdIndex == -1) {
             Timer.periodic(const Duration(milliseconds: 200), (timer) {
               timerCount++;

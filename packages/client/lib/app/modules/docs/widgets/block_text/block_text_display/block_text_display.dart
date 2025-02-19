@@ -83,7 +83,7 @@ class BlockTextDisplay extends HookWidget {
                       duration: Duration.zero,
                       curve: Curves.easeInOut,
                       child: GestureDetector(
-                        onLongPressStart: (details) {
+                        onLongPressStart: (details) async {
                           HapticFeedback.mediumImpact();
                           showContextMenu(
                             context,
@@ -111,7 +111,7 @@ class BlockTextDisplay extends HookWidget {
                               position: details.globalPosition,
                               padding: const EdgeInsets.all(8.0),
                             ),
-                          );
+                          ).whenComplete(() => store.setBlockScroll(true));
                         },
                         child: Container(
                           margin: EdgeInsets.only(
