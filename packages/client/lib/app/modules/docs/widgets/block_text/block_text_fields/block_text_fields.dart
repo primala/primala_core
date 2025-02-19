@@ -48,8 +48,10 @@ class BlockTextFields extends HookWidget {
               alignment: Alignment.bottomCenter,
               children: [
                 GestureDetector(
-                  onTap: store.currentlySelectedParentId != -1
-                      ? () => store.onParentDeselected()
+                  onTap: store.isFocused
+                      ? store.currentlySelectedParentId != -1
+                          ? () => store.onParentDeselected()
+                          : () => store.reset()
                       : null,
                   child: NokhteBlur(
                     store: store.blur,
