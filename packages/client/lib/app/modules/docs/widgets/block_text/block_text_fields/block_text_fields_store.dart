@@ -81,11 +81,10 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
 
   @action
   onParentDeselected() {
-    setCurrentlySelectedParentId(-1);
+    reset();
     Timer(Seconds.get(0, milli: 300), () {
       setCurrentlySelectedBlock(ContentBlockEntity.initial());
     });
-    blur.reverse();
   }
 
   @action
@@ -121,7 +120,7 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   int submissionCount = 0;
 
   @observable
-  double textFieldHeight = 40.0;
+  double textFieldHeight = 75.0;
 
   @action
   setIconMovie(MovieTween value) => iconMovie = value;
