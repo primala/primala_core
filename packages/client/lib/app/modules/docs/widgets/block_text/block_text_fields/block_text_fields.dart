@@ -34,8 +34,22 @@ class BlockTextFields extends HookWidget {
       store.constructor();
       return () async => await store.dispose();
     }, []);
-
-    final bottomPadding = MediaQuery.of(context).viewInsets.bottom;
+    final screenSize = useFullScreenSize();
+    double bottomPadding = MediaQuery.of(context).viewInsets.bottom;
+    double size = bottomPadding > 100
+        ? 0
+        : useScaledSize(
+            baseValue: .03,
+            bumpPerHundredth: -0.001,
+            screenSize: screenSize,
+          );
+    final iconPadding = bottomPadding > 100
+        ? 20.0
+        : useScaledSize(
+            baseValue: .055,
+            bumpPerHundredth: -.0006,
+            screenSize: screenSize,
+          );
 
     return Observer(builder: (context) {
       return AnimatedOpacity(
@@ -113,9 +127,14 @@ class BlockTextFields extends HookWidget {
                             _buildTextFieldContainer(bottomPadding),
                           ],
                         )),
+                    AnimatedContainer(
+                      duration: Seconds.get(0, milli: 200),
+                      height: size,
+                      color: NokhteColors.eggshell,
+                    )
                   ],
                 ),
-                _buildIconColumn(bottomPadding),
+                _buildIconColumn(iconPadding),
               ],
             ),
           ),
@@ -144,16 +163,16 @@ class BlockTextFields extends HookWidget {
                 AnimatedContainer(
                   duration: store.isExpanded
                       ? Seconds.get(0, milli: 300)
-                      : Seconds.get(0),
+                      : Seconds.get(0, milli: 200),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(9),
                     color: baseColor,
                   ),
                   alignment: Alignment.bottomLeft,
                   width: 35,
-                  margin: const EdgeInsets.only(
+                  margin: EdgeInsets.only(
                     left: 10.0,
-                    bottom: 20,
+                    bottom: bottomPadding,
                     top: 20,
                   ),
                   height: store.isExpanded ? 233 : 37,
@@ -257,7 +276,7 @@ class BlockTextFields extends HookWidget {
           blur: 10,
           blurColor: Colors.black,
           colorOpacity: .6,
-          borderRadius: BorderRadius.circular(19),
+          borderRadius: BorderRadius.circular(17),
           child: _buildTextField(
             onChange: store.onChange,
             textColor: const Color.fromARGB(0, 0, 0, 0),
