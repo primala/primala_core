@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
@@ -71,11 +72,13 @@ abstract class _HomeScreenCoordinatorBase
 
   @action
   goToSessionStarter() {
-    setShowWidgets(false);
-    setShowCarousel(false);
-    Timer(Seconds.get(0, milli: 500), () {
-      Modular.to.navigate(SessionConstants.sessionStarter);
-    });
+    Modular.to.push(
+      MaterialPageRoute(builder: (BuildContext context) {
+        return SessionStarterScreen(
+          coordinator: Modular.get<SessionStarterCoordinator>(),
+        );
+      }),
+    );
   }
 
   @action
@@ -83,14 +86,13 @@ abstract class _HomeScreenCoordinatorBase
     final res = await contract.listenToActiveSessions(selectedGroup.id);
     res.fold((failure) => errorUpdater(failure), (stream) {
       activeSessionStreamSubscription = stream.listen((event) {
-        print('event $event');
         activeSession = event;
       });
     });
   }
 
   @action
-  joinSession() async {
+  joinSession() {
     if (activeSession.id == -1 || !activeSession.canJoin) return;
     setShowWidgets(false);
     setShowCarousel(false);

@@ -2,7 +2,7 @@ name: nokhte
 description: A new Flutter project.
 publish_to: "none"
 
-version: 2.64.0+140828277
+version: 2.70.0+141376160
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -27,23 +27,17 @@ dependencies:
   flutter_slidable: ^3.1.1
   google_fonts: ^5.1.0
   gradient_borders: ^1.0.0
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
-  mobile_scanner: ^5.1.1
   mobx: ^2.2.1
   nokhte_backend:
     path: ../backend/dart
   package_info_plus: ^8.0.0
-  path_drawing: ^1.0.1
   permission_handler: ^11.0.0
   posthog_flutter: ^4.4.1
-  qr_flutter: ^4.1.0
-  quick_actions: ^1.0.7
   sign_in_button: ^3.2.0
   sign_in_with_apple: ^5.0.0
   simple_animations: ^5.0.2
-  simple_gradient_text: ^1.3.0
   supabase_flutter: ^2.5.6
+  toastification: ^2.3.0
   url_launcher: ^6.3.1
 
 dev_dependencies:
@@ -80,6 +74,7 @@ flutter:
     - assets/blocks/conclusion_send_icon.png
     - assets/blocks/idea_icon.png
     - assets/blocks/idea_send_icon.png
+    - assets/blocks/nokhte_icon.png
     - assets/blocks/purpose_icon.png
     - assets/blocks/purpose_send_icon.png
     - assets/blocks/question_icon.png
@@ -99,9 +94,7 @@ flutter:
     - assets/login/header.png
 
     - assets/power_up/cook_button.png
-    - assets/power_up/rally_button_blue.png
-    - assets/power_up/rally_button_red.png
-    - assets/power_up/rally_button_white.png
+    - assets/power_up/rally_button.png
 
     - assets/session/rounded_triangle.png
     - assets/session/home_beach_icon.png

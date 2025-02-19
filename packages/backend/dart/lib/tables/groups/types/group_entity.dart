@@ -18,11 +18,19 @@ class GroupEntity extends Equatable {
     required this.profileGradient,
   });
 
-  factory GroupEntity.initial() => const GroupEntity(
+  factory GroupEntity.initial() => GroupEntity(
         id: 0,
         name: '',
         isAdmin: false,
         profileGradient: ProfileGradient.none,
+      );
+
+  GroupEntity copyWith(ProfileGradient gradient, GroupEntity group) =>
+      GroupEntity(
+        id: group.id,
+        name: group.name,
+        isAdmin: group.isAdmin,
+        profileGradient: gradient,
       );
 
   factory GroupEntity.fromSupabase(Map groupResponse) {

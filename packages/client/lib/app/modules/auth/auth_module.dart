@@ -1,7 +1,6 @@
 import 'package:nokhte/app/core/guards/auth_guard.dart';
 import 'package:nokhte/app/core/modules/legacy_connectivity/legacy_connectivity.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
-import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/network/network_info.dart';
@@ -12,7 +11,6 @@ class AuthModule extends Module {
   List<Module> get imports => [
         AuthWidgetsModule(),
         PosthogModule(),
-        UserInformationModule(),
         LegacyConnectivityModule(),
       ];
 
@@ -35,7 +33,6 @@ class AuthModule extends Module {
         contract: i.get<AuthContractImpl>(),
         identifyUser: Modular.get<IdentifyUser>(),
         captureScreen: Modular.get<CaptureScreen>(),
-        userInfo: Modular.get<UserInformationCoordinator>(),
         widgets: Modular.get<LoginWidgetsCoordinator>(),
       ),
     );
@@ -45,7 +42,6 @@ class AuthModule extends Module {
         contract: i.get<AuthContractImpl>(),
         identifyUser: Modular.get<IdentifyUser>(),
         captureScreen: Modular.get<CaptureScreen>(),
-        userInfo: Modular.get<UserInformationCoordinator>(),
         widgets: Modular.get<LoginGreeterWidgetsCoordinator>(),
       ),
     );
@@ -55,7 +51,6 @@ class AuthModule extends Module {
         contract: i.get<AuthContractImpl>(),
         identifyUser: Modular.get<IdentifyUser>(),
         captureScreen: Modular.get<CaptureScreen>(),
-        userInfo: Modular.get<UserInformationCoordinator>(),
         widgets: Modular.get<SignupWidgetsCoordinator>(),
       ),
     );

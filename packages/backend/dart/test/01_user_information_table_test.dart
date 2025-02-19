@@ -56,7 +56,7 @@ void main() {
       ProfileGradient.amethyst,
     );
 
-    expect(res.first['gradient'], 'amethyst');
+    expect(res['gradient'], 'amethyst');
   });
 
   test("shouldn't be able to insert another row if they already have one",

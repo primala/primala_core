@@ -29,7 +29,6 @@ class ViewDocScreen extends HookWidget {
           children: [
             SingleChildScrollView(
               controller: coordinator.blockTextDisplay.scrollController,
-              physics: const ClampingScrollPhysics(),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -43,10 +42,8 @@ class ViewDocScreen extends HookWidget {
                     padding: const EdgeInsets.only(top: 30),
                     child: SpotlightStatement(
                       onTextUpdated: coordinator.onSpotlightTextChanged,
-                      onBlockTypeUpdated: coordinator.onBlockTypeChanged,
                       controller: coordinator.spotlightController,
                       externalBlockType: coordinator.spotlightContentBlock.type,
-                      showTextField: true,
                     ),
                   ),
                   Container(

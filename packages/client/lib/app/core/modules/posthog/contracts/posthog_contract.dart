@@ -28,7 +28,7 @@ class PosthogContractImpl implements PosthogContract {
       await remoteSource.captureSessionEnd(startTime);
       return const Right(null);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -38,7 +38,7 @@ class PosthogContractImpl implements PosthogContract {
       await remoteSource.captureSessionStart(params);
       return const Right(null);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -48,7 +48,7 @@ class PosthogContractImpl implements PosthogContract {
       await remoteSource.identifyUser();
       return const Right(null);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -58,7 +58,7 @@ class PosthogContractImpl implements PosthogContract {
       await remoteSource.captureScreen(screen);
       return const Right(null);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -68,7 +68,7 @@ class PosthogContractImpl implements PosthogContract {
       await remoteSource.captureCreateDoc();
       return const Right(null);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 }

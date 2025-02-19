@@ -29,9 +29,9 @@ class GroupsContractImpl with ResponseToStatus implements GroupsContract {
       final res = await remoteSource.createGroup(params);
       return res != -1
           ? Right(res)
-          : Left(FailureConstants.groupCreationFailure);
+          : const Left(FailureConstants.groupCreationFailure);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -41,7 +41,7 @@ class GroupsContractImpl with ResponseToStatus implements GroupsContract {
       await remoteSource.deleteGroup(groupId);
       return const Right(true);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -51,7 +51,7 @@ class GroupsContractImpl with ResponseToStatus implements GroupsContract {
       final res = remoteSource.listenToGroups();
       return Right(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -61,7 +61,7 @@ class GroupsContractImpl with ResponseToStatus implements GroupsContract {
       final res = await remoteSource.updateGroupName(params);
       return fromSupabase(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -71,7 +71,7 @@ class GroupsContractImpl with ResponseToStatus implements GroupsContract {
       final res = await remoteSource.updateGroupProfileGradient(params);
       return fromSupabase(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 

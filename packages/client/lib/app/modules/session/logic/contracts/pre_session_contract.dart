@@ -35,7 +35,7 @@ class PreSessionContractImpl
       final res = await remoteSource.initializeSession(params);
       return fromSupabaseSingle(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -45,7 +45,7 @@ class PreSessionContractImpl
       final res = await remoteSource.getDocuments(groupId);
       return Right(DocumentEntity.fromSupabaseMultiple(res));
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -56,7 +56,7 @@ class PreSessionContractImpl
       final usersRes = res.map((e) => e[UsersConstants.S_TABLE]).toList();
       return Right(UserEntity.fromSupabaseMultiple(usersRes));
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 

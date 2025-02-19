@@ -19,13 +19,7 @@ class PurposeBanner extends HookWidget {
   @override
   Widget build(BuildContext context) {
     useEffect(() {
-      store.constructor(
-        context,
-        // useAnimationController(
-        //   duration: Seconds.get(1),
-        //   reverseDuration: Seconds.get(1),
-        // ),
-      );
+      store.constructor(context);
       return null;
     }, []);
     final height = useFullScreenSize().height;
@@ -42,7 +36,6 @@ class PurposeBanner extends HookWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    print('tap ');
                     store.onTap();
                   },
                   child: Container(

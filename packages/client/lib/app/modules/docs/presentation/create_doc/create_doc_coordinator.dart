@@ -35,12 +35,6 @@ abstract class _CreateDocCoordinatorBase with Store, BaseMobxLogic {
   @action
   setSpotlightTextContent(String value) => spotlightTextContent = value;
 
-  @observable
-  ContentBlockType selectedBlockType = ContentBlockType.none;
-
-  @action
-  setBlockType(ContentBlockType type) => selectedBlockType = type;
-
   @action
   submit() async {
     final res = await contract.insertDocument(params);
@@ -57,12 +51,9 @@ abstract class _CreateDocCoordinatorBase with Store, BaseMobxLogic {
         documentTitle: title,
         groupId: activeGroup.groupId,
         spotlightMessage: spotlightTextContent,
-        contentBlockType: selectedBlockType,
+        contentBlockType: ContentBlockType.purpose,
       );
 
   @computed
-  bool get canSubmit =>
-      title.isNotEmpty &&
-      spotlightTextContent.isNotEmpty &&
-      selectedBlockType != ContentBlockType.none;
+  bool get canSubmit => title.isNotEmpty && spotlightTextContent.isNotEmpty;
 }

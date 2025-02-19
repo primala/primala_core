@@ -41,7 +41,6 @@ class CreateGroupScreen extends HookWidget {
                     groupName: coordinator.groupNameTextField.groupName,
                     profileGradient:
                         coordinator.groupNameTextField.profileGradient,
-                    // onPencilTap: () {},
                   ),
                 ),
                 GroupNameTextField(

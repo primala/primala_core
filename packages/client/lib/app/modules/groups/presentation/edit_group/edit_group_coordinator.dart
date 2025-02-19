@@ -3,18 +3,26 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
+import 'package:nokhte/app/core/constants/text_field_validators.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/modules/groups/groups.dart';
 import 'package:nokhte_backend/tables/group_roles.dart';
 import 'package:nokhte_backend/tables/groups.dart';
+import 'package:nokhte_backend/types/types.dart';
 part 'edit_group_coordinator.g.dart';
 
 class EditGroupCoordinator = _EditGroupCoordinatorBase
     with _$EditGroupCoordinator;
 
 abstract class _EditGroupCoordinatorBase
-    with Store, BaseCoordinator, BaseMobxLogic, BaseWidgetsCoordinator {
+    with
+        Store,
+        BaseCoordinator,
+        Reactions,
+        BaseMobxLogic,
+        BaseWidgetsCoordinator,
+        TextFieldValidators {
   final GroupNameTextFieldStore groupNameTextField;
   final GroupsContract groupsContract;
   final GroupRolesContract groupRolesContract;
@@ -52,10 +60,29 @@ abstract class _EditGroupCoordinatorBase
     this.group = group;
     this.onGroupLeft = onGroupLeft;
     groupNameTextField.controller.text = group.name;
-    groupNameTextField.setIsEnabled(false);
-
+    if (!group.isAdmin) {
+      groupNameTextField.setIsEnabled(false);
+    }
     await getGroupMembers();
     await captureScreen(GroupsConstants.editGroup);
+    disposers.add(groupNameReactor());
+  }
+
+  @action
+  onGradientTapped(ProfileGradient gradient) async {
+    final res = await groupsContract.updateGroupProfileGradient(
+      UpdateGroupProfileGradientParams(
+        groupId: group.id,
+        gradient: gradient,
+      ),
+    );
+    res.fold(
+      (failure) => errorUpdater(failure),
+      (status) {
+        Modular.to.pop();
+        group = group.copyWith(gradient, group);
+      },
+    );
   }
 
   @action
@@ -124,4 +151,14 @@ abstract class _EditGroupCoordinatorBase
     await groupsContract.deleteGroup(group.id);
     Modular.to.pop();
   }
+
+  groupNameReactor() =>
+      reaction((p0) => groupNameTextField.submissionCount, (p0) async {
+        await groupsContract.updateGroupName(
+          UpdateGroupNameParams(
+            groupId: group.id,
+            name: groupNameTextField.controller.text,
+          ),
+        );
+      });
 }

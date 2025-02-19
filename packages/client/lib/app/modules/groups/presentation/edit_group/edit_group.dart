@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/hooks/hooks.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -22,7 +23,7 @@ class EditGroupScreen extends HookWidget {
   Widget build(BuildContext context) {
     useEffect(() {
       coordinator.constructor(group, onGroupLeft);
-      return null;
+      return () => coordinator.dispose();
     }, []);
     final screenHeight = useFullScreenSize().height;
     return Observer(
@@ -46,7 +47,19 @@ class EditGroupScreen extends HookWidget {
                   child: GroupAvatar(
                     groupName: coordinator.group.name,
                     profileGradient: coordinator.group.profileGradient,
-                    // onPencilTap: () {},
+                    onPencilTap: group.isAdmin
+                        ? () {
+                            Modular.to.push(
+                              MaterialPageRoute(
+                                builder: (context) => GroupGradientPickerScreen(
+                                  onGradientTapped:
+                                      coordinator.onGradientTapped,
+                                  group: group,
+                                ),
+                              ),
+                            );
+                          }
+                        : null,
                   ),
                 ),
                 GroupNameTextField(

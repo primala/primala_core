@@ -5,8 +5,6 @@ import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/posthog/posthog.dart';
-import 'package:nokhte/app/core/modules/user_information/user_information.dart';
-import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/auth/auth.dart';
 part 'signup_coordinator.g.dart';
 
@@ -16,13 +14,11 @@ abstract class _SignupCoordinatorBase with Store, BaseCoordinator, Reactions {
   final SignupWidgetsCoordinator widgets;
   final AuthContract contract;
   final IdentifyUser identifyUser;
-  final UserInformationCoordinator userInfo;
   @override
   final CaptureScreen captureScreen;
   _SignupCoordinatorBase({
     required this.contract,
     required this.widgets,
-    required this.userInfo,
     required this.identifyUser,
     required this.captureScreen,
   }) {
@@ -44,7 +40,6 @@ abstract class _SignupCoordinatorBase with Store, BaseCoordinator, Reactions {
     widgets.constructor();
     listenToAuthState();
     initReactors();
-    await userInfo.checkIfVersionIsUpToDate();
     await captureScreen(AuthConstants.signup);
   }
 
@@ -88,11 +83,7 @@ abstract class _SignupCoordinatorBase with Store, BaseCoordinator, Reactions {
   @action
   onGoBack() {
     if (disableAllTouchFeedback) return;
-    widgets.setShowWidgets(false);
-    Timer(Seconds.get(0, milli: 500), () {
-      Modular.to.navigate(AuthConstants.greeter);
-    });
-    setDisableAllTouchFeedback(true);
+    Modular.to.pop();
   }
 
   authStateReactor() => reaction((p0) => isLoggedIn, (p0) async {

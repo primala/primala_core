@@ -18,6 +18,7 @@ abstract class UserContract {
   Future<Either<Failure, bool>> updateUserProfileGradient(
     ProfileGradient profileGradient,
   );
+  Future<Either<Failure, bool>> updateFullName(String name);
   Future<Either<Failure, bool>> checkIfVersionIsUpToDate();
   Future<Either<Failure, bool>> updateActiveGroup(int groupId);
 }
@@ -40,7 +41,7 @@ class UserContractImpl with ResponseToStatus implements UserContract {
       final res = remoteSource.listenToRequests();
       return Right(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -50,7 +51,7 @@ class UserContractImpl with ResponseToStatus implements UserContract {
       await remoteSource.handleRequest(params);
       return const Right(true);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -60,7 +61,7 @@ class UserContractImpl with ResponseToStatus implements UserContract {
       final res = await remoteSource.updateActiveGroup(groupId);
       return fromSupabase(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -70,7 +71,7 @@ class UserContractImpl with ResponseToStatus implements UserContract {
       final res = await remoteSource.versionIsUpToDate();
       return Right(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -78,9 +79,9 @@ class UserContractImpl with ResponseToStatus implements UserContract {
   updateUserProfileGradient(profileGradient) async {
     if (await networkInfo.isConnected) {
       final res = await remoteSource.updateUserProfileGradient(profileGradient);
-      return fromSupabase(res);
+      return fromSupabaseSingle(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -90,7 +91,7 @@ class UserContractImpl with ResponseToStatus implements UserContract {
       final res = await remoteSource.getUserInformation();
       return Right(UserEntity.fromSupabaseSingle(res));
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -103,7 +104,17 @@ class UserContractImpl with ResponseToStatus implements UserContract {
       final res = await remoteSource.checkIfCanDeleteAccount();
       return Right(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  @override
+  updateFullName(name) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.updateFullName(name);
+      return fromSupabaseSingle(res);
+    } else {
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 }

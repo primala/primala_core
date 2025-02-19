@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:nokhte/app/core/modules/user_information/user_information.dart';
 import 'package:nokhte/app/modules/auth/auth.dart';
 import 'package:nokhte_backend/tables/users.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -24,7 +23,6 @@ abstract class AuthRemoteSource {
 
 class AuthRemoteSourceImpl implements AuthRemoteSource {
   final SupabaseClient supabase;
-  late UserInformationRemoteSourceImpl userInfoRemoteSource;
 
   AuthRemoteSourceImpl({required this.supabase});
 
@@ -86,7 +84,10 @@ class AuthRemoteSourceImpl implements AuthRemoteSource {
     final queries = UsersQueries(supabase: supabase);
 
     await queries.insertUserInfo(
-        fullName: '$firstName $lastName', email: email);
+        fullName: '$firstName $lastName'.trim().isEmpty
+            ? 'Nokhte User'
+            : '$firstName $lastName',
+        email: email);
     return authRes.user?.id.isNotEmpty ?? false;
   }
 
@@ -106,6 +107,9 @@ class AuthRemoteSourceImpl implements AuthRemoteSource {
             supabase.auth.currentUser?.userMetadata?["email"];
       } else {
         fullName = theName;
+      }
+      if (fullName.trim().isEmpty) {
+        fullName = 'Nokhte User';
       }
 
       final email = supabase.auth.currentUser?.email ?? '';

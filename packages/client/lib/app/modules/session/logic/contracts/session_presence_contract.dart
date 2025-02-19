@@ -39,7 +39,7 @@ class SessionPresenceContractImpl
       final res = await remoteSource.deleteSession(sessionId);
       return fromSupabase(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -49,7 +49,7 @@ class SessionPresenceContractImpl
       final res = remoteSource.listenToSessionMetadata();
       return Right(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -59,7 +59,7 @@ class SessionPresenceContractImpl
       final res = await remoteSource.updateUserStatus(params);
       return fromSupabase(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -75,7 +75,7 @@ class SessionPresenceContractImpl
           return const Right(true);
       }
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -89,7 +89,7 @@ class SessionPresenceContractImpl
       final res = await remoteSource.startTheSession();
       return fromSupabase(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -104,7 +104,7 @@ class SessionPresenceContractImpl
         return fromSupabase(res);
       });
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -114,7 +114,7 @@ class SessionPresenceContractImpl
       final res = await remoteSource.updateSpeakingTimerStart();
       return fromSupabase(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -124,7 +124,7 @@ class SessionPresenceContractImpl
       final res = await remoteSource.updateActiveDocument(docId);
       return fromSupabase(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 }

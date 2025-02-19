@@ -5,6 +5,7 @@ import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/docs/docs.dart';
+import 'package:nokhte/app/modules/session/session.dart';
 import 'package:nokhte_backend/tables/content_blocks.dart';
 import 'package:simple_animations/simple_animations.dart';
 part 'block_text_fields_store.g.dart';
@@ -14,6 +15,7 @@ class BlockTextFieldsStore = _BlockTextFieldsStoreBase
 
 abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
     with Store, BlockTextFieldMovies {
+  final NokhteBlurStore blur = NokhteBlurStore();
   _BlockTextFieldsStoreBase() {
     setBlockType(ContentBlockType.purpose);
     setIconMovie(getExpandingIcons(blockIcons));
@@ -24,6 +26,13 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   }
   TextEditingController controller = TextEditingController();
   FocusNode focusNode = FocusNode();
+
+  @observable
+  ContentBlockEntity currentlySelectedBlock = ContentBlockEntity.initial();
+
+  @action
+  setCurrentlySelectedBlock(ContentBlockEntity value) =>
+      currentlySelectedBlock = value;
 
   @observable
   bool isFocused = false;
@@ -47,25 +56,10 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   GlobalKey textFieldKey = GlobalKey();
 
   @observable
-  double textFieldHeight = 97.0;
-
-  @observable
   MovieStatus iconMovieStatus = MovieStatus.idle;
 
   @action
   setIconMovieStatus(MovieStatus value) => iconMovieStatus = value;
-
-  @action
-  updateTextFieldHeight() {
-    final RenderObject? renderBox =
-        textFieldKey.currentContext?.findRenderObject();
-    if (renderBox != null) {
-      if (movieStatus == MovieStatus.finished) {
-        setControl(Control.stop);
-      }
-      textFieldHeight = (renderBox.semanticBounds.height) + 77;
-    }
-  }
 
   @action
   onChange(String value) => characterCount = value.length;
@@ -79,12 +73,18 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
     controller.clear();
     currentTextContent = '';
     focusNode.unfocus();
-    Timer(Seconds.get(0, milli: 1), () {
-      updateTextFieldHeight();
-    });
     characterCount = 0;
+    blur.reverse();
     setCurrentlySelectedParentId(-1);
     setCurrentlySelectedContentId(-1);
+  }
+
+  @action
+  onParentDeselected() {
+    reset();
+    Timer(Seconds.get(0, milli: 300), () {
+      setCurrentlySelectedBlock(ContentBlockEntity.initial());
+    });
   }
 
   @action
@@ -119,8 +119,17 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   @observable
   int submissionCount = 0;
 
+  @observable
+  double extraHeight = 0;
+
+  @observable
+  double textFieldHeight = 75.0;
+
   @action
   setIconMovie(MovieTween value) => iconMovie = value;
+
+  @action
+  setExtraHeight(double value) => extraHeight = value;
 
   @action
   setIconControl(Control value) => iconControl = value;
@@ -155,22 +164,38 @@ abstract class _BlockTextFieldsStoreBase extends BaseWidgetStore
   }
 
   @action
+  updateTextFieldHeight() {
+    final RenderObject? renderBox =
+        textFieldKey.currentContext?.findRenderObject();
+    if (renderBox != null) {
+      if (movieStatus == MovieStatus.finished) {
+        setControl(Control.stop);
+      }
+      textFieldHeight = (renderBox.semanticBounds.height) + 40;
+    }
+  }
+
+  @action
   onSubmit() {
     if (controller.text.trim().isNotEmpty &&
         currentTextContent != controller.text) {
-      print('is this being called five times ');
       currentTextContent = controller.text;
       submissionCount++;
-    } else {
+    } else if (controller.text.trim().isEmpty) {
       reset();
     }
     // focusNode.unfocus();
   }
 
   @action
+  onError() {
+    currentTextContent = '';
+  }
+
+  @action
   dispose() {
-    controller.dispose();
-    focusNode.dispose();
+    // controller.dispose();
+    // focusNode.dispose();
   }
 
   @action

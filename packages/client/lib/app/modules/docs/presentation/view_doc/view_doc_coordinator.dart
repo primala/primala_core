@@ -175,7 +175,6 @@ abstract class _ViewDocCoordinatorBase
 
   @action
   setTitle(String value) {
-    print('is this being called $value');
     setText(
       value,
       docTitleController,
@@ -255,11 +254,25 @@ abstract class _ViewDocCoordinatorBase
       reaction((p0) => blockTextFields.submissionCount, (p0) async {
         if (characterCount > 2000) return;
         if (blockTextFields.mode == BlockTextFieldMode.adding) {
-          await contract.addContent(addContentParams);
+          if (isDuplicate(blockTextFields.currentTextContent)) return;
+          final res = await contract.addContent(addContentParams);
+          res.fold(
+            (failure) {
+              blockTextFields.onError();
+              errorUpdater(failure);
+            },
+            (value) => blockTextFields.reset(),
+          );
         } else {
-          await contract.updateContent(updateContentParams);
+          final res = await contract.updateContent(updateContentParams);
+          res.fold(
+            (failure) {
+              errorUpdater(failure);
+              errorUpdater(failure);
+            },
+            (value) => blockTextFields.reset(),
+          );
         }
-        blockTextFields.reset();
       });
 
   textFieldCharactersReactor() =>

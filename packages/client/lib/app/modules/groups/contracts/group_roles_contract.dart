@@ -44,7 +44,7 @@ class GroupRolesContractImpl
         ),
       );
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -54,7 +54,7 @@ class GroupRolesContractImpl
       final res = await remoteSource.removeUserRole(params);
       return fromSupabase(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -64,7 +64,7 @@ class GroupRolesContractImpl
       final res = await remoteSource.updateUserRole(params);
       return fromSupabase(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -74,7 +74,7 @@ class GroupRolesContractImpl
       final res = await remoteSource.sendRequests(params);
       return fromSupabase(res);
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 
@@ -87,10 +87,10 @@ class GroupRolesContractImpl
       if (model.uid != userUid) {
         return Right(UserEntity.fromDatabaseFunction(res));
       } else {
-        return Left(FailureConstants.lookedThemselvesUpFailure);
+        return const Left(FailureConstants.lookedThemselvesUpFailure);
       }
     } else {
-      return Left(FailureConstants.internetConnectionFailure);
+      return const Left(FailureConstants.internetConnectionFailure);
     }
   }
 }
