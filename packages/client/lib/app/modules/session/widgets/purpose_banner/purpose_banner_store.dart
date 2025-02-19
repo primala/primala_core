@@ -66,6 +66,7 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
       blur.init(
         end: Seconds.get(0, milli: 200),
       );
+      const color = Color(0xFFA1998E);
       showModalBottomSheet(
         isDismissible: false,
         shape: const RoundedRectangleBorder(
@@ -74,7 +75,7 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
           ),
         ),
         isScrollControlled: true,
-        backgroundColor: const Color(0xFFA7A59F),
+        backgroundColor: color,
         context: buildContext,
         builder: (context) => DraggableScrollableSheet(
           maxChildSize: .91,
@@ -134,7 +135,7 @@ abstract class _PurposeBannerStoreBase extends BaseWidgetStore<NoParams>
               BlockTextFields(
                 store: blockTextDisplay.blockTextFields,
                 fontColor: Colors.white,
-                baseColor: const Color(0xFFA7A59F),
+                baseColor: color,
               ),
             ],
           ),

@@ -130,7 +130,7 @@ class BlockTextFields extends HookWidget {
                     AnimatedContainer(
                       duration: Seconds.get(0, milli: 200),
                       height: size,
-                      color: NokhteColors.eggshell,
+                      color: baseColor,
                     )
                   ],
                 ),
