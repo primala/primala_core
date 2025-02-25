@@ -2,7 +2,7 @@ name: nokhte
 description: A new Flutter project.
 publish_to: "none"
 
-version: 2.70.0+141376160
+version: 2.71.0+141874671
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -36,7 +36,7 @@ dependencies:
   sign_in_button: ^3.2.0
   sign_in_with_apple: ^5.0.0
   simple_animations: ^5.0.2
-  supabase_flutter: ^2.5.6
+  supabase_flutter: ^2.7.0
   toastification: ^2.3.0
   url_launcher: ^6.3.1
 

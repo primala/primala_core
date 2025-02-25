@@ -43,7 +43,7 @@ class DocsDisplay extends HookWidget {
             ),
             itemCount: docs.length + (onCreateDocTapped != null ? 1 : 0),
             itemBuilder: (context, index) {
-              if (index == docs.length && onCreateDocTapped != null) {
+              if (index == 0 && onCreateDocTapped != null) {
                 return GestureDetector(
                   onTap: () => onCreateDocTapped?.call(),
                   child: Container(
@@ -62,11 +62,12 @@ class DocsDisplay extends HookWidget {
                   ),
                 );
               }
-
+              final adjustedIndex =
+                  index -= (onCreateDocTapped != null ? 1 : 0);
               return DocItem(
                 size: const Size(98, 130),
-                doc: docs[index],
-                onTap: () => onDocTapped(index),
+                doc: docs[adjustedIndex],
+                onTap: () => onDocTapped(adjustedIndex),
               );
             }),
       ),
