@@ -22,6 +22,13 @@ class ViewDocScreen extends HookWidget {
       coordinator.constructor(doc);
       return () => coordinator.dispose();
     }, []);
+    useOnAppLifecycleStateChange(
+      (previous, current) => coordinator.onAppLifeCycleStateChange(
+        current,
+        onResumed: () async => await coordinator.onResumed(),
+        onInactive: () async => await coordinator.dispose(),
+      ),
+    );
     return Observer(builder: (context) {
       return AnimatedScaffold(
         showWidgets: coordinator.showWidgets,

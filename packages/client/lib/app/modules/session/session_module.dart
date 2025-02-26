@@ -27,6 +27,7 @@ class SessionModule extends Module {
 
     i.add<PauseCoordinator>(
       () => PauseCoordinator(
+        captureScreen: Modular.get<CaptureScreen>(),
         presence: Modular.get<SessionPresenceCoordinator>(),
         tint: TintStore(),
       ),

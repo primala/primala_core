@@ -6,6 +6,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
 import 'package:nokhte/app/core/modules/active_group/active_group.dart';
+import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/modules/docs/docs.dart';
 import 'package:nokhte_backend/tables/content_blocks.dart';
@@ -15,14 +16,22 @@ part 'view_doc_coordinator.g.dart';
 class ViewDocCoordinator = _ViewDocCoordinatorBase with _$ViewDocCoordinator;
 
 abstract class _ViewDocCoordinatorBase
-    with Store, BaseWidgetsCoordinator, BaseMobxLogic, Reactions {
+    with
+        Store,
+        BaseCoordinator,
+        BaseWidgetsCoordinator,
+        BaseMobxLogic,
+        Reactions {
   final DocsContract contract;
   final BlockTextFieldsStore blockTextFields;
   final ActiveGroup activeGroup;
   final BlockTextDisplayStore blockTextDisplay;
+  @override
+  final CaptureScreen captureScreen;
 
   _ViewDocCoordinatorBase({
     required this.contract,
+    required this.captureScreen,
     required this.activeGroup,
     required this.blockTextDisplay,
   }) : blockTextFields = blockTextDisplay.blockTextFields {
@@ -66,6 +75,12 @@ abstract class _ViewDocCoordinatorBase
     disposers.add(blockTextFieldSubmissionReactor());
     disposers.add(contentToDeletionReactor());
     disposers.add(textFieldCharactersReactor());
+  }
+
+  @action
+  onResumed() async {
+    await listenToContent(documentId);
+    initReactors();
   }
 
   @action
@@ -163,17 +178,6 @@ abstract class _ViewDocCoordinatorBase
   }
 
   @action
-  onBlockTypeChanged(ContentBlockType type) async {
-    await contract.updateContent(
-      UpdateContentParams(
-        content: spotlightController.text,
-        contentId: spotlightContentBlockId,
-        contentBlockType: type,
-      ),
-    );
-  }
-
-  @action
   setTitle(String value) {
     setText(
       value,
@@ -255,6 +259,7 @@ abstract class _ViewDocCoordinatorBase
         if (characterCount > 2000) return;
         if (blockTextFields.mode == BlockTextFieldMode.adding) {
           if (isDuplicate(blockTextFields.currentTextContent)) return;
+          print('params $addContentParams ');
           final res = await contract.addContent(addContentParams);
           res.fold(
             (failure) {
@@ -266,10 +271,7 @@ abstract class _ViewDocCoordinatorBase
         } else {
           final res = await contract.updateContent(updateContentParams);
           res.fold(
-            (failure) {
-              errorUpdater(failure);
-              errorUpdater(failure);
-            },
+            (failure) => errorUpdater(failure),
             (value) => blockTextFields.reset(),
           );
         }

@@ -137,7 +137,7 @@ abstract class _SessionMainCoordinatorBase
   @action
   onPauseTapped() async {
     borderGlow.setControl(Control.stop);
-    await presence.dispose();
+    // await presence.dispose();
     setShowWidgets(false);
     if (presence.incidentsOverlayStore.showWidget) {
       presence.incidentsOverlayStore.setWidgetVisibility(false);
@@ -149,9 +149,14 @@ abstract class _SessionMainCoordinatorBase
 
   onInactive() async {
     await presence.updateUserStatus(SessionUserStatus.offline);
+    if (sessionMetadata.userIsSpeaking) {
+      onLetGo();
+    }
+    await presence.dispose();
   }
 
   onResumed() async {
+    await presence.listen();
     await presence.updateUserStatus(SessionUserStatus.online);
     if (presence.sessionMetadataStore.everyoneIsOnline) {
       onCollaboratorJoined();
@@ -296,6 +301,7 @@ abstract class _SessionMainCoordinatorBase
               rally.setCurrentInitiator(
                 sessionMetadata.currentSpeakerFirstName,
               );
+              letEmCook.setButtonVisibility(false);
               rally.setRallyPhase(RallyPhase.activeRecipient);
               tint.reverseMovie(const NoParams());
               borderGlow.synchronizeGlow(sessionMetadata.speakingTimerStart);

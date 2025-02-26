@@ -17,7 +17,7 @@ class SessionMainScreen extends HookWidget {
   Widget build(BuildContext context) {
     useEffect(() {
       coordinator.constructor();
-      return null;
+      return () => coordinator.dispose();
       // return () => coordinator.deconstructor();
     }, []);
     useOnAppLifecycleStateChange(

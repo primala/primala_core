@@ -1,6 +1,7 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:nokhte/app/core/modules/active_group/active_group.dart';
 import 'package:nokhte/app/core/modules/legacy_connectivity/legacy_connectivity.dart';
+import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/modules/supabase/supabase.dart';
 import 'package:nokhte/app/core/network/network_info.dart';
 import 'package:nokhte/app/modules/docs/docs.dart';
@@ -14,6 +15,7 @@ class SessionLogicModule extends Module {
         DocsLogicModule(),
         ActiveGroupModule(),
         LegacyConnectivityModule(),
+        PosthogModule(),
       ];
   @override
   void exportedBinds(i) {
@@ -31,6 +33,7 @@ class SessionLogicModule extends Module {
     i.add<SessionMetadataStore>(
       () => SessionMetadataStore(
         viewDoc: ViewDocCoordinator(
+          captureScreen: Modular.get<CaptureScreen>(),
           contract: Modular.get<DocsContractImpl>(),
           activeGroup: Modular.get<ActiveGroup>(),
           blockTextDisplay: BlockTextDisplayStore(
