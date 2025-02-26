@@ -97,7 +97,7 @@ final class MenuItem<T> extends ContextMenuItem<T> {
                 SizedBox.square(
                   dimension: 25.0,
                   child: Image.asset(
-                    'assets/session/$iconPath.png',
+                    iconPath,
                     height: 5.0,
                     width: 5.0,
                   ),

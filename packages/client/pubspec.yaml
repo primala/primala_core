@@ -70,6 +70,10 @@ flutter:
     - assets/groups/envelope_icon_transparent.png
     - assets/groups/magnifying_glass_icon.png
 
+    - assets/docs/trash_icon.png
+    - assets/docs/archive_icon.png
+    - assets/docs/ellipse_icon.png
+
     - assets/blocks/conclusion_icon.png
     - assets/blocks/conclusion_send_icon.png
     - assets/blocks/idea_icon.png

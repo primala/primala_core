@@ -78,6 +78,21 @@ abstract class _ViewDocCoordinatorBase
   }
 
   @action
+  toggleArchive() async {
+    final res = await contract.toggleArchive(
+      ToggleArchiveParams(
+        documentId: documentId,
+        shouldArchive: !doc.isArchived,
+      ),
+    );
+
+    res.fold(
+      (failure) => errorUpdater(failure),
+      (value) => Modular.to.pop(),
+    );
+  }
+
+  @action
   onResumed() async {
     await listenToContent(documentId);
     initReactors();

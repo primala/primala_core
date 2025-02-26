@@ -8,6 +8,7 @@ class SpotlightStatement extends HookWidget {
   final Function(String) onTextUpdated;
   final TextEditingController? controller;
   final ContentBlockType? externalBlockType;
+  final bool isEnabled;
   final double paddingValue;
 
   const SpotlightStatement({
@@ -16,6 +17,7 @@ class SpotlightStatement extends HookWidget {
     this.controller,
     this.externalBlockType,
     this.paddingValue = 0.5,
+    this.isEnabled = true,
   });
 
   @override
@@ -56,6 +58,7 @@ class SpotlightStatement extends HookWidget {
               ),
               TextField(
                 maxLines: null,
+                enabled: isEnabled,
                 textInputAction: TextInputAction.done,
                 cursorColor: Colors.white,
                 keyboardType: TextInputType.text,
