@@ -17,6 +17,7 @@ class CarouselScaffold extends HookWidget with OpacityUtils {
   final Function dispose;
   final int initialPosition;
   final bool isScrollable;
+  final Widget floatingActionButton;
 
   const CarouselScaffold({
     super.key,
@@ -28,14 +29,29 @@ class CarouselScaffold extends HookWidget with OpacityUtils {
     this.showWidgets = true,
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.floatingActionButton = const SizedBox(),
   });
 
   @override
   Widget build(BuildContext context) {
     final currentPosition = useState(initialPosition.toDouble());
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: NokhteColors.eggshell,
+      floatingActionButton: AnimatedOpacity(
+        opacity: useWidgetOpacity(showWidgets),
+        duration: const Duration(milliseconds: 500),
+        child: Opacity(
+          opacity: interpolate(
+            currentValue: currentPosition.value,
+            targetValue: initialPosition.toDouble(),
+            minOutput: 0.0,
+            maxOutput: 1.0,
+          ),
+          child: floatingActionButton,
+        ),
+      ),
       body: MultiHitStack(
         children: [
           AnimatedOpacity(

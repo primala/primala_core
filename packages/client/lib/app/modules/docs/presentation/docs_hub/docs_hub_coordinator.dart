@@ -36,10 +36,16 @@ abstract class _DocsHubCoordinatorBase
   }
 
   @observable
-  ObservableList<DocumentEntity> documents = ObservableList();
+  ObservableList<DocumentEntity> currentDocuments = ObservableList();
+
+  @observable
+  ObservableList<DocumentEntity> archivedDocuments = ObservableList();
 
   @observable
   int selectedDocIndex = -1;
+
+  @observable
+  bool isCurrentSelected = true;
 
   @observable
   ObservableStream<DocumentEntities> documentsStream =
@@ -59,12 +65,18 @@ abstract class _DocsHubCoordinatorBase
   }
 
   @action
+  setIsCurrentSelected(bool value) => isCurrentSelected = value;
+
+  @action
   listenToDocuments() async {
     final res = await contract.listenToDocuments(activeGroup.groupId);
     res.fold((failure) => errorUpdater(failure), (stream) {
       documentsStream = ObservableStream(stream);
       documentsStreamSubscription = documentsStream.listen((event) {
-        documents = ObservableList.of(event);
+        currentDocuments = ObservableList.of(
+            event.where((element) => element.isArchived == false).toList());
+        archivedDocuments = ObservableList.of(
+            event.where((element) => element.isArchived == true).toList());
       });
     });
   }
@@ -75,7 +87,7 @@ abstract class _DocsHubCoordinatorBase
     Modular.to.push(MaterialPageRoute(
       builder: (context) {
         return ViewDocScreen(
-          doc: documents[index],
+          doc: docs[index],
           coordinator: viewDocCoordinator,
         );
       },
@@ -106,5 +118,9 @@ abstract class _DocsHubCoordinatorBase
 
   @computed
   String get selectedDocTitle =>
-      selectedDocIndex == -1 ? "" : documents[selectedDocIndex].title;
+      selectedDocIndex == -1 ? "" : docs[selectedDocIndex].title;
+
+  @computed
+  List<DocumentEntity> get docs =>
+      isCurrentSelected ? currentDocuments : archivedDocuments;
 }

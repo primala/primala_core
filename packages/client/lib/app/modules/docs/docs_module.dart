@@ -30,6 +30,7 @@ class DocsModule extends Module {
     i.add<ViewDocCoordinator>(
       () => ViewDocCoordinator(
         contract: i<DocsContractImpl>(),
+        captureScreen: Modular.get<CaptureScreen>(),
         activeGroup: Modular.get<ActiveGroup>(),
         blockTextDisplay: BlockTextDisplayStore(
           blockTextFields: BlockTextFieldsStore(),

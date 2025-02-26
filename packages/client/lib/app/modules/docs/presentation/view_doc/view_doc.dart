@@ -22,6 +22,13 @@ class ViewDocScreen extends HookWidget {
       coordinator.constructor(doc);
       return () => coordinator.dispose();
     }, []);
+    useOnAppLifecycleStateChange(
+      (previous, current) => coordinator.onAppLifeCycleStateChange(
+        current,
+        onResumed: () async => await coordinator.onResumed(),
+        onInactive: () async => await coordinator.dispose(),
+      ),
+    );
     return Observer(builder: (context) {
       return AnimatedScaffold(
         showWidgets: coordinator.showWidgets,
@@ -35,6 +42,8 @@ class ViewDocScreen extends HookWidget {
                   DocHeader(
                     onBackPress: coordinator.onBackPress,
                     onChanged: coordinator.onTitleChanged,
+                    onArchivePressed: coordinator.toggleArchive,
+                    isArchived: doc.isArchived,
                     onTrashPressed: coordinator.onTrashPressed,
                     controller: coordinator.docTitleController,
                   ),
@@ -44,6 +53,7 @@ class ViewDocScreen extends HookWidget {
                       onTextUpdated: coordinator.onSpotlightTextChanged,
                       controller: coordinator.spotlightController,
                       externalBlockType: coordinator.spotlightContentBlock.type,
+                      isEnabled: !doc.isArchived,
                     ),
                   ),
                   Container(
@@ -65,9 +75,10 @@ class ViewDocScreen extends HookWidget {
                 ],
               ),
             ),
-            BlockTextFields(
-              store: coordinator.blockTextFields,
-            ),
+            if (!doc.isArchived)
+              BlockTextFields(
+                store: coordinator.blockTextFields,
+              ),
           ],
         ),
       );

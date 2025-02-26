@@ -24,6 +24,7 @@ abstract class DocsContract {
   Future<Either<Failure, bool>> updateDocumentTitle(
     UpdateDocumentTitleParams params,
   );
+  Future<Either<Failure, bool>> toggleArchive(ToggleArchiveParams params);
 
   Future<Either<Failure, bool>> addContent(AddContentParams params);
   Future<Either<Failure, bool>> updateContent(UpdateContentParams params);
@@ -136,6 +137,16 @@ class DocsContractImpl extends DocsContract
     if (await networkInfo.isConnected) {
       final res = remoteSource.listenToSpecificDocuments(documentIds);
       return Right(res);
+    } else {
+      return const Left(FailureConstants.internetConnectionFailure);
+    }
+  }
+
+  @override
+  toggleArchive(params) async {
+    if (await networkInfo.isConnected) {
+      final res = await remoteSource.toggleArchive(params);
+      return fromSupabaseSingle(res);
     } else {
       return const Left(FailureConstants.internetConnectionFailure);
     }

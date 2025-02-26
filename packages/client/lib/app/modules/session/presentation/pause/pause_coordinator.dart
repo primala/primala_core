@@ -4,6 +4,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nokhte/app/core/interfaces/logic.dart';
 import 'package:nokhte/app/core/mobx/mobx.dart';
+import 'package:nokhte/app/core/modules/posthog/posthog.dart';
 import 'package:nokhte/app/core/types/types.dart';
 import 'package:nokhte/app/core/widgets/widgets.dart';
 import 'package:nokhte/app/modules/session/session.dart';
@@ -11,24 +12,38 @@ part 'pause_coordinator.g.dart';
 
 class PauseCoordinator = _PauseCoordinatorBase with _$PauseCoordinator;
 
-abstract class _PauseCoordinatorBase with Store, BaseWidgetsCoordinator {
+abstract class _PauseCoordinatorBase
+    with Store, BaseCoordinator, BaseWidgetsCoordinator {
   final TintStore tint;
   final SessionPresenceCoordinator presence;
+  @override
+  final CaptureScreen captureScreen;
 
   _PauseCoordinatorBase({
     required this.tint,
     required this.presence,
+    required this.captureScreen,
   }) {
     initBaseWidgetsCoordinatorActions();
   }
 
   @action
   constructor() async {
-    await presence.dispose();
-    Modular.dispose<SessionLogicModule>();
-    await presence.listen();
+    // await presence.dispose();
+    // Modular.dispose<SessionLogicModule>();
+    // await presence.listen();
     fadeInWidgets();
     tint.initMovie(const NoParams());
+  }
+
+  @action
+  onCollaboratorJoined() async {
+    await presence.listen();
+  }
+
+  @action
+  onCollaboratorLeft() async {
+    await presence.listen();
   }
 
   @action

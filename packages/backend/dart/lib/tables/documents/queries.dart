@@ -36,8 +36,21 @@ class DocumentsQueries with DocumentUtils, DocumentConstants {
     ));
   }
 
-  Future<List> selectByGroup(int groupId) async =>
-      await supabase.from(TABLE).select().eq(GROUP_ID, groupId);
+  Future<Map> toggleArchive(ToggleArchiveParams params) async => await supabase
+      .from(TABLE)
+      .update({IS_ARCHIVED: params.shouldArchive})
+      .eq(ID, params.documentId)
+      .select()
+      .single();
+
+  Future<List> selectByGroup(
+    int groupId, {
+    bool includeArchived = false,
+  }) async =>
+      await supabase.from(TABLE).select().eq(GROUP_ID, groupId).eq(
+            IS_ARCHIVED,
+            includeArchived,
+          );
 
   Future<Map> updateTitle(UpdateDocumentTitleParams params) async =>
       await supabase

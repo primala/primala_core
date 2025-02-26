@@ -10,6 +10,7 @@ abstract class DocsRemoteSource {
   Future<Map> insertDocument(InsertDocumentParams params);
   Future<Map> deleteDocument(int documentId);
   Future<Map> updateDocumentTitle(UpdateDocumentTitleParams params);
+  Future<Map> toggleArchive(ToggleArchiveParams params);
 
   Future<Map> addContent(AddContentParams params);
   Future<Map> updateContent(UpdateContentParams params);
@@ -78,4 +79,7 @@ class DocsRemoteSourceImpl extends DocsRemoteSource {
   @override
   listenToSpecificDocuments(documentIds) =>
       documentsStreams.listenToSpecificDocuments(documentIds);
+
+  @override
+  toggleArchive(params) async => await documentsQueries.toggleArchive(params);
 }

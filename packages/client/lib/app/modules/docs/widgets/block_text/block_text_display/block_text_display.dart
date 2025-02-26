@@ -96,14 +96,15 @@ class BlockTextDisplay extends HookWidget {
                               entries: <ContextMenuEntry>[
                                 MenuItem(
                                   label: 'edit',
-                                  iconPath: 'pencil_icon',
+                                  iconPath: 'assets/session/pencil_icon.png',
                                   onSelected: () {
                                     store.onEdit(element);
                                   },
                                 ),
                                 MenuItem(
                                   label: 'delete',
-                                  iconPath: 'trash_icon_black',
+                                  iconPath:
+                                      'assets/session/trash_icon_black.png',
                                   onSelected: () {
                                     store.setItemIdToDelete(element.id);
                                   },
