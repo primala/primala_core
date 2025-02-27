@@ -25,6 +25,13 @@ class PauseScreen extends HookWidget {
       screenSize: screenSize,
       bumpPerHundredth: -0.001,
     );
+    useOnAppLifecycleStateChange(
+      (previous, current) => coordinator.onAppLifeCycleStateChange(
+        current,
+        onResumed: () async => await coordinator.onResumed(),
+        onInactive: () => null,
+      ),
+    );
 
     return Observer(builder: (context) {
       return AnimatedScaffold(

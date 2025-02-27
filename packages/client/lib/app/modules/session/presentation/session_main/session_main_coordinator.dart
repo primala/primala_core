@@ -149,7 +149,9 @@ abstract class _SessionMainCoordinatorBase
 
   onInactive() async {
     await presence.updateUserStatus(SessionUserStatus.offline);
-    if (sessionMetadata.userIsSpeaking) {
+    if (sessionMetadata.userIsSpeaking ||
+        sessionMetadata.userIsInSecondarySpeakingSpotlight) {
+      await presence.updateWhoIsTalking(UpdateWhoIsTalkingParams.clearOut);
       onLetGo();
     }
     await presence.dispose();
