@@ -29,21 +29,17 @@ abstract class _PauseCoordinatorBase
 
   @action
   constructor() async {
-    // await presence.dispose();
-    // Modular.dispose<SessionLogicModule>();
-    // await presence.listen();
+    await presence.dispose();
+    Modular.dispose<SessionLogicModule>();
+    await presence.listen();
     fadeInWidgets();
     tint.initMovie(const NoParams());
   }
 
   @action
-  onCollaboratorJoined() async {
-    await presence.listen();
-  }
-
-  @action
-  onCollaboratorLeft() async {
-    await presence.listen();
+  onResumed() async {
+    // await presence.dispose();
+    // await presence.listen();
   }
 
   @action

@@ -94,7 +94,7 @@ abstract class _BlockTextDisplayStoreBase extends BaseWidgetStore
   }
 
   focusReactor() => reaction((p0) => blockTextFields.isFocused, (p0) {
-        if (p0) {
+        if (p0 && scrollController.hasClients) {
           if (blockScroll) {
             setBlockScroll(false);
             return;
