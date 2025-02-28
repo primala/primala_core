@@ -17,7 +17,7 @@ export 'block_text_fields_store.dart';
 export 'movies/movies.dart';
 export 'block_text_field_mode.dart';
 
-class BlockTextFields extends HookWidget {
+class BlockTextFields extends HookWidget with DialogueUtils {
   final BlockTextFieldsStore store;
   final Color fontColor;
   final Color baseColor;
@@ -65,8 +65,21 @@ class BlockTextFields extends HookWidget {
                 GestureDetector(
                   onTap: store.isFocused
                       ? store.currentlySelectedParentId != -1
-                          ? () => store.onParentDeselected()
-                          : () => store.reset()
+                          ? () => showDeleteConfirmationDialog(
+                                context: context,
+                                onConfirm: store.onParentDeselected,
+                                title: 'Discard Input',
+                                content:
+                                    'Are you sure you want to discard your input?',
+                              )
+                          : () => showDeleteConfirmationDialog(
+                                context: context,
+                                onConfirm: store.reset,
+                                title: 'Discard Input',
+                                content:
+                                    'Are you sure you want to discard your input?',
+                              )
+                      // : () => store.reset()
                       : null,
                   child: NokhteBlur(
                     store: store.blur,
